@@ -134,16 +134,22 @@ var UserSchema = new Schema({
     type: Object,
     default: {}
   },
+  //favorites: {
+  //  type: [{
+  //    type: String
+  //  }]
+  //},
   favorites: {
-    type: Array,
-    default: []
+    type: String
   },
   newsletter: {
     type: Boolean,
     default: false
   },
   associatedProjects: {
-    type: Array,
+    type: [{
+      type: String
+    }],
     default: []
   },
   bio: {

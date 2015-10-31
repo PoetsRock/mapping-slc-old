@@ -31,10 +31,9 @@ module.exports = function(app) {
 
 
 // Single project routes
+  //app.route('/api/v1/projects/:projectId').all(projectsPolicy.isAllowed)
   app.route('/api/v1/projects/:projectId')
-    .get(projects.read);
-
-  app.route('/api/v1/projects/:projectId').all(projectsPolicy.isAllowed)
+    .get(projects.read)
     .put(projects.update)
     .delete(projects.delete);
 

@@ -13,6 +13,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $rootScope.signInBeforeProject = false;
     $scope.updateToContrib = null;
     $scope.isPublished = false;
+    $scope.userToEdit = {};
 
     $scope.trustAsHtml = $sce.trustAsHtml;
 
@@ -26,12 +27,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     /**
      * called when $scope.project.status updates
      */
-    $scope.projectStatusChanged = function(){
-      if($scope.project.status === 'published'){
-        $scope.update();
+    $scope.projectStatusChanged = function () {
+      if ($scope.project.status === 'published') {
         $scope.publishProject();
         $scope.toggleEdit = false;
-      }else{
+      } else {
         $scope.update();
         $scope.toggleEdit = false;
       }
@@ -39,7 +39,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.modalTemplateUrl = '/modules/projects/client/directives/views/project-warning-modal.html';
     //var confirmPublishModal = function(modalTemplateUrl){
-    $scope.confirmPublishModal = function(){
+    $scope.confirmPublishModal = function () {
       $scope.animationsEnabled = true;
       $uibModal.open({
         animation: $scope.animationsEnabled,
@@ -49,29 +49,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
-    var publishUser = function (projectId, userId) {
-      $scope.updateToContrib = AdminUpdateUser.get({
-        userId: userId
-      }, function () {
-        if (updateToContrib.roles[0] !== 'admin' || updateToContrib.roles[0] !== 'superUser') {
-          $scope.updateToContrib.associatedProjects.push(projectId);
-          $scope.updateToContrib.roles[0] = 'contributor';
-          console.log('$scope.updateToContrib', $scope.updateToContrib);
-          $scope.updateToContrib.$update(function () {
+    var publishUser = function (project) {
+      AdminUpdateUser.get({userId: project.user._id},
+        function (userData, getResponseHeader) {
+          userData.associatedProjects.push(project._id);
+          if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser') {
+            userData.roles[0] = 'contributor';
+          }
+          userData.$update(function (userData, putResponseHeaders) {
           });
-        }
-      });
+        });
     };
 
     $scope.publishProject = function () {
       //todo need to call on a confirm modal first
-      var project = Projects.get({
-        projectId: $stateParams.projectId
-      }, function () {
-        publishUser($stateParams.projectId, project.user._id); //call method to display contributor bio
-        //todo need some func for deleting all of this if we unpublish a project. was thinking we check if prevPub is true and current status does not equal publish, then execute unPub func.
-        //project.previouslyPublished = true;
-      })
+      $scope.update();
+      publishUser($scope.project); //call method to display contributor bio
     };
 
     var saveProject = null;
