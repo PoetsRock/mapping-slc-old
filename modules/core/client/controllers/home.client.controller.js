@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
-  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService', '$cookies', '$cookieStore',
+  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService, $cookies, $cookieStore) {
 
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
@@ -29,7 +29,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.projectMarker = null;
     $scope.markerData = null;
 
-
+    /**
+     * test for getting and setting cookies
+     */
 
     /**
      *
