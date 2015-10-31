@@ -38,7 +38,7 @@ module.exports = function(app) {
     .delete(projects.delete);
 
   // Single project routes for different genres
-    app.route('/api/v1/projects/:projectId/video/:videoId').getOneVideo(projects.read);
+  //  app.route('/api/v1/projects/:projectId/video/:videoId').getOneVideo(projects.read);
 
 
 // Project Markers Routes
