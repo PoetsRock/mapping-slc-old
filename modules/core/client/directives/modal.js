@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').directive('ModalDirective', function() {
+angular.module('core').directive('modalDirective', function() {
         return {
             restrict: 'E',
             link: function() {
