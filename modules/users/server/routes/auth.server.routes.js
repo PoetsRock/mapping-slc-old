@@ -55,4 +55,7 @@ module.exports = function (app) {
   app.route('/api/v1/auth/paypal').get(users.oauthCall('paypal'));
   app.route('/api/v1/auth/paypal/callback').get(users.oauthCallback('paypal'));
 
+  // Setting the vimeo oauth routes
+  app.route('/api/v1/auth/vimeo').get(users.oauthCall('vimeo'));
+  app.route('/api/v1/auth/vimeo/callback').get(users.oauthCallback('vimeo'));
 };

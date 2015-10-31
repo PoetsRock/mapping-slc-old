@@ -18,7 +18,7 @@
   "scripts": {
     "start": "grunt --force",
     "test": "grunt test",
-    "postinstall": "bower install --config.interactive=false && gulp build"
+    "postinstall": "bower install --config.interactive=false && gulp heroku"
   },
   "dependencies": {
     "acl": "~0.4.4",
@@ -68,7 +68,7 @@
     "passport-paypal-openidconnect": "^0.1.1",
     "passport-twitter": "^1.0.2",
     "phantomjs": "^1.9.18",
-    "request": "^2.63.0",
+    "request": "^2.65.0",
     "require": "^2.4.20",
     "sanitize-html": "^1.10.0",
     "serve-favicon": "^2.3.0",
@@ -76,7 +76,8 @@
     "swig": "^1.4.2",
     "uglify-js": "^2.4.24",
     "underscore": "^1.8.3",
-    "validator": "^3.41.2"
+    "validator": "^3.41.2",
+    "vimeo": "^1.1.4"
   },
   "devDependencies": {
     "grunt-concurrent": "^2.0.0",

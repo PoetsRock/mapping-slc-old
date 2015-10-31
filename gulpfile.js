@@ -241,3 +241,8 @@ gulp.task('debug', function (done) {
 gulp.task('prod', function (done) {
   runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
+
+// Run the project in production mode
+gulp.task('heroku', function (done) {
+  runSequence('templatecache', 'build', 'env:prod', done);
+});
