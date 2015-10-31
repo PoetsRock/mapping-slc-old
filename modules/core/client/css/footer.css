@@ -35,11 +35,19 @@
 
 .btn-footer-overlay {
     color: #fff;
-    margin: 2% 0 0 7.5%;
+    margin: 2% 0 0 0.5%;
 }
 
 .btn-footer-overlay:hover, .btn-footer-overlay:focus, .btn-footer-overlay.focus {
     color: #ffffff;
+}
+
+.footer-overlay input {
+    font-size: 1.5rem;
+}
+
+.footer-overlay input:active {
+    font-size: 1.7rem;
 }
 
 

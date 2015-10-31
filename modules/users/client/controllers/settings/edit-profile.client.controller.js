@@ -10,7 +10,7 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
 
     // Update existing User
-    $scope.update = function ($valid) {
+    $scope.update = function (isValid) {
       $scope.error = null;
 
       if (!isValid) {
