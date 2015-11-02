@@ -37,6 +37,8 @@ module.exports = {
 **/
     mapboxSecret: 'pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw',
     mapboxKey: 'poetsrock.map-55znsh8b',
+
+    //todo need to pull thses out of here; won't be available on production server
     mapboxMaps: {
         'grayMap': 'L.mapbox.tileLayer(\'poetsrock.b06189bb\')',
         'mainMap': 'L.mapbox.tileLayer(\'poetsrock.la999il2\')',
@@ -49,6 +51,10 @@ module.exports = {
 
     yelpKey: 'if7aWpJFqEcJ6q8tM-Y9qQ',
     yelpSecret: 'FZU4zSc-S3NJgI_aKm2O0_4ym6c',
+
+    vimeoKey: '6565bb005d7bffac18d89cbc4ef57af1bccde906',
+    vimeoSecret: 'V7h0cZTU0VqBDjYdnAoBmuJb1/XoQzPQJ09NB9uSit6M8LJnt10bDwO7EQFbs9RbMM2Yruo/UZEeVSuG7dMNZW+W+950+Iny/31V5AJ9pokT6Gezzto3R8qnp0mO6NTs',
+    vimeoToken: 'a72958bf1f855bd7c58f3a354953c183',
 
 
     //social media accounts

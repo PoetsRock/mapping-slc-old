@@ -27,6 +27,9 @@ var ProjectSchema = new Schema({
         }],
         default: 'pending'
     },
+    publishedDate: {
+        type: Date
+    },
     createdOn: {
         type: Date,
         default: Date.now
@@ -123,22 +126,18 @@ var ProjectSchema = new Schema({
     lat: {
         type: Number,
         es_indexed: true,
-        default: '',
         trim: true
     },
     lng: {
         type: Number,
         es_indexed: true,
-        default: '',
         trim: true
     },
-
     //stores a static .map image, created on new project creation
     //calls from mapbox web services static .map image:
     //https://www.mapbox.com/developers/api/v1/static/#images
     mapImage: {
         type: String,
-        default: '',
         trim: true
     },
     category: {
@@ -149,8 +148,9 @@ var ProjectSchema = new Schema({
         trim: true
     },
     keywords: {
-        type: Array,
-        default: []
+        type: [{
+            type: String
+        }]
     },
     tags: {
         type: Array
@@ -161,18 +161,29 @@ var ProjectSchema = new Schema({
     },
     mainImage: {
         type: String,
-        default: '',
         trim: true
     },
     mainImgThumbnail: {
         type: String,
-        default: '',
         trim: true
     },
     imageGallery: {
-        type: Array,
-        default: '',
+        type: [{
+            type: String
+        }],
         trim: true
+    },
+    /**
+    * specialLayout is an array of objects that specify custom layout options
+    * for projects that have specific, custom layout requirements.
+     * E.G., take a project that has both a video and an image gallery...
+     * the standard layout would display the video on top of the image gallery.
+     * however, you can specify here if the reverse should be true.
+    */
+    specialLayout: {
+        type: [{
+            type: Object
+        }]
     }
 });
 

@@ -134,11 +134,11 @@ var UserSchema = new Schema({
     type: Object,
     default: {}
   },
-  //favorites: {
-  //  type: [{
-  //    type: String
-  //  }]
-  //},
+  bookmarks: {
+    type: [{
+      type: Object
+    }]
+  },
   favorites: {
     type: String
   },

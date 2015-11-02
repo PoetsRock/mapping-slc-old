@@ -10,7 +10,8 @@ module.exports = function(app) {
         markerData = require('../models/project.server.model.js'),
         keys = require('../../../users/server/config/private/keys.js'),
         request = require('request'),
-        s3 = require('../controllers/s3.server.controller');
+        s3 = require('../controllers/s3.server.controller'),
+        vimeo = require('../controllers/vimeo.server.controller');
 
 
 // Projects collection routes
@@ -38,7 +39,11 @@ module.exports = function(app) {
     .delete(projects.delete);
 
   // Single project routes for different genres
-  //  app.route('/api/v1/projects/:projectId/video/:videoId').getOneVideo(projects.read);
+    app.route('/api/v1/projects/:projectId/video/:videoId')
+      .get(vimeo.getOneVideo);
+
+    app.route('/api/v1/projects/:projectId/videos')
+        .get(projects.findOneVideoId);
 
 
 // Project Markers Routes

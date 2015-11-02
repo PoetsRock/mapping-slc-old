@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin',
-  function ($scope, $filter, Admin) {
-    Admin.query(function (data) {
+angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'AdminUpdateUser',
+  function ($scope, $filter, AdminUpdateUser) {
+    AdminUpdateUser.query(function (data) {
       $scope.users = data;
       $scope.buildPager();
     });
