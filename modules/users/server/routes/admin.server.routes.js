@@ -29,9 +29,7 @@ module.exports = function (app) {
 
   // Single contributor routes
   app.route('/api/v1/contributors/:userId')
-    .get(adminPolicy.isAllowed, admin.getContributorByID)
-    .delete(adminPolicy.isAllowed, admin.deleteContributor);
-
+    .get(admin.getContributorByID);
 
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);

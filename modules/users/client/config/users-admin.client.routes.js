@@ -15,7 +15,7 @@
 //        controller: 'UserController',
 //        resolve: {
 //          userResolve: ['$stateParams', function ($stateParams) {
-//            return Admin.get({
+//            return AdminUpdateUser.get({
 //              userId: $stateParams.userId
 //            });
 //          }]
@@ -27,7 +27,7 @@
 //        controller: 'UserController',
 //        resolve: {
 //          userResolve: ['$stateParams', function ($stateParams) {
-//            return Admin.get({
+//            return AdminUpdateUser.get({
 //              userId: $stateParams.userId
 //            });
 //          }]

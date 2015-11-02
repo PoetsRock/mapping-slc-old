@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$modal', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'Admin', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $modal, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, Admin, AdminUpdateUser, $state, UtilsService, $uibModal) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$modal', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $modal, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window) {
     $scope.Authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -63,6 +63,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.publishProject = function () {
       //todo need to call on a confirm modal first
+      project.publishedDate = new Date();
       $scope.update();
       publishUser($scope.project); //call method to display contributor bio
     };
@@ -95,8 +96,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       success(function (publishedProjects) {
         $scope.publishedProjects = publishedProjects;
         console.log('$scope.publishedProjects:\n', $scope.publishedProjects);
-        console.log('$scope.publishedProjects.title:\n', $scope.publishedProjects[0].title);
-
       }).
       error(function (data, status) {
 
@@ -226,21 +225,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     // Find existing Project
     $scope.findOne = function () {
-      $scope.project = Projects.get({
-        projectId: $stateParams.projectId
-      });
-      var vimeoId,
-        soundCloudId;
-      $http.get('/api/v1/keys').success(function (data) {
-        vimeoId = data.vimeoId;
-        soundCloudId = data.soundCloudId;
-      });
-      if (soundCloudId) {
-        $scope.soundCloudId = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true';
-      }
-      if (vimeoId) {
-        $scope.vimeoId = '' + project.vimeoId + ''
-      }
+      $http.get('/api/v1/projects/' + $stateParams.projectId)
+        .success(function(project) {
+          $scope.project = project;
+          if(project.vimeoId) {
+            $scope.vimeo = {
+              video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
+              width: $window.innerWidth / 1.75,
+              height: $window.innerHeight / 1.75
+            };
+          }
+          if(project.soundCloudId) {
+            $scope.soundCloud = {
+              audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
+              width: $window.innerWidth / 1.75,
+              height: $window.innerHeight / 1.75
+            };
+          }
+          if(project.imageGallery) {
+            $scope.imageGallery = [];
+          }
+        })
+        .error(function(err, status){
+
+        });
     };
 
     $scope.completed = function () {
@@ -318,6 +326,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //		error(function () {
     //		});
     //};
+
+
 
 
   }

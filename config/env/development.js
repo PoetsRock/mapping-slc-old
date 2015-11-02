@@ -1,6 +1,7 @@
 'use strict';
 
-var defaultEnvConfig = require('./default');
+var   keys = require('../../modules/users/server/config/private/keys.js'),
+      defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
@@ -18,20 +19,20 @@ module.exports = {
     // Stream defaults to process.stdout
     // Uncomment to enable logging to a log on the file system
     options: {
-      //stream: 'access.log'
+      stream: 'access.log'
     }
   },
   app: {
     title: defaultEnvConfig.app.title + ' - Development Environment'
   },
   facebook: {
-    clientID: process.env.FACEBOOK_ID || 'APP_ID',
-    clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
+    clientID: process.env.FACEBOOK_ID || keys.facebookKey,
+    clientSecret: process.env.FACEBOOK_SECRET || keys.facebookSecret,
     callbackURL: '/api/v1/auth/facebook/callback'
   },
   twitter: {
-    clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-    clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
+    clientID: process.env.TWITTER_KEY || keys.twitterKey,
+    clientSecret: process.env.TWITTER_SECRET || keys.twitterSecret,
     callbackURL: '/api/v1/auth/twitter/callback'
   },
   google: {

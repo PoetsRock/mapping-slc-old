@@ -74,7 +74,11 @@ angular.module('users').config(['$stateProvider',
       })
       .state('contributors', {
         url: '/contributors',
-        templateUrl: 'modules/users/client/views/contributors.client.view.html'
+        templateUrl: 'modules/users/client/views/contributors/contributors.client.list.html'
+      })
+      .state('contributor', {
+        url: '/contributors/:userId',
+        templateUrl: 'modules/users/client/views/contributors/contributors.client.view.html'
       });
   }
 ]);

@@ -1,12 +1,14 @@
 'use strict';
 
 
-angular.module('users').controller('ContributorController', ['$scope', '$animate', '$location', 'Authentication', 'GetContributors', '$stateParams', '$http', '$modal', '$window', 'Lightbox', 'UtilsService',
-  function ($scope, $animate, $location, Authentication, GetContributors, $stateParams, $http, $modal, $window, Lightbox, UtilsService) {
+angular.module('users').controller('ContributorController', ['$scope', '$animate', '$location', 'Authentication', 'GetContributors', '$stateParams', '$http', '$modal', '$window', 'Lightbox', 'UtilsService', 'User', 'Projects',
+  function ($scope, $animate, $location, Authentication, GetContributors, $stateParams, $http, $modal, $window, Lightbox, UtilsService, User, Projects) {
 
     $scope.contributors = null;
-    $scope.images = [];
+    $scope.contributor = {};
+    $scope.contributorProjects = [];
     $scope.contribData = {};
+    $scope.images = [];
 
     //provides logic for the css in the forms
     UtilsService.cssLayout();
@@ -45,6 +47,24 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
       }
 
     };
+
+    $scope.findContributor = function() {
+      User.get({userId: $stateParams.userId},
+        function(userData) {
+          getAssociatedProjects(userData);
+          $scope.contributor = userData;
+      });
+    };
+
+    var getAssociatedProjects = function(userObj) {
+      for (var i = 0; i < userObj.associatedProjects.length; i++) {
+        Projects.get({projectId: userObj.associatedProjects[i]},
+        function(projectObj){
+          $scope.contributorProjects.push(projectObj);
+        })
+      }
+    };
+
 
     $scope.changeView = function (view) {
       $location.path(view);

@@ -91,3 +91,8 @@ MODAL
     height: auto;
     margin: 5%;
 }
+
+.contrib-view img {
+    width: 15vw;
+
+}

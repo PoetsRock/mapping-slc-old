@@ -194,6 +194,18 @@ exports.markerList = function (req, res) {
 		});
 };
 
+exports.findOneVideoId = function(req, res) {
+	Project.findById(req.body._id)
+			.exec(function(err, project) {
+				if (err) {return next (err);}
+				if (!project) {
+					return next(new Error('Failed to load project ' + id + 'associated with the requested video.')
+				)}
+				console.log('res:\n', res);
+				res.vimeoId = project.vimeoId;
+			});
+};
+
 /**
  * Project middleware
  */
