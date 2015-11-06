@@ -36,7 +36,6 @@ module.exports = {
         'public/lib/underscore/underscore-min.js',
         'public/lib/modernizr/modernizr.js',
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
-        'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
         'public/lib/d3/d3.min.js',
@@ -50,7 +49,9 @@ module.exports = {
         'public/lib/c3/c3.min.js',
         'public/lib/angular-notify/dist/angular-notify.min.js',
         'public/lib/angular-loading-bar/build/loading-bar.min.js',
-        'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.min.js'
+        'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.min.js',
+        'public/lib/ng-file-upload/ng-file-upload-shim.min.js',
+        'public/lib/ng-file-upload/ng-file-upload.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

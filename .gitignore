@@ -56,6 +56,7 @@ mongod
 modules/users/client/img/profile/uploads
 config/env/local.js
 *.pem
+/modules/projects/server/uploads
 /modules/projects/server/models/data/private
 /modules/users/server/config/private
 

@@ -1,5 +1,8 @@
 'use strict';
 
+//todo replace current file upload library with `https://github.com/danialfarid/ng-file-upload`...
+// current library appears to be incompatible with angular 1.4?
+
 angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
   function ($scope, $timeout, $window, Authentication, FileUploader) {
     $scope.user = Authentication.user;
