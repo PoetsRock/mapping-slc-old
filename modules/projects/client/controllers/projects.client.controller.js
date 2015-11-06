@@ -14,6 +14,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.updateToContrib = null;
     $scope.isPublished = false;
     $scope.userToEdit = {};
+    $scope.images = [];
 
     $scope.trustAsHtml = $sce.trustAsHtml;
 
@@ -63,7 +64,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.publishProject = function () {
       //todo need to call on a confirm modal first
-      project.publishedDate = new Date();
+      //$scope.project.publishedDate = new Date();
       $scope.update();
       publishUser($scope.project); //call method to display contributor bio
     };
@@ -95,7 +96,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $http.get('/api/v1/projects/published').
       success(function (publishedProjects) {
         $scope.publishedProjects = publishedProjects;
-        console.log('$scope.publishedProjects:\n', $scope.publishedProjects);
       }).
       error(function (data, status) {
 
@@ -219,36 +219,34 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     // Find a list of Projects
     $scope.find = function () {
       $scope.projects = Projects.query();
-      console.log('$scope.projects', $scope.projects);
     };
-
 
     // Find existing Project
     $scope.findOne = function () {
-      $http.get('/api/v1/projects/' + $stateParams.projectId)
-        .success(function(project) {
-          $scope.project = project;
-          if(project.vimeoId) {
-            $scope.vimeo = {
-              video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
-              width: $window.innerWidth / 1.75,
-              height: $window.innerHeight / 1.75
-            };
+      $scope.project = Projects.get({
+        projectId: $stateParams.projectId
+      }, function(project) {
+        $scope.project = project;
+        if (project.vimeoId) {
+          $scope.vimeo = {
+            video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
+            width: $window.innerWidth / 1.75,
+            height: $window.innerHeight / 1.75
+          };
+        }
+        if (project.soundCloudId) {
+          $scope.soundCloud = {
+            audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
+            width: $window.innerWidth / 1.75,
+            height: $window.innerHeight / 1.75
+          };
+        }
+        if(project.imageGallery) {
+          for (var i = 0; i < project.imageGallery.length; i++) {
+            $scope.images.push(project.imageGallery[i]);
           }
-          if(project.soundCloudId) {
-            $scope.soundCloud = {
-              audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
-              width: $window.innerWidth / 1.75,
-              height: $window.innerHeight / 1.75
-            };
-          }
-          if(project.imageGallery) {
-            $scope.imageGallery = [];
-          }
-        })
-        .error(function(err, status){
-
-        });
+        }
+      });
     };
 
     $scope.completed = function () {
@@ -273,8 +271,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //Give user warning if leaving form
     var preventRunning = false;
     $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      //console.log('fromState.url: ', fromState.url);
-      console.log('preventRunning: ', preventRunning);
       if (preventRunning) {
         return;
       }
@@ -287,9 +283,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           controller: function ($scope, $modalInstance, $location) {
             $scope.stay = function (result) {
               //$modalInstance.dismiss('cancel');
-              console.log('stay just a little bit longer, oh won\'t you stay');
               $modalInstance.close(function (result) {
-                console.log('result: ', result);
+
               });
             };
             $scope.leave = function () {
