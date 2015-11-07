@@ -3,11 +3,30 @@
 //todo replace current file upload library with `https://github.com/danialfarid/ng-file-upload`...
 // current library appears to be incompatible with angular 1.4?
 
-angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
-  function ($scope, $timeout, $window, Authentication, FileUploader) {
+angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'Upload',
+  function ($scope, $timeout, $window, Authentication, Upload) {
     $scope.user = Authentication.user;
     $scope.imageURL = $scope.user.profileImageURL;
 
+    // upload on file select or drop
+    $scope.upload = function (file) {
+      Upload.upload({
+        url: 'api/v1/users/upload',
+        data: {file: file, 'username': $scope.username}
+      }).then(function (resp) {
+        console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+      }, function (resp) {
+        console.log('Error status: ' + resp.status);
+      }, function (evt) {
+        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+      });
+    };
+
+
+
+
+    /**
     // Create file uploader instance
     $scope.uploader = new FileUploader({
       url: 'api/v1/users/picture'
@@ -79,5 +98,9 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       $scope.uploadToCloud.clearQueue();
       $scope.imageURL = $scope.user.profileImageURL;
     };
+
+     */
+
+
   }
 ]);
