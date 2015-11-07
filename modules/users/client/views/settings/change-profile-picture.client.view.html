@@ -4,17 +4,36 @@
       <fieldset>
         <div class="form-group text-center">
           <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
+          Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">
         </div>
+
         <!--<div class="text-center form-group" ng-hide="uploader.queue.length">-->
         <div class="text-center form-group" ng-hide="uploadToCloud.queue.length">
           <span class="btn btn-default btn-file">
               Select Image <input type="file" nv-file-select uploader="uploadToCloud">
           </span>
         </div>
-        <div class="text-center form-group" ng-show="uploadToCloud.queue.length">
-          <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>
-          <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>
+
+        <div>
+          Drop File:
+          <div ngf-drop="uploadFiles($files)" class="drop-box"
+               ngf-drag-over-class="'dragover'" ngf-multiple="true"
+               ngf-pattern="'image/*,application/pdf'">Drop Images or PDFs files here</div>
+          <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
         </div>
+
+
+        <div>
+          <div class="button" ngf-select="upload($file)">Upload on file select</div>
+          <div class="button" ngf-select="uploadFiles($files)" multiple="multiple">Upload on file select</div>
+        </div>
+
+
+        <div class="text-center form-group" ng-show="uploadToCloud.queue.length">
+          <!--<button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>-->
+          <!--<button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>-->
+        </div>
+        
         <div ng-show="success" class="text-center text-success">
           <strong>Profile Picture Changed Successfully</strong>
         </div>
