@@ -66,6 +66,12 @@ module.exports = {
       }
     }
   },
+  aws: {
+    s3Id: process.env.S3_ID || keys.s3Id,
+    s3Secret: process.env.S3_SECRET || keys.s3Secret,
+    callbackUrl: '/api/v1/auth/s3/callback'
+  },
+
   livereload: true,
   seedDB: process.env.MONGO_SEED || false
 };

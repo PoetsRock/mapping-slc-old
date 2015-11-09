@@ -56,5 +56,6 @@ angular.module('core').directive('randomMapDirective', [
             }
 
         };
+
     }
 ]);

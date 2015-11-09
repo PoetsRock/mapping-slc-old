@@ -15,8 +15,6 @@ module.exports = {
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.min.css',
         'public/lib/c3/c3.min.css',
         'public/lib/angular-loading-bar/build/loading-bar.min.css'
-
-
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -50,8 +48,8 @@ module.exports = {
         'public/lib/angular-notify/dist/angular-notify.min.js',
         'public/lib/angular-loading-bar/build/loading-bar.min.js',
         'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.min.js',
-        'public/lib/ng-file-upload/ng-file-upload-shim.min.js',
-        'public/lib/ng-file-upload/ng-file-upload.min.js'
+        'public/lib/ng-file-upload/ng-file-upload-shim.js',
+        'public/lib/ng-file-upload/ng-file-upload.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

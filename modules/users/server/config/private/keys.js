@@ -48,6 +48,8 @@ module.exports = {
         'watercolor': 'L.tileLayer(\'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png\')'
     },
 
+    s3Id: 'AKIAJNURVYVK3YRNKLCA',
+    s3Secret: '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',
 
     yelpKey: 'if7aWpJFqEcJ6q8tM-Y9qQ',
     yelpSecret: 'FZU4zSc-S3NJgI_aKm2O0_4ym6c',
