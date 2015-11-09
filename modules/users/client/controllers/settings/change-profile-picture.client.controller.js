@@ -1,105 +1,78 @@
 'use strict';
 
-//todo replace current file upload library with `https://github.com/danialfarid/ng-file-upload`...
-// current library appears to be incompatible with angular 1.4?
-
-angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'Upload',
-  function ($scope, $timeout, $window, Authentication, Upload) {
+angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'Upload', '$http',
+  function ($scope, $timeout, $window, Authentication, Upload, $http) {
     $scope.user = Authentication.user;
     $scope.imageURL = $scope.user.profileImageURL;
+    $scope.uploading = false;
 
-    // upload on file select or drop
-    $scope.upload = function (file) {
-      Upload.upload({
-        url: 'api/v1/users/upload',
-        data: {file: file, 'username': $scope.username}
-      }).then(function (resp) {
-        console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-      }, function (resp) {
-        console.log('Error status: ' + resp.status);
-      }, function (evt) {
-        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-      });
-    };
+    $scope.onFileSelect = function(files) {
 
-
-
-
-    /**
-    // Create file uploader instance
-    $scope.uploader = new FileUploader({
-      url: 'api/v1/users/picture'
-    });
-
-
-    // Create file uploader instance
-    $scope.uploadToCloud = new FileUploader({
-      url: '/api/v1/users/upload'
-    });
-
-
-
-    // Set file uploader image filter
-    $scope.uploadToCloud.filters.push({
-      name: 'imageFilter',
-      fn: function (item, options) {
-        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-      }
-    });
-
-    // Called after the user selected a new picture file
-    $scope.uploadToCloud.onAfterAddingFile = function (fileItem) {
-      if ($window.FileReader) {
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(fileItem._file);
-
-        fileReader.onload = function (fileReaderEvent) {
-          $timeout(function () {
-            $scope.imageURL = fileReaderEvent.target.result;
-          }, 0);
+      if (files.length > 0) {
+        $scope.uploading = true;
+        var filename = files[0].name;
+        var type = files[0].type;
+        var query = {
+          filename: filename,
+          type: type
         };
+        //cache: true
+        $http.post('api/v1/s3/upload', query)
+          .success(function(result) {
+            Upload.upload({
+              url: result.url, //s3Url
+              transformRequest: function(data, headersGetter) {
+                var headers = headersGetter();
+                delete headers.Authorization;
+                return data;
+              },
+              fields: result.fields, //credentials
+              method: 'POST',
+              file: files[0]
+            }).progress(function(evt) {
+              console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
+            }).success(function(data, status, headers, config) {
+              // file is uploaded successfully
+              $scope.uploading = false;
+              console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
+              // need to set image on front end
+              //$scope.imageURL = $scope.user.profileImageURL = data;
+
+                $http({
+                  url: '',
+                  method: 'PUT'
+                })
+                  .then(function(data) {
+
+                  })
+                  .finally(function(data) {
+
+                  });
+
+              // and need to update mongodb
+
+
+            }).error(function() {
+
+            });
+          })
+          .error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            $scope.uploading = false;
+          })
+
+          .xhr(function(xhr) {
+            $scope.abort = function() {
+            xhr.abort();
+            $scope.uploading = false;
+          };
+        });
+
       }
+
+
     };
-
-    // Called after the user has successfully uploaded a new picture
-    $scope.uploadToCloud.onSuccessItem = function (fileItem, response, status, headers) {
-      // Show success message
-      $scope.success = true;
-
-      // Populate user object
-      $scope.user = Authentication.user = response;
-
-      // Clear upload buttons
-      $scope.cancelUpload();
-    };
-
-    // Called after the user has failed to uploaded a new picture
-    $scope.uploadToCloud.onErrorItem = function (fileItem, response, status, headers) {
-      // Clear upload buttons
-      $scope.cancelUpload();
-
-      // Show error message
-      $scope.error = response.message;
-    };
-
-    // Change user profile picture
-    $scope.uploadProfilePicture = function () {
-      // Clear messages
-      $scope.success = $scope.error = null;
-
-      // Start upload
-      $scope.uploadToCloud.uploadAll();
-    };
-
-    // Cancel the upload process
-    $scope.cancelUpload = function () {
-      $scope.uploadToCloud.clearQueue();
-      $scope.imageURL = $scope.user.profileImageURL;
-    };
-
-     */
 
 
   }
