@@ -16,9 +16,8 @@
     "npm": "2.12"
   },
   "scripts": {
-    "start": "grunt --force",
-    "test": "grunt test",
-    "postinstall": "bower install --config.interactive=false && gulp heroku"
+    "start": "gulp build",
+    "postinstall": "bower install --config.interactive=false"
   },
   "dependencies": {
     "acl": "~0.4.4",
@@ -52,6 +51,7 @@
     "lodash": "^3.10.0",
     "method-override": "^2.3.3",
     "mocha": "~1.20.0",
+    "moment": "^2.10.6",
     "mongoosastic": "^3.3.0",
     "mongoose": "4.1.11",
     "morgan": "^1.6.1",
