@@ -9,6 +9,7 @@ var _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Project = mongoose.model('Project'),
   aws = {
     keys: require('../../../../../config/env/production.js'),
     bucket: 'mapping-slc-file-upload',
@@ -21,6 +22,8 @@ var _ = require('lodash'),
   },
   crypto = require('crypto'),
   moment = require('moment');
+
+  var s3Url = 'https://' + aws.bucket + '.s3-' + aws.region + '.amazonaws.com';
 
 /**
  * Update user details
@@ -111,15 +114,17 @@ exports.me = function (req, res) {
 
 
 /**
- * upload to Amazon S3
+ * upload user profile image to Amazon S3
  */
 
-var s3Url = 'https://' + aws.bucket + '.s3-' + aws.region + '.amazonaws.com';
 
-exports.upload = function(req, res) {
+
+exports.uploadUserProfileImage = function(req, res) {
   var request = req.body;
+  var user = req.body.user;
   var fileName = request.filename;
-  var path = aws.userDir + '/' + fileName;
+  //var path = aws.directory.user + '/' + fileName;
+  var path = aws.directory.user + '/' + user._id + '/' + fileName;
 
   var readType = 'private';
 
@@ -161,7 +166,99 @@ exports.upload = function(req, res) {
       success_action_status: 201
     }
   };
+
+  if (user) {
+    // Merge existing user
+    user = _.extend(user, req.body);
+    user.updated = Date.now();
+
+    //now save url to mongoDb
+    //user.profileImageURL = 'https://s3-' + aws.region + '.amazonaws.com/' + aws.bucket + '/' + aws.directory.user + '/' + fileName;
+    user.profileImageURL = 'https://s3-' + aws.region + '.amazonaws.com/' + aws.bucket + '/' + aws.directory.user + '/' + user._id + '/' + fileName;
+
+    user.save(function (saveError) {
+      if (saveError) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(saveError)
+        });
+      } else {
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err);
+          }
+          //else {
+          //  //console.log('user response thingggggggg:\n', user);
+          //  res.json(user);
+          //}
+        });
+      }
+    });
+  }
+
+  console.log('credentials:\n', credentials);
+  res.jsonp(credentials);
+
+
+
+};
+
+
+
+
+//todo refactor
+/**
+ * upload project files to Amazon S3
+ */
+
+exports.uploadProject = function(req, res) {
+  var request = req.body;
+  var fileName = request.filename;
+  var project = req.body.project;
+  var path = aws.directory.project + '/' + project._id + '/' + fileName;
+
+  var readType = 'private';
+
+  var expiration = moment().add(5, 'm').toDate(); //15 minutes
+
+  var s3Policy = {
+    'expiration': expiration,
+    'conditions': [{
+      'bucket': aws.bucket
+    },
+      ['starts-with', '$key', path],
+      {
+        'acl': readType
+      },
+      {
+        'success_action_status': '201'
+      },
+      ['starts-with', '$Content-Type', request.type],
+      ['content-length-range', 2048, 10485760], //min and max
+    ]
+  };
+
+  var stringPolicy = JSON.stringify(s3Policy);
+  var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+
+  // sign policy
+  var signature = crypto.createHmac('sha1', aws.keys.aws.s3Secret)
+    .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+
+  var credentials = {
+    url: s3Url,
+    fields: {
+      key: path,
+      AWSAccessKeyId: aws.keys.aws.s3Id,
+      acl: readType,
+      policy: base64Policy,
+      signature: signature,
+      'Content-Type': request.type,
+      success_action_status: 201
+    }
+  };
+  console.log('credentials:\n', credentials);
   res.jsonp(credentials);
   //todo call on above `update()` object to update mongo
+  //see above for working thingy
   //User.profileImageURL = 'https://s3-' + aws.region + '.amazonaws.com/' + aws.bucket + '/' + aws.directory.user + '/' + fileName;
 };

@@ -15,21 +15,23 @@
 
 
 
-    <a data-ng-repeat="file in listOfImages" data-ng-href="{{file.imagepath}}{{file.imagename}}" class="list-group-item">
-      <img src="{{file.imagepath}}{{file.imagename}}" />
-    </a>
+    <!--<a data-ng-repeat="file in listOfImages" data-ng-href="{{file.imagepath}}{{file.imagename}}" class="list-group-item">-->
+      <!--<img data-ng-src="{{imageURL}}" />-->
+    <!--</a>-->
+
+    <img data-ng-src="{{imageURL}}" class="img-thumbnail user-profile-picture"/>
 
     the real deal
     <input type="file" ngf-select ngf-change="onFileSelect($files)">
 
-    <button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>
+    <!--<button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>-->
     <button data-ng-click="abort();" data-ng-hide="!uploading">Cancel Current Upload</button>
 
-    Drop File:
-    <div ng-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)" drag-over-class="dragover" ng-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf">
-      Drop Images or PDFs files here
-    </div>
-    <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
+    <!--Drop File:-->
+    <!--<div ng-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)" drag-over-class="dragover" ng-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf">-->
+      <!--Drop Images or PDFs files here-->
+    <!--</div>-->
+    <!--<div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>-->
 
 
 
