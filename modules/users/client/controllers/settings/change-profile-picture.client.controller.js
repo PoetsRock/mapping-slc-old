@@ -13,6 +13,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
         var filename = files[0].name;
         var type = files[0].type;
         var query = {
+          user: $scope.user,
           filename: filename,
           type: type
         };

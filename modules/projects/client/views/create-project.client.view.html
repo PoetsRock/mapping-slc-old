@@ -85,35 +85,25 @@
                     </div>
                   </div>
 
-                  <!--<section data-ng-controller="ProjectsUploadController" class="project-uploader">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col-md-12">-->
+                  <section data-ng-controller="ProjectsUploadController" class="project-uploader">
+                    <div class="row">
+                      <div class="col-md-12">
 
 
 
 
-                        <!--<h4>Upload on file select</h4>-->
-                        <!--<button ngf-select="uploadFiles($files, $invalidFiles)" multiple-->
-                                <!--accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">-->
-                          <!--Select Files</button>-->
-                        <!--<br><br>-->
-                        <!--Files:-->
-                        <!--<ul>-->
-                          <!--<li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}-->
-                            <!--<span class="progress" ng-show="f.progress >= 0">-->
-                              <!--<div style="width:{{f.progress}}%"ng-bind="f.progress + '%'"></div>-->
-                            <!--</span>-->
-                          <!--</li>-->
-                          <!--<li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}-->
-                          <!--</li>-->
-                        <!--</ul>-->
-                        <!--{{errorMsg}}-->
+                        <h4>Upload Project Documents and Media</h4>
+
+                        <input type="file" ngf-select ngf-change="onFileSelect($files)">
+
+                        <button data-ng-click="abort();" data-ng-hide="!uploading">Cancel Current Upload</button>
 
 
 
-                      <!--</div>-->
-                    <!--</div>-->
-                  <!--</section>-->
+
+                      </div>
+                    </div>
+                  </section>
 
 
                 </div>
