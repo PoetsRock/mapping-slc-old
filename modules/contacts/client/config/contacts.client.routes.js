@@ -7,7 +7,7 @@ angular.module('contacts').config(['$stateProvider',
         $stateProvider.
             state('createContact', {
                 url: '/contact-us',
-                templateUrl: 'modules/contacts/client/views/contact-us.client.view.html'
+                templateUrl: 'modules/contacts/client/views/contact-us.client.view.html',
             })
             .state('editContact', {
                 url: '/contacts/:contactId/edit',

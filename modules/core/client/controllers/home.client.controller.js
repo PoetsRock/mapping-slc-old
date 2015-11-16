@@ -41,21 +41,30 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
     $scope.overlayActive = true;
     $scope.menuOpen = false;
-    var changeMapFrom = null;
+    //var changeMapFrom = null;
+    $scope.shadeMap = false;
+
+    $scope.toggleTest = function(){
+      $scope.shadeMap = !$scope.shadeMap;
+      console.log('$scope.shadeMap: ', $scope.shadeMap);
+    };
+
 
     $scope.toggleOverlayFunction = function (source) {
       if ($scope.overlayActive && source === 'overlay') {
         $scope.overlayActive = !$scope.overlayActive;
-        changeMapFrom('gray-map');
+        $scope.shadeMap = true;
       } else if ($scope.overlayActive && source === 'menu-closed') {
         $scope.overlayActive = false;
         $scope.menuOpen = true;
-        changeMapFrom('gray-map');
+        $scope.shadeMap = true;
       } else if (!$scope.overlayActive && source === 'menu-closed' && !$scope.menuOpen) {
         $scope.menuOpen = !$scope.menuOpen;
+        $scope.shadeMap = false;
       } else if (!$scope.overlayActive && source === 'home') {
         $scope.menuOpen = false;
         $scope.overlayActive = true;
+        $scope.shadeMap = false;
       }
     };
 
@@ -126,23 +135,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         'Watercolor': watercolor
       };
 
-      grayMap.addTo(map);
+      mainMap.addTo(map);
       L.control.layers(layers).addTo(map);
 
-      //var sidebar = L.control.sidebar('sidebar', {
-      //	closeButton: true,
-      //	position: 'left'
-      //}).addTo(map);
-
-      changeMapFrom = function (currentMap) {
-        if (currentMap === 'gray-map') {
-          map.addLayer(mainMap);
-          map.removeLayer(grayMap);
-        } else {
-          map.addLayer(grayMap);
-          map.removeLayer(mainMap);
-        }
-      };
       //var markers = new L.MarkerClusterGroup();
       //markers.addLayer(new L.Marker(getRandomLatLng(map)));
       //map.addLayer(markers);
@@ -215,24 +210,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
         return $scope.markerArray;
       };
-      //
-      //var popupMenuToggle = function (e) {
-      //  if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-      //    $scope.toggleOverlayFunction('menu-closed');
-      //    //$scope.populateStorySummary($scope.projectDetails);
-      //    sidebar.open('details');
-      //    popupIndex = e.target._leaflet_id;
-      //  } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
-      //    //$scope.populateStorySummary($scope.projectDetails);
-      //  } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-      //    //$scope.populateStorySummary($scope.projectDetails);
-      //    sidebar.open('details');
-      //    popupIndex = e.target._leaflet_id;
-      //  } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-      //    sidebar.close();
-      //    popupIndex = 0;
-      //  }
-      //};
 
       //style the polygon tracts
       var style = {
@@ -268,45 +245,32 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
       map.on('click', function (e) {
         if ($scope.menuOpen) {
-          sidebar.close();
+          $scope.sidebar.close();
+          $scope.shadeMap = false;
+        } else {
+          console.log('map click!');
+          $scope.overlayActive = false;
         }
       });
 
-
-
-
-
-      //projectMarker.on('click', function() {
-      //	alert('yep!');
-      //});
-
       $scope.getProjectMarkers = function (markerData) {
       };
-      //var sidebar = L.control.sidebar('sidebar', {
-      //  closeButton: true,
-      //  position: 'left'
-      //}).addTo(map);
     };
-
-
-
-
-
 
     var popupMenuToggle = function (e) {
       if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         $scope.toggleOverlayFunction('menu-closed');
         //$scope.populateStorySummary($scope.projectDetails);
-        sidebar.open('details');
+        $scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
       } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
         //$scope.populateStorySummary($scope.projectDetails);
       } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         //$scope.populateStorySummary($scope.projectDetails);
-        sidebar.open('details');
+        $scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
       } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        sidebar.close();
+        $scope.sidebar.close();
         popupIndex = 0;
       }
     };

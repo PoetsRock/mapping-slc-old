@@ -11,8 +11,7 @@ angular.module('projects').config(['$stateProvider',
     }).
     state('createProject', {
       url: '/projects/create',
-      templateUrl: 'modules/projects/client/views/create-project.client.view.html',
-      authenticate: true
+      templateUrl: 'modules/projects/client/views/create-project.client.view.html'
     }).
     state('viewProject', {
       url: '/projects/:projectId',
@@ -20,7 +19,11 @@ angular.module('projects').config(['$stateProvider',
     }).
     state('editProject', {
       url: '/projects/:projectId/edit',
-      templateUrl: 'modules/projects/client/views/edit-project.client.view.html'
+      templateUrl: 'modules/projects/client/views/edit-project.client.view.html',
+      data: {
+        authenticate: true,
+        roles: ['contributor', 'admin', 'superUser']
+      }
     }).
     state('andrewShaw', {
       url: '/shaw',
