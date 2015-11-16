@@ -21,15 +21,16 @@ var _ = require('lodash'),
     }
   },
   crypto = require('crypto'),
-  moment = require('moment');
-
-  var s3Url = 'https://' + aws.bucket + '.s3-' + aws.region + '.amazonaws.com';
+  moment = require('moment'),
+  s3Url = 'https://' + aws.bucket + '.s3-' + aws.region + '.amazonaws.com';
 
 /**
  * Update user details
  */
 exports.update = function (req, res) {
   // Init Variables
+  console.log('req.body::::::::::::::::::::::::::\n', req.body);
+  console.log('req.user::::::::::::::::::::::::::\n', req.user);
   var user = req.user;
 
   // For security measurement we remove the roles from the req.body object
@@ -117,11 +118,12 @@ exports.me = function (req, res) {
  * upload user profile image to Amazon S3
  */
 
-
-
 exports.uploadUserProfileImage = function(req, res) {
   var request = req.body;
-  var user = req.body.user;
+  var user = request.user;
+  console.log('user:\n', user);
+
+
   var fileName = request.filename;
   //var path = aws.directory.user + '/' + fileName;
   var path = aws.directory.user + '/' + user._id + '/' + fileName;
@@ -154,6 +156,13 @@ exports.uploadUserProfileImage = function(req, res) {
   var signature = crypto.createHmac('sha1', aws.keys.aws.s3Secret)
     .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
 
+
+
+  console.log('s3Policy:\n', s3Policy);
+  console.log('stringPolicy:\n', stringPolicy);
+  console.log('base64Policy:\n', base64Policy);
+
+
   var credentials = {
     url: s3Url,
     fields: {
@@ -168,15 +177,18 @@ exports.uploadUserProfileImage = function(req, res) {
   };
 
   if (user) {
+    //now save url to mongoDb
+
+    // For security measurement we remove the roles from the req.body object
+    delete req.body.roles;
+
     // Merge existing user
     user = _.extend(user, req.body);
     user.updated = Date.now();
 
-    //now save url to mongoDb
-    //user.profileImageURL = 'https://s3-' + aws.region + '.amazonaws.com/' + aws.bucket + '/' + aws.directory.user + '/' + fileName;
     user.profileImageURL = 'https://s3-' + aws.region + '.amazonaws.com/' + aws.bucket + '/' + aws.directory.user + '/' + user._id + '/' + fileName;
 
-    user.save(function (saveError) {
+      user.save(function (saveError) {
       if (saveError) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(saveError)
@@ -193,6 +205,8 @@ exports.uploadUserProfileImage = function(req, res) {
         });
       }
     });
+  } else {
+    console.log('error: user data not saved on image upload');
   }
 
   console.log('credentials:\n', credentials);

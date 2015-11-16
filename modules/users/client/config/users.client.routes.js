@@ -10,7 +10,8 @@ angular.module('users').config(['$stateProvider',
         url: '/settings',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          authenticate: true,
+          roles: ['user', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
         }
       })
       .state('settings.profile', {

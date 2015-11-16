@@ -7,13 +7,52 @@ angular.module('core').directive('mainMenu', function(AdminAuthService) {
 
       controller: function($scope) {
         $scope.isAdmin = AdminAuthService.user;
-      },
 
-      link: function() {
-        var sidebar = L.control.sidebar('sidebar', {
+
+        $scope.sidebar = L.control.sidebar('sidebar', {
           closeButton: true,
           position: 'left'
         }).addTo(map);
+
+        $scope.sidebar.click = function() {
+          if (L.DomUtil.hasClass(this, 'active')) {
+            $scope.sidebar.close();
+            console.log('here i am close');
+          }
+          else {
+            $scope.sidebar.open(this.firstChild.hash.slice(1));
+            console.log('here i am open');
+          }
+        };
+
+
+
+
+          //if (child.firstChild.hash == '#' + id)
+          //  L.DomUtil.addClass(child, 'active');
+          //else if (L.DomUtil.hasClass(child, 'active'))
+          //  L.DomUtil.removeClass(child, 'active');
+
+          //
+          //if (L.DomUtil.hasClass(this, 'active')) {
+          //  $scope.sidebar.close();
+          //  console.log('here i am close');
+          //}
+          //else {
+          //  $scope.sidebar.open(this.firstChild.hash.slice(1));
+          //  console.log('here i am open');
+          //}
+
+
+      },
+
+      link: function($scope) {
+        //$scope.sidebar = L.control.sidebar('sidebar', {
+        //  closeButton: true,
+        //  position: 'left'
+        //}).addTo(map);
+
+
       }
 
     };

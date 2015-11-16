@@ -328,17 +328,7 @@ div .leaflet-top.leaflet-left .mapbox-share {
     color: #454545;
 }
 
-/*.leaflet-control-layers-expanded input[type="radio"]:checked + label,*/
-/*input[type="radio"]:checked + label,*/
-/*.leaflet-control-layers-selector:checked + label,*/
-/*.leaflet-control input[type="radio"]:checked,*/
-/*input[type="radio"]:checked .leaflet-control-layers-selector + label,*/
-/*.map input[type="radio"]:checked,*/
-/*input[type="radio"]:checked + label,*/
-/*input[type="radio"]:checked ~ label,*/
-/*#map > div.leaflet-control-container > div.leaflet-top.leaflet-right > div.leaflet-control-layers.leaflet-control.leaflet-control-layers-expanded > form > div.leaflet-control-layers-base > label ~ input[type="radio"]:checked,*/
-.leaflet-control-layers label ~ input:checked
-{
+.leaflet-control-layers label ~ input:checked {
     background-color: #023a31!important;
     color: #454545!important;
     width: 50px;
@@ -384,4 +374,13 @@ div.leaflet-control-mapbox-geocoder.leaflet-bar.leaflet-control.active > div.lea
 
 .leaflet-bar a, .leaflet-bar a:hover {
 
+}
+
+
+.leaflet-tile-gray {
+    -webkit-filter: sepia(100%);
+    -moz-filter: sepia(100%);
+    -o-filter: sepia(100%);
+    filter: sepia(100%);
+    /*filter: grayscale(100%);*/
 }

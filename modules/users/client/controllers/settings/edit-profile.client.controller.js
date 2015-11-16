@@ -9,7 +9,30 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     UtilsService.cssLayout();
 
 
-    // Update existing User
+    // user fn to update a user profile
+    $scope.updateUserProfile = function (isValid) {
+      $scope.success = $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'userForm');
+
+        return false;
+      }
+
+      var user = new Users($scope.user);
+
+      user.$update(function (response) {
+        $scope.$broadcast('show-errors-reset', 'userForm');
+
+        $scope.success = true;
+        Authentication.user = response;
+      }, function (response) {
+        $scope.error = response.data.message;
+      });
+    };
+
+
+    // admin fn to update existing User
     $scope.update = function (isValid) {
       $scope.error = null;
 
