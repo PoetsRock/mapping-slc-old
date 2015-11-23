@@ -45,6 +45,7 @@ module.exports = {
         'public/lib/masonry/dist/masonry.pkgd.min.js',
         'public/lib/moment/min/moment.min.js',
         'public/lib/c3/c3.min.js',
+        'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
         'public/lib/angular-notify/dist/angular-notify.min.js',
         'public/lib/angular-loading-bar/build/loading-bar.min.js',
         'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.min.js',

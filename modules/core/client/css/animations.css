@@ -273,25 +273,25 @@
 }
 
 .animate-small-logo {
-    /*z-index: 3;*/
-    /*background: #023a31;*/
-    /*border: 3px solid #fff;*/
-    /*border-radius: 50%;*/
-    /*color: #fff;*/
+    background: rgba(0,0,0,0.8);
+    border: 3px solid #023a31;
+    border-radius: 0 0 0 15%;
+    color: #fff;
     cursor: pointer;
-    /*font-size: 5.5rem;*/
-    position: absolute;
+    position: relative;
     text-align: center;
-    top: -18%;
-    left: -11.2%;
-    height: 250px;
-    width: 250px;
+    vertical-align: baseline;
+    width: 75px;
+    z-index: 999;
+    height: 25px;
+    top: -20px;
+    left: 20px;
+    margin-bottom: 25px;
+    padding: 20px;
     -webkit-transition: all 0.25s ease;
     -moz-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
     transition: all 0.25s ease;
-    z-index: 999;
-    background: url(../img/loaders/circle-close.svg);
 }
 
 .animate-small-logo:hover {

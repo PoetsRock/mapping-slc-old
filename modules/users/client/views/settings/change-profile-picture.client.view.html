@@ -26,12 +26,13 @@
 
     <!--<button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>-->
     <button data-ng-click="abort();" data-ng-hide="!uploading">Cancel Current Upload</button>
+    <button data-ng-click="getProfilePic();" data-ng-hide="uploading">Get Photo</button>
 
     <!--Drop File:-->
-    <!--<div ng-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)" drag-over-class="dragover" ng-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf">-->
-      <!--Drop Images or PDFs files here-->
-    <!--</div>-->
-    <!--<div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>-->
+    <div ng-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)" drag-over-class="dragover" ng-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf">
+      Drop Images or PDFs files here
+    </div>
+    <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
 
 

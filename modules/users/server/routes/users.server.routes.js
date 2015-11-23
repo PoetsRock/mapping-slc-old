@@ -10,6 +10,7 @@ module.exports = function (app) {
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/v1/users/password').post(users.changePassword);
   app.route('/api/v1/users/picture').post(users.changeProfilePicture);
+  app.route('/api/v1/users/:userId/picture/:photoId').get(users.getS3File);
   //app.route('/api/v1/s3/upload/:directory').post(users.changeProfilePicture);
   app.route('/api/v1/s3/upload').post(users.uploadUserProfileImage);
   app.route('/api/v1/s3/upload/project').post(users.uploadProject);
