@@ -27,7 +27,8 @@ module.exports = function(app) {
     .get(projects.listPublished);
 
 
-  app.route('/api/v1/projects').all(projectsPolicy.isAllowed)
+  //app.route('/api/v1/projects').all(projectsPolicy.isAllowed)
+  app.route('/api/v1/projects')
     .post(projects.create);
 
 

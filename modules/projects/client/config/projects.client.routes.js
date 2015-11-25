@@ -25,6 +25,14 @@ angular.module('projects').config(['$stateProvider',
         roles: ['contributor', 'admin', 'superUser']
       }
     }).
+    state('confirmCreateProject', {
+      url: '/projects/:projectId/confirm',
+      //data: {
+      //  authenticate: true,
+      //  roles: ['contributor', 'admin', 'superUser']
+      //}
+      templateUrl: 'modules/projects/client/views/project-for-submission.client.view.html'
+    }).
     state('andrewShaw', {
       url: '/shaw',
       templateUrl: 'modules/projects/client/views/view-project.client.shaw.html'

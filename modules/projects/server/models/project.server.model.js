@@ -35,8 +35,7 @@ var ProjectSchema = new Schema({
         default: Date.now
     },
     modifiedOn: {
-        type: Date,
-        default: Date.now
+        type: Date
     },
     firstName: {
         type: String,
@@ -49,10 +48,6 @@ var ProjectSchema = new Schema({
     modifiedBy: {
         type: String,
         default: ''
-        //todo test function that auto-generates current user to make sure it works
-        //default: (function(currentUser){
-        //	this.Schema.user = currentUser;
-        //})
     },
     street: {
         type: String,
@@ -92,8 +87,7 @@ var ProjectSchema = new Schema({
     story: {
         type: String,
         es_indexed: true,
-        default: 'Enter and format your project here',
-        required: '',
+        default: 'This will be updated to the file you have uploaded',
         trim: true
     },
     storySummary: {

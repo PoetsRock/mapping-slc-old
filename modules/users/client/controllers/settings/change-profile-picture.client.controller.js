@@ -39,7 +39,9 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
 
             }).success(function (data, status, headers, config) {
 
-              var s3Result = xmlToJSON.parseString(data);   // parse
+
+              //var s3Result = xmlToJSON.parseString(data);   // parse
+
 
               // file is uploaded successfully
               $scope.uploading = false;

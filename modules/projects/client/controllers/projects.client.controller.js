@@ -141,9 +141,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     // Create new Project
     $scope.create = function (isValid) {
-
       $scope.error = null;
-
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
         return false;
@@ -163,7 +161,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       saveProject = function () {
         project.$save(function (response) {
-          $location.path('projects/' + response._id);
+          console.log('location.path: ', 'projects/' + response._id + '/confirm');
+          $location.path('projects/' + response._id + '/confirm');
           // Clear form fields
           $scope.street = '';
           $scope.city = '';

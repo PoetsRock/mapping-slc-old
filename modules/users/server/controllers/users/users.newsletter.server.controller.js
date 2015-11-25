@@ -3,9 +3,9 @@
  */
 var path = require('path'),
     mongoose = require('mongoose'),
-    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-    profile =  require('./users/users.profile.server.controller'),
-    authenticate = require('./users/users.authentication.server.controller'),
+    errorHandler = require('../../../../core/server/controllers/errors.server.controller'),
+    profile =  require('./users.profile.server.controller'),
+    authenticate = require('./users.authentication.server.controller'),
     User = mongoose.model('User'),
     _ = require('lodash');
 

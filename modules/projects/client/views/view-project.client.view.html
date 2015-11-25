@@ -40,40 +40,39 @@
               </div>
 
               <div data-ng-show="project.imageGallery || images">
-              <div class="row">
-                <ul id="grid-view">
-                  <a ng-click="openLightboxModal($index)" data-ng-repeat="image in images" class="col-md-3">
-                    <li>
-                      <img ng-src="{{image}}" class="img-thumbnail">
-                    </li>
+                <div class="row">
+                  <ul id="grid-view">
+                    <a ng-click="openLightboxModal($index)" data-ng-repeat="image in images" class="col-md-3">
+                      <li>
+                        <img ng-src="{{image}}" class="img-thumbnail">
+                      </li>
+                    </a>
+                  </ul>
+                </div>
+
+
+                <div data-ng-show="project.story !== ''">
+                  <p data-ng-bind-html="trustAsHtml(project.story)"></p>
+                </div>
+                <hr>
+                <div>
+                  <img ng-src="{{project.mapImage}}" class="img-responsive">
+                </div>
+
+                <hr/>
+                <h3>Related Stories</h3>
+
+                <div class="pull-right"
+                     data-ng-show="((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === 'admin'">
+                  <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
+                    <i class="glyphicon glyphicon-edit"></i>
                   </a>
-                </ul>
+                  <a class="btn btn-primary btn-warning" data-ng-click="remove();">
+                    <i class="glyphicon glyphicon-trash"></i>
+                  </a>
+                </div>
+
               </div>
-
-
-
-
-              <div data-ng-show="project.story !== ''">
-                <p data-ng-bind-html="trustAsHtml(project.story)"></p>
-              </div>
-              <hr>
-              <div>
-                <img ng-src="{{project.mapImage}}" class="img-responsive">
-              </div>
-
-              <hr/>
-              <h3>Related Stories</h3>
-
-              <div class="pull-right"
-                   data-ng-show="((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === 'admin'">
-                <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
-                  <i class="glyphicon glyphicon-edit"></i>
-                </a>
-                <a class="btn btn-primary btn-warning" data-ng-click="remove();">
-                  <i class="glyphicon glyphicon-trash"></i>
-                </a>
-              </div>
-
             </div>
           </div>
         </div>
