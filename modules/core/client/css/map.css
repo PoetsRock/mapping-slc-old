@@ -267,13 +267,8 @@ div .leaflet-control-attribution.leaflet-control {
     border-bottom: dashed;
 }
 
-.leaflet-bar {
-    top: 70px;
-}
-
 .leaflet-top.leaflet-right {
-    /*top: 185px;*/
-    /*right: -17px;*/
+    top: 13px;
 }
 
 .leaflet-top.leaflet-left {
