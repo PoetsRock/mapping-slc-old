@@ -49,8 +49,8 @@ gulp.task('watch', function () {
 
   // Add watch rules
   gulp.watch(defaultAssets.server.views).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.client.sass, ['sass']).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.client.less, ['less']).on('change', plugins.livereload.changed);
+  //gulp.watch(defaultAssets.client.sass, ['sass']).on('change', plugins.livereload.changed);
+  //gulp.watch(defaultAssets.client.less, ['less']).on('change', plugins.livereload.changed);
 
   if (process.env.NODE_ENV === 'production') {
     gulp.watch(defaultAssets.server.gulpConfig, ['templatecache']);
@@ -113,27 +113,27 @@ gulp.task('cssmin', function () {
     .pipe(gulp.dest('public/dist'));
 });
 
-// Sass task
-gulp.task('sass', function () {
-  return gulp.src(defaultAssets.client.sass)
-    .pipe(plugins.sass())
-    .pipe(plugins.autoprefixer())
-    .pipe(plugins.rename(function (file) {
-      file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css');
-    }))
-    .pipe(gulp.dest('./modules/'));
-});
-
-// Less task
-gulp.task('less', function () {
-  return gulp.src(defaultAssets.client.less)
-    .pipe(plugins.less())
-    .pipe(plugins.autoprefixer())
-    .pipe(plugins.rename(function (file) {
-      file.dirname = file.dirname.replace(path.sep + 'less', path.sep + 'css');
-    }))
-    .pipe(gulp.dest('./modules/'));
-});
+//// Sass task
+//gulp.task('sass', function () {
+//  return gulp.src(defaultAssets.client.sass)
+//    .pipe(plugins.sass())
+//    .pipe(plugins.autoprefixer())
+//    .pipe(plugins.rename(function (file) {
+//      file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css');
+//    }))
+//    .pipe(gulp.dest('./modules/'));
+//});
+//
+//// Less task
+//gulp.task('less', function () {
+//  return gulp.src(defaultAssets.client.less)
+//    .pipe(plugins.less())
+//    .pipe(plugins.autoprefixer())
+//    .pipe(plugins.rename(function (file) {
+//      file.dirname = file.dirname.replace(path.sep + 'less', path.sep + 'css');
+//    }))
+//    .pipe(gulp.dest('./modules/'));
+//});
 
 // Angular template cache task
 gulp.task('templatecache', function () {
@@ -150,7 +150,8 @@ gulp.task('templatecache', function () {
         return url.replace(re, path.sep);
       }
     }))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build'))
+    .pipe(gulp.dest('public/dist'));
 });
 
 // Mocha tests task
@@ -244,5 +245,5 @@ gulp.task('prod', function (done) {
 
 // Run the project in production mode
 gulp.task('heroku', function (done) {
-  runSequence('templatecache', 'build', 'env:prod', done);
+  runSequence('templatecache', 'env:prod', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
 });
