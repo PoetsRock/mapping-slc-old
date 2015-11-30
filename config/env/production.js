@@ -1,7 +1,5 @@
 'use strict';
 
-var   keys = require('../../modules/users/server/config/private/keys.js');
-
 module.exports = {
   secure: {
     ssl: true,
@@ -69,8 +67,8 @@ module.exports = {
     }
   },
   aws: {
-    s3Id: process.env.S3_ID || keys.s3Id,
-    s3Secret: process.env.S3_SECRET || keys.s3Secret,
+    s3Id: process.env.S3_ID,
+    s3Secret: process.env.S3_SECRET,
     callbackUrl: '/api/v1/auth/s3/callback'
   },
   seedDB: process.env.MONGO_SEED || false
