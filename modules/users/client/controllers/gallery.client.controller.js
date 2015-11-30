@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('users').controller('GalleryController', ['$scope', '$stateParams', '$location', 'Authentication', '$http', '$modal',
-    function ($scope, $stateParams, $location, Authentication, $http, $modal) {
+angular.module('users').controller('GalleryController', ['$scope', '$stateParams', '$location', 'Authentication', '$http', '$uibModal',
+    function ($scope, $stateParams, $location, Authentication, $http, $uibModal) {
 
         //Give user warning if leaving form
         var preventRunning = false;
@@ -13,7 +13,7 @@ angular.module('users').controller('GalleryController', ['$scope', '$stateParams
             if (fromState.url === '/projects/create' && toState.url !== '/projects/:projectId') {
                 event.preventDefault();
 
-                $modal.open({
+                $uibModal.open({
                     templateUrl: '/modules/projects/directives/views/modal.html',
                     controller: function ($scope, $modalInstance) {
                         $scope.closeMe = function () {

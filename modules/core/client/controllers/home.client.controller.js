@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService', '$cookies', '$cookieStore',
-  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService, $cookies, $cookieStore) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
+  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
 
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
@@ -113,9 +113,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           infoControl: false, attributionControl: false
         })
         .setView([40.7630772, -111.8689467], 12)
-        //allow users to share maps on social media
-        .addControl(L.mapbox.shareControl())
-        .addControl(L.mapbox.geocoderControl('mapbox.places'));
+        .addControl(L.mapbox.geocoderControl('mapbox.places', { position: 'topright' }))
+        .addControl( L.control.zoom({position: 'topright'}) );
+        //.addControl(L.mapbox.Zoom({ position: 'topright' }));
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),

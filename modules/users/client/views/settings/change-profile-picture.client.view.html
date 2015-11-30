@@ -1,5 +1,8 @@
-<section class="row" ng-controller="ChangeProfilePictureController">
-  <div class="col-xs-offset-1 col-xs-10 col-md-offset-3 col-md-4">
+<section class="row" ng-controller="ChangeProfilePictureController" data-ng-init="init();">
+
+  <div class="file-upload">
+
+  <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8">
 
     <!--<h4>Upload on file select</h4>-->
     <!--<button type="file" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/*" ngf-max-height="3000" ngf-max-size="5MB">-->
@@ -19,20 +22,22 @@
       <!--<img data-ng-src="{{imageURL}}" />-->
     <!--</a>-->
 
-    <img data-ng-src="{{imageURL}}" class="img-thumbnail user-profile-picture"/>
+    <img data-ng-src="{{user.profileImage}}" class="img-thumbnail user-profile-picture"/>
 
-    the real deal
-    <input type="file" ngf-select ngf-change="onFileSelect($files)">
+    <div>
+        <button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select ngf-change="onFileSelect($files)">Choose File</button>
+    </div>
 
     <!--<button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>-->
-    <button data-ng-click="abort();" data-ng-hide="!uploading">Cancel Current Upload</button>
-    <button data-ng-click="getProfilePic();" data-ng-hide="uploading">Get Photo</button>
+
+    <button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow" >Cancel</button>
 
     <!--Drop File:-->
-    <div ng-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)" drag-over-class="dragover" ng-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf">
+    <div ng-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)" drag-over-class="dragover" ng-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf" data-ng-hide="uploading">
       Drop Images or PDFs files here
     </div>
-    <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+    <div ng-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">File Drag/Drop is not supported for this browser</div>
 
 
 
@@ -70,9 +75,9 @@
 
         <!--<button ng-disabled="!myForm.$valid" data-ng-click="uploadPic(picFile)">Submit</button>-->
 
-        <!--<span class="progress" ng-show="picFile.progress >= 0">-->
-          <!--<div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>-->
-        <!--</span>-->
+        <span class="progress" ng-show="picFile.progress >= 0">
+          <div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>
+        </span>
 
         <!--<span ng-show="picFile.result">Upload Successful</span>-->
         <!--<span class="err" ng-show="errorMsg">{{errorMsg}}</span>-->
@@ -88,7 +93,7 @@
 
       <!--</fieldset>-->
     <!--</form>-->
-
+  </div>
 
   </div>
 </section>

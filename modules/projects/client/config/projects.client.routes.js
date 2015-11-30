@@ -26,20 +26,12 @@ angular.module('projects').config(['$stateProvider',
       }
     }).
     state('confirmCreateProject', {
-      url: '/projects/:projectId/confirm',
+      url: '/projects/:projectId/status',
       //data: {
       //  authenticate: true,
       //  roles: ['contributor', 'admin', 'superUser']
       //}
       templateUrl: 'modules/projects/client/views/project-for-submission.client.view.html'
-    }).
-    state('andrewShaw', {
-      url: '/shaw',
-      templateUrl: 'modules/projects/client/views/view-project.client.shaw.html'
-    }).
-    state('westsideLeadershipInstitute', {
-      url: '/westside-leadership-institute',
-      templateUrl: 'modules/projects/client/views/view-project.client.wli.html'
     });
   }
 ]);

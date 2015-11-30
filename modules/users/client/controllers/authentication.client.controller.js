@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator', '$modal',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator, $modal) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator', '$uibModal',
+  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator, $uibModal) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -72,7 +72,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     // Reroutes from sign in to sign up on modal
     $scope.modalOpenSignUp = function () {
       var isSwitched = false;
-      $modal.open({
+      $uibModal.open({
         templateUrl: function () {
           if (!isSwitched) {
             isSwitched = false;

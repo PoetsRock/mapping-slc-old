@@ -4,85 +4,72 @@
          ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
-    <section class="container">
-        <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
+  <section class="container">
+    <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
 
-        <div class="main-content-outer">
-            <section data-ng-controller="ProjectsController" class="main-content-inner">
+    <div class="main-content-outer">
+      <section data-ng-controller="ProjectsController" class="main-content-inner" data-ng-init="initSubmissionStatus()">
 
-                <div class="page-header">
-                    <h1>Review and Confirm Project Submission</h1>
-                </div>
-
-
-
-              <div class="view-project">
-                <div class="page-header">
-                  <h1 data-ng-bind="project.title"></h1>
-                  <em class="text-muted">
-
-                    <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
-                    by
-                    <a data-ng-href="/contributors/{{project.user._id}}"><span data-ng-bind="project.user.displayName"></span></a>
-                  </em>
-                </div>
-
-                <div class="row">
-                  <div class="col-xs-12">
-
-                    <div class="videoWrapper" data-ng-show="project.vimeoId">
-                      <iframe data-ng-show="!videoSizeSelect()" width="{{vimeo.width}}" height="{{vimeo.height}}"
-                              data-ng-src="{{vimeo.video}}" frameborder="0" webkitallowfullscreen mozallowfullscreen
-                              allowfullscreen>
-                      </iframe>
-                    </div>
-
-                    <div class="videoWrapper" data-ng-show="project.soundCloudId">
-                      <iframe width="100%" height="450" scrolling="no" frameborder="no" data-ng-src="{{soundCloud.audio}}">
-                      </iframe>
-                    </div>
-
-                    <div data-ng-show="project.imageGallery || images">
-                      <div class="row">
-                        <ul id="grid-view">
-                          <a ng-click="openLightboxModal($index)" data-ng-repeat="image in images" class="col-md-3">
-                            <li>
-                              <img ng-src="{{image}}" class="img-thumbnail">
-                            </li>
-                          </a>
-                        </ul>
-                      </div>
-
-
-                      <div data-ng-show="project.story !== ''">
-                        <p data-ng-bind-html="trustAsHtml(project.story)"></p>
-                      </div>
-                      <hr>
-                      <div>
-                        <img ng-src="{{project.mapImage}}" class="img-responsive">
-                      </div>
-
-                      <hr/>
-                      <div class="pull-right">
-                           <!--data-ng-show="((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === 'admin'">-->
-                        <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
-                          <i class="glyphicon glyphicon-edit"></i>
-                        </a>
-
-                        <a class="btn btn-primary btn-warning" data-ng-click="remove();" data-ng-show="isAdmin.user === 'admin'">
-                          <i class="glyphicon glyphicon-trash"></i>
-                        </a>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-
-
-            </section>
+        <div class="page-header">
+          <h1>Thank You for Your Submission</h1>
         </div>
-    </section>
+
+
+        <div class="view-project">
+
+          <section class="overview">
+
+            <div data-ng-show="project.status[0]==='received'">
+              <p>We have received your submission, and will begin reviewing it shortly.</p>
+              <p>You are welcome to edit your submission for a short period, until we begin reviewing it. After we have
+                begun our review, you may still edit your contact information on this page.</p>
+              <p>If your piece is accepted for publication, you will have a chance to layout and format your project and
+                are welcome to suggest edits at this stage as well.</p>
+              <p>You can access this page at a later date by going to your Account page and clicking on the Submitted
+                Projects tab.</p>
+            </div>
+            <p data-ng-show="project.status[0]==='pending'">We have begun reading your submission. So, currently, you
+              are not able to edit your submission. You can still edit your bio, contact information, and author
+              photo.</p>
+
+            <p data-ng-show="project.status[0]==='accepted'"></p>
+
+          </section>
+
+          <section class="submission-info">
+
+
+            <uib-tabset justified="true">
+
+
+              <uib-tab heading="Project Information">
+                <project-status-project-info></project-status-project-info>
+              </uib-tab>
+
+              <uib-tab heading="Contact Information">
+                <project-status-user-contact-info></project-status-user-contact-info>
+              </uib-tab>
+
+              <uib-tab heading="Bio" data-ng-show="project.stats[0]==='accepted'">
+                <project-status-user-bio-info></project-status-user-bio-info>
+              </uib-tab>
+
+
+            </uib-tabset>
+
+
+          </section>
+
+          <div class="pull-right" data-ng-show="project.status[0] ==='received'">
+            <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+          </div>
+
+
+          </div>
+
+      </section>
+    </div>
+  </section>
 </section>

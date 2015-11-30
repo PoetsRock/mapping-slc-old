@@ -19,9 +19,9 @@ var _ = require('lodash'),
 exports.update = function (req, res) {
   // Init Variables
   //console.log('req.body::::::::::::::::::::::::::\n', req.body);
-  console.log('req.user::::::::::::::::::::::::::\n', req.user);
+  //console.log('req.user::::::::::::::::::::::::::\n', req.user);
   var user = req.user;
-  //console.log('user::::::::::::::::::::::::::\n', user);
+  console.log('user::::::::::::::::::::::::::\n', user);
 
   // For security measurement we remove the roles from the req.body object
   if (req.body && req.body.roles !== undefined) {

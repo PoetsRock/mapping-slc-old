@@ -10,12 +10,10 @@ var _ = require('lodash'),
   mongoose = require('mongoose'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
+  //Project = mongoose.model('Project'),
   User = mongoose.model('User'),
-  Users = require('./users.profile.server.controller.js'),
-  Project = mongoose.model('Project'),
   AWS = require('aws-sdk'),
   s3 = {
-    keys: require('../../../../../config/env/production.js'),
     bucket: 'mapping-slc-file-upload',
     region: 'us-west-1',
     directory: {
@@ -26,13 +24,127 @@ var _ = require('lodash'),
   },
   crypto = require('crypto'),
   moment = require('moment'),
-  tinify = require("tinify"),
+  tinify = require('tinify'),
   s3Url = 'https://' + s3.bucket + '.s3-' + s3.region + '.amazonaws.com';
 
+
+
+//old code
+/**
+ * upload user profile image to Amazon S3
+ */
+
+exports.uploadUserProfileImage = function(req, res) {
+  var user = req.body.user;
+  //console.log('req.ServerResponse.req.locals:\n', req.ServerResponse.req.locals);
+  //console.log('req  v2:\n', req.ServerResponse.req);
+  console.log('req  v2:\n', req);
+  //console.log('req.body  v2:\n', req.body);
+  //console.log('req.origFileName:\n', req.bufferImage);
+  var bufferImage = new Buffer(req.body.toString('base64'),'base64');
+  //console.log('bufferImage  v2:\n', bufferImage);
+
+  //var fileName = req.body.fileName;
+  var fileName = req.body.fileName;
+  var path = s3.directory.user + '/' + user._id + '/' + fileName;
+  var readType = 'private';
+  var expiration = moment().add(5, 'm').toDate(); //15 minutes
+
+  tinify.key = config.tinyPngKey;
+
+  var tinyParams = {
+    service: 's3',
+    aws_access_key_id: config.aws.s3Id,
+    aws_secret_access_key: config.aws.s3Secret,
+    region: s3.region,
+    path: s3.bucket + '/' + path
+  };
+
+  //console.log('req.origFileName:\n', req.body.fileName);
+
+  //console.log('tinyParams  v2:\n', tinyParams);
+
+  var source = tinify.fromFile(req.body.fileName);
+
+  //console.log('source  v1:\n', source);
+
+  source.store(tinyParams);
+
+  //console.log('source  v2:\n', source);
+
+  //var s3Policy = {
+  //  'expiration': expiration,
+  //  'conditions': [{
+  //    'bucket': s3.bucket
+  //  },
+  //    ['starts-with', '$key', path],
+  //    {
+  //      'acl': readType
+  //    },
+  //    {
+  //      'success_action_status': '201'
+  //    },
+  //    ['starts-with', '$Content-Type', req.body.type],
+  //    ['content-length-range', 2048, 10485760], //min and max
+  //  ]
+  //};
+  //
+  //var stringPolicy = JSON.stringify(s3Policy);
+  //var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+  //
+  //// sign policy
+  //var signature = crypto.createHmac('sha1', config.aws.s3Secret)
+  //  .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+  //
+  //var credentials = {
+  //  url: s3Url,
+  //  fields: {
+  //    key: path,
+  //    AWSAccessKeyId: config.aws.s3Id,
+  //    acl: readType,
+  //    policy: base64Policy,
+  //    signature: signature,
+  //    'Content-Type': req.body.type,
+  //    success_action_status: 201
+  //  }
+  //};
+
+  //now save url to mongoDb
+  var query = {
+    _id: user._id
+  };
+
+  var propertiesToUpdate = {
+    profileImageURL: 'https://s3-' + s3.region + '.amazonaws.com/' + s3.bucket + '/' + s3.directory.user + '/' + user._id + '/' + fileName,
+    profileImageFileName: fileName,
+    updated: Date.now()
+  };
+  var options = {
+
+  };
+  //call on mongoose Model.update function to update db
+  User.update(query, propertiesToUpdate).exec();
+
+
+  res.jsonp(source);
+  //res.jsonp(credentials);
+  //res.send(credentials);
+
+
+};
+
+// old code end
 
 /**
  * upload user profile image to Amazon S3
  */
+
+/**
+ *
+ * new code
+ *
+ *
+ *
 
 exports.uploadUserProfileImage = function (req, res) {
   //console.log('req:::::::::::::::::::::::::::::::\n', req);
@@ -48,6 +160,46 @@ exports.uploadUserProfileImage = function (req, res) {
   //perform image optimization with tinypng.com
   tinify.key = config.tinyPngKey;
 
+
+  console.log('unOptImage:\n', unOptImage);
+  console.log('filePath:\n', filePath);
+
+
+
+
+  var imageBuffer = new Buffer(unOptImage, 'utf-8').toString('base64');
+
+  // sign policy
+  var signature = crypto.createHmac('sha1', s3.keys.aws.s3Secret)
+    .update(new Buffer(imageBuffer, 'utf-8')).digest('base64');
+
+  console.log('imageBuffer:\n', imageBuffer, '\n\n');
+  console.log('signature:\n', signature, '\n\n');
+
+  var fs = require('fs');
+  fs.readFile(imageBuffer, function(err, sourceData) {
+    if (err) {throw err;}
+    tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
+      if (err) {
+        console.log('err:\n', err);
+        throw err;
+      // ...
+    } else {
+        console.log('resultData:\n', resultData);
+      }
+    });
+  });
+
+
+
+
+  ////now save url to mongoDb
+  user.profileImageURL = 'https://s3-' + s3.region + '.amazonaws.com/' + s3.bucket + '/' + s3.directory.user + '/' + user._id + '/' + optImage;
+
+
+
+
+
   //var tinyParams = {
   //  service: 's3',
   //  aws_access_key_id: config.s3Id,
@@ -55,11 +207,6 @@ exports.uploadUserProfileImage = function (req, res) {
   //  region: s3.region,
   //  path: filePath
   //};
-
-
-
-  console.log('unOptImage:\n', unOptImage);
-  console.log('filePath:\n', filePath);
 
 
 
@@ -143,37 +290,6 @@ exports.uploadUserProfileImage = function (req, res) {
   //  });
 
 
-
-  var imageBuffer = new Buffer(unOptImage, 'utf-8').toString('base64');
-
-  // sign policy
-  var signature = crypto.createHmac('sha1', s3.keys.aws.s3Secret)
-    .update(new Buffer(imageBuffer, 'utf-8')).digest('base64');
-
-  console.log('imageBuffer:\n', imageBuffer, '\n\n');
-  console.log('signature:\n', signature, '\n\n');
-
-  var fs = require('fs');
-  fs.readFile(imageBuffer, function(err, sourceData) {
-    if (err) {throw err;}
-    tinify.fromBuffer(sourceData).toBuffer(function(err, resultData) {
-      if (err) {
-        console.log('err:\n', err);
-        throw err;
-      // ...
-    } else {
-        console.log('resultData:\n', resultData);
-      }
-    });
-  });
-
-
-
-
-  ////now save url to mongoDb
-  user.profileImageURL = 'https://s3-' + s3.region + '.amazonaws.com/' + s3.bucket + '/' + s3.directory.user + '/' + user._id + '/' + optImage;
-
-
   //var updateUser = {
   //  user: {
   //    body: user
@@ -186,6 +302,16 @@ exports.uploadUserProfileImage = function (req, res) {
 
 };
 
+
+/**
+ *
+ * new code end
+ *
+ *
+ */
+
+
+
 /**
  * Update profile picture
  */
@@ -194,20 +320,6 @@ exports.changeProfilePicture = function (req, res) {
   var message = null;
   var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-
-
-
-  ////compress image with Tinypng
-  //var source = tinify.fromFile("large.jpg");
-  //source.store({
-  //  service: "s3",
-  //  aws_access_key_id: "AKIAIOSFODNN7EXAMPLE",
-  //  aws_secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-  //  region: "us-west-1",
-  //  path: "example-bucket/my-images/optimized.jpg"
-  //});
-
-
 
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
@@ -254,23 +366,37 @@ exports.changeProfilePicture = function (req, res) {
 
 exports.getS3File = function (req, res) {
 
-  var s3File = new AWS.S3({
+  var awsS3Config = {
     accessKeyId: config.aws.s3Id,
     secretAccessKey: config.aws.s3Secret,
     region: 'us-west-1'
-  });
+  };
+
+  var s3File = new AWS.S3(awsS3Config);
   var fileToGet = req.params.photoId;
   var userIdBucket = req.params.userId;
   var params = {
     Bucket: s3.bucket + '/' + s3.directory.user + '/' + userIdBucket,
     Key: fileToGet
   };
+  var stuff = {
+    fileToGet: fileToGet,
+    userIdBucket: userIdBucket,
+    params: params
+  };
 
-  var pathToLocalDisk = 'modules/users/client/img/profile/';
-  var userProfileImage = pathToLocalDisk + 'uploaded-profile-image.jpg';
+  var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
+  var userProfileImage = pathToLocalDisk + fileToGet;
+  var fileType = '';
 
   var returnedFile = require('fs').createWriteStream(userProfileImage);
   s3File.getObject(params).createReadStream().pipe(returnedFile);
+
+  res.status(200).send({
+    message: 'Success: Profile Image Delivered'
+  });
+
+  console.log('stuff:\n', stuff);
 
 };
 
@@ -310,37 +436,6 @@ exports.uploadProject = function (req, res) {
   var stringPolicy = JSON.stringify(s3Policy);
   var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
 
-  // sign policy
-  var signature = crypto.createHmac('sha1', s3.keys.aws.s3Secret)
-    .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
-
-  var credentials = {
-    url: s3Url,
-    fields: {
-      key: filePath,
-      AWSAccessKeyId: s3.keys.aws.s3Id,
-      acl: readType,
-      policy: base64Policy,
-      signature: signature,
-      'Content-Type': req.body.type,
-      success_action_status: 201
-    }
-  };
-
-
-  //now save url to mongoDb
-  //user.profileImageURL = 'https://s3-' + s3.region + '.amazonaws.com/' + s3.bucket + '/' + s3.directory.user + '/' + user._id + '/' + optFileName;
-
-  //var updateUser = {
-  //  user: {
-  //    body: user
-  //    }
-  //  };
-  //console.log('updateUser:\n', updateUser);
-  ////console.log('user:\n', user);
-  //console.log('user.body:\n', user.body);
-  //Users.update(updateUser);
-  res.jsonp(credentials);
 
 };
 
