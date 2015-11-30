@@ -119,7 +119,14 @@ module.exports = function(app) {
 // API Keys Routes
   app.route('/api/v1/keys')
     .get(function (req, res) {
-      res.jsonp(keys);
+        console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
+        if(process.env.NODE_ENV === 'production') {
+          var defaultEnvConfig = require('../../../../config/env/default');
+          res.jsonp(defaultEnvConfig);
+        } else if (process.env.NODE_ENV === 'development') {
+          var keys = require('../../../users/server/config/private/keys.js');
+          res.jsonp(keys);
+        }
     });
 
 

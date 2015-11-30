@@ -11,16 +11,16 @@ exports.getOneVideo = function (req, res) {
     Vimeo = vimeo_module.Vimeo,
     util_module = require('util');
 
-  try {
+
+  if(process.env.NODE_ENV === 'production') {
     var defaultEnvConfig = require('../../../../config/env/default');
-  } catch (error) {
-    var keys = require('../../../users/server/config/private/keys.js');
-    var CLIENT_ID = keys.vimeoKey,
+    res.jsonp(defaultEnvConfig);
+  } else if (process.env.NODE_ENV === 'development') {
+    var keys = require('../../../users/server/config/private/keys.js'),
+      CLIENT_ID = keys.vimeoKey,
       CLIENT_SECRET = keys.vimeoSecret,
       ACCESS_TOKEN = keys.vimeoToken;
-  } finally {
-    var config = require('../config/config.json');
-
+    res.jsonp(keys);
   }
 
   /**
