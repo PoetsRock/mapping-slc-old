@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "grunt",
-    "postinstall": "bower install --config.interactive=false && gulp heroku"
+    "postinstall": "bower install --config.interactive=false && gulp build"
   },
   "dependencies": {
     "acl": "~0.4.4",
