@@ -6,7 +6,6 @@ exports.getOneVideo = function (req, res) {
     mongoose = require('mongoose'),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
     Project = mongoose.model('Project'),
-    sanitizeHtml = require('sanitize-html'),
     request = require('request'),
     vimeo_module = require('../../../../node_modules/vimeo/index.js'),
     Vimeo = vimeo_module.Vimeo,

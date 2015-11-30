@@ -1,6 +1,5 @@
 var cloudinary = require('cloudinary').v2,
     fs = require('fs'),
-    keys = require('../../../users/server/config/private/keys.js'),
     path = require('path'),
     mongoose = require('mongoose'),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),

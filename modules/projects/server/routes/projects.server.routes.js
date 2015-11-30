@@ -8,7 +8,6 @@ module.exports = function(app) {
         Project = mongoose.model('Project'),
         //tractData = require('../models/data/utahTract.json'),
         markerData = require('../models/project.server.model.js'),
-        keys = require('../../../users/server/config/private/keys.js'),
         request = require('request'),
         s3 = require('../controllers/s3.server.controller'),
         vimeo = require('../controllers/vimeo.server.controller');

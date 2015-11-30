@@ -8,7 +8,7 @@ var path = require('path'),
 		errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 		Project = mongoose.model('Project'),
 		_ = require('lodash'),
-		keys = require('../../../users/server/config/private/keys.js'),
+
 		Kraken = require('kraken'),
 		AlchemyAPI = require('alchemy-api'),
 		sanitizeHtml = require('sanitize-html');
@@ -234,13 +234,13 @@ exports.hasAuthorization = function (req, res, next) {
  * Alchemy API for NLP
  **/
 
-exports.nlpProjects = function (req, res) {
-	var alchemyapi = new AlchemyAPI(keys.alchemyKey);
-	var myText = "Whoa, AlchemyAPI's Node.js SDK is really great, I can't wait to build my app!";
-	alchemyapi.sentiment("text", myText, {}, function (response) {
-		console.log("Sentiment: " + response["docSentiment"]["type"]);
-	});
-};
+//exports.nlpProjects = function (req, res) {
+//	var alchemyapi = new AlchemyAPI(keys.alchemyKey);
+//	var myText = "Whoa, AlchemyAPI's Node.js SDK is really great, I can't wait to build my app!";
+//	alchemyapi.sentiment("text", myText, {}, function (response) {
+//		console.log("Sentiment: " + response["docSentiment"]["type"]);
+//	});
+//};
 
 //var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
 
@@ -261,23 +261,23 @@ exports.nlpProjects = function (req, res) {
  * Kraken.io Img Optimization
  */
 
-exports.krakenImageUpload = function(req, res) {
-	var kraken = new Kraken({
-		api_key: keys.krakenKey,
-		api_secret: keys.krakenSecret
-	});
-
-	var opts = {
-		file: '/path/to/image/file.jpg',
-		wait: true
-	};
-
-	kraken.upload(opts, function(data) {
-		if (data.success) {
-			console.log('Success. Optimized image URL: %s', data.kraked_url);
-		} else {
-			console.log('Fail. Error message: %s', data.error);
-		}
-	});
-
-};
+//exports.krakenImageUpload = function(req, res) {
+//	var kraken = new Kraken({
+//		api_key: keys.krakenKey,
+//		api_secret: keys.krakenSecret
+//	});
+//
+//	var opts = {
+//		file: '/path/to/image/file.jpg',
+//		wait: true
+//	};
+//
+//	kraken.upload(opts, function(data) {
+//		if (data.success) {
+//			console.log('Success. Optimized image URL: %s', data.kraked_url);
+//		} else {
+//			console.log('Fail. Error message: %s', data.error);
+//		}
+//	});
+//
+//};
