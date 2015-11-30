@@ -19,7 +19,7 @@
             Please include an address for <span>the location of a your essay or project</span>. (Feel free to
             approximate if there's not an exact address.)
 
-            <form name="projectForm" class="form-horizontal" data-ng-submit="create(projectForm.$valid)" novalidate>
+            <form name="project" class="form-horizontal" data-ng-submit="create(project.$valid)" novalidate>
               <fieldset>
                 <div class="form-group">
 
@@ -29,9 +29,10 @@
                     <div class="col-md-6">
                       <span class="input input-secondary">
                           <input class="input_field input_field-secondary" type="text" id="street"
-                                 data-ng-model="street" required/>
+                                 data-ng-model="project.street" required ng-change="showUploadFunction()"/>
                           <label class="input_label input_label-secondary" for="street">
-                            <span class="input_label-content input_label-content-secondary">Street Address for Project</span>
+                            <span
+                              class="input_label-content input_label-content-secondary">Street Address for Project</span>
                           </label>
                       </span>
                     </div>
@@ -39,7 +40,7 @@
                     <div class="col-md-6">
                       <span class="input input-secondary">
                           <input class="input_field input_field-secondary" type="text" id="city"
-                                 data-ng-model="city" required/>
+                                 data-ng-model="project.city" required/>
                           <label class="input_label input_label-secondary" for="city">
                             <span class="input_label-content input_label-content-secondary">City</span>
                           </label>
@@ -52,58 +53,58 @@
 
                     <div class="col-md-6">
                       <span class="input input-secondary">
-                          <input class="input_field input_field-secondary" type="text" id="state"
-                                 data-ng-model="state" required/>
-                          <label class="input_label input_label-secondary" for="state">
-                            <span class="input_label-content input_label-content-secondary">State</span>
-                          </label>
-                      </span>
-                    </div>
-
-                    <div class="col-md-6">
-                      <span class="input input-secondary">
                           <input class="input_field input_field-secondary" type="zip" id="zip"
-                                 data-ng-model="zip" required/>
+                                 data-ng-model="project.zip" required/>
                           <label class="input_label input_label-secondary" for="zip">
                             <span
                               class="input_label-content input_label-content-secondary">Zip Code</span>
                           </label>
                       </span>
                     </div>
+
+
+                    <div class="col-md-6">
+                      <div class="dropdown">
+                        <label for="status">Submission Category
+                          <a href="#" tooltip-placement="right"
+                             uib-tooltip="If you're unsure of the best  category, just select whatever you feel is close.">
+                            <i class="fa fa-question-circle"></i>
+                          </a>
+                        </label>
+                        <select id="status" data-ng-model="project.category">
+                          <option value="essay">Essay</option>
+                          <option value="multimedia">Multimedia</option>
+                          <option value="video">Video</option>
+                          <option value="audio">Audio</option>
+                          <option value="photograhpy">Photography</option>
+                          <option value="this was here">This Was Here</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="row">
 
+                  <div class="row">
                     <div class="col-md-12">
-                      <span class="input input-secondary">
+                      <span class="input input-secondary title">
                           <input class="input_field input_field-secondary" type="text" id="title"
-                                 data-ng-model="title" required/>
-                          <label class="input_label input_label-secondary" for="street">
-                            <span class="input_label-content input_label-content-secondary">Title of Your Project</span>
+                                 data-ng-model="project.title" required/>
+                          <label class="input_label input_label-secondary title" for="title">
+                            <span
+                              class="input_label-content input_label-content-secondary">Title</span>
                           </label>
                       </span>
                     </div>
                   </div>
 
-                  <section data-ng-controller="ProjectsUploadController" class="project-uploader">
-                    <div class="row">
-                      <div class="col-md-12">
 
+                  <div class="row">
 
-
-
-                        <h4>Upload Project Documents and Media</h4>
-
-                        <input type="file" ngf-select ngf-change="onFileSelect($files)">
-
-                        <button data-ng-click="abort();" data-ng-hide="!uploading">Cancel Current Upload</button>
-
-
-
-
-                      </div>
+                    <div class="col-md-6">
+                      <project-uploader-directive data-ng-show="showUpload"></project-uploader-directive>
                     </div>
-                  </section>
+
+                  </div>
 
 
                 </div>
@@ -115,6 +116,7 @@
                 <div data-ng-show="error" class="text-danger">
                   <strong data-ng-bind="error"></strong>
                 </div>
+
               </fieldset>
             </form>
           </div>

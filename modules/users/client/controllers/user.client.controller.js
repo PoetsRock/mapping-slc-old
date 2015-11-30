@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'UserData', 'Users',
-  function ($scope, $state, $stateParams, Authentication, UserData, Users) {
+angular.module('users').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'UserData', 'Users', 'ProfileImageService',
+  function ($scope, $state, $stateParams, Authentication, UserData, Users, ProfileImageService) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -42,6 +42,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     // Find a list of Users
     $scope.find = function() {
       $scope.users = Users.query($scope.query);
+      ProfileImageService.getUploadedProfilePic();
     };
 
     // Find existing User

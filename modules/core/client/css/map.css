@@ -262,15 +262,6 @@ div .leaflet-control-attribution.leaflet-control {
     color: #004444;
 }
 
-div a .mapbox-share.mapbox-icon.mapbox-icon-share  {
-    top: 150px;
-    background: rgba(0, 0, 0, 0.8);
-}
-
-div .leaflet-top.leaflet-left .mapbox-share {
-    bottom: 150px;
-}
-
 .leaflet-bar .leaflet-control-mapbox-geocoder-toggle .mapbox-icon .mapbox-icon-geocoder {
     display: inline;
     border-bottom: dashed;
@@ -280,37 +271,21 @@ div .leaflet-top.leaflet-left .mapbox-share {
     top: 70px;
 }
 
-.leaflet-control-layers .leaflet-control {
-    /*margin-top: 455%;*/
-}
-
-.leaflet-left .leaflet-control {
-    /*left: 4500%;*/
-    /*right: -1687px;*/
-    /*position: relative;*/
-}
-
 .leaflet-top.leaflet-right {
-    /*top: 18%;*/
-    top: 185px;
-    /*right: -8px;*/
-    right: -17px;
+    /*top: 185px;*/
+    /*right: -17px;*/
 }
 
 .leaflet-top.leaflet-left {
-    top: -6.5%;
-    left: 97%;
-    /*top: -55px;*/
-    /*left: 175px;*/
-    /*top: -60px;*/
-    /*left: -787px;*/
-    /*position: absolute;*/
-    /*left: 1573px;*/
-    /*top: -55px;*/
+    visibility: hidden;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+    /*top: -1125%;*/
+    position: relative;
 }
 
 .leaflet-control-layers label {
-    /*margin: 5%;*/
     font-size: 1.25em;
     font-family: "pragmatica-web", "jaf-facitweb", Verdana, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -343,10 +318,6 @@ div .leaflet-top.leaflet-left .mapbox-share {
 
 .leaflet-right .leaflet-control {
     margin-right: 25px;
-}
-
-.leaflet-control-zoom {
-    top: 75px;
 }
 
 .leaflet-bar a, .leaflet-bar a:hover {

@@ -270,13 +270,13 @@ a:hover .header-profile-image {
   float: none;
 }
 .open > .dropdown-menu {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 1);
   border: solid 3px #2c2c2c;
   border-radius: 5px;
-  /*left: -75%;*/
-  /*margin: 10%;*/
   width: 100%;
   clear: both;
+  top: 6rem;
+  position: absolute;
 }
 
 .undecorated-link:hover {
@@ -614,8 +614,7 @@ button > .grow {
 
 .core sign-in-directive ul {
   position: relative;
-  /*left: 2%;*/
-  top: 1rem;
+  top: -4rem;
 }
 
 .videoWrapper {
@@ -672,4 +671,10 @@ button > .grow {
 
 .two-columns {
   margin-bottom: 10px;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-color: #aaaaaa;
+  border-radius: 5%;
 }

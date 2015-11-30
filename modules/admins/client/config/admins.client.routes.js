@@ -8,19 +8,26 @@ angular.module('admins').config(['$stateProvider',
       state('admin', {
         abstract: true,
         url: '/admin',
-        templateUrl: 'modules/admins/client/views/admins.client.view.html',
+        template: '<ui-view>',
         //data property is inherited by child states, so you can place something like this authenticate flag in the parent.
         data: {
           authenticate: true,
-          templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
           data: {
             roles: ['admin', 'superUser']
           }
         }
       })
-
-
     //admin projects routes
+      .state('admin.dashboard', {
+        url: '/dashboard',
+        templateUrl: 'modules/admins/client/views/admins.client.view.html',
+        data: {
+          authenticate: true,
+          data: {
+            roles: ['admin', 'superUser']
+          }
+        }
+      })
       .state('admin.adminProjectsQueue', {
         url: '/projects-queue',
         templateUrl: 'modules/admins/client/views/projects/admin-projects-list.client.view.html'
@@ -58,10 +65,6 @@ angular.module('admins').config(['$stateProvider',
       .state('admin.createUser', {
         url: '/create-user',
         templateUrl: 'modules/users/client/views/create-user.client.view.html'
-      })
-      .state('admin.adminDashboard', {
-        url: '/dashboard',
-        templateUrl: 'modules/admins/client/views/dashboard/admin-dashboard.client.view.html'
       });
   }
 

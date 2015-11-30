@@ -1,3 +1,9 @@
+/modules/core/client/img/loaders/circle-close.png
+/modules/core/client/img/loaders/circle-close-final-50px.jpg
+/modules/core/client/img/loaders/circle-close.svg
+/modules/core/client/img/loaders/circle-close-final.jpg
+/.aws
+/modules/users/server/config/private/awsConfig.json
 /modules/users/server/config/private/keys.js
 # OS
 # ===========

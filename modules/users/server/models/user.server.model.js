@@ -104,6 +104,10 @@ var UserSchema = new Schema({
     type: String,
     trim: true
   },
+  profileImageFileName: {
+    type: String,
+    default: 'default.png'
+  },
   provider: {
     type: String,
     required: 'Provider is required'

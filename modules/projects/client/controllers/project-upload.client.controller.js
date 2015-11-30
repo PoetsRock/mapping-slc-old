@@ -14,7 +14,9 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
         var type = files[0].type;
         var query = {
           filename: filename,
-          type: type
+          type: type,
+          user: $scope.user,
+          project: $scope.project
         };
         var configObj = {cache: true};
         $http.post('api/v1/s3/upload/project', query, configObj)

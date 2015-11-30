@@ -1,9 +1,9 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$modal', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $modal, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window) {
-    $scope.Authentication = Authentication;
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window) {
+    $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
     var width = '800';
@@ -18,12 +18,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.trustAsHtml = $sce.trustAsHtml;
 
+    console.log('$scope.user:\n', $scope.user);
+    console.log('$scope.project:\n', $scope.project);
+
     $scope.init = function () {
       $scope.publishedProjects();
     };
 
+    $scope.initSubmissionStatus = function () {
+      $scope.findOne();
+    };
+
     //provides logic for the css in the forms
     UtilsService.cssLayout();
+
+    $scope.showUpload = false;
+    $scope.showSubmit = false;
+    $scope.showUploadFunction = function () {
+      if (project.street !== '') {
+        $scope.showUpload = true;
+      }
+      if ($scope.showUpload && this.project.story !== '') {
+        $scope.showSubmit = true;
+      }
+    };
 
     /**
      * called when $scope.project.status updates
@@ -38,13 +56,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     };
 
-    $scope.modalTemplateUrl = '/modules/projects/client/directives/views/project-warning-modal.html';
-    //var confirmPublishModal = function(modalTemplateUrl){
     $scope.confirmPublishModal = function () {
       $scope.animationsEnabled = true;
       $uibModal.open({
         animation: $scope.animationsEnabled,
-        templateUrl: $scope.modalTemplateUrl,
+        templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
         controller: 'ModalController',
         size: 'lg'
       });
@@ -64,13 +80,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.publishProject = function () {
       //todo need to call on a confirm modal first
-      //$scope.project.publishedDate = new Date();
+      $scope.confirmPublishModal();
+      $scope.project.publishedDate = new Date();
       $scope.update();
       publishUser($scope.project); //call method to display contributor bio
     };
 
     var saveProject = null;
     $scope.updateLatLng = function (project) {
+      console.log('project ctrl', project);
       $http.get('/api/v1/keys').success(function (data) {
         var mapboxKey = data.mapboxKey;
         var mapboxSecret = data.mapboxSecret;
@@ -103,47 +121,43 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-    $rootScope.previousState = '';
-    $rootScope.currentState = '';
-    $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
-      $rootScope.previousState = from.name;
-      $rootScope.currentState = to.name;
-    });
-    $scope.goBack = function () {
-      if ($rootScope.previousState === 'listProjects') {
-        $state.go($rootScope.previousState);
-      } else {
-        $state.go('admin');
-      }
-    };
-    $scope.run = function ($rootScope, $state, Authentication) {
-      $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        if (toState.authenticate && !Authentication.isLoggedIn()) {
-        }
-        event.preventDefault();
-      });
-    };
-
-    $scope.userLoggedin = function () {
-      // get request to /users/me
-      if ($location.path() === '/projects/create') {
-        $http.get('/api/v1/users/me')
-          .success(function (data) {
-            if (data === null) {
-              $rootScope.signInBeforeProject = true;
-              $location.path('/signin');
-            }
-          });
-      }
-    }();
-
-    var mapImage = '';
+    //$rootScope.previousState = '';
+    //$rootScope.currentState = '';
+    //$rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
+    //  $rootScope.previousState = from.name;
+    //  $rootScope.currentState = to.name;
+    //});
+    //$scope.goBack = function () {
+    //  if ($rootScope.previousState === 'listProjects') {
+    //    $state.go($rootScope.previousState);
+    //  } else {
+    //    $state.go('admin');
+    //  }
+    //};
+    //$scope.run = function ($rootScope, $state, Authentication) {
+    //  $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+    //    if (toState.authenticate && !Authentication.isLoggedIn()) {
+    //    }
+    //    event.preventDefault();
+    //  });
+    //};
+    //
+    //$scope.userLoggedin = function () {
+    //  // get request to /users/me
+    //  if ($location.path() === '/projects/create') {
+    //    $http.get('/api/v1/users/me')
+    //      .success(function (data) {
+    //        if (data === null) {
+    //          $rootScope.signInBeforeProject = true;
+    //          $location.path('/authentication/signin');
+    //        }
+    //      });
+    //  }
+    //}();
 
     // Create new Project
     $scope.create = function (isValid) {
-
       $scope.error = null;
-
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
         return false;
@@ -151,19 +165,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       // Create new Project object
       var project = new Projects({
-        created: this.created,
-        createdBy: this.createdBy,
-        street: this.street,
-        city: this.city,
-        state: this.state,
-        zip: this.zip,
-        story: this.story,
-        title: this.title
+        createdBy: Authentication.user._id,
+        street: this.project.street,
+        city: this.project.city,
+        state: 'UT',
+        zip: this.project.zip,
+        story: '',
+        title: this.project.title
       });
 
       saveProject = function () {
         project.$save(function (response) {
-          $location.path('projects/' + response._id);
+          console.log('location.path: ', 'projects/' + response._id + '/confirm');
+          $location.path('projects/' + response._id + '/confirm');
           // Clear form fields
           $scope.street = '';
           $scope.city = '';
@@ -223,9 +237,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     // Find existing Project
     $scope.findOne = function () {
-      $scope.project = Projects.get({
+
+      Projects.get({
         projectId: $stateParams.projectId
-      }, function(project) {
+      }, function (project) {
         $scope.project = project;
         if (project.vimeoId) {
           $scope.vimeo = {
@@ -241,11 +256,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             height: $window.innerHeight / 1.75
           };
         }
-        if(project.imageGallery) {
+        if (project.imageGallery) {
           for (var i = 0; i < project.imageGallery.length; i++) {
             $scope.images.push(project.imageGallery[i]);
           }
         }
+        console.log('$scope.project:\n', $scope.project);
       });
     };
 
@@ -260,53 +276,42 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     };
 
-    //CKEDITOR.replace('story');
-    $scope.editorOptions = {
-      language: 'en',
-      uiColor: '#02211D'
-    };
-    CKEDITOR.replaceClass = 'ck-crazy';
+    ////CKEDITOR.replace('story');
+    //$scope.editorOptions = {
+    //  language: 'en',
+    //  uiColor: '#02211D'
+    //};
+    //CKEDITOR.replaceClass = 'ck-crazy';
 
     //modal for leaving projects
     //Give user warning if leaving form
-    var preventRunning = false;
-    $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      if (preventRunning) {
-        return;
-      }
-      if (fromState.url === '/projects/client/create' && toState.url !== '/projects/:projectId') {
-        event.preventDefault();
 
-        $modal.open({
-          animation: true,
-          templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
-          controller: function ($scope, $modalInstance, $location) {
-            $scope.stay = function (result) {
-              //$modalInstance.dismiss('cancel');
-              $modalInstance.close(function (result) {
+    //var preventRunning = false;
+    //$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+    //  if (preventRunning) {
+    //    return;
+    //  }
+    //  if (fromState.url === '/projects/create' && toState.url !== '/projects/:projectId') {
+    //    event.preventDefault();
+    //
+    //    $scope.animationsEnabled = true;
+    //    $uibModal.open({
+    //      animation: $scope.animationsEnabled,
+    //      templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
+    //      controller: 'ModalController',
+    //      size: 'lg'
+    //    });
+    //  }
+    //});
 
-              });
-            };
-            $scope.leave = function () {
-              preventRunning = true;
-              $scope.stay();
-              $location.path(toState);
-            };
-          },
-          size: 'lg'
-        });
-
-      }
-    });
-
-    //admin panel editing
-    $scope.toggleEdit = false;
-    $scope.toggleId = 0;
-
-    $scope.toggleEditFn = function (editNum) {
-      $scope.toggleEdit = !$scope.toggle;
-      $scope.toggleId = editNum;
-    };
+    ////admin panel editing
+    //$scope.toggleEdit = false;
+    //$scope.toggleId = 0;
+    //
+    //$scope.toggleEditFn = function (editNum) {
+    //  $scope.toggleEdit = !$scope.toggle;
+    //  $scope.toggleId = editNum;
+    //};
 
     /**
      * nlp
@@ -321,8 +326,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //		error(function () {
     //		});
     //};
-
-
 
 
   }

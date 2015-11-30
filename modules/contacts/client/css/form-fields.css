@@ -188,6 +188,16 @@ textarea.input_field-secondary:active {
     transform: translateY(3.0em) scale3d(0.955, 0.955, 1.5);
 }
 
+span.input.input-secondary .title {
+    max-width: 850px;
+}
+
+.input_label.input_label-secondary .title {
+    left: 5%;
+}
+
+
+
 .grow.btn-contact {
     position: relative;
     left: 2%;
