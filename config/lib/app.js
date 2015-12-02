@@ -7,6 +7,7 @@ var config = require('../config'),
   mongoose = require('./mongoose'),
   express = require('./express'),
   chalk = require('chalk');
+  console.log('here at app.js');
 
 // Initialize Models
 mongoose.loadModels();
