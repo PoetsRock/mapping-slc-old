@@ -27,8 +27,6 @@ var _ = require('lodash'),
   tinify = require('tinify'),
   s3Url = 'https://' + s3.bucket + '.s3-' + s3.region + '.amazonaws.com';
 
-
-
 //old code
 /**
  * upload user profile image to Amazon S3
