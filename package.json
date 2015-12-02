@@ -16,7 +16,7 @@
     "npm": "2.12"
   },
   "scripts": {
-    "start": "gulp",
+    "start": "grunt",
     "postinstall": "bower install --config.interactive=false && gulp prod"
   },
   "dependencies": {
