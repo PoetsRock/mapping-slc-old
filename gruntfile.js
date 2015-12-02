@@ -271,9 +271,6 @@ module.exports = function (grunt) {
   grunt.registerTask();
   //grunt.registerTask('lint', ['sass', 'less', 'jshint', 'csslint']);
 
-  // Lint project files and minify them into two production files.
-  grunt.registerTask('build', ['env:dev', 'ngAnnotate', 'uglify', 'cssmin']);
-
   // Run the project tests
   grunt.registerTask('test', ['env:test', 'mkdir:upload', 'copy:localConfig', 'server', 'mochaTest', 'karma:unit']);
   grunt.registerTask('test:server', ['env:test', 'server', 'mochaTest']);
@@ -286,6 +283,9 @@ module.exports = function (grunt) {
 
   // Run the project in debug mode
   grunt.registerTask('debug', ['env:dev', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
+
+  // Lint project files and minify them into two production files.
+  grunt.registerTask('build', ['env:dev', 'ngAnnotate', 'uglify', 'cssmin']);
 
   // Run the project in production mode
   grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
