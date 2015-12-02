@@ -150,8 +150,8 @@ gulp.task('templatecache', function () {
         return url.replace(re, path.sep);
       }
     }))
-    .pipe(gulp.dest('build'))
-    .pipe(gulp.dest('public/dist'));
+    .pipe(gulp.dest('build'));
+    //.pipe(gulp.dest('public/dist'));
 });
 
 // Mocha tests task
