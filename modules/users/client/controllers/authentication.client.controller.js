@@ -1,12 +1,15 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator', '$uibModal',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator, $uibModal) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator', '$uibModal', 'UtilsService',
+  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator, $uibModal, UtilsService) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
+
+    //provides logic for the css in the forms
+    UtilsService.cssLayout();
 
     // If user is signed in then redirect back home
     if ($scope.authentication.user) {

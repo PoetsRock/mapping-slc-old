@@ -15,11 +15,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isPublished = false;
     $scope.userToEdit = {};
     $scope.images = [];
+    $scope.override = false;
 
     $scope.trustAsHtml = $sce.trustAsHtml;
 
     console.log('$scope.user:\n', $scope.user);
-    console.log('$scope.project:\n', $scope.project);
 
     $scope.init = function () {
       $scope.publishedProjects();
@@ -120,41 +120,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
-
-    //$rootScope.previousState = '';
-    //$rootScope.currentState = '';
-    //$rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
-    //  $rootScope.previousState = from.name;
-    //  $rootScope.currentState = to.name;
-    //});
-    //$scope.goBack = function () {
-    //  if ($rootScope.previousState === 'listProjects') {
-    //    $state.go($rootScope.previousState);
-    //  } else {
-    //    $state.go('admin');
-    //  }
-    //};
-    //$scope.run = function ($rootScope, $state, Authentication) {
-    //  $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    //    if (toState.authenticate && !Authentication.isLoggedIn()) {
-    //    }
-    //    event.preventDefault();
-    //  });
-    //};
-    //
-    //$scope.userLoggedin = function () {
-    //  // get request to /users/me
-    //  if ($location.path() === '/projects/create') {
-    //    $http.get('/api/v1/users/me')
-    //      .success(function (data) {
-    //        if (data === null) {
-    //          $rootScope.signInBeforeProject = true;
-    //          $location.path('/authentication/signin');
-    //        }
-    //      });
-    //  }
-    //}();
-
     // Create new Project
     $scope.create = function (isValid) {
       $scope.error = null;
@@ -176,8 +141,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       saveProject = function () {
         project.$save(function (response) {
-          console.log('location.path: ', 'projects/' + response._id + '/confirm');
-          $location.path('projects/' + response._id + '/confirm');
+          $scope.override = true;
+          $location.path('projects/' + response._id + '/status');
           // Clear form fields
           $scope.street = '';
           $scope.city = '';
@@ -191,7 +156,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       };
 
       $scope.updateLatLng(project);
-
+      $scope.override = false;
     };
 
     // Remove existing Project
@@ -276,6 +241,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     };
 
+
+
+
     ////CKEDITOR.replace('story');
     //$scope.editorOptions = {
     //  language: 'en',
@@ -283,69 +251,119 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //};
     //CKEDITOR.replaceClass = 'ck-crazy';
 
-    //modal for leaving projects
-    //Give user warning if leaving form
+    /**
+     * Checks to see if a user is logged in before allowing a user to create a project
+     * @type {function}
+     * @params: none
+     */
+
+    $rootScope.previousState = '';
+    $rootScope.currentState = '';
+    $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
+      $rootScope.previousState = from.name;
+      $rootScope.currentState = to.name;
+    });
+    $scope.goBack = function () {
+      if ($rootScope.previousState === 'listProjects') {
+        $state.go($rootScope.previousState);
+      } else {
+        $state.go('admin');
+      }
+    };
+    $scope.run = function ($rootScope, $state, Authentication) {
+      $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        if (toState.authenticate && !Authentication.isLoggedIn()) {
+        }
+        event.preventDefault();
+      });
+    };
+
+    $scope.userLoggedin = function () {
+      // get request to /users/me
+      if ($location.path() === '/projects/create') {
+        $http.get('/api/v1/users/me')
+          .success(function (data) {
+            if (data === null) {
+              $rootScope.signInBeforeProject = true;
+              $location.path('/authentication/signin');
+            }
+          });
+      }
+    }();
+
+
+    /**
+     * modal for leaving projects, will give user warning if leaving form
+     *
+     */
+
     $scope.preventRunning = true;
     $scope.$on('$stateChangeStart',
       function (event, toState, toParams, fromState, fromParams) {
-
-        if (!$scope.preventRunning) {
+        var state = {
+          event: event,
+          toState: toState,
+          toParams: toParams,
+          fromState: fromState,
+          fromParams: fromParams
+        };
+        if (!$scope.preventRunning || $scope.override) {
           return
         } else {
-          event.preventDefault();
-
           var template = '';
-          var items = [];
           $scope.items = [];
 
-          $scope.animationsEnabled = true;
-          $scope.openModal = function (size, backdropClass, windowClass) {
-
-            var modalInstance = $uibModal.open({
-              templateUrl: template,
-              controller: 'ModalController',
-              animation: $scope.animationsEnabled,
-              backdrop: 'static',
-              backdropClass: backdropClass,
-              windowClass: windowClass,
-              size: size,
-              resolve: {
-                items: function () {
-                  return $scope.items;
-                }
-              }
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-              $scope.preventRunning = false;
-              $state.go(toState.name);
-            }, function () {
-              $log.info('Modal dismissed at: ' + new Date());
-            });
-            $scope.toggleAnimation = function () {
-              $scope.animationsEnabled = !$scope.animationsEnabled;
-            };
-          };
-          if (Authentication.user === '') {
+          if (fromState.url === '/projects/create') {
+            event.preventDefault();
+            $scope.items.toStateUrl = toState.url;
             template = '/modules/projects/client/directives/views/project-warning-modal.html';
-            $scope.openModal('lg');
+            $scope.openModal('lg', template);
           }
-          if (fromState.url === '/projects/create' && toState.url !== '/projects/:projectId') {
-            template = '/modules/projects/client/directives/views/project-warning-modal.html';
-            $scope.openModal('lg');
-          }
+
         }
       });
 
 
-    ////admin panel editing
-    //$scope.toggleEdit = false;
-    //$scope.toggleId = 0;
-    //
-    //$scope.toggleEditFn = function (editNum) {
-    //  $scope.toggleEdit = !$scope.toggle;
-    //  $scope.toggleId = editNum;
-    //};
+    $scope.animationsEnabled = true;
+    $scope.openModal = function (size, template, backdropClass, windowClass) {
+
+      var modalInstance = $uibModal.open({
+        templateUrl: template,
+        controller: 'ModalController',
+        animation: $scope.animationsEnabled,
+        backdrop: 'static',
+        backdropClass: backdropClass,
+        windowClass: windowClass,
+        size: size,
+        resolve: {
+          items: function () {
+            return $scope.items;
+          }
+        }
+      });
+      modalInstance.result.then(function (selectedItem) {
+        $scope.preventRunning = false;
+        return $location.path(selectedItem);
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+      $scope.toggleAnimation = function () {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+      };
+    };
+
+
+    /**
+     * admin panel editing
+     */
+
+    $scope.toggleEdit = false;
+    $scope.toggleId = 0;
+
+    $scope.toggleEditFn = function (editNum) {
+      $scope.toggleEdit = !$scope.toggle;
+      $scope.toggleId = editNum;
+    };
 
     /**
      * nlp
@@ -360,6 +378,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //		error(function () {
     //		});
     //};
+
 
 
   }

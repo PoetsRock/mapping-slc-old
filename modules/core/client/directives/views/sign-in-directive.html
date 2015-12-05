@@ -3,13 +3,13 @@
   <div>  <!-- signin  signout functionality -->
 
     <ul class="pull-right" data-ng-hide="authentication.user">
-      <li class="dropdown" dropdown>
+      <li class="uib-dropdown" uib-dropdown>
         <button class="btn btn-dark">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" dropdown-toggle>
+          <a href="#" class="uib-dropdown-toggle" data-toggle="uib-dropdown" uib-dropdown-toggle>
             <span class="fa fa-sign-in hvr-icon-forward"> Sign In</span></a>
         </button>
 
-        <ul class="dropdown-menu">
+        <ul class="uib-dropdown-menu">
           <li ui-sref-active="active">
             <a ui-sref="authentication.signin">Sign In</a>
           </li>
@@ -21,12 +21,12 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-      <li class="dropdown" dropdown>
-        <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
+      <li class="uib-dropdown" uib-dropdown>
+        <a class="uib-dropdown-toggle user-header-uib-dropdown-toggle" uib-dropdown-toggle role="button">
           <img ng-src="{{user.profileImage}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
           <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="uib-dropdown-menu" role="menu">
           <li ui-sref-active="active">
             <a ui-sref="settings.profile">Edit Profile</a>
           </li>

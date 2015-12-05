@@ -5,15 +5,20 @@ angular.module('core').controller('ModalController', ['$scope', '$uibModalInstan
         $scope.items = items;
         $scope.selected = {
           item: $scope.items[0],
-          toStateName: items.toStateName
+          toStateUrl: items.toStateUrl
         };
+      console.log('$scope.selected', $scope.selected);
+
+
       if ($scope.selected.item) {
+        console.log('$scope.selected.item', $scope.selected.item);
         $scope.ok = function () {
           $uibModalInstance.close($scope.selected.item);
         };
       } else {
+        console.log('$scope.selected.toStateName', $scope.selected.toStateUrl);
         $scope.ok = function () {
-          $uibModalInstance.close($scope.selected.toStateName);
+          $uibModalInstance.close($scope.selected.toStateUrl);
         };
       }
 

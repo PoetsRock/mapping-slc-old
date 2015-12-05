@@ -243,7 +243,23 @@ gulp.task('prod', function (done) {
   runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
 
-// Run the project in production mode
-gulp.task('heroku', function (done) {
-  runSequence('templatecache', 'env:prod', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
+// Run production mode in local/dev environment
+gulp.task('local-prod', function (done) {
+  runSequence('templatecache', 'env:dev', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
 });
+
+// Heroku Buildpack for Node.js and gulp.js
+//https://github.com/timdp/heroku-buildpack-nodejs-gulp
+gulp.task('heroku:production', function (done) {
+  runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
+});
+
+
+/**
+ *  Heroku Buildpack for Node.js and gulp.js
+ *
+ * url: https://github.com/timdp/heroku-buildpack-nodejs-gulp
+    - Set your Heroku app's buildpack URL to https://github.com/timdp/heroku-buildpack-nodejs-gulp.git
+    Add a Gulp task called `heroku:production` that builds your app
+    Serve your app using Express or whatever
+**/

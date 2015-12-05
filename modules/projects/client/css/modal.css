@@ -1,22 +1,24 @@
-.modal-open{
-    /*background-color: rgba(0,0,0,0.8);*/
-    /*top: 30%;*/
+.modal-dialog {
+    margin-top: 15%;
 }
 
 .modal-lg {
-    top: 30%;
-    width: 50%;
+    width: 60%;
 }
 
 .modal-content {
+    border-radius: 0;
     color: #ffffff;
-    background-color: rgba(2, 58, 49, 0.6);
+    background-color: rgba(2, 58, 49, 0.9);
     border: solid rgba(255, 255, 255, 0.7) 2px;
+    -webkit-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
+    -moz-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
+    box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
 }
 
-.modal-body {
-    background-color: rgba(2, 58, 49, 0.8);
-}
+/*.modal-body {*/
+    /*background-color: rgba(2, 58, 49, 0.8);*/
+/*}*/
 
 .modal-footer .grow:hover {
     border-color: #03725e;
@@ -31,7 +33,6 @@
 .text-center.form-group {
     width: 205%;
     margin-left: -55%;
-    margin-top: 5%;
 }
 
 .modal-content input[type=text], .modal-content input[type=password] {
@@ -46,6 +47,6 @@
     font-size: 2rem;
 }
 
-.modal-dialog .modal-lg {
-
+.modal-header, .modal-footer {
+    border: none;
 }
