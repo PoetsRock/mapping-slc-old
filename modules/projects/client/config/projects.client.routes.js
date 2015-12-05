@@ -11,7 +11,8 @@ angular.module('projects').config(['$stateProvider',
     }).
     state('createProject', {
       url: '/projects/create',
-      templateUrl: 'modules/projects/client/views/create-project.client.view.html'
+      templateUrl: 'modules/projects/client/views/create-project.client.view.html',
+      loginRequired: true
     }).
     state('viewProject', {
       url: '/projects/:projectId',

@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -285,24 +285,58 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     //modal for leaving projects
     //Give user warning if leaving form
+    $scope.preventRunning = true;
+    $scope.$on('$stateChangeStart',
+      function (event, toState, toParams, fromState, fromParams) {
 
-    //var preventRunning = false;
-    //$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    //  if (preventRunning) {
-    //    return;
-    //  }
-    //  if (fromState.url === '/projects/create' && toState.url !== '/projects/:projectId') {
-    //    event.preventDefault();
-    //
-    //    $scope.animationsEnabled = true;
-    //    $uibModal.open({
-    //      animation: $scope.animationsEnabled,
-    //      templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
-    //      controller: 'ModalController',
-    //      size: 'lg'
-    //    });
-    //  }
-    //});
+        if (!$scope.preventRunning) {
+          return
+        } else {
+          event.preventDefault();
+
+          var template = '';
+          var items = [];
+          $scope.items = [];
+
+          $scope.animationsEnabled = true;
+          $scope.openModal = function (size, backdropClass, windowClass) {
+
+            var modalInstance = $uibModal.open({
+              templateUrl: template,
+              controller: 'ModalController',
+              animation: $scope.animationsEnabled,
+              backdrop: 'static',
+              backdropClass: backdropClass,
+              windowClass: windowClass,
+              size: size,
+              resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+              }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+              $scope.preventRunning = false;
+              $state.go(toState.name);
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
+            $scope.toggleAnimation = function () {
+              $scope.animationsEnabled = !$scope.animationsEnabled;
+            };
+          };
+          if (Authentication.user === '') {
+            template = '/modules/projects/client/directives/views/project-warning-modal.html';
+            $scope.openModal('lg');
+          }
+          if (fromState.url === '/projects/create' && toState.url !== '/projects/:projectId') {
+            template = '/modules/projects/client/directives/views/project-warning-modal.html';
+            $scope.openModal('lg');
+          }
+        }
+      });
+
 
     ////admin panel editing
     //$scope.toggleEdit = false;

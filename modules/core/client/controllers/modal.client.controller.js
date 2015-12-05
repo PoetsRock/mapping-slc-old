@@ -1,19 +1,24 @@
 'use strict';
 
-angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance',
-    function($scope, $uibModalInstance) {
+angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance', 'items',
+    function($scope, $uibModalInstance, items) {
+        $scope.items = items;
+        $scope.selected = {
+          item: $scope.items[0],
+          toStateName: items.toStateName
+        };
+      if ($scope.selected.item) {
+        $scope.ok = function () {
+          $uibModalInstance.close($scope.selected.item);
+        };
+      } else {
+        $scope.ok = function () {
+          $uibModalInstance.close($scope.selected.toStateName);
+        };
+      }
 
-            //$scope.items = items;
-            //$scope.selected = {
-            //    item: $scope.items[0]
-            //};
-
-            $scope.ok = function () {
-                $uibModalInstance.close($scope.selected.item);
-            };
-
-            $scope.cancel = function () {
-                $uibModalInstance.dismiss('cancel');
-            };
+      $scope.cancel = function () {
+          $uibModalInstance.dismiss('user cancelled modal');
+      };
     }
 ]);
