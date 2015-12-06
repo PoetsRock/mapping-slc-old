@@ -11,7 +11,16 @@
             <section data-ng-controller="ProjectsController" data-ng-init="findOne()" class="main-content-inner">
 
                 <div class="admin">
-                    <div class="admin-user">
+                    <div class="admin-projects">
+
+                      <div class="admin-nav">
+                        <a class="btn btn-main grow" ui-sref="admin.dashboard">
+                          Admin Home Page
+                        </a>
+                        <a class="btn btn-main grow" ui-sref="admin.adminProjectsQueue">
+                          Admin Project Page
+                        </a>
+                      </div>
 
                         <div class="page-header">
                             <h1>{{project.title}}
@@ -23,8 +32,8 @@
 
                         <div class="row projects-profile">
                             <div class="col-xs-12">
-                              <a class="btn btn-main grow" data-ng-click="testFn()">
-                                Publish
+                              <a class="btn btn-main grow" data-ng-click="processNlpData()">
+                                NLP!
                                 <i class="fa fa-check"></i>
                               </a>
 
@@ -33,7 +42,7 @@
                                 <i class="fa fa-check"></i>
                               </a>
 
-                                <form class="form-horizontal" data-ng-submit="update()" novalidate>
+                                <form class="form-horizontal" data-ng-submit="update(toggleId)" novalidate>
                                   <fieldset>
                                         <project-view-form></project-view-form>
                                     </fieldset>
@@ -45,9 +54,6 @@
                         <hr>
 
                         <div class="pull-right">
-                            <a class="btn btn-main grow" data-ng-click="testButton()">
-                                <i class="fa fa-check"></i>
-                            </a>
                             <a class="btn btn-main grow btn-warning" data-ng-click="remove();">
                                 <i class="glyphicon glyphicon-trash"></i>
                             </a>

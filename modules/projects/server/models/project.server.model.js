@@ -23,23 +23,27 @@ var ProjectSchema = new Schema({
   status: {
     type: [{
       type: String,
-      enum: ['received', 'pending', 'rejected', 'revise and resubmit', 'accepted', 'userPulled', 'staffPulled', 'published']
+      enum: ['received', 'pending', 'rejected', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published']
     }],
     default: 'received'
   },
-  publishedDate: {
-    type: Date
-  },
-  createdOn: {
+  submittedOn: {
     type: Date,
     default: Date.now
   },
-  modifiedOn: {
+  publishedOn: {
     type: Date
   },
-  modifiedBy: {
-    type: String,
-    default: ''
+  /**
+   * `ModifiedBy` is an array of objects
+   * @prop {string}: userId of user who edited document
+   * @prop {string}: timestamp that records when document was modified
+   */
+  ModifiedBy: {
+    type: [{
+      type: String
+      }],
+    default: []
   },
   firstName: {
     type: String,
@@ -124,10 +128,18 @@ var ProjectSchema = new Schema({
   keywords: {
     type: [{
       type: String
-    }]
+    }],
+    default: []
   },
   tags: {
-    type: Array
+    type: [{
+      type: String
+    }]
+  },
+  relatedContent: {
+    type: [{
+      type: String
+    }]
   },
   vimeoId: {
     type: String,
@@ -149,15 +161,24 @@ var ProjectSchema = new Schema({
     type: Boolean,
     default: 'false'
   },
+  //mainImage: {
+  //  type: String,
+  //  trim: true
+  //},
   mainImage: {
-    type: String,
-    trim: true
+    type: Buffer
   },
   mainImgThumbnail: {
+    type: Buffer
+  },
+  mainImageUrl: {
     type: String,
     trim: true
   },
-
+  mainImgThumbnailUrl: {
+    type: String,
+    trim: true
+  },
   url: {
     type: String,
     set: function (url) {
@@ -170,19 +191,6 @@ var ProjectSchema = new Schema({
         return url;
       }
     }
-  },
-
-  /**
-   * specialLayout is an array of objects that specify custom layout options
-   * for projects that have specific, custom layout requirements.
-   * E.G., take a project that has both a video and an image gallery...
-   * the standard layout would display the video on top of the image gallery.
-   * however, you can specify here if the reverse should be true.
-   */
-  specialLayout: {
-    type: [{
-      type: Object
-    }]
   }
 });
 
@@ -208,33 +216,16 @@ ProjectSchema.virtual('geoCoordinates').get(function () {
 
 //see mongoose-function library in node modules
 //source: https://github.com/aheckmann/mongoose-function
-//var defaultKeywords = [];
-//ProjectSchema.methods.setDefaultKeywords = function(){
-//    defaultKeywords.push(project.user, project.title);
-//};
-//console.log('defaultKeywords: ', defaultKeywords);
+var defaultKeywords = [];
+ProjectSchema.methods.setDefaultKeywords = function(){
+    defaultKeywords.push(project.fullName, project.title);
+};
+console.log('defaultKeywords: ', defaultKeywords);
 
-//// Using Mongoosastic to watch what's going on with the MongoDB server and feeding into Elastic Search
-//ProjectSchema.plugin(mongoosastic);
-//
-//ProjectSchema.set('toJSON', {
-//    getters: true,
-//    virtuals: true
-//});
-//
-//// Add model
-//var Project = mongoose.model('Project', ProjectSchema),
-//    stream = Project.synchronize(),
-//    count = 0;
-//
-//stream.on('data', function (err, doc) {
-//    count++;
-//});
-//stream.on('close', function () {
-//    console.log('indexed ' + count + ' documents!');
-//});
-//stream.on('error', function (err) {
-//    //console.log(err);
-//});
+
+ProjectSchema.set('toJSON', {
+    getters: true,
+    virtuals: true
+});
 
 mongoose.model('Project', ProjectSchema);

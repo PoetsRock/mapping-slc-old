@@ -69,8 +69,8 @@ module.exports = function(app) {
     /**
      * routes for Natural Language Processing Engine
      */
-    //app.route('/api/v1/nlp')
-    //    .get(projects.nlpEngine);
+    app.route('/api/v1/nlp')
+        .get(projects.nlpProjects);
 
 
     // This is the search route, make a GET request on this endpoitn to return search results

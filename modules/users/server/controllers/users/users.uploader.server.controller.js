@@ -5,10 +5,10 @@
  */
 var _ = require('lodash'),
   fs = require('fs'),
-  path = require('path'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
+  path = require('path'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   config = require(path.resolve('./config/config')),
   //Project = mongoose.model('Project'),
   User = mongoose.model('User'),
