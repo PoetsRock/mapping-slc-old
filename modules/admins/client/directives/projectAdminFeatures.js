@@ -2,17 +2,15 @@
 
 angular.module('admins').directive('projectAdminFeatures', function () {
 	return {
-		restrict: 'E',
+		restrict: 'EA',
 		templateUrl: '/modules/admins/client/directives/views/project-admin-features.html',
 
-		//require: 'ngModel',
-		link: function (scope, element, attrs, modelCtrl) {
-			if(scope.project.status === 'published'){
-				console.log('pub be hooked, yo, up yeah up');
-				//fire pub confirm modal and then publish project function
+		link: function ($scope) {
+			console.log('inside directive projAdminFeatures, logging $scope.project:\n', $scope.project);
+			if($scope.project.status === 'published'){
 			}
-
 		}
-
 	};
 });
+
+

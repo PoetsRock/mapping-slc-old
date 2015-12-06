@@ -12,12 +12,13 @@
     "url": "https://github.com/poetsrock/mappingslc.git"
   },
   "engines": {
-    "node": "0.12",
-    "npm": "2.12"
+    "node": "^4.2",
+    "npm": "^2.14"
   },
   "scripts": {
-    "start": "grunt",
-    "postinstall": "bower install --config.interactive=false && gulp heroku"
+    "local": "grunt",
+    "start": "grunt heroku:production",
+    "postinstall": "bower install --config.interactive=false"
   },
   "dependencies": {
     "acl": "~0.4.4",

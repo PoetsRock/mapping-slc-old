@@ -66,10 +66,37 @@ module.exports = {
       }
     }
   },
+
+  alchemyApi: {
+    clientID: process.env.ALCHEMY_KEY,
+    callbackUrl: '/api/v1/auth/alchemy/callback'
+  },
   aws: {
+    awsAccessKey: process.env.AWS_ACCESS_KEY,
+    awsSecretKey: process.env.AWS_SECRET_KEY,
     s3Id: process.env.S3_ID,
     s3Secret: process.env.S3_SECRET,
     callbackUrl: '/api/v1/auth/s3/callback'
   },
+  census: {
+    clientID: process.env.CENSUS_KEY,
+    callbackUrl: '/api/v1/auth/census/callback'
+  },
+  googleAnalytics: {
+    googleAnalyticsID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
+    callbackUrl: '/api/v1/auth/google-analytics/callback'
+  },
+  here: {
+    hereId: process.env.HERE_KEY,
+    hereSecret: process.env.HERE_SECRET,
+    callbackUrl: '/api/v1/auth/mapbox/callback'
+  },
+  mapbox: {
+    mapboxId: process.env.MAPBOX_KEY,
+    mapboxSecret: process.env.MAPBOX_SECRET,
+    callbackUrl: '/api/v1/auth/mapbox/callback'
+  },
+
+
   seedDB: process.env.MONGO_SEED || false
 };

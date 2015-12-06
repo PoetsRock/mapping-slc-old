@@ -15,6 +15,14 @@ fieldset.contact {
     vertical-align: top;
 }
 
+.input .title, .input.input-secondary.title {
+    max-width: 76%;
+}
+
+.input.input-secondary.title.input-filled {
+    left: 5%;
+}
+
 .input_field {
     position: relative;
     display: block;
@@ -188,12 +196,16 @@ textarea.input_field-secondary:active {
     transform: translateY(3.0em) scale3d(0.955, 0.955, 1.5);
 }
 
+#title {
+    margin-left: 10%
+}
+
 span.input.input-secondary .title {
     max-width: 850px;
 }
 
 .input_label.input_label-secondary .title {
-    left: 5%;
+    /*left: 10%;*/
 }
 
 

@@ -60,7 +60,7 @@ module.exports = {
     clientID: process.env.PAYPAL_ID || 'CLIENT_ID',
     clientSecret: process.env.PAYPAL_SECRET || 'CLIENT_SECRET',
     callbackURL: '/api/v1/auth/paypal/callback',
-    sandbox: true
+    sandbox: false
   },
   mailer: {
     from: process.env.MAILER_FROM || 'MAILER_FROM',
@@ -76,6 +76,10 @@ module.exports = {
     s3Id: process.env.S3_ID || keys.s3Id,
     s3Secret: process.env.S3_SECRET || keys.s3Secret,
     callbackUrl: '/api/v1/auth/s3/callback'
+  },
+  alchemyApi: {
+    alchemyKey: process.env.ALCHEMY_ID || keys.alchemyKey,
+    callbackUrl: '/api/v1/auth/alchemy/callback'
   },
 
   livereload: true,

@@ -40,3 +40,16 @@ form .progress {
     left: 5px;
     position: relative;
 }
+
+.signin-icons .undecorated-link .fa {
+    font-size: 7rem;
+    margin: 12px 5%;
+    transition: all 0.3s ease 0s;
+}
+
+.signin-icons .undecorated-link .fa:hover {
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+    transition: all 0.3s ease 0s;
+}

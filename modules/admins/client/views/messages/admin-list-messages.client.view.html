@@ -4,50 +4,69 @@
          ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
-    <section class="container">
+  <section class="container">
 
-        <div class="main-content-outer">
+    <div class="main-content-outer">
 
-            <section class="main-content-inner" data-ng-controller="ContactsController" data-ng-init="find()">
-
-                <div class="page-header">
-                    <h1>Messages</h1>
-                </div>
-
-                <table class="table table-bordered table-striped">
-                    <thead ts-wrapper>
-                    <tr>
-                        <th ts-criteria="firstName">First Name</th>
-                        <th ts-criteria="lastName|lowercase" ts-default>Last Name</th>
-                        <th ts-criteria="email">E-Mail</th>
-                        <th ts-criteria="created">Date Sent</th>
-                        <!--<th ts-criteria="read">Read</th>-->
-                        <!--<th ts-criteria="flag">Flag</th>-->
-                    </tr>
-                    </thead>
+      <section class="main-content-inner" data-ng-controller="ContactsController" data-ng-init="find()">
 
 
-                    <tbody>
+        <div class="admin">
 
-                    <tr data-ng-repeat="contact in contacts | orderBy: '-created'" data-ng-class="{'message-read' : contact.read}" data-ng-click="viewMessage(contact._id)">
-                            <td>{{ contact.firstName }}</td>
-                            <td>{{ contact.lastName }}</td>
-                            <!--<td>{{ contact.email }}</td>-->
-                            <td>{{ contact._id }}</td>
-                            <td>{{ contact.created | date : short }}</td>
-                            <!--<td>{{ contact.read }}</td>-->
-                            <!--<td align="center"><i class="fa fa-flag" data-ng-click="toggleFlag = !toggleFlag" data-ng-class="{'select' : toggleFlag = true}"></i></td>-->
-                    </tr>
+          <div class="admin-messages">
 
-                    </tbody>
+            <div class="admin-nav">
+              <a class="btn btn-main grow" ui-sref="admin.dashboard">
+                Admin Home Page
+              </a>
+              <a class="btn btn-main grow" ui-sref="admin.adminProjectsQueue">
+                Admin Project Page
+              </a>
+            </div>
 
-                </table>
+            <div class="page-header">
+              <h1>Messages</h1>
+            </div>
 
-              <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            <table class="table table-bordered table-striped">
+              <thead ts-wrapper>
+              <tr>
+                <th ts-criteria="firstName">First Name</th>
+                <th ts-criteria="lastName|lowercase" ts-default>Last Name</th>
+                <th ts-criteria="email">E-Mail</th>
+                <th ts-criteria="created">Date Sent</th>
+                <!--<th ts-criteria="read">Read</th>-->
+                <!--<th ts-criteria="flag">Flag</th>-->
+              </tr>
+              </thead>
 
-            </section>
+
+              <tbody>
+
+              <tr data-ng-repeat="contact in contacts | orderBy: '-created'"
+                  data-ng-class="{'message-read' : contact.read}" data-ng-click="viewMessage(contact._id)">
+                <td>{{ contact.firstName }}</td>
+                <td>{{ contact.lastName }}</td>
+                <!--<td>{{ contact.email }}</td>-->
+                <td>{{ contact._id }}</td>
+                <td>{{ contact.created | date : short }}</td>
+                <!--<td>{{ contact.read }}</td>-->
+                <!--<td align="center"><i class="fa fa-flag" data-ng-click="toggleFlag = !toggleFlag" data-ng-class="{'select' : toggleFlag = true}"></i></td>-->
+              </tr>
+
+              </tbody>
+
+            </table>
+
+            <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength"
+                        ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
+
+          </div>
         </div>
+      </section>
+    </div>
 
 
-    </section>
+  </section>
 </section>

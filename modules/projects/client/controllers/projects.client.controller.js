@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -15,11 +15,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isPublished = false;
     $scope.userToEdit = {};
     $scope.images = [];
+    $scope.override = false;
 
     $scope.trustAsHtml = $sce.trustAsHtml;
 
     console.log('$scope.user:\n', $scope.user);
-    console.log('$scope.project:\n', $scope.project);
 
     $scope.init = function () {
       $scope.publishedProjects();
@@ -120,41 +120,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
-
-    //$rootScope.previousState = '';
-    //$rootScope.currentState = '';
-    //$rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
-    //  $rootScope.previousState = from.name;
-    //  $rootScope.currentState = to.name;
-    //});
-    //$scope.goBack = function () {
-    //  if ($rootScope.previousState === 'listProjects') {
-    //    $state.go($rootScope.previousState);
-    //  } else {
-    //    $state.go('admin');
-    //  }
-    //};
-    //$scope.run = function ($rootScope, $state, Authentication) {
-    //  $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    //    if (toState.authenticate && !Authentication.isLoggedIn()) {
-    //    }
-    //    event.preventDefault();
-    //  });
-    //};
-    //
-    //$scope.userLoggedin = function () {
-    //  // get request to /users/me
-    //  if ($location.path() === '/projects/create') {
-    //    $http.get('/api/v1/users/me')
-    //      .success(function (data) {
-    //        if (data === null) {
-    //          $rootScope.signInBeforeProject = true;
-    //          $location.path('/authentication/signin');
-    //        }
-    //      });
-    //  }
-    //}();
-
     // Create new Project
     $scope.create = function (isValid) {
       $scope.error = null;
@@ -176,8 +141,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       saveProject = function () {
         project.$save(function (response) {
-          console.log('location.path: ', 'projects/' + response._id + '/confirm');
-          $location.path('projects/' + response._id + '/confirm');
+          $scope.override = true;
+          $location.path('projects/' + response._id + '/status');
           // Clear form fields
           $scope.street = '';
           $scope.city = '';
@@ -191,7 +156,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       };
 
       $scope.updateLatLng(project);
-
+      $scope.override = false;
     };
 
     // Remove existing Project
@@ -218,13 +183,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     // Update existing Project
     $scope.update = function () {
       var project = $scope.project;
-      project.$update(function () {
-        if ($location.path() === '/admin/edit-project/' + project._id) {
-          //return to view mode and call notify for success message
-        } else {
-          $location.path('projects/' + project._id);
+      project.$update(function (response) {
+        if(response.$resolved) {
+          if ($location.path() === '/admin/edit-project/' + project._id) {
+            $location.path('/admin/edit-project/' + project._id);
+            $scope.toggleEditFn(0);
+          } else {
+            $location.path('projects/' + project._id);
+            $scope.toggleEditFn(0);
+          }
+          notify({
+            message: 'Project updated successfully',
+            classes: 'ng-notify-contact-success'
+          })
+        }else{
+          notify({
+            message: 'Something went wrong, and we didn\'t receive your message. We apologize.',
+            classes: 'ng-notify-contact-failure'
+          })
         }
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
@@ -276,56 +254,146 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     };
 
-    ////CKEDITOR.replace('story');
+
+
+
+    //CKEDITOR.replace('story');
     //$scope.editorOptions = {
     //  language: 'en',
     //  uiColor: '#02211D'
     //};
     //CKEDITOR.replaceClass = 'ck-crazy';
 
-    //modal for leaving projects
-    //Give user warning if leaving form
+    /**
+     * Checks to see if a user is logged in before allowing a user to create a project
+     * @type {function}
+     * @params: none
+     */
 
-    //var preventRunning = false;
-    //$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    //  if (preventRunning) {
-    //    return;
-    //  }
-    //  if (fromState.url === '/projects/create' && toState.url !== '/projects/:projectId') {
-    //    event.preventDefault();
-    //
-    //    $scope.animationsEnabled = true;
-    //    $uibModal.open({
-    //      animation: $scope.animationsEnabled,
-    //      templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
-    //      controller: 'ModalController',
-    //      size: 'lg'
-    //    });
-    //  }
-    //});
+    $rootScope.previousState = '';
+    $rootScope.currentState = '';
+    $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
+      $rootScope.previousState = from.name;
+      $rootScope.currentState = to.name;
+    });
+    $scope.goBack = function () {
+      if ($rootScope.previousState === 'listProjects') {
+        $state.go($rootScope.previousState);
+      } else {
+        $state.go('admin');
+      }
+    };
+    $scope.run = function ($rootScope, $state, Authentication) {
+      $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        if (toState.authenticate && !Authentication.isLoggedIn()) {
+        }
+        event.preventDefault();
+      });
+    };
 
-    ////admin panel editing
-    //$scope.toggleEdit = false;
-    //$scope.toggleId = 0;
-    //
-    //$scope.toggleEditFn = function (editNum) {
-    //  $scope.toggleEdit = !$scope.toggle;
-    //  $scope.toggleId = editNum;
-    //};
+    $scope.userLoggedin = function () {
+      // get request to /users/me
+      if ($location.path() === '/projects/create') {
+        $http.get('/api/v1/users/me')
+          .success(function (data) {
+            if (data === null) {
+              $rootScope.signInBeforeProject = true;
+              $location.path('/authentication/signin');
+            }
+          });
+      }
+    }();
+
+
+    /**
+     * modal for leaving projects, will give user warning if leaving form
+     *
+     */
+
+    $scope.preventRunning = true;
+    $scope.$on('$stateChangeStart',
+      function (event, toState, toParams, fromState, fromParams) {
+        var state = {
+          event: event,
+          toState: toState,
+          toParams: toParams,
+          fromState: fromState,
+          fromParams: fromParams
+        };
+        if (!$scope.preventRunning || $scope.override) {
+          return
+        } else {
+          var template = '';
+          $scope.items = [];
+
+          if (fromState.url === '/projects/create') {
+            event.preventDefault();
+            $scope.items.toStateUrl = toState.url;
+            template = '/modules/projects/client/directives/views/project-warning-modal.html';
+            $scope.openModal('lg', template);
+          }
+
+        }
+      });
+
+
+    $scope.animationsEnabled = true;
+    $scope.openModal = function (size, template, backdropClass, windowClass) {
+
+      var modalInstance = $uibModal.open({
+        templateUrl: template,
+        controller: 'ModalController',
+        animation: $scope.animationsEnabled,
+        backdrop: 'static',
+        backdropClass: backdropClass,
+        windowClass: windowClass,
+        size: size,
+        resolve: {
+          items: function () {
+            return $scope.items;
+          }
+        }
+      });
+      modalInstance.result.then(function (selectedItem) {
+        $scope.preventRunning = false;
+        return $location.path(selectedItem);
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+      $scope.toggleAnimation = function () {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+      };
+    };
+
+
+    /**
+     * admin panel editing
+     */
+
+    $scope.toggleEdit = false;
+    $scope.toggleId = 0;
+
+    $scope.toggleEditFn = function (editNum) {
+      $scope.toggleEdit = !$scope.toggle;
+      $scope.toggleId = editNum;
+    };
 
     /**
      * nlp
      **/
-    //$scope.nlpData = null;
-    //var getNlpData = function() {
-    //	$http.get('/nlp').
-    //		success(function (nlpData) {
-    //			console.log(nlpData);
-    //			$scope.nlpData = nlpData;
-    //		}).
-    //		error(function () {
-    //		});
-    //};
+    //$scope.update()
+    $scope.nlpData = null;
+    var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
+    $scope.processNlpData = function() {
+    	$http.get('api/v1/nlp').
+    		success(function (nlpData) {
+    			console.log(nlpData);
+    			$scope.nlpData = nlpData;
+    		}).
+    		error(function () {
+    		});
+    };
+
 
 
   }

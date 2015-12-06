@@ -7,7 +7,8 @@ angular.module('core').directive('modalDirective', function() {
 
             $uibModal.open({
               animation: true,
-              templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
+              //templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
+              templateUrl: template,
               controller: function ($scope, $modalInstance, $location) {
                 $scope.stay = function (result) {
                   //$modalInstance.dismiss('cancel');
