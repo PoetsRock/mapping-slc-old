@@ -214,11 +214,11 @@ div.list-group > a > div {
 /* slide in from the right */
 @keyframes slideInRight {
     from {
-        transform:translateX(200%);
-    }
-    to {
-        transform: translateX(0);
-    }
+transform:translateX(200%);
+}
+to {
+    transform: translateX(0);
+}
 }
 @-moz-keyframes slideInRight {
     from { -moz-transform:translateX(200%);
@@ -234,6 +234,11 @@ div.list-group > a > div {
 }
 
 
+
+/* Favorite */
+.fa-heart-o ,.fa-heart{
+    float: right;
+}
 
 
 

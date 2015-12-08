@@ -18,43 +18,43 @@ var _ = require('lodash'),
  */
 exports.update = function (req, res) {
   // Init Variables
-  //console.log('req.body::::::::::::::::::::::::::\n', req.body);
-  //console.log('req.user::::::::::::::::::::::::::\n', req.user);
+
   var user = req.user;
-  console.log('user::::::::::::::::::::::::::\n', user);
+
 
   // For security measurement we remove the roles from the req.body object
   if (req.body && req.body.roles !== undefined) {
     delete req.body.roles;
   }
-  //else if (req.user.body.roles) {
-  //  delete req.user.body.roles;
-  //}
-
-
 
   if (user) {
+      var i = 0;
     // Merge existing user
     user = _.extend(user, req.body);
-    user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
 
+      if (user.favorites.indexOf(req.body.favorite) === -1 ){
+          user.favorites.push(req.body.favorite);
+
+      } else {
+          console.log('this one is already here!');
+          return;
+      }
+
+    //console.log('the favorites: ', user.favorites);
     user.save(function (err) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        req.login(user, function (err) {
 
-          //console.log('req:\n', req);
-          console.log('req.login:\n', req.login);
-          console.log('res:\n', res);
-          console.log('user:\n', user);
+        req.login(user, function (err) {
 
           if (err) {
             res.status(400).send(err);
           } else {
+            console.log('this is the saved fav: ', user.favorites);
             res.json(user);
           }
         });
@@ -66,6 +66,7 @@ exports.update = function (req, res) {
     });
   }
 };
+
 
 
 /**

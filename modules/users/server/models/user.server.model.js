@@ -144,7 +144,10 @@ var UserSchema = new Schema({
     }]
   },
   favorites: {
-    type: String
+    type: [{
+        type: String
+    }],
+    default: []
   },
   newsletter: {
     type: Boolean,

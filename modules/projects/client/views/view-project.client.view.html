@@ -15,9 +15,10 @@
 
         <div class="view-project">
           <div class="page-header">
-            <h1 data-ng-bind="project.title"></h1>
+              <h1 data-ng-bind="project.title"></h1>
+              <i class="fa fa-heart-o" ng-show="!isFavorite" ng-click="favProject()"></i>
+              <i class="fa fa-heart" ng-show="isFavorite" ng-click="favProject()"></i>
             <em class="text-muted">
-
               <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
               by
               <a data-ng-href="/contributors/{{project.user._id}}"><span data-ng-bind="project.user.displayName"></span></a>
@@ -26,7 +27,6 @@
 
           <div class="row">
             <div class="col-xs-12">
-
               <div class="videoWrapper" data-ng-show="project.vimeoId">
                 <iframe data-ng-show="!videoSizeSelect()" width="{{vimeo.width}}" height="{{vimeo.height}}"
                         data-ng-src="{{vimeo.video}}" frameborder="0" webkitallowfullscreen mozallowfullscreen
