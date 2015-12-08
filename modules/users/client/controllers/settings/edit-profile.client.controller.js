@@ -5,6 +5,8 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
 
+    console.log('\n\n$scope.user:\n', $scope.user, '\n\n');
+
     // Provides logic for the css in the forms
     UtilsService.cssLayout();
 

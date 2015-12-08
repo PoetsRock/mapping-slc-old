@@ -1,23 +1,14 @@
 'use strict';
 
-angular.module('users').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'UserData', 'Users', 'ProfileImageService',
-  function ($scope, $state, $stateParams, Authentication, UserData, Users, ProfileImageService) {
+angular.module('users').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'UserData', 'Users', 'ProfileImageService', 'Projects', '$resource',
+  function ($scope, $state, $stateParams, Authentication, UserData, Users, ProfileImageService, Projects, $resource) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
-
-    $scope.remove = function (user) {
-      if (confirm('Are you sure you want to delete this user?')) {
-        if (user) {
-          user.$remove();
-
-          $scope.users.splice($scope.users.indexOf(user), 1);
-        } else {
-          $scope.user.$remove(function () {
-            $state.go('admin.users');
-          });
-        }
-      }
-    };
+    //$scope.user.projects = [];
+    $scope.userProjects = [];
+    //$scope.getProjects = null;
+    var associatedProjects = $scope.user.associatedProjects;
+    var userProjects = [];
 
 
     $scope.update = function (isValid) {
@@ -38,6 +29,20 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
       });
     };
 
+    //delete user
+    $scope.remove = function (user) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        if (user) {
+          user.$remove();
+
+          $scope.users.splice($scope.users.indexOf(user), 1);
+        } else {
+          $scope.user.$remove(function () {
+            $state.go('admin.users');
+          });
+        }
+      }
+    };
 
     // Find a list of Users
     $scope.find = function() {
@@ -48,10 +53,111 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     // Find existing User
     $scope.findOne = function() {
       $scope.user = UserData.get({
-        userId: $stateParams.userId
+        userId: $stateParams.userId || $scope.user.userId
       });
       console.log('$scope.users: ', $scope.users);
     };
+
+    //Find existing project submissions by UserId
+    $scope.findCurrentUserSubmissions = function() {
+
+
+      $scope.getProjects = function (associatedProjects) {
+        associatedProjects.forEach(function(associatedProject) {
+          userProjects.push(Projects.get({
+              projectId: associatedProject
+            })
+          );
+        });
+
+        console.log('userProjects inside of findCurrentUserSub fn:\n', userProjects);
+        console.log('$scope.userProjects inside of findCurrentUserSub fn:\n', $scope.userProjects);
+        $scope.userProjects = userProjects;
+        return userProjects;
+      };
+
+      console.log('userProjects outsode of findCurrentUserSub fn:\n', userProjects);
+      console.log('$scope.userProjects outsode of findCurrentUserSub fn:\n', $scope.userProjects);
+
+
+
+      $scope.getProjects(associatedProjects);
+
+    };
+
+
+    /**
+     * newsletter subscription form
+     */
+
+    $scope.newsletterSubscription = function (isValid) {
+      $scope.error = null;
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'userForm');
+        return false;
+      }
+      //var queryEmail = {email: $scope.subscribe.newsletter};
+      //var Newsletter = $resource('/api/v1/users', {queryObjectParam: queryObject});
+
+      //var newsletterUser = Users.query({email: $scope.subscribe.newsletter}, function(userData, err) {
+      //Users.query({email: $scope.subscribe.newsletter}, function(userData, err) {
+      //  if (err) {
+      //    console.log(err)
+      //  } else {
+      //    console.log('userData response', userData);
+      //  }
+      //});
+
+
+      Users.get({email: $scope.subscribe.newsletter}, function(userData) {
+            console.log('userData response', userData);
+        });
+
+
+
+        //.then(function(response) {
+        //  console.log('response:\n', response);
+        //})
+        //.catch(function(error) {
+        //  console.log('error:\n', error);
+        //});
+
+
+
+
+
+    };
+
+
+    /**
+     *
+     EXAMPLE OF USING A RESOURCE OBJ, FROM PROJECTS CONTROLLER
+
+    var publishUser = function (project) {
+      AdminUpdateUser.get({userId: project.user._id},
+        function (userData, getResponseHeader) {
+          userData.associatedProjects.push(project._id);
+          if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser') {
+            userData.roles[0] = 'contributor';
+          }
+          userData.$update(function (userData, putResponseHeaders) {
+          });
+        });
+    };
+
+     */
+
+
+    //get request to query db to see if email exists
+
+      //if true, conditional that checks whether the associated user has already subscribed
+
+        //if already subscribed, do nothing and notify user of this
+
+        //else update the current user's document
+
+      //else if email doesn't exist, call post method to create new user
+
 
   }
 ]);

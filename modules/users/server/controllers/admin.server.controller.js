@@ -6,6 +6,8 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  admin = require('./admin.server.controller.js'),
+  auth = require('./users/users.authentication.server.controller.js'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -27,7 +29,6 @@ exports.update = function (req, res) {
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = req.body.roles;
   user.associatedProjects.push(req.body.associatedProjects);
-  //user.associatedProjects = user.associatedProjects.concat(req.body.associatedProjects);
 
   user.save(function (err) {
     if (err) {
@@ -129,4 +130,68 @@ exports.userByID = function (req, res, next, id) {
     req.model = user;
     next();
   });
+};
+
+
+
+/**
+ * Find User(s) By Source (where source can be any property in Users model)
+ *
+ * @id {Object) key-value pair, where `key` is a property in the Users model
+ *
+ */
+
+exports.findUsersBySource = function (req, res) {
+
+  var sourceKey1 = req.source1.key,
+    sourceValue1 = req.source1.value;
+
+  var queryObject = {
+    sourceKey1: sourceValue1
+  };
+
+  User.find(queryObject)
+      .exec();
+
+};
+
+exports.addNewsletter = function (req, res) {
+
+  var newUserObject = {  };
+  var updateUserObject = {  };
+
+  User.find({
+    email: req.email
+  })
+    .select('newsletter firstName lastName email modifiedOn')
+    .exec(function(err, response) {
+    if(err) {
+      //email does not exist. create a new user
+      console.log('email does not exist. creating new user.\nError message:\n', err);
+      auth.create(newUserObject, function(createResponse) {
+        console.log('createResponse:\n', createResponse);
+        res.jsonp(createResponse);
+      });
+    } else if (!response.newsletter) {
+      //update user document to subscribe them to the newsletter
+      admin.update(updateUserObject, function(updateResponse){
+        console.log('updateResponse:\n', updateResponse);
+        res.jsonp(updateResponse);
+      });
+    } else if (response.newsletter) {
+      //email address is already receiving the newsletter
+      //send back message to front end
+      res.send('email is already subscribed to newsletter');
+    } else {
+      throw new Error('error subscribing user to newsletter. please try your request again.')
+    }
+  });
+
+  // start here:
+  //   http://mongoosejs.com/docs/queries.html
+  //
+  // and then:
+  //   http://mongoosejs.com/docs/api.html#query-js
+
+
 };
