@@ -16,15 +16,12 @@ module.exports = function (app) {
 
   // Single user routes
   app.route('/api/v1/users/:userId')
-    //.get(adminPolicy.isAllowed, admin.read)
     .get(admin.read)
-    .put(adminPolicy.isAllowed, admin.update)
-    //.put(admin.update)
+    .put(admin.update)
     .delete(adminPolicy.isAllowed, admin.delete);
 
   // Contributors collection routes
   app.route('/api/v1/contributors')
-    //.get(adminPolicy.isAllowed, admin.getContributors);
     .get(admin.getContributors);
 
   // Single contributor routes

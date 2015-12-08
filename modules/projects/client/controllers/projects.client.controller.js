@@ -16,7 +16,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.userToEdit = {};
     $scope.images = [];
     $scope.override = false;
-
+    $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
 
     console.log('$scope.user:\n', $scope.user);
@@ -304,6 +304,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     }();
 
+      /**
+       * Favorite project function
+       */
+
+
+      function checkFavs() {
+          var i = 0;
+          for (i < $scope.user.favorites.length; i++;){
+              if ($scope.user.favorites[i] === $stateParams.projectId) {
+                  $scope.isFavorite = true;
+              }else {
+                  $scope.isFavorite = false;
+              }
+          }
+      }
+      checkFavs();
+      $scope.favProject = function(){
+          $scope.isFavorite = !$scope.isFavorite;
+          var projectnum = $stateParams.projectId.toString();
+          if ($scope.isFavorite == true) {
+              $http({
+                  method: 'PUT',
+                  url: '/api/v1/users',
+                  data: {
+                      favorite: projectnum
+                  }
+              }).then(function(data){
+                  console.log('This is what I get', data);
+              })
+          }
+      };
 
     /**
      * modal for leaving projects, will give user warning if leaving form
@@ -397,5 +428,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 
   }
+
 ]);
 
