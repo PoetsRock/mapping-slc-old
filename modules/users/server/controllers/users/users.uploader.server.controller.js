@@ -33,6 +33,21 @@ var _ = require('lodash'),
  */
 
 exports.uploadUserProfileImage = function(req, res) {
+
+
+  /**
+   *
+   *
+   * Express.js Response methods
+   *
+   * The methods on the response object (res) in the following table can send a response to the client, and terminate the request-response cycle. If none of these methods are called from a route handler, the client request will be left hanging.
+
+   * `res.sendFile`  Send a file as an octet stream.
+   * `res.download()`  Prompt a file to be downloaded.
+   *
+   **/
+
+
   var user = req.body.user;
   //console.log('req.ServerResponse.req.locals:\n', req.ServerResponse.req.locals);
   //console.log('req  v2:\n', req.ServerResponse.req);

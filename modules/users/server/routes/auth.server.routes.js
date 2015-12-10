@@ -19,9 +19,6 @@ module.exports = function (app) {
   app.route('/api/v1/auth/signin').post(users.signin);
   app.route('/api/v1/auth/signout').get(users.signout);
 
-  // Setting up the users signup api when signing up via newsletter form
-  app.route('/api/v1/auth/signup/newsletter').post(users.subscriber);
-
   // Setting the facebook oauth routes
   app.route('/api/v1/auth/facebook').get(users.oauthCall('facebook', {
     scope: ['email']

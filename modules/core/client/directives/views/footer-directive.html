@@ -32,23 +32,25 @@
             </div>
           </div>
 
-          <div class="col-md-8 col-sm-12">
 
-            <form class="form-horizontal" data-ng-submit="create()" novalidate>
+          <div class="col-md-offset-1 col-md-7 col-sm-12" data-ng-controller="UserController">
+
+            <form name="subscribe" class="form-horizontal" data-ng-submit="newsletterSubscription(subscribe.$valid)" novalidate>
               <fieldset>
-                <!--<div class="form">-->
+
                   <span class="input input-secondary">
-                    <input class="input_field input_field-secondary" type="email" id="newsletter" data-ng-model="newsletter" required/>
+                    <input class="input_field input_field-secondary" type="email" id="newsletter" data-ng-model="subscribe.newsletter" required/>
                     <label class="input_label input_label-secondary" for="newsletter">
                       <span class="input_label-content input_label-content-secondary">E-mail for Quarterly Newsletter</span>
                     </label>
-                      </span>
-                <button class="btn btn-main btn-footer-overlay grow" type="submit" data-ng-hide="">Subscribe</button>
-                <!--</div>-->
+                  </span>
+                <button class="btn btn-main btn-footer-overlay grow" type="submit">Subscribe</button>
+
               </fieldset>
             </form>
 
           </div>
+
 
         </div>
       </div>

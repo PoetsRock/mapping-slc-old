@@ -98,8 +98,10 @@ var path = require('path'),
 //        }
 //    });
 //};
+
 exports.subscriber = function (req, res) {
-    console.log('de req', req.body);
+    console.log('de req', req);
+    console.log('de req.body', req.body);
     User.findOne({
         email: req.body.email
     }).exec(function (err, user) {

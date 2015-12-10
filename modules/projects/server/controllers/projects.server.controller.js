@@ -43,7 +43,7 @@ function nlpKeywords(sanitizedText) {
 
 
 
-
+//
 // export default function getReplies(topicId) {
 //  return new Promise(function (resolve, reject) {
 //
@@ -72,7 +72,7 @@ function nlpKeywords(sanitizedText) {
 //    console.log(error)
 //    ;
 //  });
-//
+
 // **/
 
 
@@ -185,10 +185,6 @@ exports.delete = function (req, res) {
  *
  */
 exports.list = function (req, res) {
-  //run a query in mongoose
-  //Project.find(
-  //{'projects._id': req.query.}
-  //)
   Project.find()
     .sort('-created')
     .populate('user')
@@ -198,8 +194,6 @@ exports.list = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //projects.user;
-        //console.log('projects.user', projects.user);
         res.jsonp(projects);
       }
     });
@@ -225,8 +219,6 @@ exports.listPublished = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //projects.user;
-        console.log('published projects:\n', projects);
         res.jsonp(projects);
       }
     });
@@ -247,7 +239,6 @@ exports.markerList = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        console.log('projects: ', projects);
         res.jsonp(projects);
       }
     });
@@ -263,7 +254,6 @@ exports.findOneVideoId = function (req, res) {
         return next(new Error('Failed to load project ' + id + 'associated with the requested video.')
         )
       }
-      console.log('res:\n', res);
       res.vimeoId = project.vimeoId;
     });
 };
@@ -311,7 +301,6 @@ exports.nlpProjects = function (req, res) {
     if (err) {
       throw err;
     //} else if (req.body.useCase === 'server') {
-    //  console.log('keywords:\n', response);
     //  res.json(response);
     } else {
       console.log('keywords.keywords l. 317:\n', keywords.keywords);

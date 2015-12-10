@@ -5,6 +5,8 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
 
+    console.log('\n\n$scope.user:\n', $scope.user, '\n\n');
+
     // Provides logic for the css in the forms
     UtilsService.cssLayout();
 
@@ -65,6 +67,8 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
     // Find a list of Users
     $scope.find = function() {
+      console.log('edit-profile: $$$$$$$$$$$$$$$$$scope.userSSS:::\n', $scope.users);
+      console.log('$$$$$$$$$$$$$$$$$scope.query:::\n', $scope.query);
       $scope.users = Users.query($scope.query);
     };
 

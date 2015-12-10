@@ -19,8 +19,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
 
-    console.log('$scope.user:\n', $scope.user);
-
     $scope.init = function () {
       $scope.publishedProjects();
     };
@@ -109,7 +107,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     // Find a list of all published projects
-    //PublishingService.getPublishedProjects().
     $scope.publishedProjects = function () {
       $http.get('/api/v1/projects/published').
       success(function (publishedProjects) {
@@ -184,7 +181,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.update = function () {
       var project = $scope.project;
       project.$update(function (response) {
-        if(response.$resolved) {
+        if (response.$resolved) {
           if ($location.path() === '/admin/edit-project/' + project._id) {
             $location.path('/admin/edit-project/' + project._id);
             $scope.toggleEditFn(0);
@@ -196,13 +193,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             message: 'Project updated successfully',
             classes: 'ng-notify-contact-success'
           })
-        }else{
+        } else {
           notify({
             message: 'Something went wrong, and we didn\'t receive your message. We apologize.',
             classes: 'ng-notify-contact-failure'
           })
         }
-      }, function(errorResponse) {
+      }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
@@ -239,8 +236,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             $scope.images.push(project.imageGallery[i]);
           }
         }
-        console.log('$scope.project:\n', $scope.project);
+        getUserFavoriteStories($scope.user.favorites, $scope.project.id);
       });
+
     };
 
     $scope.completed = function () {
@@ -253,8 +251,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       }
     };
-
-
 
 
     //CKEDITOR.replace('story');
@@ -304,37 +300,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     }();
 
-      /**
-       * Favorite project function
-       */
+    /**
+     * Favorite project function
+     */
 
+    var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
+      userFavoriteProjects.forEach(function (userFavoriteProject) {
+        if (userFavoriteProject === projectId) {
+          $scope.isFavorite = true;
+        }
+      });
+    };
+    $scope.toggleFavProject = function () {
+      $scope.isFavorite = !$scope.isFavorite;
 
-      function checkFavs() {
-          var i = 0;
-          for (i < $scope.user.favorites.length; i++;){
-              if ($scope.user.favorites[i] === $stateParams.projectId) {
-                  $scope.isFavorite = true;
-              }else {
-                  $scope.isFavorite = false;
-              }
-          }
+      var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
+      if (!$scope.isFavorite) {
+        updateFavoriteObj.isFavorite = false;
       }
-      checkFavs();
-      $scope.favProject = function(){
-          $scope.isFavorite = !$scope.isFavorite;
-          var projectnum = $stateParams.projectId.toString();
-          if ($scope.isFavorite == true) {
-              $http({
-                  method: 'PUT',
-                  url: '/api/v1/users',
-                  data: {
-                      favorite: projectnum
-                  }
-              }).then(function(data){
-                  console.log('This is what I get', data);
-              })
-          }
-      };
+      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+    };
+
 
     /**
      * modal for leaving projects, will give user warning if leaving form
@@ -412,19 +398,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     /**
      * nlp
      **/
-    //$scope.update()
+      //$scope.update()
     $scope.nlpData = null;
     var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
-    $scope.processNlpData = function() {
-    	$http.get('api/v1/nlp').
-    		success(function (nlpData) {
-    			console.log(nlpData);
-    			$scope.nlpData = nlpData;
-    		}).
-    		error(function () {
-    		});
+    $scope.processNlpData = function () {
+      $http.get('api/v1/nlp').
+      success(function (nlpData) {
+        console.log(nlpData);
+        $scope.nlpData = nlpData;
+      }).
+      error(function () {
+      });
     };
-
 
 
   }

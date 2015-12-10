@@ -7,7 +7,7 @@
   <p data-ng-show="project.street2">Street 2:<br/>{{project.street2}}</p>
   <p>City:<br/>{{project.city}}</p>
   <p>Zip Code:<br/>{{project.zip}}</p>
-  <p>Keywords:<br/>{{project.keywords}}</p>
+  <p data-ng-show="project.keywords.length > 0">Keywords:<br/>{{project.keywords}}</p>
 
 </div>
 
