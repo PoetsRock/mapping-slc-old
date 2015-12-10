@@ -24,7 +24,6 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var user = null;
   if(req.model) {
-    console.log('::::::req.model::::::::\n', req.model);
     user = req.model;
     user = _.extend(user, req.body);
     ////For security purposes only merge these parameters
@@ -33,7 +32,6 @@ exports.update = function (req, res) {
     //user.displayName = user.firstName + ' ' + user.lastName;
     //user.roles = req.body.roles;
     user.associatedProjects.push(req.body.associatedProjects);
-    console.log('::::::user::::::::\n', user, '\n\n\n\n');
     // if true, then user has just added project as a favorite
     // so, projectId needs to be pushed into favorites array.
     // if false, projectId should be popped from favorites array.
@@ -47,10 +45,6 @@ exports.update = function (req, res) {
     user = req.body;
   }
 
-  console.log('::::::req.body::::::::\n', req.body);
-
-
-
   user.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -58,7 +52,6 @@ exports.update = function (req, res) {
       });
     }
 
-    //console.log('::::::user inside of SAVE SAVE SAVE::::::::\n', user, '\n\n\n\n');
     res.jsonp(user);
 
   });
@@ -187,26 +180,8 @@ exports.addNewsletter = function (req, res) {
     //.select('newsletter firstName lastName email ModifiedOn')
     .exec(function(err, userData) {
 
-      console.log('Error message:');
-      console.log('....................................');
-      console.log(err);
-      console.log('....................................');
-      console.log('....................................');
-      console.log('and user data, sir:');
-      console.log('....................................');
-      console.log('userData: (response from email query):\n', userData);
-
-
       if(err === null && userData === null) {
         //email does not exist. create a new user
-        console.log('email does not exist.');
-        console.log('....................................');
-        console.log('creating new user');
-        console.log('....................................');
-        console.log('Error message:');
-        console.log('....................................');
-        console.log(err);
-
         var newUserObject = {
           body: {
             email: req.query.email,
@@ -253,9 +228,4 @@ exports.addNewsletter = function (req, res) {
       }
   });
 
-  // start here:
-  //   http://mongoosejs.com/docs/queries.html
-  //
-  // and then:
-  //   http://mongoosejs.com/docs/api.html#query-js
 };

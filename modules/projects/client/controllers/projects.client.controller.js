@@ -19,8 +19,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
 
-    console.log('$scope.user:\n', $scope.user);
-
     $scope.init = function () {
       $scope.publishedProjects();
     };
@@ -238,8 +236,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             $scope.images.push(project.imageGallery[i]);
           }
         }
-        console.log('$scope.project 1212:\n', $scope.project);
-        console.log('$scope.user 1212:\n', $scope.user);
         getUserFavoriteStories($scope.user.favorites, $scope.project.id);
       });
 
@@ -315,11 +311,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       });
     };
-
     $scope.toggleFavProject = function () {
-      console.log('$scope.user 3434:\n', $scope.user);
-      console.log('$scope.user.id 3434:\n', $scope.user._id);
-      console.log('$scope.project 3434:\n', $scope.project);
       $scope.isFavorite = !$scope.isFavorite;
 
       var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
@@ -327,10 +319,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         updateFavoriteObj.isFavorite = false;
       }
       $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
-        .then(function (data) {
-          console.log('This is what I get', data);
-        });
     };
+
 
     /**
      * modal for leaving projects, will give user warning if leaving form
