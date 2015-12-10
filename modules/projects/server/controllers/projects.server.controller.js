@@ -226,7 +226,7 @@ exports.listPublished = function (req, res) {
         });
       } else {
         //projects.user;
-        console.log('published projects:\n', projects);
+        //console.log('published projects:\n', projects);
         res.jsonp(projects);
       }
     });
@@ -247,7 +247,7 @@ exports.markerList = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        console.log('projects: ', projects);
+        //console.log('projects: ', projects);
         res.jsonp(projects);
       }
     });
@@ -263,7 +263,7 @@ exports.findOneVideoId = function (req, res) {
         return next(new Error('Failed to load project ' + id + 'associated with the requested video.')
         )
       }
-      console.log('res:\n', res);
+      //console.log('res:\n', res);
       res.vimeoId = project.vimeoId;
     });
 };

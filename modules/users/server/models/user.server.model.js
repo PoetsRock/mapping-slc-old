@@ -27,6 +27,16 @@ var validateLocalStrategyEmail = function (email) {
  * User Schema
  **/
 var UserSchema = new Schema({
+  createdOn: {
+    type: Date,
+    default: Date.now
+  },
+  ModifiedBy: {
+    type: String
+  },
+  ModifiedOn: {
+    type: Date
+  },
   namePrefix: {
     type: String,
     trim: true,
@@ -35,14 +45,14 @@ var UserSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    default: ''
+    //validate: [validateLocalStrategyProperty, 'Please fill in your first name']
   },
   lastName: {
     type: String,
     trim: true,
     default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+    //validate: [validateLocalStrategyProperty, 'Please fill in your last name']
   },
   displayName: {
     type: String,
@@ -56,10 +66,8 @@ var UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    lowercase: true,
     trim: true,
-    required: '',
-    default: '',
+    required: true,
     validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
   },
   userStreet: {
@@ -119,8 +127,7 @@ var UserSchema = new Schema({
       type: String,
       enum: ['user', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
     }],
-    default: ['registered'],
-    required: 'Please provide at least one role'
+    default: ['registered']
   },
   updated: {
     type: Date

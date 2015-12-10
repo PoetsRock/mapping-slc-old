@@ -109,7 +109,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     // Find a list of all published projects
-    //PublishingService.getPublishedProjects().
     $scope.publishedProjects = function () {
       $http.get('/api/v1/projects/published').
       success(function (publishedProjects) {
