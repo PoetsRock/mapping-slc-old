@@ -58,3 +58,21 @@ angular.module('users').factory('AdminUpdateUser', ['$resource', 'AdminAuthServi
     }
   }
 ]);
+
+angular.module('users').factory('Newsletter', ['$resource',
+  function ($resource) {
+      return $resource('api/v1/newsletter', {email: '@email'}, {
+        update: {
+          method: 'PUT'
+        }
+      }, {
+        create: {
+          method: 'POST'
+        }
+      }, {
+        read: {
+          method: 'GET'
+        }
+      });
+  }
+]);

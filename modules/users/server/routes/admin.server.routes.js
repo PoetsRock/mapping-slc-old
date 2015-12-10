@@ -14,6 +14,10 @@ module.exports = function (app) {
   app.route('/api/v1/users')
     .get(adminPolicy.isAllowed, admin.list);
 
+  //app.route('/api/v1/users/newsletter').put(admin.addNewsletter);
+  app.route('/api/v1/newsletter')
+      .get(admin.addNewsletter);
+  //
   // Single user routes
   app.route('/api/v1/users/:userId')
     //.get(adminPolicy.isAllowed, admin.read)

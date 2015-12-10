@@ -8,12 +8,11 @@ module.exports = function (app) {
   app.route('/api/v1/users/me')
     .get(users.me);
   
-  app.route('/api/v1/users')
-      .put(users.update);
+  //app.route('/api/v1/users').put(users.update);
 
   // Setting up the users signup api when signing up via newsletter form
-  app.route('/api/v1/auth/signup/newsletter')
-      .put(users.addNewsletter);
+  //app.route('/api/v1/auth/signup/newsletter').put(users.addNewsletter);
+
 
   
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);

@@ -27,7 +27,7 @@ var ProjectSchema = new Schema({
     }],
     default: 'received'
   },
-  submittedOn: {
+  createdOn: {
     type: Date,
     default: Date.now
   },

@@ -67,6 +67,8 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
     // Find a list of Users
     $scope.find = function() {
+      console.log('edit-profile: $$$$$$$$$$$$$$$$$scope.userSSS:::\n', $scope.users);
+      console.log('$$$$$$$$$$$$$$$$$scope.query:::\n', $scope.query);
       $scope.users = Users.query($scope.query);
     };
 
