@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  _ = require('lodash'),
   admin = require('./admin.server.controller.js'),
   auth = require('./users/users.authentication.server.controller.js'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
@@ -25,18 +26,29 @@ exports.update = function (req, res) {
   if(req.model) {
     console.log('::::::req.model::::::::\n', req.model);
     user = req.model;
-    //For security purposes only merge these parameters
-    user.firstName = req.body.firstName;
-    user.lastName = req.body.lastName;
-    user.displayName = user.firstName + ' ' + user.lastName;
-    user.roles = req.body.roles;
+    user = _.extend(user, req.body);
+    ////For security purposes only merge these parameters
+    //user.firstName = req.body.firstName;
+    //user.lastName = req.body.lastName;
+    //user.displayName = user.firstName + ' ' + user.lastName;
+    //user.roles = req.body.roles;
     user.associatedProjects.push(req.body.associatedProjects);
+    console.log('::::::user::::::::\n', user, '\n\n\n\n');
+    // if true, then user has just added project as a favorite
+    // so, projectId needs to be pushed into favorites array.
+    // if false, projectId should be popped from favorites array.
+    if(req.body.isFavorite) {
+      user.favorites.push(req.body.favorite);
+    } else if (req.body.isFavorite === false && req.body.favorite) {
+      user.favorites.pop(req.body.favorite);
+    }
 
   } else if (req.body._id) {
     user = req.body;
   }
+
   console.log('::::::req.body::::::::\n', req.body);
-  console.log('::::::user::::::::\n', user, '\n\n\n\n');
+
 
 
   user.save(function (err) {
@@ -46,7 +58,7 @@ exports.update = function (req, res) {
       });
     }
 
-    console.log('::::::user inside of SAVE SAVE SAVE::::::::\n', user, '\n\n\n\n');
+    //console.log('::::::user inside of SAVE SAVE SAVE::::::::\n', user, '\n\n\n\n');
     res.jsonp(user);
 
   });

@@ -16,8 +16,8 @@
         <div class="view-project">
           <div class="page-header">
               <h1 data-ng-bind="project.title"></h1>
-              <i class="fa fa-heart-o" ng-show="!isFavorite" ng-click="favProject()"></i>
-              <i class="fa fa-heart" ng-show="isFavorite" ng-click="favProject()"></i>
+              <i class="fa fa-heart-o" ng-show="!isFavorite" ng-click="toggleFavProject()"></i>
+              <i class="fa fa-heart" ng-show="isFavorite" ng-click="toggleFavProject()"></i>
             <em class="text-muted">
               <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
               by
