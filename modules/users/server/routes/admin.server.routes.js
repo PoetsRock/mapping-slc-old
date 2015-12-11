@@ -11,8 +11,8 @@ module.exports = function (app) {
   require('./users.server.routes.js')(app);
 
   // Users collection routes
-  app.route('/api/v1/users')
-    .get(adminPolicy.isAllowed, admin.list);
+  //app.route('/api/v1/users')
+  //  .get(admin.list);
 
   //app.route('/api/v1/users/newsletter').put(admin.addNewsletter);
   app.route('/api/v1/newsletter')
@@ -21,8 +21,8 @@ module.exports = function (app) {
   // Single user routes
   app.route('/api/v1/users/:userId')
     .get(admin.read)
-    .put(admin.update)
-    .delete(adminPolicy.isAllowed, admin.delete);
+    //.delete(adminPolicy.isAllowed, admin.delete),
+    .put(admin.update);
 
   // Contributors collection routes
   app.route('/api/v1/contributors')
