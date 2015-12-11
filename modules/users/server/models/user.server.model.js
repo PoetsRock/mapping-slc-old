@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   crypto = require('crypto'),
   validator = require('validator'),
+  generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
 
 /**
@@ -128,6 +129,7 @@ var UserSchema = new Schema({
       enum: ['user', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
     }],
     default: ['registered']
+    required: 'Please provide at least one role'
   },
   updated: {
     type: Date
@@ -200,7 +202,7 @@ UserSchema.pre('validate', function (next) {
   owasp.config({
     minLength: 8  //this overrides default val -- original set to 10
   });
-  if (this.provider === 'local' && this.password) {
+  if (this.provider === 'local' && this.password && this.isModified('password')) {
     var result = owasp.test(this.password);
     if (result.errors.length) {
       var error = result.errors.join(' ');
@@ -252,10 +254,10 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 };
 
 /**
- * Generates a random passphrase that passes the owasp test.
- * Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
- * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
- */
+* Generates a random passphrase that passes the owasp test.
+* Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
+* NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
+*/
 UserSchema.statics.generateRandomPassphrase = function () {
   return new Promise(function (resolve, reject) {
     var password = '';

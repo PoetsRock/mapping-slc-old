@@ -25,6 +25,18 @@ app/tests/coverage/
 .idea/
 coverage/
 
+# MEAN.js app and assets
+# ======================
+public/dist/
+uploads
+modules/users/client/img/profile/uploads
+config/env/local.js
+config/env/local-*.js
+*.pem
+
+# Ignoring MEAN.JS's gh-pages branch for documenation
+_site/
+
 # General
 # =======
 *.log
@@ -37,6 +49,22 @@ coverage/
 *.bak
 *.swp
 logs/
+build/
+
+# Sublime editor
+# ==============
+.sublime-project
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse project files
+# =====================
+.project
+.settings/
+.*.md.html
+.metadata
+*~.nib
+local.properties
 
 # IntelliJ
 # ========

@@ -125,7 +125,7 @@ exports.delete = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
-    //return res.json(user);
+
     res.json(user);
   });
 };
@@ -140,11 +140,8 @@ exports.list = function (req, res) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else {
-        res.json(users);
       }
-  });
-};
+    res.json(users);
 
 
 /**
