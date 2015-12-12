@@ -1,0 +1,11 @@
+/app/tests
+<<<<<<< HEAD
+/modules/.articles
+/modules/admins/tests
+/modules/chat
+/modules/contacts/tests
+/modules/core/tests
+/modules/projects/tests
+/modules/users/tests
+=======
+>>>>>>> meanjs/master

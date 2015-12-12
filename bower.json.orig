@@ -1,0 +1,75 @@
+{
+<<<<<<< HEAD
+  "name": "mapping-salt-lake-city",
+  "description": "Mapping Salt Lake City is a community-created archive of Salt Lake City’s neighborhoods and people that documents the city’s changes through art, critical and creative literature, personal maps and multimedia projects. We invite people to engage with and evolve this site by submitting their own contributions.",
+  "version": "0.2.0",
+  "author": "Chris Tanseer",
+  "meanjs-version": "0.4.1",
+  "homepage": "http://mappingslc.org/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/poetsrock/mappingslc.git"
+  },
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-animate": "~1.4.7",
+    "angular-cookies": "~1.4.7",
+    "angular-messages": "~1.4.7",
+    "angular-mocks": "~1.4.7",
+    "angular-resource": "~1.4.7",
+    "angular-touch": "~1.4.7",
+    "angular-sanitize": "~1.4.7",
+    "angular-bootstrap-lightbox": "~0.9.0",
+    "angular-file-upload": "~2.2.0",
+    "angular-notify": "~2.5.0",
+    "angular-ui-router": "~0.2",
+    "angular-ui-utils": "bower",
+    "bootstrap": "~3",
+    "c3": "~0.4.10",
+    "d3": "~3.5.6",
+    "font-awesome": "~4.4.0",
+    "modernizr": "~3.0.0",
+    "moment": "~2.10.6",
+    "ng-ckeditor": "~0.2.1",
+    "owasp-password-strength-test": "~1.3.0",
+    "rangy": "~1.3.0",
+    "sidebar-v2": "~0.2.1",
+    "classie": "~1.0.1",
+    "angular-redactor": "~1.1.5",
+    "angular-loading-bar": "~0.8.0",
+    "ng-videosharing-embed": "~0.3.4",
+    "angular-bootstrap": "~0.14.3",
+    "ng-file-upload": "~9.1.2",
+    "ng-file-upload-shim": "~9.1.2",
+    "xmlToJSON.js": "~1.3.2"
+  },
+  "resolutions": {
+    "angular": "~1.4.7",
+    "d3": "~3.5.6",
+    "angular-ui-utils": "bower",
+    "angular-bootstrap": "~0.14.3",
+    "angular-file-upload": "~2.2.0"
+=======
+  "name": "meanjs",
+  "description": "Fullstack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
+  "homepage": "http://meanjs.org/",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "~3",
+    "angular": "~1.3",
+    "angular-resource": "~1.3",
+    "angular-animate": "~1.3",
+    "angular-mocks": "~1.3",
+    "angular-bootstrap": "~0.13",
+    "angular-ui-utils": "bower",
+    "angular-ui-router": "~0.2",
+    "angular-file-upload": "1.1.5",
+    "angular-messages": "~1.3.17",
+    "owasp-password-strength-test": "~1.3.0"
+  },
+  "resolutions": {
+    "angular": "~1.3"
+>>>>>>> meanjs/master
+  }
+}

@@ -7,7 +7,10 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   crypto = require('crypto'),
   validator = require('validator'),
+<<<<<<< HEAD
+=======
   generatePassword = require('generate-password'),
+>>>>>>> meanjs/master
   owasp = require('owasp-password-strength-test');
 
 /**
@@ -26,6 +29,7 @@ var validateLocalStrategyEmail = function (email) {
 
 /**
  * User Schema
+<<<<<<< HEAD
  **/
 var UserSchema = new Schema({
   createdOn: {
@@ -48,17 +52,31 @@ var UserSchema = new Schema({
     trim: true,
     default: ''
     //validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+=======
+ */
+var UserSchema = new Schema({
+  firstName: {
+    type: String,
+    trim: true,
+    default: '',
+    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+>>>>>>> meanjs/master
   },
   lastName: {
     type: String,
     trim: true,
     default: '',
+<<<<<<< HEAD
     //validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+=======
+    validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+>>>>>>> meanjs/master
   },
   displayName: {
     type: String,
     trim: true
   },
+<<<<<<< HEAD
   userTitle: {
     type: String,
     trim: true,
@@ -90,6 +108,15 @@ var UserSchema = new Schema({
     type: Number,
     default: '',
     trim: true
+=======
+  email: {
+    type: String,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    default: '',
+    validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
+>>>>>>> meanjs/master
   },
   username: {
     type: String,
@@ -109,6 +136,7 @@ var UserSchema = new Schema({
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
+<<<<<<< HEAD
   profileImageThumbURL: {
     type: String,
     trim: true
@@ -117,6 +145,8 @@ var UserSchema = new Schema({
     type: String,
     default: 'default.png'
   },
+=======
+>>>>>>> meanjs/master
   provider: {
     type: String,
     required: 'Provider is required'
@@ -126,10 +156,16 @@ var UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
+<<<<<<< HEAD
       enum: ['user', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
     }],
-    default: ['registered'],
+    default: ['registered']
+=======
+      enum: ['user', 'admin']
+    }],
+    default: ['user'],
     required: 'Please provide at least one role'
+>>>>>>> meanjs/master
   },
   updated: {
     type: Date
@@ -138,6 +174,7 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+<<<<<<< HEAD
   lastVisit: {
     type: Date,
     default: Date.now
@@ -173,6 +210,8 @@ var UserSchema = new Schema({
     default: '',
     trim: true
   },
+=======
+>>>>>>> meanjs/master
   /* For reset password */
   resetPasswordToken: {
     type: String
@@ -198,11 +237,15 @@ UserSchema.pre('save', function (next) {
  * Hook a pre validate method to test the local password
  */
 UserSchema.pre('validate', function (next) {
+<<<<<<< HEAD
   // Pass a hash of settings to the `config` method to override defaults
   owasp.config({
     minLength: 8  //this overrides default val -- original set to 10
   });
+  if (this.provider === 'local' && this.password) {
+=======
   if (this.provider === 'local' && this.password && this.isModified('password')) {
+>>>>>>> meanjs/master
     var result = owasp.test(this.password);
     if (result.errors.length) {
       var error = result.errors.join(' ');
@@ -254,16 +297,27 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 };
 
 /**
+<<<<<<< HEAD
+ * Generates a random passphrase that passes the owasp test.
+ * Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
+ * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
+ */
+=======
 * Generates a random passphrase that passes the owasp test.
 * Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
 * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
 */
+>>>>>>> meanjs/master
 UserSchema.statics.generateRandomPassphrase = function () {
   return new Promise(function (resolve, reject) {
     var password = '';
     var repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
 
+<<<<<<< HEAD
     // iterate until the we have a valid passphrase.
+=======
+    // iterate until the we have a valid passphrase. 
+>>>>>>> meanjs/master
     // NOTE: Should rarely iterate more than once, but we need this to ensure no repeating characters are present.
     while (password.length < 20 || repeatingCharacters.test(password)) {
       // build the random password

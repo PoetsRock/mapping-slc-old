@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+<<<<<<< HEAD
 //import { admin } from './admin.server.controller.js';
 var path = require('path'),
   mongoose = require('mongoose'),
@@ -11,6 +12,12 @@ var path = require('path'),
   _ = require('lodash'),
   admin = require('./admin.server.controller.js'),
   auth = require('./users/users.authentication.server.controller.js');
+=======
+var path = require('path'),
+  mongoose = require('mongoose'),
+  User = mongoose.model('User'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+>>>>>>> meanjs/master
 
 /**
  * Show the current user
@@ -23,6 +30,7 @@ exports.read = function (req, res) {
  * Update a User
  */
 exports.update = function (req, res) {
+<<<<<<< HEAD
   var user = null;
   if(req.model) {
     user = req.model;
@@ -45,6 +53,15 @@ exports.update = function (req, res) {
   } else if (req.body._id) {
     user = req.body;
   }
+=======
+  var user = req.model;
+
+  //For security purposes only merge these parameters
+  user.firstName = req.body.firstName;
+  user.lastName = req.body.lastName;
+  user.displayName = user.firstName + ' ' + user.lastName;
+  user.roles = req.body.roles;
+>>>>>>> meanjs/master
 
   user.save(function (err) {
     if (err) {
@@ -52,21 +69,27 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
+<<<<<<< HEAD
     res.jsonp(user);
+=======
+
+    res.json(user);
+>>>>>>> meanjs/master
   });
 };
 
 /**
+<<<<<<< HEAD
  * subscribe user to newsletter
  * and add new user to database if email does not exist
  */
 exports.addNewsletter = function (req, res) {
 
-  User.findOne({email: req.query.email})
+  User.findOne({ email: req.query.email})
     //.select('newsletter firstName lastName email ModifiedOn')
-    .exec(function (err, userData) {
+    .exec(function(err, userData) {
 
-      if (err === null && userData === null) {
+      if(err === null && userData === null) {
         //email does not exist. create a new user
         var newUserObject = {
           body: {
@@ -79,14 +102,14 @@ exports.addNewsletter = function (req, res) {
           }
         };
         auth.signup(newUserObject,
-          function (createResponse) {
+          function(createResponse) {
             console.log('createResponse:\n', createResponse);
             createResponse.subscribed = true;
             createResponse.message = 'Ok, we penciled you in. Please check your email to confirm your subscription.';
             res.jsonp([createResponse]);
           });
 
-      } else if (!userData.newsletter) {
+      } else if(!userData.newsletter) {
         console.log('userData: (response from email query):\n', userData);
 
         var updateUserObject = {
@@ -108,13 +131,14 @@ exports.addNewsletter = function (req, res) {
       } else {
         //email address is already receiving the newsletter
         //send back message to front end
-        res.jsonp([{subscribed: true, message: 'email is already subscribed to newsletter'}]);
+        res.jsonp([{subscribed:true, message: 'email is already subscribed to newsletter'}]);
       }
     });
-};
 
 
 /**
+=======
+>>>>>>> meanjs/master
  * Delete a user
  */
 exports.delete = function (req, res) {
@@ -126,7 +150,11 @@ exports.delete = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
+<<<<<<< HEAD
+    //return res.json(user);
+=======
 
+>>>>>>> meanjs/master
     res.json(user);
   });
 };
@@ -135,15 +163,17 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
+<<<<<<< HEAD
   User.find({}, '-salt -password').sort('-created').populate('user', 'displayName')
     .exec(function (err, users) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
+      } else {
+        res.json(users);
       }
-      res.json(users);
-    });
+  });
 };
 
 
@@ -163,6 +193,17 @@ exports.getContributors = function(req, res) {
       }
         res.jsonp(users);
     });
+=======
+  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(users);
+  });
+>>>>>>> meanjs/master
 };
 
 /**
@@ -186,6 +227,7 @@ exports.userByID = function (req, res, next, id) {
     next();
   });
 };
+<<<<<<< HEAD
 
 
 
@@ -226,3 +268,8 @@ exports.findUsersBySource = function (req, res) {
   exports.deleteContributor = function(req, res) {
 
   };
+
+
+};
+=======
+>>>>>>> meanjs/master

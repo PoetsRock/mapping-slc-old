@@ -2,7 +2,11 @@
 
 module.exports = {
   secure: {
+<<<<<<< HEAD
+    ssl: false,
+=======
     ssl: true,
+>>>>>>> meanjs/master
     privateKey: './config/sslcerts/key.pem',
     certificate: './config/sslcerts/cert.pem'
   },
@@ -17,6 +21,14 @@ module.exports = {
     debug: process.env.MONGODB_DEBUG || false
   },
   log: {
+<<<<<<< HEAD
+    // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
+    format: 'combined',
+    // Stream defaults to process.stdout
+    // Uncomment to enable logging to a log on the file system
+    options: {
+      stream: 'access.log'
+=======
     // logging with Morgan - https://github.com/expressjs/morgan
     // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
     format: process.env.LOG_FORMAT || 'combined',
@@ -33,37 +45,62 @@ module.exports = {
           verbose: process.env.LOG_ROTATING_VERBOSE === 'true' ? true : false
         }
       }
+>>>>>>> meanjs/master
     }
   },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',
     clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
+<<<<<<< HEAD
     callbackURL: '/api/v1/auth/facebook/callback'
+=======
+    callbackURL: '/api/auth/facebook/callback'
+>>>>>>> meanjs/master
   },
   twitter: {
     clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
     clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
+<<<<<<< HEAD
     callbackURL: '/api/v1/auth/twitter/callback'
+=======
+    callbackURL: '/api/auth/twitter/callback'
+>>>>>>> meanjs/master
   },
   google: {
     clientID: process.env.GOOGLE_ID || 'APP_ID',
     clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
+<<<<<<< HEAD
     callbackURL: '/api/v1/auth/google/callback'
+=======
+    callbackURL: '/api/auth/google/callback'
+>>>>>>> meanjs/master
   },
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
     clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
+<<<<<<< HEAD
     callbackURL: '/api/v1/auth/linkedin/callback'
+=======
+    callbackURL: '/api/auth/linkedin/callback'
+>>>>>>> meanjs/master
   },
   github: {
     clientID: process.env.GITHUB_ID || 'APP_ID',
     clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
+<<<<<<< HEAD
     callbackURL: '/api/v1/auth/github/callback'
+=======
+    callbackURL: '/api/auth/github/callback'
+>>>>>>> meanjs/master
   },
   paypal: {
     clientID: process.env.PAYPAL_ID || 'CLIENT_ID',
     clientSecret: process.env.PAYPAL_SECRET || 'CLIENT_SECRET',
+<<<<<<< HEAD
     callbackURL: '/api/v1/auth/paypal/callback',
+=======
+    callbackURL: '/api/auth/paypal/callback',
+>>>>>>> meanjs/master
     sandbox: false
   },
   mailer: {
@@ -76,33 +113,9 @@ module.exports = {
       }
     }
   },
+<<<<<<< HEAD
 
-seedDB: {
-    seed: process.env.MONGO_SEED === 'true' ? true : false,
-
-    options: {
-      logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
-      seedUser: {
-        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
-        provider: 'local',
-        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
-        firstName: 'User',
-        lastName: 'Local',
-        displayName: 'User Local',
-        roles: ['user']
-      },
-      seedAdmin: {
-        username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',
-        provider: 'local',
-        email: process.env.MONGO_SEED_ADMIN_EMAIL || 'admin@localhost.com',
-        firstName: 'Admin',
-        lastName: 'Local',
-        displayName: 'Admin Local',
-        roles: ['user', 'admin']
-      }
-  },
-
-    alchemyApi: {
+  alchemyApi: {
     clientID: process.env.ALCHEMY_KEY,
     callbackUrl: '/api/v1/auth/alchemy/callback'
   },
@@ -130,6 +143,34 @@ seedDB: {
     mapboxId: process.env.MAPBOX_KEY,
     mapboxSecret: process.env.MAPBOX_SECRET,
     callbackUrl: '/api/v1/auth/mapbox/callback'
+  },
+
+
+  seedDB: process.env.MONGO_SEED || false
+=======
+  seedDB: {
+    seed: process.env.MONGO_SEED === 'true' ? true : false,
+    options: {
+      logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
+      seedUser: {
+        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
+        provider: 'local',
+        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
+        firstName: 'User',
+        lastName: 'Local',
+        displayName: 'User Local',
+        roles: ['user']
+      },
+      seedAdmin: {
+        username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',
+        provider: 'local',
+        email: process.env.MONGO_SEED_ADMIN_EMAIL || 'admin@localhost.com',
+        firstName: 'Admin',
+        lastName: 'Local',
+        displayName: 'Admin Local',
+        roles: ['user', 'admin']
+      }
+    }
   }
-  }
+>>>>>>> meanjs/master
 };

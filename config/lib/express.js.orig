@@ -4,22 +4,24 @@
  * Module dependencies.
  */
 var config = require('../config'),
-    express = require('express'),
-    morgan = require('morgan'),
-    logger = require('./logger'),
-    bodyParser = require('body-parser'),
-    session = require('express-session'),
-    MongoStore = require('connect-mongo')(session),
-    //multer = require('multer'),
-    //upload = multer({ dest: './uploads' }),
-    favicon = require('serve-favicon'),
-    compress = require('compression'),
-    methodOverride = require('method-override'),
-    cookieParser = require('cookie-parser'),
-    helmet = require('helmet'),
-    flash = require('connect-flash'),
-    consolidate = require('consolidate'),
-    path = require('path');
+  express = require('express'),
+  morgan = require('morgan'),
+  logger = require('./logger'),
+  bodyParser = require('body-parser'),
+  session = require('express-session'),
+  MongoStore = require('connect-mongo')(session),
+<<<<<<< HEAD
+  multer = require('multer'),
+=======
+>>>>>>> meanjs/master
+  favicon = require('serve-favicon'),
+  compress = require('compression'),
+  methodOverride = require('method-override'),
+  cookieParser = require('cookie-parser'),
+  helmet = require('helmet'),
+  flash = require('connect-flash'),
+  consolidate = require('consolidate'),
+  path = require('path');
 
 /**
  * Initialize local variables
@@ -90,12 +92,15 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
+<<<<<<< HEAD
 
   // Add multipart handling middleware
-  //app.use(multer({
-  //  dest: './uploads/',
-  //  inMemory: true
-  //}));
+  app.use(multer({
+    dest: './uploads/',
+    inMemory: true
+  }));
+=======
+>>>>>>> meanjs/master
 };
 
 /**
