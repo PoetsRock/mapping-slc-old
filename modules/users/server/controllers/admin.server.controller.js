@@ -3,13 +3,14 @@
 /**
  * Module dependencies.
  */
+//import { admin } from './admin.server.controller.js';
 var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   admin = require('./admin.server.controller.js'),
-  auth = require('./users/users.authentication.server.controller.js'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  auth = require('./users/users.authentication.server.controller.js');
 
 /**
  * Show the current user
@@ -51,11 +52,67 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
-
     res.jsonp(user);
-
   });
 };
+
+/**
+ * subscribe user to newsletter
+ * and add new user to database if email does not exist
+ */
+exports.addNewsletter = function (req, res) {
+
+  User.findOne({email: req.query.email})
+    //.select('newsletter firstName lastName email ModifiedOn')
+    .exec(function (err, userData) {
+
+      if (err === null && userData === null) {
+        //email does not exist. create a new user
+        var newUserObject = {
+          body: {
+            email: req.query.email,
+            username: req.query.email,
+            firstName: '',
+            lastName: '',
+            newsletter: true,
+            role: 'registered'
+          }
+        };
+        auth.signup(newUserObject,
+          function (createResponse) {
+            console.log('createResponse:\n', createResponse);
+            createResponse.subscribed = true;
+            createResponse.message = 'Ok, we penciled you in. Please check your email to confirm your subscription.';
+            res.jsonp([createResponse]);
+          });
+
+      } else if (!userData.newsletter) {
+        console.log('userData: (response from email query):\n', userData);
+
+        var updateUserObject = {
+          body: userData
+        };
+        updateUserObject.body.newsletter = true;
+        updateUserObject.body.ModifiedOn = Date.now();
+        updateUserObject.body.ModifiedBy = userData.id;
+
+
+        admin.update(updateUserObject,
+          function (updateResponse) {
+            console.log('updateResponse:\n', updateResponse);
+            updateResponse.subscribed = true;
+            updateResponse.message = 'You\'ve been subscribed to the newsletter.';
+            res.jsonp([updateResponse]);
+          });
+
+      } else {
+        //email address is already receiving the newsletter
+        //send back message to front end
+        res.jsonp([{subscribed: true, message: 'email is already subscribed to newsletter'}]);
+      }
+    });
+};
+
 
 /**
  * Delete a user
@@ -78,15 +135,15 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec(function (err, users) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
-
-    res.json(users);
-  });
+  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName')
+    .exec(function (err, users) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      res.json(users);
+    });
 };
 
 
@@ -103,27 +160,9 @@ exports.getContributors = function(req, res) {
         return res.send(400, {
           message: errorHandler.getErrorMessage(err)
         });
-      } else {
-        res.jsonp(users);
       }
+        res.jsonp(users);
     });
-};
-
-/**
- *
- */
-
-exports.getContributorByID = function(req, res) {
-
-};
-
-
-/**
- *
- */
-
-exports.deleteContributor = function(req, res) {
-
 };
 
 /**
@@ -171,61 +210,19 @@ exports.findUsersBySource = function (req, res) {
 
 };
 
-exports.addNewsletter = function (req, res) {
+  /**
+   *
+   */
+
+  exports.getContributorByID = function(req, res) {
+
+  };
 
 
+  /**
+   *
+   */
 
+  exports.deleteContributor = function(req, res) {
 
-  User.findOne({ email: req.query.email})
-    //.select('newsletter firstName lastName email ModifiedOn')
-    .exec(function(err, userData) {
-
-      if(err === null && userData === null) {
-        //email does not exist. create a new user
-        var newUserObject = {
-          body: {
-            email: req.query.email,
-            username: req.query.email,
-            firstName: '',
-            lastName: '',
-            newsletter: true,
-            role: 'registered'
-          }
-        };
-        console.log('newUserObject:\n', newUserObject);
-
-        auth.signup(newUserObject,
-          function(createResponse) {
-            console.log('createResponse:\n', createResponse);
-            createResponse.subscribed = true;
-            createResponse.message = 'Ok, we penciled you in. Please check your email to confirm your subscription.';
-            res.jsonp([createResponse]);
-          });
-
-      } else if(!userData.newsletter) {
-        console.log('userData: (response from email query):\n', userData);
-
-        var updateUserObject = {
-          body: userData
-        };
-        updateUserObject.body.newsletter = true;
-        updateUserObject.body.ModifiedOn = Date.now();
-        updateUserObject.body.ModifiedBy = userData.id;
-
-
-        admin.update(updateUserObject,
-          function (updateResponse) {
-            console.log('updateResponse:\n', updateResponse);
-            updateResponse.subscribed = true;
-            updateResponse.message = 'You\'ve been subscribed to the newsletter.';
-            res.jsonp([updateResponse]);
-          });
-
-      } else {
-        //email address is already receiving the newsletter
-        //send back message to front end
-        res.jsonp([{subscribed:true, message: 'email is already subscribed to newsletter'}]);
-      }
-  });
-
-};
+  };
