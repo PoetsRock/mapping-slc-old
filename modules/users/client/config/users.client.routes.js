@@ -11,7 +11,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
           authenticate: true,
-          roles: ['user', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
+          roles: ['user', 'registered', 'contributor', 'admin', 'superUser']
         }
       })
       .state('settings.profile', {
@@ -55,7 +55,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
       })
       .state('authentication.signin', {
-        url: '/signin',
+        url: '/signin?err',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html'
       })
       .state('password', {

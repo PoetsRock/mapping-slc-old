@@ -6,7 +6,7 @@
 var _ = require('lodash'),
   fs = require('fs'),
   mongoose = require('mongoose'),
-  multer = require('multer'),
+  //multer = require('multer'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   config = require(path.resolve('./config/config')),
@@ -331,8 +331,8 @@ exports.uploadUserProfileImage = function (req, res) {
 exports.changeProfilePicture = function (req, res) {
   var user = req.user;
   var message = null;
-  var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
-  var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
+  //var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
+  //var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
 
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;

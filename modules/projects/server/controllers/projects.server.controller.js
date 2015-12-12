@@ -15,8 +15,7 @@ var mongoose = require('mongoose'),
   sanitizeHtml = require('sanitize-html'),
   Promise = require('bluebird'),
   fs = Promise.promisifyAll(require('fs')),
-  exports = Promise.promisifyAll(exports),
-  Kraken = require('kraken');
+  exports = Promise.promisifyAll(exports);
 
 
 

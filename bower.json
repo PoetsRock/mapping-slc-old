@@ -1,9 +1,9 @@
 {
   "name": "mapping-salt-lake-city",
   "description": "Mapping Salt Lake City is a community-created archive of Salt Lake City’s neighborhoods and people that documents the city’s changes through art, critical and creative literature, personal maps and multimedia projects. We invite people to engage with and evolve this site by submitting their own contributions.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Chris Tanseer",
-  "meanjs-version": "0.4.1",
+  "meanjs-version": "0.4.2",
   "homepage": "http://mappingslc.org/",
   "license": "MIT",
   "repository": {

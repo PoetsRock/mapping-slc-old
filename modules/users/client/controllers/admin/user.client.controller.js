@@ -1,7 +1,7 @@
 //'use strict';
 //
-//angular.module('users.admin').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'userResolve',
-//  function ($scope, $state, $stateParams, Authentication, userResolve) {
+//angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve',
+//  function ($scope, $state, Authentication, userResolve) {
 //    $scope.authentication = Authentication;
 //    //$scope.user = userResolve;
 //
@@ -36,6 +36,5 @@
 //        $scope.error = errorResponse.data.message;
 //      });
 //    };
-//
 //  }
 //]);
