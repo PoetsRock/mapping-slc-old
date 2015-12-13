@@ -111,6 +111,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $http.get('/api/v1/projects/published').
       success(function (publishedProjects) {
         $scope.publishedProjects = publishedProjects;
+        console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
       }).
       error(function (data, status) {
 
@@ -303,6 +304,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     /**
      * Favorite project function
      */
+
+    //getUserFavorites.getUserFavoriteStories(userFavoriteProjects, projectId);
+    //getUserFavorites.toggleFavProject();
 
     var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
       userFavoriteProjects.forEach(function (userFavoriteProject) {

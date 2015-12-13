@@ -32,9 +32,9 @@ module.exports = function (app) {
     .get(admin.getContributorByID);
 
 
-  var myFunction = function myFunction () {
-    //this will show up in a stack trace
-  };
+  //var myFunction = function myFunction () {
+  //  //this will show up in a stack trace
+  //};
 
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);

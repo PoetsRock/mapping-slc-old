@@ -20,7 +20,7 @@ var noReturnUrls = [
  */
 exports.signup = function (req, res) {
 
-  console.log('\n\nreq:\n', req, '\n\n\n');
+  console.log('\n\nreq.login:\n', req.login, '\n\n\n');
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
@@ -73,6 +73,8 @@ exports.signin = function (req, res, next) {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
+
+      console.log('\n\nreq.login:::::::::::::::::::::::::::::::::::::::\n', req.login, '\n\n\n');
 
       req.login(user, function (err) {
         if (err) {

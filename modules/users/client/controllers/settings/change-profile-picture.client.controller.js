@@ -149,5 +149,11 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
     };
 
 
+
+    $scope.getProfilePic = function() {
+
+    };
+
+
   }
 ]);
