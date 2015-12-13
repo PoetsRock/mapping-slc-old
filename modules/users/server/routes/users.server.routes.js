@@ -2,7 +2,8 @@
 
 module.exports = function (app) {
   // User Routes
-  var users = require('../controllers/users.server.controller');
+  var users = require('../controllers/users.server.controller'),
+      assets = require('../controllers/users/users.uploader.server.controller');
 
   // Setting up the users profile api
   app.route('/api/v1/users/me').get(users.me);
@@ -11,8 +12,8 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
 
-  app.route('/api/v1/users/:userId/media/uploadedProfileImage/:photoId')
-    .get(users.getS3File);
+  app.route('/api/v1/users/:userId/media/:mediaId')
+    .get(assets.getS3File);
 
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/v1/users/password').post(users.changePassword);

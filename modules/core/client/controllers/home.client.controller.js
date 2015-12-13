@@ -5,6 +5,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
+    console.log('current user:\n', $scope.authentication.user);
 
     //for overlay
     $scope.featuredProjects = {};

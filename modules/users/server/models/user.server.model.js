@@ -117,6 +117,9 @@ var UserSchema = new Schema({
     type: String,
     default: 'default.png'
   },
+  profileImageETag: {
+    type: String
+  },
   provider: {
     type: String,
     required: 'Provider is required'
