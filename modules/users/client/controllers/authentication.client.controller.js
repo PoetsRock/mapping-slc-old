@@ -1,15 +1,12 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator', '$uibModal', 'UtilsService',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator, $uibModal, UtilsService) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
+  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
-
-    //provides logic for the css in the forms
-    UtilsService.cssLayout();
 
     // If user is signed in then redirect back home
     if ($scope.authentication.user) {
@@ -25,8 +22,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         return false;
       }
 
-      $http.post('/api/v1/auth/signup', $scope.credentials)
-        .success(function (response) {
+      $http.post('/api/auth/signup', $scope.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
@@ -46,7 +42,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         return false;
       }
 
-      $http.post('/api/v1/auth/signin', $scope.credentials).success(function (response) {
+      $http.post('/api/auth/signin', $scope.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
@@ -66,39 +62,5 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       // Effectively call OAuth authentication route:
       $window.location.href = url;
     };
-
-    $scope.goToSignUp = function ($state) {
-      $state.go('signup');
-    };
-
-
-    // Reroutes from sign in to sign up on modal
-    $scope.modalOpenSignUp = function () {
-      var isSwitched = false;
-      $uibModal.open({
-        templateUrl: function () {
-          if (!isSwitched) {
-            isSwitched = false;
-            return 'modules/users/client/views/authentication/signup.client.view.html';
-
-          } else {
-            return 'modules/users/client/views/authentication/signin.client.view.html';
-
-          }
-        },
-        size: 'lg',
-        backdropClass: 'sign-in-modal-background',
-        windowClass: 'sign-in-modal-background',
-        backdrop: false,
-        controller: function ($scope) {
-
-        }
-
-      }).then(function () {
-
-        console.log('Success!!!!!');
-      });
-    };
-
   }
 ]);

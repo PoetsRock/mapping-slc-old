@@ -10,8 +10,7 @@ angular.module('users').config(['$stateProvider',
         url: '/settings',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
-          authenticate: true,
-          roles: ['user', 'registered', 'contributor', 'admin', 'superUser']
+          roles: ['user', 'admin']
         }
       })
       .state('settings.profile', {
@@ -25,21 +24,6 @@ angular.module('users').config(['$stateProvider',
       .state('settings.accounts', {
         url: '/accounts',
         templateUrl: 'modules/users/client/views/settings/manage-social-accounts.client.view.html'
-      })
-      .state('settings.favorites', {
-        url: '/favorites',
-        templateUrl: 'modules/users/client/views/settings/favorites.client.view.html'
-      })
-      .state('settings.submissions', {
-        url: '/submissions',
-        //abstract: true,
-        templateUrl: 'modules/users/client/views/settings/submissions-list.client.view.html'
-        //templateUrl: 'modules/users/client/directives/views/user-submissions-list.html'
-      })
-      .state('settings.submissionsView', {
-        url: '/:projectId/status/',
-        templateUrl: 'modules/users/client/views/settings/submissions-view.client.view.html'
-        //templateUrl: 'modules/users/client/directives/views/user-submissions-view.html'
       })
       .state('settings.picture', {
         url: '/picture',
@@ -83,14 +67,6 @@ angular.module('users').config(['$stateProvider',
       .state('password.reset.form', {
         url: '/:token',
         templateUrl: 'modules/users/client/views/password/reset-password.client.view.html'
-      })
-      .state('contributors', {
-        url: '/contributors',
-        templateUrl: 'modules/users/client/views/contributors/contributors.client.list.html'
-      })
-      .state('contributor', {
-        url: '/contributors/:userId',
-        templateUrl: 'modules/users/client/views/contributors/contributors.client.view.html'
       });
   }
 ]);

@@ -15,7 +15,7 @@ angular.module('users.admin.routes').config(['$stateProvider',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {
-            return AdminUpdateUser.get({
+            return Admin.get({
               userId: $stateParams.userId
             });
           }]
@@ -27,7 +27,7 @@ angular.module('users.admin.routes').config(['$stateProvider',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {
-            return AdminUpdateUser.get({
+            return Admin.get({
               userId: $stateParams.userId
             });
           }]

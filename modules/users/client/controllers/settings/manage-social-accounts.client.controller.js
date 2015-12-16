@@ -22,7 +22,7 @@ angular.module('users').controller('SocialAccountsController', ['$scope', '$http
     $scope.removeUserSocialAccount = function (provider) {
       $scope.success = $scope.error = null;
 
-      $http.delete('/api/v1/users/accounts', {
+      $http.delete('/api/users/accounts', {
         params: {
           provider: provider
         }

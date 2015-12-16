@@ -8,7 +8,7 @@ var _ = require('lodash'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
-  //multer = require('multer'),
+  multer = require('multer'),
   config = require(path.resolve('./config/config')),
   User = mongoose.model('User');
 
@@ -17,14 +17,10 @@ var _ = require('lodash'),
  */
 exports.update = function (req, res) {
   // Init Variables
-
   var user = req.user;
 
-
   // For security measurement we remove the roles from the req.body object
-  if (req.body && req.body.roles !== undefined) {
-    delete req.body.roles;
-  }
+  delete req.body.roles;
 
   if (user) {
     // Merge existing user
@@ -38,9 +34,7 @@ exports.update = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-
         req.login(user, function (err) {
-
           if (err) {
             res.status(400).send(err);
           } else {
@@ -59,7 +53,6 @@ exports.update = function (req, res) {
 /**
  * Update profile picture
  */
-/**
 exports.changeProfilePicture = function (req, res) {
   var user = req.user;
   var message = null;
@@ -101,7 +94,6 @@ exports.changeProfilePicture = function (req, res) {
     });
   }
 };
-**/
 
 /**
  * Send User
