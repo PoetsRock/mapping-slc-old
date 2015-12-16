@@ -121,3 +121,11 @@
         padding: 40px;
     }
 }
+
+
+@media (min-width: 1750px) {
+    .page-view-menu-open {
+        width: calc(100% - 350px);
+        left: 350px;
+    }
+}

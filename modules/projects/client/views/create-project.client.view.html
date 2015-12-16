@@ -52,6 +52,9 @@
                   <div class="row">
 
                     <div class="col-md-6">
+
+
+
                       <span class="input input-secondary">
                           <input class="input_field input_field-secondary" type="zip" id="zip"
                                  data-ng-model="project.zip" required/>
@@ -64,13 +67,13 @@
 
 
                     <div class="col-md-6">
+                      <label for="status">Submission Category
+                        <a href="#" tooltip-placement="right"
+                           uib-tooltip="If you're unsure of the best  category, just select whatever you feel is close.">
+                          <i class="fa fa-question-circle"></i>
+                        </a>
+                      </label>
                       <div class="dropdown">
-                        <label for="status">Submission Category
-                          <a href="#" tooltip-placement="right"
-                             uib-tooltip="If you're unsure of the best  category, just select whatever you feel is close.">
-                            <i class="fa fa-question-circle"></i>
-                          </a>
-                        </label>
                         <select id="status" data-ng-model="project.category">
                           <option value="essay">Essay</option>
                           <option value="multimedia">Multimedia</option>

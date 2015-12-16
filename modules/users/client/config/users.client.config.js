@@ -1,9 +1,15 @@
 'use strict';
 
 // Config HTTP Error Handling
-angular.module('users').config(['$httpProvider', 'LightboxProvider',
-  function ($httpProvider, LightboxProvider) {
+angular.module('users').config(['$httpProvider', 'LightboxProvider', '$compileProvider',
+  function ($httpProvider, LightboxProvider, $compileProvider) {
+
+    //turn off debugging for  prod
+    // https://docs.angularjs.org/guide/production
+    $compileProvider.debugInfoEnabled(false);
+
     // Set the httpProvider "not authorized" interceptor
+
     $httpProvider.interceptors.push(['$q', '$location', 'Authentication',
       function ($q, $location, Authentication) {
         return {

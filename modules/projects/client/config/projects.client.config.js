@@ -1,19 +1,22 @@
-//'use strict';
-//
-////Setting up route
-//angular.module('projects').run(['$rootScope', '$location', 'Authentication', 'AdminAuthService',
-//  function ($rootScope, $location, Authentication, AdminAuthService) {
-//    var user = Authentication.user;
-//    var isAdmin = AdminAuthService;
-//        $rootScope.$on('$routeChangeStart', function (event, next, current) {
-//          console.log('event:\n', event, '\n\n');
-//          console.log('\n\nnext:\n', next, '\n\n');
-//          console.log('\n\ncurrent:\n', current, '\n\n');
-//          console.log('\n\nuser:\n', user, '\n\n');
-//          console.log('\n\nisAdmin:\n', isAdmin, '\n\n');
-//          //Look at the next parameter value to determine if a redirect is needed
-//        });
-//
-//
-//  }
-//]);
+'use strict';
+
+//Setting up route
+angular.module('projects').config(['$compileProvider',
+      function ($compileProvider) {
+
+        //turn off debugging for  prod
+        // https://docs.angularjs.org/guide/production
+        $compileProvider.debugInfoEnabled(false);
+  }
+]);
+
+//.run(function($rootScope) {
+//    angular.element(document).on('click', function(e) {
+//      $rootScope.$broadcast('documentClicked', angular.element(e.target));
+//    });
+//  });
+
+
+
+
+
