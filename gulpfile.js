@@ -309,6 +309,10 @@ gulp.task('heroku:production', function (done) {
   runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
 
+// Run the project in production mode
+gulp.task('build-no-min', function (done) {
+  runSequence('templatecache', 'cssmin', 'env:prod', ['nodemon', 'watch'], done);
+});
 
 /**
  *  Heroku Buildpack for Node.js and gulp.js

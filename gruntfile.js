@@ -334,4 +334,6 @@ module.exports = function (grunt) {
   grunt.registerTask('heroku:production', 'build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'concurrent:default');
   //grunt.registerTask('heroku:production', 'clean less mincss uglify');
 
+  grunt.registerTask('build-no-min', ['env:dev', 'ngAnnotate', 'cssmin']);
+
 };

@@ -16,8 +16,8 @@
     "npm": "^2.14"
   },
   "scripts": {
-    "start": "grunt --debug=5860",
-    "postinstall": "bower install --config.interactive=false && gulp build"
+    "start": "grunt build-no-min",
+    "postinstall": "bower install --config.interactive=false && gulp build-no-min"
   },
   "dependencies": {
     "acl": "~0.4.4",
