@@ -347,7 +347,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           var template = '';
           $scope.items = [];
 
-          if (fromState.url === '/projects/create') {
+          if (fromState.url === '/projects/create' && toState.url !== "/signin?err") {
             event.preventDefault();
             $scope.items.toStateUrl = toState.url;
             template = '/modules/projects/client/directives/views/project-warning-modal.html';
