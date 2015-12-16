@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
-  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
+  function ($scope, Authentication, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
 
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
@@ -88,13 +88,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
 
     //service that returns api keys
-    ApiKeys.getApiKeys()
-      .success(function (data) {
-        mapFunction(data.mapboxKey, data.mapboxSecret);
-      })
-      .error(function (data, status) {
-        alert('Failed to load Mapbox API key. Status: ' + status);
-      });
+    //ApiKeys.getApiKeys()
+    //  .success(function (data) {
+    //    mapFunction(data.mapboxKey, data.mapboxSecret);
+    //  })
+    //  .error(function (data, status) {
+    //    alert('Failed to load Mapbox API key. Status: ' + status);
+    //  });
 
     var popupIndex = 0;
 
@@ -103,9 +103,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 //
 
 
-    var mapFunction = function (key, accessToken) {
+    var mapFunction = function () {
       //creates a Mapbox Map
-      L.mapbox.accessToken = accessToken;
+      L.mapbox.accessToken = 'pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw';
 
       //'info' id is part of creating tooltip with absolute position
       var info = document.getElementById('info');
@@ -144,17 +144,17 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       //map.addLayer(markers);
 
 
-      //service that returns project markers
-      MarkerDataService.getMarkerData()
-        .success(function (markerData) {
-          //$scope.getProjectMarkers(markerData);
-          $scope.addProjectMarkers(markerData);
-        })
-        .error(function (data, status) {
-          alert('Failed to load project markers. Status: ' + status);
-        });
-
-      $scope.markerArray = [];
+      ////service that returns project markers
+      //MarkerDataService.getMarkerData()
+      //  .success(function (markerData) {
+      //    //$scope.getProjectMarkers(markerData);
+      //    $scope.addProjectMarkers(markerData);
+      //  })
+      //  .error(function (data, status) {
+      //    alert('Failed to load project markers. Status: ' + status);
+      //  });
+      //
+      //$scope.markerArray = [];
 
       //add markers from marker data
       $scope.addProjectMarkers = function (markerData) {
@@ -257,6 +257,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       $scope.getProjectMarkers = function (markerData) {
       };
     };
+
+    mapFunction();
 
     var popupMenuToggle = function (e) {
       if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {

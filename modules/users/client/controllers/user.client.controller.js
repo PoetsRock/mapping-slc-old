@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'UserData', 'Users', 'ProfileImageService', 'Projects', '$http', '$resource', 'Newsletter',
-  function ($scope, $state, $stateParams, Authentication, UserData, Users, ProfileImageService, Projects, $http, $resource, Newsletter) {
+angular.module('users').controller('UserController', ['$scope', '$state', '$stateParams', 'Authentication', 'UserData', 'Users', 'ProfileImageService', '$http', '$resource', 'Newsletter',
+  function ($scope, $state, $stateParams, Authentication, UserData, Users, ProfileImageService, $http, $resource, Newsletter) {
     $scope.user = Authentication.user;
     var favoriteProjects = $scope.user.favorites;
     var associatedProjects = $scope.user.associatedProjects;
@@ -55,36 +55,36 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
       console.log('$scope.users: ', $scope.users);
     };
 
-    //Find existing project submissions by UserId
-    $scope.findUserFavorites = function () {
-      $scope.getFavorites = function (favoriteProjects) {
-        favoriteProjects.forEach(function (favoriteProject) {
-          userFavorites.push(Projects.get({
-              projectId: favoriteProject
-            })
-          );
-        });
-        $scope.userFavorites = userFavorites;
-        return userFavorites;
-      };
-      $scope.getFavorites(favoriteProjects);
-    };
+    ////Find existing project submissions by UserId
+    //$scope.findUserFavorites = function () {
+    //  $scope.getFavorites = function (favoriteProjects) {
+    //    favoriteProjects.forEach(function (favoriteProject) {
+    //      userFavorites.push(Projects.get({
+    //          projectId: favoriteProject
+    //        })
+    //      );
+    //    });
+    //    $scope.userFavorites = userFavorites;
+    //    return userFavorites;
+    //  };
+    //  $scope.getFavorites(favoriteProjects);
+    //};
 
-    //Find existing project submissions by UserId
-    $scope.findCurrentUserSubmissions = function () {
-      $scope.getProjects = function (associatedProjects) {
-        associatedProjects.forEach(function (associatedProject) {
-          userProjects.push(Projects.get({
-              projectId: associatedProject
-            })
-          );
-        });
-        $scope.userProjects = userProjects;
-        return userProjects;
-      };
-      $scope.getProjects(associatedProjects);
-
-    };
+    ////Find existing project submissions by UserId
+    //$scope.findCurrentUserSubmissions = function () {
+    //  $scope.getProjects = function (associatedProjects) {
+    //    associatedProjects.forEach(function (associatedProject) {
+    //      userProjects.push(Projects.get({
+    //          projectId: associatedProject
+    //        })
+    //      );
+    //    });
+    //    $scope.userProjects = userProjects;
+    //    return userProjects;
+    //  };
+    //  $scope.getProjects(associatedProjects);
+    //
+    //};
 
     /**
      * newsletter subscription form

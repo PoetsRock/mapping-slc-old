@@ -10,8 +10,7 @@ var _ = require('lodash'),
   mongoose = require('mongoose'),
   //multer = require('multer'),
   config = require(path.resolve('./config/config')),
-  User = mongoose.model('User'),
-  Project = mongoose.model('Project');
+  User = mongoose.model('User');
 
 /**
  * Update user details
