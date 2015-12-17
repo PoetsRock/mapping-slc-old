@@ -23,8 +23,7 @@
           Projects tab.</p>
       </div>
       <p data-ng-show="project.status[0]==='pending'">We have begun reading your submission. So, currently, you
-        are not able to edit your submission. You can still edit your bio, contact information, and author
-        photo.</p>
+        are not able to edit your submission. You can still edit your contact information.</p>
 
       <div data-ng-show="project.status[0]==='accepted'">
         <p>{{project.title}} has been accepted for publication. We thank you again for your submission and feel
@@ -49,11 +48,6 @@
         </uib-tab>
 
         <uib-tab heading="Contact Information">
-
-          <!--<edit-profile></edit-profile>-->
-
-          <change-profile-picture></change-profile-picture>
-
           <project-status-user-info></project-status-user-info>
         </uib-tab>
 
@@ -61,6 +55,9 @@
           <project-status-user-bio></project-status-user-bio>
         </uib-tab>
 
+        <uib-tab heading="Author Photo" data-ng-show="project.status[0]==='accepted'">
+          <change-profile-picture></change-profile-picture>
+        </uib-tab>
 
       </uib-tabset>
 
