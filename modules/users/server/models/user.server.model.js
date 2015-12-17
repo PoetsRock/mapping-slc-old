@@ -21,36 +21,75 @@ var validateLocalStrategyProperty = function (property) {
  * A Validation function for local strategy email
  */
 var validateLocalStrategyEmail = function (email) {
-  return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email, { require_tld: false }));
+  return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email));
 };
 
 /**
  * User Schema
- */
+ **/
 var UserSchema = new Schema({
+  createdOn: {
+    type: Date,
+    default: Date.now
+  },
+  ModifiedBy: {
+    type: String
+  },
+  ModifiedOn: {
+    type: Date
+  },
+  namePrefix: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   firstName: {
     type: String,
     trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    default: ''
+    //validate: [validateLocalStrategyProperty, 'Please fill in your first name']
   },
   lastName: {
     type: String,
     trim: true,
     default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+    //validate: [validateLocalStrategyProperty, 'Please fill in your last name']
   },
   displayName: {
     type: String,
     trim: true
   },
+  userTitle: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   email: {
     type: String,
     unique: true,
-    lowercase: true,
     trim: true,
-    default: '',
+    required: true,
     validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
+  },
+  userStreet: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  userCity: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  userState: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  userZip: {
+    type: Number,
+    default: '',
+    trim: true
   },
   username: {
     type: String,
@@ -70,6 +109,17 @@ var UserSchema = new Schema({
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
+  profileImageThumbURL: {
+    type: String,
+    trim: true
+  },
+  profileImageFileName: {
+    type: String,
+    default: 'default.png'
+  },
+  profileImageETag: {
+    type: String
+  },
   provider: {
     type: String,
     required: 'Provider is required'
@@ -79,9 +129,9 @@ var UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'admin']
+      enum: ['user', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
     }],
-    default: ['user'],
+    default: ['registered'],
     required: 'Please provide at least one role'
   },
   updated: {
@@ -90,6 +140,41 @@ var UserSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  lastVisit: {
+    type: Date,
+    default: Date.now
+  },
+  //this field will store info about users browsing history and preferences
+  browseHistory: {
+    type: Object,
+    default: {}
+  },
+  bookmarks: {
+    type: [{
+      type: Object
+    }]
+  },
+  favorites: {
+    type: [{
+        type: String
+    }],
+    default: []
+  },
+  newsletter: {
+    type: Boolean,
+    default: false
+  },
+  associatedProjects: {
+    type: [{
+      type: String
+    }],
+    default: []
+  },
+  bio: {
+    type: String,
+    default: '',
+    trim: true
   },
   /* For reset password */
   resetPasswordToken: {
@@ -116,6 +201,10 @@ UserSchema.pre('save', function (next) {
  * Hook a pre validate method to test the local password
  */
 UserSchema.pre('validate', function (next) {
+  // Pass a hash of settings to the `config` method to override defaults
+  owasp.config({
+    minLength: 8  //this overrides default val -- original set to 10
+  });
   if (this.provider === 'local' && this.password && this.isModified('password')) {
     var result = owasp.test(this.password);
     if (result.errors.length) {

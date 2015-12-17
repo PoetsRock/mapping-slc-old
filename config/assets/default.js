@@ -13,8 +13,6 @@ module.exports = {
         'public/lib/angular-notify/dist/angular-notify.min.css',
         'public/lib/ng-ckeditor/ng-ckeditor.css',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.min.css',
-        'public/lib/c3/c3.min.css',
-        'public/lib/angular-loading-bar/build/loading-bar.min.css'
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -36,7 +34,6 @@ module.exports = {
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
-        'public/lib/d3/d3.js',
         'public/lib/ng-ckeditor/libs/ckeditor/ckeditor.js',
         'public/lib/ng-ckeditor/ng-ckeditor.js',
         'public/lib/sidebar-v2/js/leaflet-sidebar.js',
@@ -44,14 +41,10 @@ module.exports = {
         'public/lib/classie/classie.js',
         'public/lib/masonry/dist/masonry.pkgd.js',
         'public/lib/moment/min/moment.js',
-        'public/lib/c3/c3.js',
         'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
         'public/lib/angular-notify/dist/angular-notify.js',
-        'public/lib/angular-loading-bar/build/loading-bar.js',
-        'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
-        'public/lib/ng-file-upload/ng-file-upload.js',
-        'public/lib/angular-file-upload/dist/angular-file-upload.min.js'
+        'public/lib/ng-file-upload/ng-file-upload.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

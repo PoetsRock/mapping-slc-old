@@ -1,0 +1,34 @@
+<section data-ng-controller="UserController" class="row" style="height: 600px;" data-ng-init="findUserFavorites()">
+
+  <div class="user-submissions">
+
+    <div class="list-group">
+      <div class="row">
+
+        <a data-ng-repeat="userFavorite in userFavorites" ui-sref="viewProject({projectId: userFavorite.id})"
+           class="col-md-12 admin-list">
+          <div class="row">
+
+            <div class="col-md-2">
+              <img data-ng-src="{{userFavorite.mainImgThumbnail}}"/>
+            </div>
+
+            <div class="col-md-9">
+              <h4 class="list-group-item-heading" data-ng-bind="userFavorite.title"></h4>
+              <small>
+                <span>{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</span>
+              </small>
+
+            </div>
+            <div class="col-md-1">
+              <i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)" style="color: rgba(2,58,49,0.4);"></i>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+
+</section>

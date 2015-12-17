@@ -35,10 +35,7 @@
     "rangy": "~1.3.0",
     "sidebar-v2": "~0.2.1",
     "classie": "~1.0.1",
-    "angular-loading-bar": "~0.8.0",
-    "ng-videosharing-embed": "~0.3.4",
-    "xmlToJSON.js": "~1.3.2",
-    "angular-file-upload": "~2.2.0"
+    "xmlToJSON.js": "~1.3.2"
   },
   "resolutions": {
     "angular": "~1.4.7",

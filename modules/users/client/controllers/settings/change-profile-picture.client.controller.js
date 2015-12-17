@@ -1,73 +1,159 @@
 'use strict';
 
-angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
-  function ($scope, $timeout, $window, Authentication, FileUploader) {
+angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'Upload', '$http', 'ProfileImageService',
+  function ($scope, $timeout, $window, Authentication, Upload, $http, ProfileImageService) {
+
+    $scope.init = function () {
+      ProfileImageService.getUploadedProfilePic();
+    };
+
+    //// Create a new cache with a capacity of 10
+    //var lruCache = $cacheFactory('lruCache', { capacity: 10 });
+
     $scope.user = Authentication.user;
-    $scope.imageURL = $scope.user.profileImageURL;
+    $scope.uploading = false;
+    var upload = null;
 
-    // Create file uploader instance
-    $scope.uploader = new FileUploader({
-      url: 'api/users/picture',
-      alias: 'newProfilePicture'
-    });
+    /**
+     *
+     * @param requestType {string} - the requestType specifies what type of files are being uploaded...
+     *    for example, 'profile-image' is passed in when the content is for a user's profile image.
+     * @param files {object} a Blob that contains the file(s) to upload
+     */
+      //$scope.onFileSelect = function (files, requestType) {
+    $scope.onFileSelect = function (files) {
+      //if (files.length > 0) {
+      $scope.uploading = true;
 
-    // Set file uploader image filter
-    $scope.uploader.filters.push({
-      name: 'imageFilter',
-      fn: function (item, options) {
-        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+      console.log('files:\n', files[0]);
+      console.log('files:\n', files[0].File);
+
+      var fileType = files[0].type;
+      if (fileType === 'image/jpeg') {
+        fileType = '.jpg'
+      } else if (fileType === 'image/png') {
+        fileType = '.png'
       }
-    });
+      var fileName = '';
+      //hard coded for now ... later will refactor to take multiple use cases
+      var requestType = 'profile-image';
 
-    // Called after the user selected a new picture file
-    $scope.uploader.onAfterAddingFile = function (fileItem) {
-      if ($window.FileReader) {
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(fileItem._file);
-
-        fileReader.onload = function (fileReaderEvent) {
-          $timeout(function () {
-            $scope.imageURL = fileReaderEvent.target.result;
-          }, 0);
+      if (requestType === 'profile-image') {
+        fileName = {
+          origFileName: files[0].name.replace(/\s/g, '_'), //substitute all whitespace with underscores
+          fileName: 'uploaded-profile-image' + fileType
         };
       }
+
+      var query = {
+        user: $scope.user,
+        fileName: fileName.fileName,
+        origFileName: fileName.origFileName,
+        type: files[0].type
+      };
+
+      console.log('fileType:\n', fileType);
+      console.log('query:\n', query);
+
+      $http.post('api/v1/s3/upload/media/photo', query)
+        .then(function (result) {
+
+          console.log('result:\n', result);
+          console.log('result.data:\n', result.data);
+          console.log('result.status:\n', result.status);
+          console.log('result.config:\n', result.config);
+
+          /**
+           Specify the file and optional data to be sent to the server.
+           Each field including nested objects will be sent as a form data multipart.
+           Samples:
+
+           {pic: file, username: username}
+           {files: files, otherInfo: {id: id, person: person,...}} multiple files (html5)
+           {profiles: {[{pic: file1, username: username1}, {pic: file2, username: username2}]} nested array multiple files (html5)
+           {file: file, info: Upload.json({id: id, name: name, ...})} send fields as json string
+           {file: file, info: Upload.jsonBlob({id: id, name: name, ...})} send fields as json blob
+           {picFile: Upload.rename(file, 'profile.jpg'), title: title} send file with picFile key and profile.jpg file name
+         **/
+
+
+            //upload to back end
+          upload = Upload.upload({
+              url: result.config.url, //s3Url
+              //transformRequest: function (data, headersGetter) {
+              //  var headers = headersGetter();
+              //  delete headers.Authorization;
+              //  console.log('data v1\n', data);
+              //  return data;
+              //},
+              //info: Upload.jsonBlob({id: id, name: name}),
+              file: files[0],
+              //data: {
+              //  file: files,
+              //  picFile: Upload.rename(files, 'uploaded-profile-image.jpg')
+              //},
+              //fields: result.fields, //credentials
+              method: 'POST'
+            })
+            .then(function (resp) {
+              // file is uploaded successfully
+              console.log('resp:\n', resp);
+              var s3Result = xmlToJSON.parseString(resp.data);   // parse
+              console.log('file ' + resp.config.data.file.name + 'is uploaded successfully. Response: ' + s3Result);
+              console.log('status: ', resp.status);
+              $scope.uploading = false;
+              ProfileImageService.getUploadedProfilePic();
+            }, function (resp) {
+              // handle error
+            }, function (evt) {
+              //var s3Result = xmlToJSON.parseString(resp.data);
+              console.log('evt:\n', evt);
+              // progress notify
+              console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :' + evt.config.data.file.name);
+            });
+          //upload.catch(errorCallback);
+          //upload.finally(callback, notifyCallback);
+
+
+          //  .progress(function (evt) {
+          //    console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
+          //  })
+          //  .success(function (data, status, headers, config) {
+          //    var s3Result = xmlToJSON.parseString(data);   // parse
+          //    console.log('status: ', status);
+          //    console.log('The file ' + config.file.name + ' is uploaded successfully.\nResponse:\n', s3Result);
+          //    $scope.uploading = false;
+          //    ProfileImageService.getUploadedProfilePic();
+          //  })
+          //  .error(function () {
+          //
+          //  });
+          //})
+          //.error(function (data, status, headers, config) {
+          //  // called asynchronously if an error occurs
+          //  // or server returns response with an error status.
+          //  $scope.uploading = false;
+          //});
+        });
+      //.catch(err)
+      //.finally(callback, notifyCallback);
+    };
+    //};
+
+
+    /* cancel/abort the upload in progress. */
+    $scope.abort = function () {
+      console.log('abort!!!');
+      upload.abort();
+      $scope.uploading = false;
     };
 
-    // Called after the user has successfully uploaded a new picture
-    $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-      // Show success message
-      $scope.success = true;
 
-      // Populate user object
-      $scope.user = Authentication.user = response;
 
-      // Clear upload buttons
-      $scope.cancelUpload();
+    $scope.getProfilePic = function() {
+
     };
 
-    // Called after the user has failed to uploaded a new picture
-    $scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
-      // Clear upload buttons
-      $scope.cancelUpload();
 
-      // Show error message
-      $scope.error = response.message;
-    };
-
-    // Change user profile picture
-    $scope.uploadProfilePicture = function () {
-      // Clear messages
-      $scope.success = $scope.error = null;
-
-      // Start upload
-      $scope.uploader.uploadAll();
-    };
-
-    // Cancel the upload process
-    $scope.cancelUpload = function () {
-      $scope.uploader.clearQueue();
-      $scope.imageURL = $scope.user.profileImageURL;
-    };
   }
 ]);

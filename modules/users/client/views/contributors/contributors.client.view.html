@@ -1,0 +1,59 @@
+<secondary-menu-directive></secondary-menu-directive>
+
+<section class="content background" data-ng-controller="RandomMapController"
+         ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
+         data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
+  <section class="container">
+    <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
+
+    <div class="main-content-outer">
+      <section data-ng-controller="ContributorController" data-ng-init="findContributor()" class="contributors">
+        <div class="contrib-view">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="main-content-inner">
+
+                <div class="row">
+                  <div><h1 class="col-md-6">{{contributor.firstName}} {{contributor.lastName}}</h1></div>
+                  <div><img class="col-md-6 pull-right" data-ng-src="{{contributor.profileImageURL}}"/></div>
+                </div>
+
+                <div class="row">
+                  <div><p class="col-md-12">{{contributor.bio}}</p></div>
+                </div>
+
+                <hr/>
+
+                <h4>Other Projects by {{contributor.firstName}}</h4>
+                <div class="row">
+                  <div><p class="col-md-12" data-ng-repeat="contributorProject in contributorProjects"><a data-ng-href="/projects/{{contributorProject._id}}">
+                    {{contributorProject.title}}
+                    </a>
+                  </p></div>
+                </div>
+
+
+                <!--<div class="row">-->
+
+                  <!--<ul id="grid-view">-->
+                    <!--<a ng-click="openLightboxModal($index)" data-ng-repeat="contributor in contributors | filter:searchContributors" class="col-md-3">-->
+                      <!--<li>-->
+                        <!--<div>-->
+                            <!--<img ng-src="{{contributor.profileImageURL}}" class="img-thumbnail">-->
+                            <!--<p>{{contributor.firstName}} {{contributor.lastName}}</p>-->
+                        <!--</div>-->
+                      <!--</li>-->
+                    <!--</a>-->
+                  <!--</ul>-->
+
+
+                <!--</div>-->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</section>

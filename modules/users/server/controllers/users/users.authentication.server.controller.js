@@ -19,6 +19,7 @@ var noReturnUrls = [
  * Signup
  */
 exports.signup = function (req, res) {
+
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
 
@@ -28,10 +29,11 @@ exports.signup = function (req, res) {
 
   // Add missing user fields
   user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
-
+  if (user.firstName && user.lastName) {
+    user.displayName = user.firstName + ' ' + user.lastName;
+  }
   // Then save the user
-  user.save(function (err) {
+  user.save(function (err, success) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -41,13 +43,18 @@ exports.signup = function (req, res) {
       user.password = undefined;
       user.salt = undefined;
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
-      });
+      if (req.login) {
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
+      //} else {
+        console.log('success::::::::::::::::::::\n', success);
+      //  res.json(user);
+      }
     }
   });
 };
@@ -63,6 +70,8 @@ exports.signin = function (req, res, next) {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
+
+      console.log('\n\nreq.login:::::::::::::::::::::::::::::::::::::::\n', req.login, '\n\n\n');
 
       req.login(user, function (err) {
         if (err) {
