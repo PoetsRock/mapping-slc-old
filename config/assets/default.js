@@ -50,7 +50,8 @@ module.exports = {
         'public/lib/angular-loading-bar/build/loading-bar.js',
         'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
-        'public/lib/ng-file-upload/ng-file-upload.js'
+        'public/lib/ng-file-upload/ng-file-upload.js',
+        'public/lib/angular-file-upload/dist/angular-file-upload.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
