@@ -49,12 +49,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       $http.post('/api/v1/auth/signin', $scope.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         $scope.user = $scope.authentication.user = response;
-
-        console.log('$scope.authentication:\n',$scope.authentication);
-        console.log('$scope.authentication.user:\n',$scope.authentication.user);
-        console.log('$scope.user:\n',$scope.user);
-        console.log('$scope.user.roles:\n',$scope.user.roles);
-
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
