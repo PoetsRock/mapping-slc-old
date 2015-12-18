@@ -15,9 +15,9 @@ module.exports = function (app) {
   // Define application route
   app.route('/*').get(core.renderIndex);
 
-  //route for getting the Featured Projects Array
-  app.route('featured/')
-    .get(core.getFeaturedProjects);
+  ////route for getting the Featured Projects Array
+  //app.route('featured/')
+  //  .get(core.getFeaturedProjects);
 
   ////route for updating the Featured Projects Array
   //app.route('featured/:projectId')

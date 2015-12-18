@@ -45,18 +45,3 @@ exports.renderNotFound = function (req, res) {
     }
   });
 };
-
-
-/**
- *
- */
-exports.getFeaturedProjects = function (req, res) {
-  var featuredProjectsArray = findOne(core.featuredProjects);
-  res.jsonp(featuredProjectsArray);
-};
-
-exports.putFeaturedProjects = function (req, res, next) {
-  var featuredProjectsArray = findOne(core.featuredProjects);
-  res.jsonp(featuredProjectsArray);
-  next();
-};
