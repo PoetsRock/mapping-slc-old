@@ -8,14 +8,6 @@ var ApplicationConfiguration = (function () {
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {
-
-    console.log('module registration -- right here, baby...');
-    console.log('moduleName:::::::::::::::::::::::::::::::::::::::::::');
-    console.log(moduleName);
-    console.log('dependencies:::::::::::::::::::::::::::::::::::::::::::');
-    console.log(dependencies);
-    console.log('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-
     // Create angular module
     angular.module(moduleName, dependencies || []);
 

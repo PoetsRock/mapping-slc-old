@@ -16,7 +16,7 @@
     "npm": "^2.14"
   },
   "scripts": {
-    "start": "grunt",
+    "start": "gulp",
     "postinstall": "bower install --config.interactive=false && gulp build"
   },
   "dependencies": {

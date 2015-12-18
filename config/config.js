@@ -132,6 +132,9 @@ var initGlobalConfigFiles = function (config, assets) {
     server: {},
     client: {}
   };
+  console.log('::::::::::::::::::::::::::::::::::::config::::::::::::::::::::::::::::::::::::');
+  console.log(config);
+  console.log('::::::::::::::::::::::::::::::::::::config::::::::::::::::::::::::::::::::::::');
 
   // Setting Globbed model files
   config.files.server.models = getGlobbedPaths(assets.server.models);

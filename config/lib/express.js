@@ -33,6 +33,10 @@ module.exports.initLocalVariables = function (app) {
   app.locals.googleAnalyticsTrackingID = config.app.googleAnalyticsTrackingID;
   app.locals.facebookAppId = config.facebook.clientID;
   app.locals.jsFiles = config.files.client.js;
+  console.log('express yourself ... hey, hey.... \'app.locals\'');
+  console.log(app.locals);
+  console.log('config.files');
+  console.log(config.files);
   app.locals.cssFiles = config.files.client.css;
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;
