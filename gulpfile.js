@@ -293,9 +293,14 @@ gulp.task('debug', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
+// Lint project files and minify them into two production files.
+gulp.task('build-no-mini-js', function (done) {
+  runSequence('env:dev', ['cssmin'], done);
+});
+
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
+  runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
 });
 
 // Run production mode in local/dev environment
