@@ -117,8 +117,8 @@ gulp.task('debug', function (done) {
 });
 
 // Lint project files and minify them into two production files.
-gulp.task('build-no-mini-js', function (done) {
-  runSequence('env:dev', ['cssmin'], done);
+gulp.task('build-no-mini', function (done) {
+  runSequence('env:dev', done);
 });
 
 // Run the project in production mode
