@@ -10,7 +10,6 @@ var mongoose = require('mongoose'),
   _ = require('lodash'),
   config = require(path.resolve('./config/config')),
   AlchemyAPI = require('alchemy-api'),
-  alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey),
   projects = require('./projects.server.controller'),
   sanitizeHtml = require('sanitize-html'),
   Promise = require('bluebird'),
@@ -27,7 +26,7 @@ var mongoose = require('mongoose'),
 function nlpKeywords(sanitizedText) {
   return new Promise(
     function (resolve, reject) {
-
+      var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
       alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'},
         function (err, keywords) {
         if (keywords) {
@@ -296,6 +295,7 @@ exports.nlpProjects = function (req, res) {
     allowedTags: [],
     allowedAttributes: []
   });
+  var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
   alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'}, function (err, keywords) {
     if (err) {
       throw err;
