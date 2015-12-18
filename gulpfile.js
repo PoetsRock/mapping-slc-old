@@ -58,13 +58,26 @@ gulp.task('watch', function () {
   }
 });
 
+// JS minifying task
+gulp.task('uglify', function () {
+  var assets = _.union(
+    defaultAssets.client.js,
+    defaultAssets.client.templates
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.ngAnnotate())
+    .pipe(plugins.concat('application.js'))
+    .pipe(gulp.dest('public/dist'));
+});
+
 // CSS minifying task
 gulp.task('cssmin', function () {
   return gulp.src(defaultAssets.client.css)
-    //.pipe(plugins.cssmin())
     .pipe(plugins.concat('application.css'))
     .pipe(gulp.dest('public/dist'));
 });
+
 
 // Sass task
 gulp.task('sass', function () {
@@ -111,6 +124,11 @@ gulp.task('default', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
+// Lint project files and minify them into two production files.
+gulp.task('build', function (done) {
+  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+});
+
 // Run the project in debug mode
 gulp.task('debug', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done);
@@ -118,7 +136,7 @@ gulp.task('debug', function (done) {
 
 // Lint project files and minify them into two production files.
 gulp.task('build-no-mini', function (done) {
-  runSequence('env:dev', done);
+  runSequence('env:dev', ['uglify', 'cssmin'], done);
 });
 
 // Run the project in production mode
