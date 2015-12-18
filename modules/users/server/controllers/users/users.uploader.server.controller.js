@@ -72,14 +72,14 @@ exports.uploadUserProfileImage = function (req, res) {
   var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
 
   // sign policy
-  var signature = crypto.createHmac('sha1', s3.keys.aws.s3Secret)
+  var signature = crypto.createHmac('sha1', config.aws.s3Secret)
     .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
 
   var credentials = {
     url: s3Url,
     fields: {
       key: path,
-      AWSAccessKeyId: s3.keys.aws.s3Id,
+      AWSAccessKeyId: config.aws.s3Id,
       acl: readType,
       policy: base64Policy,
       signature: signature,

@@ -32,7 +32,9 @@ exports.update = function (req, res) {
     //user.lastName = req.body.lastName;
     //user.displayName = user.firstName + ' ' + user.lastName;
     //user.roles = req.body.roles;
-    user.associatedProjects.push(req.body.associatedProjects);
+    if(req.body.associatedProjects) {
+      user.associatedProjects.push(req.body.associatedProjects);
+    }
     // if true, then user has just added project as a favorite
     // so, projectId needs to be pushed into favorites array.
     // if false, projectId should be popped from favorites array.
@@ -57,10 +59,12 @@ exports.update = function (req, res) {
 };
 
 /**
+ * middleware
+ *
  * subscribe user to newsletter
  * and add new user to database if email does not exist
  */
-exports.addNewsletter = function (req, res) {
+exports.addNewsletter = function (req, res, next) {
 
   User.findOne({email: req.query.email})
     //.select('newsletter firstName lastName email ModifiedOn')

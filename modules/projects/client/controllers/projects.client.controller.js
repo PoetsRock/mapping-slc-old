@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -347,7 +347,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           var template = '';
           $scope.items = [];
 
-          if (fromState.url === '/projects/create') {
+          if (fromState.url === '/projects/create' && toState.url !== "/signin?err") {
             event.preventDefault();
             $scope.items.toStateUrl = toState.url;
             template = '/modules/projects/client/directives/views/project-warning-modal.html';
@@ -414,6 +414,87 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       error(function () {
       });
     };
+
+
+
+
+    //
+    //var documentClicked = function(e) {
+    //  var target = angular.element(e.target),
+    //    parent = angular.element(target.parent()[0]);
+    //
+    //  if (!(target.hasClass('dropdown-display') && target.hasClass('clicked')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked'))) {
+    //    $scope.$applyAsync(function() {
+    //      $scope.listVisible = false;
+    //    });
+    //  }
+    //};
+    //
+    //$document.bind('click', documentClicked);
+    //
+    //
+    //
+    ////$scope.dropdownList = function($scope) {
+    //  $scope.listVisible = false;
+    //  $scope.isPlaceholder = true;
+    //
+    //  $scope.select = function(item) {
+    //    $scope.isPlaceholder = false;
+    //    $scope.selected = item;
+    //  };
+    //
+    //  $scope.isSelected = function(item) {
+    //    return item[$scope.property] === $scope.selected[$scope.property];
+    //  };
+    //
+    //  $scope.show = function() {
+    //    $scope.listVisible = true;
+    //  };
+    //
+    //  $rootScope.$on('documentClicked', function(inner, target) {
+    //
+    //    var parent = angular.element(target.parent()[0]);
+    //    if (!(target.hasClass('dropdown-display') && target.hasClass('clicked-add')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked-add'))) {
+    //
+    //      $scope.$apply(function() {
+    //        $scope.listVisible = false;
+    //      });
+    //    }
+    //
+    //    //  var parent = angular.element(target.parent()[0]);
+    //    //  if (!parent.hasClass('clicked')) {
+    //    //    $scope.$apply(function () {
+    //    //      $scope.listVisible = false;
+    //    //    });
+    //    //  }
+    //
+    //
+    //  });
+    //
+    //  $scope.$watch('selected', function(value) {
+    //    //$scope.isPlaceholder = $scope.selected[$scope.property] === undefined;
+    //    //$scope.display = $scope.selected[$scope.property];
+    //  });
+    ////};
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //$scope.colours = [{
+    //  name: 'Red',
+    //  hex: '#F21B1B'
+    //}, {
+    //  name: 'Blue',
+    //  hex: '#1B66F2'
+    //}, {
+    //  name: 'Green',
+    //  hex: '#07BA16'
+    //}];
+    //$scope.colour = '';
+    //
 
 
   }

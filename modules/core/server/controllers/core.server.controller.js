@@ -1,5 +1,10 @@
 'use strict';
 
+var projects = require('../../../projects/server/controllers/projects.server.controller'),
+    mongoose = require('mongoose'),
+    Project = mongoose.model('Project'),
+    Core = mongoose.model('Core');
+
 /**
  * Render the main application page
  */

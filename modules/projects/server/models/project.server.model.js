@@ -5,7 +5,6 @@
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
-  _ = require('underscore'),
   mongoosastic = require('mongoosastic');
 
 /**
@@ -23,7 +22,7 @@ var ProjectSchema = new Schema({
   status: {
     type: [{
       type: String,
-      enum: ['received', 'pending', 'rejected', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published']
+      enum: ['received', 'pending', 'rejected', 'soft_rejection', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published']
     }],
     default: 'received'
   },

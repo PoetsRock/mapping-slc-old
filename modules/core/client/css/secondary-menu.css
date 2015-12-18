@@ -41,6 +41,7 @@
 .menu-top-level {
     /* critical sizing and position styles */
     width: 20%;
+    max-width: 350px;
     height: 100%;
     position: fixed;
     z-index: 999;

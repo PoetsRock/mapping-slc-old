@@ -102,8 +102,8 @@ seedDB: {
       }
   },
 
-    alchemyApi: {
-    clientID: process.env.ALCHEMY_KEY,
+  alchemyApi: {
+    alchemyKey: process.env.ALCHEMY_KEY,
     callbackUrl: '/api/v1/auth/alchemy/callback'
   },
   aws: {
@@ -114,7 +114,7 @@ seedDB: {
     callbackUrl: '/api/v1/auth/s3/callback'
   },
   census: {
-    clientID: process.env.CENSUS_KEY,
+    censusKey: process.env.CENSUS_KEY,
     callbackUrl: '/api/v1/auth/census/callback'
   },
   googleAnalytics: {
@@ -122,12 +122,12 @@ seedDB: {
     callbackUrl: '/api/v1/auth/google-analytics/callback'
   },
   here: {
-    hereId: process.env.HERE_KEY,
+    hereKey: process.env.HERE_KEY,
     hereSecret: process.env.HERE_SECRET,
     callbackUrl: '/api/v1/auth/mapbox/callback'
   },
   mapbox: {
-    mapboxId: process.env.MAPBOX_KEY,
+    mapboxKey: process.env.MAPBOX_KEY,
     mapboxSecret: process.env.MAPBOX_SECRET,
     callbackUrl: '/api/v1/auth/mapbox/callback'
   }

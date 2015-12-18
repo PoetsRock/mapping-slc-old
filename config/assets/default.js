@@ -13,8 +13,7 @@ module.exports = {
         'public/lib/angular-notify/dist/angular-notify.min.css',
         'public/lib/ng-ckeditor/ng-ckeditor.css',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.min.css',
-        'public/lib/c3/c3.min.css',
-        'public/lib/angular-loading-bar/build/loading-bar.min.css'
+        'public/lib/c3/c3.min.css'
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -47,8 +46,6 @@ module.exports = {
         'public/lib/c3/c3.min.js',
         'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
         'public/lib/angular-notify/dist/angular-notify.min.js',
-        'public/lib/angular-loading-bar/build/loading-bar.min.js',
-        'public/lib/ng-videosharing-embed/build/ng-videosharing-embed.min.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
         'public/lib/ng-file-upload/ng-file-upload.js'
       ],
@@ -73,7 +70,7 @@ module.exports = {
     templates: ['build/templates.js']
   },
   server: {
-    gruntConfig: 'gruntfile.js',
+    //gruntConfig: 'gruntfile.js',
     gulpConfig: 'gulpfile.js',
     allJS: ['server.js', 'config/**/*.js', 'modules/*/server/**/*.js'],
     models: 'modules/*/server/models/**/*.js',

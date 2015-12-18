@@ -30,7 +30,7 @@
           <ul>
             <div class="row">
               <li class="col-sm-12">
-                <a href="#" data-ng-click="toggleOverlayFunction('home')">
+                <a ui-sref="home" data-ng-click="toggleOverlayFunction('home')">
                   <i class="fa fa-home"></i>
                   Home
                 </a>
@@ -39,34 +39,16 @@
 
             <div class="row">
               <li class="col-sm-12">
-                <a href="/projects">
+                <a ui-sref="listProjects">
                   <i class="fa fa-map-marker"></i>
-                  Stories
+                  Projects
                 </a>
               </li>
             </div>
 
             <div class="row">
               <li class="col-sm-12">
-                <a href="/projects/create">
-                  <i class="fa fa-file"></i>
-                  Get Involved
-                </a>
-              </li>
-            </div>
-
-            <div class="row" data-ng-hide="isAdmin === undefined">
-              <li class="col-sm-12">
-                <a href="#">
-                  <i class="fa fa-heart"></i>
-                  Favorites
-                </a>
-              </li>
-            </div>
-
-            <div class="row">
-              <li class="col-sm-12">
-                <a href="/contributors">
+                <a ui-sref="contributors">
                   <i class="fa fa-users"></i>
                   Contributors
                 </a>
@@ -75,51 +57,61 @@
 
             <div class="row">
               <li class="col-sm-12">
-                <a href="/about-the-project">
-                  <i class="fa fa-user"></i>
-                  <!--<i class="fa fa-user col-sm-2"></i>-->
-                  <!--<div class="col-sm-10">-->
-                  About Us
-                  <!--</div>-->
+                <a ui-sref="createProject">
+                  <i class="fa fa-file"></i>
+                  Submit a Project
                 </a>
               </li>
             </div>
 
             <div class="row">
               <li class="col-sm-12">
-                <a href="/contact-us">
+                <a ui-sref="aboutMappingSlc">
+                  <i class="fa fa-map-signs"></i>
+                  About Mapping SLC
+                </a>
+              </li>
+            </div>
+
+            <div class="row">
+              <li class="col-sm-12">
+                <a ui-sref="createContact">
                   <i class="fa fa-envelope"></i>
-                  <!--<i class="fa fa-envelope col-sm-2"></i>-->
-                  <!--<div class="col-sm-10">-->
-                  Contact
-                  <!--</div>-->
+                  Contact Us
                 </a>
               </li>
             </div>
 
-            <div class="row" data-ng-show="isAdmin === undefined">
+            <div class="row" data-ng-show="user.roles[0] !== undefined">
               <li class="col-sm-12">
-                <a href="/authentication/signup">
-                  <i class="fa fa-sign-in"></i>
-                  Sign-up
-                </a>
-              </li>
-            </div>
-
-            <div class="row" data-ng-hide="isAdmin === undefined">
-              <li class="col-sm-12">
-                <a href="/settings/profile">
+                <a ui-sref="settings.profile">
                   <i class="fa fa-cog"></i>
                   Account Settings
                 </a>
               </li>
             </div>
 
-            <div class="row" data-ng-show="isAdmin === 'admin'">
+            <div class="row" data-ng-show="user.roles[0] === undefined">
               <li class="col-sm-12">
-                <a href="/admin/dashboard">
-                <!--<a ui-sref="admin.user({userId: user._id})">-->
-                <!--<a ui-sref="admin/dashboard">-->
+                <a ui-sref="authentication.signin">
+                  <i class="fa fa-sign-in"></i>
+                  Sign In
+                </a>
+              </li>
+            </div>
+
+            <div class="row" data-ng-show="user.roles[0] === undefined">
+              <li class="col-sm-12">
+                <a ui-sref="authentication.signup">
+                  <i class="fa fa-user-plus"></i>
+                  Sign Up
+                </a>
+              </li>
+            </div>
+
+            <div class="row" data-ng-show="user.roles[0] === 'admin'">
+              <li class="col-sm-12">
+                <a ui-sref="admin.dashboard">
                   <i class="fa fa-star"></i>
                   Admin Panel
                 </a>
@@ -140,18 +132,18 @@
 
       </div>
 
-      <!--<div class="social-media-button">-->
-      <!--<li>-->
-      <!--<a href="https://twitter.com/mappingslc">-->
-      <!--<i class="fa fa-twitter-square"></i>-->
-      <!--</a>-->
-      <!--</li>-->
-      <!--<li>-->
-      <!--<a href="https://www.facebook.com/MappingSaltLakeCity">-->
-      <!--<i class="fa fa-facebook-square"></i>-->
-      <!--</a>-->
-      <!--</li>-->
-      <!--</div>-->
+      <div class="social-media-button">
+      <li>
+      <a ui-sref="https://twitter.com/mappingslc">
+      <i class="fa fa-twitter-square"></i>
+      </a>
+      </li>
+      <li>
+      <a ui-sref="https://www.facebook.com/MappingSaltLakeCity">
+      <i class="fa fa-facebook-square"></i>
+      </a>
+      </li>
+      </div>
 
     </div>
 
@@ -244,101 +236,3 @@
   </div>
 
 </div>
-
-
-<!--<div class="area"></div>-->
-<!--<nav class="main-menu">-->
-  <!--<ul>-->
-    <!--<li>-->
-      <!--<a href="#" data-ng-click="toggleOverlayFunction('home')">-->
-        <!--<i class="fa fa-home fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Home-->
-          <!--</span>-->
-      <!--</a>-->
-
-    <!--</li>-->
-    <!--<li class="has-subnav">-->
-      <!--<a href="#" data-ng-click="toggleOverlayFunction('home')">-->
-        <!--<i class="fa fa-laptop fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--UI Components-->
-          <!--</span>-->
-      <!--</a>-->
-
-
-        <!--Home-->
-      <!--</a>-->
-
-    <!--</li>-->
-    <!--<li class="has-subnav">-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-list fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Forms-->
-          <!--</span>-->
-      <!--</a>-->
-
-    <!--</li>-->
-    <!--<li class="has-subnav">-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-folder-open fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Pages-->
-          <!--</span>-->
-      <!--</a>-->
-
-    <!--</li>-->
-    <!--<li>-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-bar-chart-o fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Graphs and Statistics-->
-          <!--</span>-->
-      <!--</a>-->
-    <!--</li>-->
-    <!--<li>-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-font fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Typography and Icons-->
-          <!--</span>-->
-      <!--</a>-->
-    <!--</li>-->
-    <!--<li>-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-table fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Tables-->
-          <!--</span>-->
-      <!--</a>-->
-    <!--</li>-->
-    <!--<li>-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-map-marker fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Maps-->
-          <!--</span>-->
-      <!--</a>-->
-    <!--</li>-->
-    <!--<li>-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-info fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Documentation-->
-          <!--</span>-->
-      <!--</a>-->
-    <!--</li>-->
-  <!--</ul>-->
-
-  <!--<ul class="logout">-->
-    <!--<li>-->
-      <!--<a href="#">-->
-        <!--<i class="fa fa-power-off fa-2x"></i>-->
-          <!--<span class="nav-text">-->
-              <!--Logout-->
-          <!--</span>-->
-      <!--</a>-->
-    <!--</li>-->
-  <!--</ul>-->
-<!--</nav>-->
