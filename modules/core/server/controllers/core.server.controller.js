@@ -1,5 +1,10 @@
 'use strict';
 
+var projects = require('../../../projects/server/controllers/projects.server.controller'),
+    mongoose = require('mongoose'),
+    Project = mongoose.model('Project'),
+    Core = mongoose.model('Core');
+
 /**
  * Render the main application page
  */
@@ -39,4 +44,19 @@ exports.renderNotFound = function (req, res) {
       res.send('Path not found');
     }
   });
+};
+
+
+/**
+ *
+ */
+exports.getFeaturedProjects = function (req, res) {
+  var featuredProjectsArray = findOne(core.featuredProjects);
+  res.jsonp(featuredProjectsArray);
+};
+
+exports.putFeaturedProjects = function (req, res, next) {
+  var featuredProjectsArray = findOne(core.featuredProjects);
+  res.jsonp(featuredProjectsArray);
+  next();
 };
