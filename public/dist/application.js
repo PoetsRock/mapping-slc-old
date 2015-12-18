@@ -105,12 +105,19 @@ angular.element(document).ready(function () {
 
 'use strict';
 
+// Use application configuration module to register a new module
+ApplicationConfiguration.registerModule('admins');
+
+'use strict';
+
 // Use applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('contacts');
 'use strict';
 
-// Use application configuration module to register a new module
-ApplicationConfiguration.registerModule('admins');
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('users', ['core']);
+ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
+ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
 
 'use strict';
 
@@ -134,194 +141,6 @@ console.log('#   __    __                            __     __                  
 
 
 **/
-
-'use strict';
-
-// Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('users', ['core']);
-ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
-ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
-
-'use strict';
-
-//Setting up route
-angular.module('contacts').config(['$compileProvider',
-  function ($compileProvider) {
-
-    // when `false`, turns off debugging for prod
-    // https://docs.angularjs.org/guide/production
-    $compileProvider.debugInfoEnabled(false);
-  }
-]);
-
-'use strict';
-
-//Setting up route
-angular.module('contacts').config(['$stateProvider',
-    function ($stateProvider) {
-        // Contacts state routing
-        $stateProvider.
-            state('createContact', {
-                url: '/contact-us',
-                templateUrl: 'modules/contacts/client/views/contact-us.client.view.html',
-            })
-            .state('editContact', {
-                url: '/contacts/:contactId/edit',
-                templateUrl: 'modules/contacts/client/views/edit-contact.client.view.html'
-            })
-            .state('aboutMappingSlc', {
-                url: '/about-mapping-slc',
-                templateUrl: 'modules/contacts/client/views/about-mapping-slc.client.view.html'
-            })
-            .state('aboutUs', {
-              url: '/about-us',
-              templateUrl: 'modules/contacts/client/views/about-us.client.view.html'
-            });
-    }
-]);
-
-'use strict';
-
-// Contacts controller
-angular.module('contacts').controller('ContactsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Contacts', '$http', 'AdminAuthService', 'UtilsService', 'notify',
-	function($scope, $stateParams, $location, Authentication, Contacts, $http, AdminAuthService, UtilsService, notify) {
-		$scope.authentication = Authentication;
-		$scope.isAdmin = AdminAuthService;
-
-		//function to create a link on an entire row in a table
-		$scope.viewMessage = function(contactId) {
-			$location.path('admin/messages/' + contactId);
-		};
-
-		//provides logic for the css in the forms
-		UtilsService.cssLayout();
-
-
-		//todo  'moment' is not defined.  --> from grunt jslint
-		// $scope.dateNow = moment();
-
-
-		$scope.toggleSort = true;
-		$scope.oneAtATime = true;
-
-		// Create new Contact
-		$scope.create = function() {
-			// Create new Contact object
-			var contact = new Contacts ({
-				firstName: this.firstName,
-				lastName: this.lastName,
-				email: this.email,
-				zip: this.zip,
-				newsletter: this.newsletter,
-				message: this.message
-			});
-
-			// Redirect after save
-			contact.$save(function(response) {
-				$location.path('/');
-
-				// Clear form fields
-				$scope.firstName = '';
-				$scope.lastName = '';
-				$scope.email = '';
-				$scope.zip = '';
-				$scope.newsletter = '';
-				$scope.message = '';
-        console.log('response:\n', response);
-        if(response.$resolved) {
-          notify({
-            message: 'Thanks for the message!',
-            classes: 'ng-notify-contact-success'
-          })
-        }else{
-          notify({
-            message: 'Something went wrong, and we didn\'t receive your message We apologize.',
-            classes: 'ng-notify-contact-failure'
-          })
-        }
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Remove existing Contact
-		$scope.remove = function(contact) {
-			if ( contact ) { 
-				contact.$remove();
-
-				for (var i in $scope.contacts) {
-					if ($scope.contacts [i] === contact) {
-						$scope.contacts.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.contact.$remove(function() {
-					$location.path('contacts');
-				});
-			}
-		};
-
-		// Update existing Contact
-		$scope.update = function() {
-			var contact = $scope.contact;
-
-			contact.$update(function() {
-				$location.path('contacts/' + contact._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Find a list of Contacts
-		$scope.find = function() {
-			$scope.contacts = Contacts.query();
-		};
-
-		// Find existing Contact
-		$scope.findOne = function() {
-			$scope.contact = Contacts.get({ 
-				contactId: $stateParams.contactId
-			});
-		};
-
-		//get data from back end for display in table
-		$http.get('/contacts').
-			success(function(messageData){
-				//console.log(messageData);
-				$scope.messageData = messageData;
-
-				$scope.sentToday = function(){
-					//if(messageData.created === moment()){
-					//	return moment().calendar(messageData.created);
-					//}else{
-						var today = moment().calendar(messageData.created);
-						return today;
-					//}
-				};
-
-			}).
-			error(function(data, status){
-
-			});
-
-	}
-]);
-
-
-
-'use strict';
-
-//Contacts service used to communicate Contacts REST endpoints
-angular.module('contacts').factory('Contacts', ['$resource',
-	function($resource) {
-		return $resource('api/v1/contacts/:contactId', { contactId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		});
-	}
-]);
 
 'use strict';
 
@@ -551,21 +370,6 @@ angular.module('admins').controller('AdminsController', ['$scope', 'd3', '$state
 	}
 ]);
 
-'use strict';
-
-//Admins service used for communicating with the articles REST endpoints
-angular.module('admins').factory('Admins', ['$resource',
-  function ($resource) {
-    return $resource('api/v1/admins/:adminId', {
-      adminId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
 //'use strict';
 //
 ////angular.module('admins').run(function($rootScope) {
@@ -695,1042 +499,23 @@ angular.module('admins').directive('userViewForm', function() {
 
 'use strict';
 
-//Setting up route
-angular.module('projects').config(['$compileProvider',
-      function ($compileProvider) {
-
-        //turn off debugging for  prod
-        // https://docs.angularjs.org/guide/production
-        $compileProvider.debugInfoEnabled(false);
+//Admins service used for communicating with the articles REST endpoints
+angular.module('admins').factory('Admins', ['$resource',
+  function ($resource) {
+    return $resource('api/v1/admins/:adminId', {
+      adminId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 ]);
-
-//.run(function($rootScope) {
-//    angular.element(document).on('click', function(e) {
-//      $rootScope.$broadcast('documentClicked', angular.element(e.target));
-//    });
-//  });
-
-
-
-
-
 
 'use strict';
 
 //Setting up route
-angular.module('projects').config(['$stateProvider',
-  function ($stateProvider) {
-    // Projects state routing
-    $stateProvider.
-    state('listProjects', {
-      url: '/projects',
-      templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
-    }).
-    state('createProject', {
-      url: '/projects/create',
-      templateUrl: 'modules/projects/client/views/create-project.client.view.html',
-      loginRequired: true
-    }).
-    state('viewProject', {
-      url: '/projects/:projectId',
-      templateUrl: 'modules/projects/client/views/view-project.client.view.html'
-    }).
-    state('editProject', {
-      url: '/projects/:projectId/edit',
-      templateUrl: 'modules/projects/client/views/edit-project.client.view.html',
-      data: {
-        authenticate: true,
-        roles: ['contributor', 'admin', 'superUser']
-      }
-    }).
-    state('confirmCreateProject', {
-      url: '/projects/:projectId/status',
-      //data: {
-      //  authenticate: true,
-      //  roles: ['contributor', 'admin', 'superUser']
-      //}
-      templateUrl: 'modules/projects/client/views/project-for-submission.client.view.html'
-    });
-  }
-]);
-
-'use strict';
-
-angular.module('projects').controller('ProjectsUploadController', ['$scope', '$timeout', '$window', 'Authentication', 'Upload', '$http',
-  function ($scope, $timeout, $window, Authentication, Upload, $http) {
-    $scope.user = Authentication.user;
-    $scope.imageURL = $scope.user.profileImageURL;
-    $scope.uploading = false;
-
-    $scope.onFileSelect = function(files) {
-
-      if (files.length > 0) {
-        $scope.uploading = true;
-        var filename = files[0].name;
-        var type = files[0].type;
-        var query = {
-          filename: filename,
-          type: type,
-          user: $scope.user,
-          project: $scope.project
-        };
-        var configObj = {cache: true};
-        $http.post('api/v1/s3/upload/project', query, configObj)
-          .success(function(result) {
-            console.log('result v1\n', result);
-            Upload.upload({
-              url: result.url, //s3Url
-              transformRequest: function(data, headersGetter) {
-                var headers = headersGetter();
-                delete headers.Authorization;
-                console.log('data v1\n', data);
-                return data;
-              },
-              fields: result.fields, //credentials
-              method: 'POST',
-              file: files[0]
-            }).progress(function(evt) {
-
-              console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
-
-            }).success(function(data, status, headers, config) {
-
-              // file is uploaded successfully
-              $scope.uploading = false;
-
-              console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
-
-              // need to set image on front end
-              if(data && data.s3Url) {
-                console.log('data v2\n', data);
-                $scope.user.profileImageURL = data.s3Url;
-                $scope.imageURL = data.s3Url;
-              }
-              console.log('$scope.imageURL:\n', $scope.imageURL);
-              //$http({
-              //  url: '',
-              //  method: 'PUT'
-              //})
-              //  .then(function(data) {
-              //
-              //  })
-              //  .finally(function(data) {
-              //
-              //  });
-
-              // and need to update mongodb
-
-
-            }).error(function() {
-
-            });
-
-            if(result && result.s3Url) {
-              console.log('result v2\n', result);
-              $scope.user.profileImageURL = result.s3Url;
-              $scope.imageURL = result.s3Url;
-            }
-          })
-          .error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            $scope.uploading = false;
-          });
-
-        //  .xhr(function(xhr) {
-        //    $scope.abort = function() {
-        //    xhr.abort();
-        //    $scope.uploading = false;
-        //  };
-        //});
-
-      }
-
-
-    };
-
-
-  }
-]);
-
-'use strict';
-
-// Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document) {
-    $scope.user = Authentication.user;
-    $scope.isAdmin = AdminAuthService;
-    $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
-    var width = '800';
-    var height = '250';
-    var markerUrl = 'url-http%3A%2F%2Fwww.mappingslc.org%2Fimages%2Fsite_img%2Flogo_marker_150px.png';
-    $scope.mapImage = '';
-    $rootScope.signInBeforeProject = false;
-    $scope.updateToContrib = null;
-    $scope.isPublished = false;
-    $scope.userToEdit = {};
-    $scope.images = [];
-    $scope.override = false;
-    $scope.isFavorite = false;
-    $scope.trustAsHtml = $sce.trustAsHtml;
-
-    $scope.init = function () {
-      $scope.publishedProjects();
-    };
-
-    $scope.initSubmissionStatus = function () {
-      $scope.findOne();
-    };
-
-    //provides logic for the css in the forms
-    UtilsService.cssLayout();
-
-    $scope.showUpload = false;
-    $scope.showSubmit = false;
-    $scope.showUploadFunction = function () {
-      if (project.street !== '') {
-        $scope.showUpload = true;
-      }
-      if ($scope.showUpload && this.project.story !== '') {
-        $scope.showSubmit = true;
-      }
-    };
-
-    /**
-     * called when $scope.project.status updates
-     */
-    $scope.projectStatusChanged = function () {
-      if ($scope.project.status === 'published') {
-        $scope.publishProject();
-        $scope.toggleEdit = false;
-      } else {
-        $scope.update();
-        $scope.toggleEdit = false;
-      }
-    };
-
-    $scope.confirmPublishModal = function () {
-      $scope.animationsEnabled = true;
-      $uibModal.open({
-        animation: $scope.animationsEnabled,
-        templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
-        controller: 'ModalController',
-        size: 'lg'
-      });
-    };
-
-    var publishUser = function (project) {
-      AdminUpdateUser.get({userId: project.user._id},
-        function (userData, getResponseHeader) {
-          userData.associatedProjects.push(project._id);
-          if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser') {
-            userData.roles[0] = 'contributor';
-          }
-          userData.$update(function (userData, putResponseHeaders) {
-          });
-        });
-    };
-
-    $scope.publishProject = function () {
-      //todo need to call on a confirm modal first
-      $scope.confirmPublishModal();
-      $scope.project.publishedDate = new Date();
-      $scope.update();
-      publishUser($scope.project); //call method to display contributor bio
-    };
-
-    var saveProject = null;
-    $scope.updateLatLng = function (project) {
-      console.log('project ctrl', project);
-      $http.get('/api/v1/keys').success(function (data) {
-        var mapboxKey = data.mapboxKey;
-        var mapboxSecret = data.mapboxSecret;
-        var hereKey = data.hereKey;
-        var hereSecret = data.hereSecret;
-
-        GeoCodeApi.callGeoCodeApi(project, hereKey, hereSecret, saveProject)
-          .success(function (data) {
-            project.lat = data.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
-            project.lng = data.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
-            project.mapImage = 'http://api.tiles.mapbox.com/v4/' + mapboxKey + '/' + markerUrl + '(' + project.lng + ',' + project.lat + ')/' + project.lng + ',' + project.lat + ',15/' + width + 'x' + height + '.png?access_token=' + mapboxSecret;
-            saveProject();
-          })
-          .error(function (data, status) {
-
-          })
-      });
-    };
-
-    // Find a list of all published projects
-    $scope.publishedProjects = function () {
-      $http.get('/api/v1/projects/published').
-      success(function (publishedProjects) {
-        $scope.publishedProjects = publishedProjects;
-        console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
-      }).
-      error(function (data, status) {
-
-      });
-    };
-
-    // Create new Project
-    $scope.create = function (isValid) {
-      $scope.error = null;
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'projectForm');
-        return false;
-      }
-
-      // Create new Project object
-      var project = new Projects({
-        createdBy: Authentication.user._id,
-        street: this.project.street,
-        city: this.project.city,
-        state: 'UT',
-        zip: this.project.zip,
-        story: '',
-        title: this.project.title
-      });
-
-      saveProject = function () {
-        project.$save(function (response) {
-          $scope.override = true;
-          $location.path('projects/' + response._id + '/status');
-          // Clear form fields
-          $scope.street = '';
-          $scope.city = '';
-          $scope.state = '';
-          $scope.zip = '';
-          $scope.story = '';
-          $scope.title = '';
-        }, function (errorResponse) {
-          $scope.error = errorResponse.data.message;
-        });
-      };
-
-      $scope.updateLatLng(project);
-      $scope.override = false;
-    };
-
-    // Remove existing Project
-    $scope.remove = function (project) {
-      if (project) {
-        project.$remove();
-
-        for (var i in $scope.projects) {
-          if ($scope.projects [i] === project) {
-            $scope.projects.splice(i, 1);
-          }
-        }
-      } else {
-        $scope.project.$remove(function () {
-          if ($location.path() === '/admin/edit-project/' + $scope.project._id) {
-            $location.path('admin/projects-queue');
-          } else {
-            $location.path('projects');
-          }
-        });
-      }
-    };
-
-    // Update existing Project
-    $scope.update = function () {
-      var project = $scope.project;
-      project.$update(function (response) {
-        if (response.$resolved) {
-          if ($location.path() === '/admin/edit-project/' + project._id) {
-            $location.path('/admin/edit-project/' + project._id);
-            $scope.toggleEditFn(0);
-          } else {
-            $location.path('projects/' + project._id);
-            $scope.toggleEditFn(0);
-          }
-          notify({
-            message: 'Project updated successfully',
-            classes: 'ng-notify-contact-success'
-          })
-        } else {
-          notify({
-            message: 'Something went wrong, and we didn\'t receive your message. We apologize.',
-            classes: 'ng-notify-contact-failure'
-          })
-        }
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-
-    // Find a list of Projects
-    $scope.find = function () {
-      $scope.projects = Projects.query();
-    };
-
-    // Find existing Project
-    $scope.findOne = function () {
-
-      Projects.get({
-        projectId: $stateParams.projectId
-      }, function (project) {
-        $scope.project = project;
-        if (project.vimeoId) {
-          $scope.vimeo = {
-            video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
-            width: $window.innerWidth / 1.75,
-            height: $window.innerHeight / 1.75
-          };
-        }
-        if (project.soundCloudId) {
-          $scope.soundCloud = {
-            audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
-            width: $window.innerWidth / 1.75,
-            height: $window.innerHeight / 1.75
-          };
-        }
-        if (project.imageGallery) {
-          for (var i = 0; i < project.imageGallery.length; i++) {
-            $scope.images.push(project.imageGallery[i]);
-          }
-        }
-        getUserFavoriteStories($scope.user.favorites, $scope.project.id);
-      });
-
-    };
-
-    $scope.completed = function () {
-      var formField;
-      for (formField in $scope.createProject) {
-        if ($scope.createProject === null) {
-          return $scope.completed = false;
-        } else {
-          $scope.completed = true;
-        }
-      }
-    };
-
-
-    //CKEDITOR.replace('story');
-    //$scope.editorOptions = {
-    //  language: 'en',
-    //  uiColor: '#02211D'
-    //};
-    //CKEDITOR.replaceClass = 'ck-crazy';
-
-    /**
-     * Checks to see if a user is logged in before allowing a user to create a project
-     * @type {function}
-     * @params: none
-     */
-
-    $rootScope.previousState = '';
-    $rootScope.currentState = '';
-    $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
-      $rootScope.previousState = from.name;
-      $rootScope.currentState = to.name;
-    });
-    $scope.goBack = function () {
-      if ($rootScope.previousState === 'listProjects') {
-        $state.go($rootScope.previousState);
-      } else {
-        $state.go('admin');
-      }
-    };
-    $scope.run = function ($rootScope, $state, Authentication) {
-      $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        if (toState.authenticate && !Authentication.isLoggedIn()) {
-        }
-        event.preventDefault();
-      });
-    };
-
-    $scope.userLoggedin = function () {
-      // get request to /users/me
-      if ($location.path() === '/projects/create') {
-        $http.get('/api/v1/users/me')
-          .success(function (data) {
-            if (data === null) {
-              $rootScope.signInBeforeProject = true;
-              $location.path('/authentication/signin');
-            }
-          });
-      }
-    }();
-
-    /**
-     * Favorite project function
-     */
-
-    //getUserFavorites.getUserFavoriteStories(userFavoriteProjects, projectId);
-    //getUserFavorites.toggleFavProject();
-
-    var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
-      userFavoriteProjects.forEach(function (userFavoriteProject) {
-        if (userFavoriteProject === projectId) {
-          $scope.isFavorite = true;
-        }
-      });
-    };
-    $scope.toggleFavProject = function () {
-      $scope.isFavorite = !$scope.isFavorite;
-
-      var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
-      if (!$scope.isFavorite) {
-        updateFavoriteObj.isFavorite = false;
-      }
-      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
-    };
-
-
-    /**
-     * modal for leaving projects, will give user warning if leaving form
-     *
-     */
-
-    $scope.preventRunning = true;
-    $scope.$on('$stateChangeStart',
-      function (event, toState, toParams, fromState, fromParams) {
-        var state = {
-          event: event,
-          toState: toState,
-          toParams: toParams,
-          fromState: fromState,
-          fromParams: fromParams
-        };
-        if (!$scope.preventRunning || $scope.override) {
-          return
-        } else {
-          var template = '';
-          $scope.items = [];
-
-          if (fromState.url === '/projects/create' && toState.url !== "/signin?err") {
-            event.preventDefault();
-            $scope.items.toStateUrl = toState.url;
-            template = '/modules/projects/client/directives/views/project-warning-modal.html';
-            $scope.openModal('lg', template);
-          }
-
-        }
-      });
-
-
-    $scope.animationsEnabled = true;
-    $scope.openModal = function (size, template, backdropClass, windowClass) {
-
-      var modalInstance = $uibModal.open({
-        templateUrl: template,
-        controller: 'ModalController',
-        animation: $scope.animationsEnabled,
-        backdrop: 'static',
-        backdropClass: backdropClass,
-        windowClass: windowClass,
-        size: size,
-        resolve: {
-          items: function () {
-            return $scope.items;
-          }
-        }
-      });
-      modalInstance.result.then(function (selectedItem) {
-        $scope.preventRunning = false;
-        return $location.path(selectedItem);
-      }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
-      });
-      $scope.toggleAnimation = function () {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
-      };
-    };
-
-
-    /**
-     * admin panel editing
-     */
-
-    $scope.toggleEdit = false;
-    $scope.toggleId = 0;
-
-    $scope.toggleEditFn = function (editNum) {
-      $scope.toggleEdit = !$scope.toggle;
-      $scope.toggleId = editNum;
-    };
-
-    /**
-     * nlp
-     **/
-      //$scope.update()
-    $scope.nlpData = null;
-    var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
-    $scope.processNlpData = function () {
-      $http.get('api/v1/nlp').
-      success(function (nlpData) {
-        console.log(nlpData);
-        $scope.nlpData = nlpData;
-      }).
-      error(function () {
-      });
-    };
-
-
-
-
-    //
-    //var documentClicked = function(e) {
-    //  var target = angular.element(e.target),
-    //    parent = angular.element(target.parent()[0]);
-    //
-    //  if (!(target.hasClass('dropdown-display') && target.hasClass('clicked')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked'))) {
-    //    $scope.$applyAsync(function() {
-    //      $scope.listVisible = false;
-    //    });
-    //  }
-    //};
-    //
-    //$document.bind('click', documentClicked);
-    //
-    //
-    //
-    ////$scope.dropdownList = function($scope) {
-    //  $scope.listVisible = false;
-    //  $scope.isPlaceholder = true;
-    //
-    //  $scope.select = function(item) {
-    //    $scope.isPlaceholder = false;
-    //    $scope.selected = item;
-    //  };
-    //
-    //  $scope.isSelected = function(item) {
-    //    return item[$scope.property] === $scope.selected[$scope.property];
-    //  };
-    //
-    //  $scope.show = function() {
-    //    $scope.listVisible = true;
-    //  };
-    //
-    //  $rootScope.$on('documentClicked', function(inner, target) {
-    //
-    //    var parent = angular.element(target.parent()[0]);
-    //    if (!(target.hasClass('dropdown-display') && target.hasClass('clicked-add')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked-add'))) {
-    //
-    //      $scope.$apply(function() {
-    //        $scope.listVisible = false;
-    //      });
-    //    }
-    //
-    //    //  var parent = angular.element(target.parent()[0]);
-    //    //  if (!parent.hasClass('clicked')) {
-    //    //    $scope.$apply(function () {
-    //    //      $scope.listVisible = false;
-    //    //    });
-    //    //  }
-    //
-    //
-    //  });
-    //
-    //  $scope.$watch('selected', function(value) {
-    //    //$scope.isPlaceholder = $scope.selected[$scope.property] === undefined;
-    //    //$scope.display = $scope.selected[$scope.property];
-    //  });
-    ////};
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //$scope.colours = [{
-    //  name: 'Red',
-    //  hex: '#F21B1B'
-    //}, {
-    //  name: 'Blue',
-    //  hex: '#1B66F2'
-    //}, {
-    //  name: 'Green',
-    //  hex: '#07BA16'
-    //}];
-    //$scope.colour = '';
-    //
-
-
-  }
-
-]);
-
-
-//'use strict';
-//
-//angular.module('projects').directive('dropdownList', function($rootScope) {
-//  return {
-//    restrict: 'E',
-//    templateUrl: 'modules/projects/client/directives/views/dropdown-list.html',
-//    scope: {
-//      placeholder: '@',
-//      list: '=',
-//      selected: '=',
-//      property: '@'
-//    },
-//    link: function(scope) {
-//      scope.listVisible = false;
-//      scope.isPlaceholder = true;
-//
-//      scope.select = function(item) {
-//        scope.isPlaceholder = false;
-//        scope.selected = item;
-//      };
-//
-//      scope.isSelected = function(item) {
-//        return item[scope.property] === scope.selected[scope.property];
-//      };
-//
-//      scope.show = function() {
-//        scope.listVisible = true;
-//      };
-//
-//      $rootScope.$on('documentClicked', function(inner, target) {
-//
-//        var parent = angular.element(target.parent()[0]);
-//    if (!(target.hasClass('dropdown-display') && target.hasClass('clicked-add')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked-add'))) {
-//
-//          scope.$apply(function() {
-//            scope.listVisible = false;
-//          });
-//        }
-//
-//      //  var parent = angular.element(target.parent()[0]);
-//      //  if (!parent.hasClass('clicked')) {
-//      //    scope.$apply(function () {
-//      //      scope.listVisible = false;
-//      //    });
-//      //  }
-//
-//
-//      });
-//
-//      scope.$watch('selected', function(value) {
-//        //scope.isPlaceholder = scope.selected[scope.property] === undefined;
-//        //scope.display = scope.selected[scope.property];
-//      });
-//    }
-//  }
-//});
-
-'use strict';
-
-angular.module('projects').directive('projectStatusOverview', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: 'modules/projects/client/directives/views/project-status-overview.html'
-        };
-    });
-
-'use strict';
-
-angular.module('projects').directive('projectStatusProjectEditor', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: 'modules/projects/client/directives/views/project-status-project-editor.html'
-        };
-    });
-
-'use strict';
-
-angular.module('projects').directive('projectStatusProjectInfo', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: 'modules/projects/client/directives/views/project-status-project-info.html'
-        };
-    });
-
-'use strict';
-
-angular.module('projects').directive('projectStatusUserBio', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: 'modules/projects/client/directives/views/project-status-user-bio.html'
-        };
-    });
-
-'use strict';
-
-angular.module('projects').directive('projectStatusUserInfo', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: 'modules/projects/client/directives/views/project-status-user-info.html'
-        };
-    });
-
-'use strict';
-
-angular.module('projects').directive('projectUploaderDirective', function () {
-  return {
-    restrict: 'AE',
-    templateUrl:'/modules/projects/client/directives/views/projectUploader.html',
-    controller: ["$scope", "$http", function($scope,$http) {
-
-
-      // Project Uploader Service logic
-
-      $scope.uploading = false;
-
-      $scope.projectUpload = function (files) {
-
-        if (files.length > 0) {
-          $scope.uploading = true;
-          var filename = files[0].name;
-          var type = files[0].type;
-          var query = {
-            filename: filename,
-            type: type,
-            user: $scope.user,
-            project: $scope.project
-          };
-          var configObj = {cache: true};
-          $http.post('api/v1/s3/upload/project', query, configObj)
-            .success(function (result) {
-              console.log('result v1\n', result);
-              Upload.upload({
-                url: result.url, //s3Url
-                transformRequest: function (data, headersGetter) {
-                  var headers = headersGetter();
-                  delete headers.Authorization;
-                  console.log('data v1\n', data);
-                  return data;
-                },
-                fields: result.fields, //credentials
-                method: 'POST',
-                file: files[0]
-              }).progress(function (evt) {
-
-                console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
-
-              }).success(function (data, status, headers, config) {
-
-                // file is uploaded successfully
-                $scope.uploading = false;
-
-                console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
-
-                // need to set image on front end
-                if (data && data.s3Url) {
-                  console.log('data v2\n', data);
-                  $scope.project.file = data.s3Url;
-                }
-                console.log('$scope.imageURL:\n', $scope.imageURL);
-
-
-              }).error(function () {
-
-              });
-
-              if (result && result.s3Url) {
-                console.log('result v2\n', result);
-                $scope.user.profileImageURL = result.s3Url;
-                $scope.imageURL = result.s3Url;
-              }
-            })
-            .error(function (data, status, headers, config) {
-              // called asynchronously if an error occurs
-              // or server returns response with an error status.
-              $scope.uploading = false;
-            });
-
-          //  .xhr(function(xhr) {
-          //    $scope.abort = function() {
-          //    xhr.abort();
-          //    $scope.uploading = false;
-          //  };
-          //});
-
-        }
-
-      }
-
-    }]
-
-  }
-});
-
-//'use strict';
-//
-//angular.module('projects').directive('staticMap', ['$scope',
-//	function($scope) {
-//		return {
-//			template: '<div></div>',
-//			restrict: 'E',
-//			link: function postLink(scope, element, attrs) {
-//
-//				//create static map from lat and long
-//
-//				$scope.mapImage =
-//					'http://api.tiles.mapbox.com/v4/{' +
-//					data.mapboxKey + '/' +
-//					this.geocode.long + ',' +
-//					this.geocode.lat +
-//					',10/' + //set the map zoom: default '10'
-//					width + 'x' + height + '.png?access_token=' +
-//					data.mapboxSecret;
-//
-//				//{name}-{label}+{color}({lon},{lat})
-//				//var width = '100%';
-//				//var height = 'auto';
-//
-//				element.text('this is the staticMap directive');
-//			}
-//		};
-//	}
-//]);
-'use strict';
-
-angular.module('projects').service('GeoCodeApi', ['$http',
-  function ($http) {
-
-    // Geocodeapi service logic
-
-    this.callGeoCodeApi = function (project, key, secret, projectSaveCallback) {
-      console.log('project:\n', project, '\nkey:\n', key, '\nsecret:\n', secret);
-      if (!project || !project.state || !project.city || !project.zip || !project.street || !key || !secret) {
-        projectSaveCallback();
-        console.log('err, there\'s an error, yo.');
-        return;
-      }
-
-      return $http.get('http://geocoder.cit.api.here.com/6.2/geocode.json' +
-          '?state=' + project.state +
-          '&city=' + project.city +
-          '&postalcode=' + project.zip +
-          '&street=' + project.street +
-          '&gen=8' +
-          '&app_id=' + key +
-          '&app_code=' + secret)
-        .success(function (geoData) {
-          console.log('success:  modules/projects/client/services/geoCodeApi.client.service.js line 24');
-          project.lat = geoData.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
-          project.lng = geoData.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
-
-        }).error(function (data, status) {
-          console.log('geocode error:\n', data, 'status:\n', status);
-          //TODO: handle this gracefully
-        });
-
-    };
-  }
-]);
-
-'use strict';
-
-angular.module('projects').service('getUserFavorites', ['$scope', '$http',
-  function ($scope, $http) {
-      this.getUserFavoriteStories = function (userFavoriteProjects, projectId) {
-        userFavoriteProjects.forEach(function (userFavoriteProject) {
-          if (userFavoriteProject === projectId) {
-            $scope.isFavorite = true;
-          }
-        });
-      };
-      this.toggleFavProject = function () {
-        $scope.isFavorite = !$scope.isFavorite;
-
-        var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
-        if (!$scope.isFavorite) {
-          updateFavoriteObj.isFavorite = false;
-        }
-        $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
-      };
-  }
-]);
-
-'use strict';
-
-//Projects service used to communicate Projects REST endpoints
-angular.module('projects').factory('Projects', ['$resource',
-	function($resource) {
-		return $resource('api/v1/projects/:projectId', {
-			projectId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		}, {
-			create: {
-				method: 'POST'
-			}
-		}, {
-			read: {
-				method: 'GET'
-			}
-		}
-		);
-	}
-]);
-
-'use strict';
-
-angular.module('projects').service('PublishingService', ['$http',
-  function ($http) {
-
-    this.getPublishedProjects = function () {
-      console.log('publishing service');
-      $http.get('/api/v1/projects/published');
-      //.success(function (data) {
-      //  console.log('published list data:\n', data);
-      //  return data;
-      //}).
-      //error(function (data, error) {
-      //  console.log('publishing error:\n', data, '\n', error);
-      //});
-
-    };
-
-  }
-]);
-
-//'use strict';
-//
-//angular.module('core.admin').run(['Menus',
-//  function (Menus) {
-//    Menus.addMenuItem('topbar', {
-//      title: 'Admin',
-//      state: 'admin',
-//      type: 'dropdown',
-//      roles: ['admin']
-//    });
-//  }
-//]);
-
-//'use strict';
-//
-//// Setting up route
-//angular.module('core.menu').config(['$stateProvider',
-//  function ($stateProvider) {
-//    $stateProvider
-//      .state('menu', {
-//        abstract: true,
-//        url: '/menu',
-//        template: '<ui-view/>'
-//        //data: {
-//        //  roles: ['admin']
-//        //}
-//      })
-//    .state('settings', {
-//      //url: '/subscribe-form',
-//      templateUrl: 'modules/projects/client/directives/views/dropdown-list.html'
-//    })
-//    .state('uploads', {
-//      url: '/uploads',
-//      templateUrl: 'modules/core/views/file-upload.client.view.html'
-//    })
-//    .state('uploadFile', {
-//      url: '/uploads/:fileHash'
-//      //templateUrl: 'modules/users/views/create-user.client.view.html'
-//    });
-//  }
-//]);
-
-'use strict';
-
-//Setting up route
-angular.module('core').config(['$compileProvider',
+angular.module('contacts').config(['$compileProvider',
   function ($compileProvider) {
 
     // when `false`, turns off debugging for prod
@@ -1741,1498 +526,172 @@ angular.module('core').config(['$compileProvider',
 
 'use strict';
 
-// Setting up route
-angular.module('core').config(['$stateProvider', '$urlRouterProvider',
-  function ($stateProvider, $urlRouterProvider) {
-
-    // Redirect to 404 when route not found
-    $urlRouterProvider.otherwise(function ($injector, $location) {
-      $injector.get('$state').transitionTo('not-found', null, {
-        location: false
-      });
-    });
-
-    // Home state routing
-    $stateProvider
-    .state('home', {
-      url: '/',
-      templateUrl: 'modules/core/client/views/home.client.view.html'
-    })
-    .state('not-found', {
-      url: '/not-found',
-      templateUrl: 'modules/core/client/views/404.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    })
-    .state('bad-request', {
-      url: '/bad-request',
-      templateUrl: 'modules/core/client/views/400.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    })
-    .state('forbidden', {
-      url: '/forbidden',
-      templateUrl: 'modules/core/client/views/403.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    });
-  }
-]);
-
-'use strict';
-
-// Controller that serves a random static map for secondary views
-angular.module('core').controller('RandomMapController', ['$scope', 'RandomMapService',
-    function($scope, RandomMapService) {
-
-        $scope.staticMap = RandomMapService.getRandomMap();
-        $scope.myFunction = function(){
-            console.log('error loading that map!');
-        };
-
-    }
-]);
-
-
-'use strict';
-
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
-  function ($scope, $state, Authentication, Menus) {
-    // Expose view variables
-    $scope.$state = $state;
-    $scope.authentication = Authentication;
-
-    // Get the topbar menu
-    $scope.menu = Menus.getMenu('topbar');
-
-    // Toggle the menu items
-    $scope.isCollapsed = false;
-    $scope.toggleCollapsibleMenu = function () {
-      $scope.isCollapsed = !$scope.isCollapsed;
-    };
-
-    // Collapsing the menu after navigation
-    $scope.$on('$stateChangeSuccess', function () {
-      $scope.isCollapsed = false;
-    });
-  }
-]);
-
-'use strict';
-
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
-  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
-
-    $scope.authentication = Authentication;
-    $scope.isAdmin = AdminAuthService;
-    console.log('current user:\n', $scope.authentication.user);
-
-    //for overlay
-    $scope.featuredProjects = {};
-
-    //provides logic for the css in the forms
-    UtilsService.cssLayout();
-
-    //menu functions
-    $scope.trustAsHtml = $sce.trustAsHtml;
-    $scope.goToProject = function (id) {
-      $location.path('projects/' + id);
-    };
-
-    //placeholder for featured projects images
-    //todo once admin module is built, create a function that makes photo1 and 2 dynamic rather than hard-coded
-    $scope.photo0 = 'chris--bw-2.jpg';
-    $scope.photo1 = 'as_thumb_150.jpg';
-    $scope.photo2 = 'wli_thumb_150.jpg';
-    $scope.photo3 = 'dw_thumb_150.jpg';
-    $scope.photo4 = 'as_thumb_bw.png';
-
-    $scope.projectMarker = null;
-    $scope.markerData = null;
-
-    /**
-     * test for getting and setting cookies
-     */
-
-    /**
-     *
-     * Animation Functionality
-     *
-     **/
-
-    $scope.overlayActive = true;
-    $scope.menuOpen = false;
-    //var changeMapFrom = null;
-    $scope.shadeMap = false;
-
-    $scope.toggleTest = function(){
-      $scope.shadeMap = !$scope.shadeMap;
-      console.log('$scope.shadeMap: ', $scope.shadeMap);
-    };
-
-
-    $scope.toggleOverlayFunction = function (source) {
-      if ($scope.overlayActive && source === 'overlay') {
-        $scope.overlayActive = !$scope.overlayActive;
-        $scope.shadeMap = true;
-      } else if ($scope.overlayActive && source === 'menu-closed') {
-        $scope.overlayActive = false;
-        $scope.menuOpen = true;
-        $scope.shadeMap = true;
-      } else if (!$scope.overlayActive && source === 'menu-closed' && !$scope.menuOpen) {
-        $scope.menuOpen = !$scope.menuOpen;
-        $scope.shadeMap = false;
-      } else if (!$scope.overlayActive && source === 'home') {
-        $scope.menuOpen = false;
-        $scope.overlayActive = true;
-        $scope.shadeMap = false;
-      }
-    };
-
-    //atrribution toggle
-    $scope.attributionFull = false;
-    $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a> & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
-
-    /**
-     *
-     * Map Functionality
-     *
-     **/
-
-    $scope.markers = true;
-    $scope.filters = true;
-    $scope.censusDataTractLayer = true;
-    $scope.googlePlacesLayer = false;
-    //$scope.toggleProjectDetails = false;
-    $scope.sidebarToggle = false;
-
-
-    //service that returns api keys
-    ApiKeys.getApiKeys()
-      .success(function (data) {
-        mapFunction(data.mapboxKey, data.mapboxSecret);
-      })
-      .error(function (data, status) {
-        alert('Failed to load Mapbox API key. Status: ' + status);
-      });
-
-    var popupIndex = 0;
-
-//
-// call map and add functionality
-//
-
-
-    var mapFunction = function (key, accessToken) {
-      //creates a Mapbox Map
-      L.mapbox.accessToken = accessToken;
-
-      //'info' id is part of creating tooltip with absolute position
-      var info = document.getElementById('info');
-
-      var map = L.mapbox.map('map', null, {
-          infoControl: false, attributionControl: false
-        })
-        .setView([40.7630772, -111.8689467], 12)
-        .addControl(L.mapbox.geocoderControl('mapbox.places', { position: 'topright' }))
-        .addControl( L.control.zoom({position: 'topright'}) );
-        //.addControl(L.mapbox.Zoom({ position: 'topright' }));
-
-      var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
-        mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
-        topoMap = L.mapbox.tileLayer('poetsrock.la97f747'),
-        greenMap = L.mapbox.tileLayer('poetsrock.jdgpalp2'),
-        landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'),
-        comic = L.mapbox.tileLayer('poetsrock.23d30eb5'),
-        watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png');
-
-      var layers = {
-        'Main Map': mainMap,
-        'Topo Map': topoMap,
-        'Green Map': greenMap,
-        'Landscape': landscape,
-        'Comically Yours': comic,
-        'Gray Day': grayMap,
-        'Watercolor': watercolor
-      };
-
-      mainMap.addTo(map);
-      L.control.layers(layers).addTo(map);
-
-      //var markers = new L.MarkerClusterGroup();
-      //markers.addLayer(new L.Marker(getRandomLatLng(map)));
-      //map.addLayer(markers);
-
-
-      //service that returns project markers
-      MarkerDataService.getMarkerData()
-        .success(function (markerData) {
-          //$scope.getProjectMarkers(markerData);
-          $scope.addProjectMarkers(markerData);
-        })
-        .error(function (data, status) {
-          alert('Failed to load project markers. Status: ' + status);
-        });
-
-      $scope.markerArray = [];
-
-      //add markers from marker data
-      $scope.addProjectMarkers = function (markerData) {
-        $scope.markerData = markerData;
-        var index = 0;
-
-
-        //loop through markers array and return values for each property
-        for (var prop in markerData) {
-
-          $scope.projectMarker = L.mapbox.featureLayer({
-              //var singleMarker = L.mapbox.featureLayer({
-              // this feature is in the GeoJSON format: see geojson.org for full specs
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                // coordinates here are in longitude, latitude order because
-                // x, y is the standard for GeoJSON and many formats
-                coordinates: [markerData[prop].lng, markerData[prop].lat]
-              },
-              properties: {
-                // one can customize markers by adding simplestyle properties
-                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-                'marker-size': 'large',
-                'marker-color': mapService.markerColorFn(markerData, prop),
-                //'marker-color': '#00ff00',
-                'marker-symbol': 'heart',
-                projectId: markerData[prop]._id,
-                summary: markerData[prop].storySummary,
-                title: markerData[prop].title,
-                mainImage: markerData[prop].mainImage,
-                category: markerData[prop].category,
-                mapImage: markerData[prop].mapImage,
-                lat: markerData[prop].lat,
-                lng: markerData[prop].lng,
-                published: markerData[prop].created,
-                leafletId: null,
-                arrayIndexId: index
-              }
+//Setting up route
+angular.module('contacts').config(['$stateProvider',
+    function ($stateProvider) {
+        // Contacts state routing
+        $stateProvider.
+            state('createContact', {
+                url: '/contact-us',
+                templateUrl: 'modules/contacts/client/views/contact-us.client.view.html',
             })
-            //create toogle for marker event that toggles sidebar on marker click
-            .on('click', function (e) {
-              $scope.$apply(function () {
-                $scope.storyEvent = e.target._geojson.properties;
-              });
-              map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
-              popupMenuToggle(e);
-              return $scope.projectMarker[prop];
+            .state('editContact', {
+                url: '/contacts/:contactId/edit',
+                templateUrl: 'modules/contacts/client/views/edit-contact.client.view.html'
+            })
+            .state('aboutMappingSlc', {
+                url: '/about-mapping-slc',
+                templateUrl: 'modules/contacts/client/views/about-mapping-slc.client.view.html'
+            })
+            .state('aboutUs', {
+              url: '/about-us',
+              templateUrl: 'modules/contacts/client/views/about-us.client.view.html'
             });
-
-          $scope.projectMarker.addTo(map);
-          $scope.markerArray.push($scope.projectMarker);
-          index++;
-        }
-        return $scope.markerArray;
-      };
-
-      //style the polygon tracts
-      var style = {
-        'stroke': true,
-        'clickable': true,
-        'color': "#00D",
-        'fillColor': "#00D",
-        'weight': 1.0,
-        'opacity': 0.2,
-        'fillOpacity': 0.0,
-        'className': ''  //String that sets custom class name on an element
-      };
-      var hoverStyle = {
-        'color': "#00D",
-        "fillOpacity": 0.5,
-        'weight': 1.0,
-        'opacity': 0.2,
-        'className': ''  //String that sets custom class name on an element
-      };
-
-      var hoverOffset = new L.Point(30, -16);
-
-
-      //create toggle/filter functionality for Census Tract Data
-
-      $scope.toggleGooglePlacesData = function () {
-        if ($scope.googlePlacesLayer) {
-          map.removeLayer(googlePlacesMarkerLayer);
-        } else {
-          map.addLayer(googlePlacesMarkerLayer);
-        }
-      };
-
-      map.on('click', function (e) {
-        if ($scope.menuOpen) {
-          $scope.sidebar.close();
-          $scope.shadeMap = false;
-        } else {
-          console.log('map click!');
-          $scope.overlayActive = false;
-        }
-      });
-
-      $scope.getProjectMarkers = function (markerData) {
-      };
-    };
-
-    var popupMenuToggle = function (e) {
-      if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        $scope.toggleOverlayFunction('menu-closed');
-        //$scope.populateStorySummary($scope.projectDetails);
-        $scope.sidebar.open('details');
-        popupIndex = e.target._leaflet_id;
-      } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
-      } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
-        $scope.sidebar.open('details');
-        popupIndex = e.target._leaflet_id;
-      } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        $scope.sidebar.close();
-        popupIndex = 0;
-      }
-    };
-  }
-]);
-
-'use strict';
-
-angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance', 'items',
-    function($scope, $uibModalInstance, items) {
-        $scope.items = items;
-        $scope.selected = {
-          item: $scope.items[0],
-          toStateUrl: items.toStateUrl
-        };
-      console.log('$scope.selected', $scope.selected);
-
-
-      if ($scope.selected.item) {
-        console.log('$scope.selected.item', $scope.selected.item);
-        $scope.ok = function () {
-          $uibModalInstance.close($scope.selected.item);
-        };
-      } else {
-        console.log('$scope.selected.toStateName', $scope.selected.toStateUrl);
-        $scope.ok = function () {
-          $uibModalInstance.close($scope.selected.toStateUrl);
-        };
-      }
-
-      $scope.cancel = function () {
-          $uibModalInstance.dismiss('user cancelled modal');
-      };
     }
 ]);
 
 'use strict';
 
-angular.module('core').service('ApiKeys', ['$http',
-	function($http) {
-		// ApiKeys service logic
-		// ...
-        this.getApiKeys = function(){
-            return  $http.get('/api/v1/keys');
-        };
-        this.getTractData = function(){
-            return  $http.get('api/v1/tractData');
-        };
-    }
-]);
+// Contacts controller
+angular.module('contacts').controller('ContactsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Contacts', '$http', 'AdminAuthService', 'UtilsService', 'notify',
+	function($scope, $stateParams, $location, Authentication, Contacts, $http, AdminAuthService, UtilsService, notify) {
+		$scope.authentication = Authentication;
+		$scope.isAdmin = AdminAuthService;
 
-'use strict';
-
-// Authentication service for user variables
-angular.module('core').factory('Authentication', [
-	function() {
-		var _this = this;
-
-		_this._data = {
-			user: window.user
+		//function to create a link on an entire row in a table
+		$scope.viewMessage = function(contactId) {
+			$location.path('admin/messages/' + contactId);
 		};
 
-		return _this._data;
-	}
-]);
-'use strict';
-
-angular.module('core').service('CensusDataService', ['$http', 'ApiKeys',
-    function ($http, ApiKeys) {
-
-        //Census Data for Population Stats service logic
-
-        var censusData = null;
-        var censusDataKey = 'P0010001';
-        var censusYear = [2000, 2010, 2011, 2012, 2013, 2014];
-        var population = '';
-
-        this.callCensusApi = function () {
-            ApiKeys.getApiKeys()
-                .success(function (data) {
-                    censusData(data.censusKey);
-                })
-                .error(function (data, status) {
-                    alert('Failed to load Mapbox API key. Status: ' + status);
-                });
-
-            censusData = function (censusKey){
-                return $http.get('http://api.census.gov/data/' + censusYear[1] + '/sf1?get=' + population + '&for=tract:*&in=state:49+county:035&key=' + censusKey);
-            }
-        };
-    }
-]);
+		//provides logic for the css in the forms
+		UtilsService.cssLayout();
 
 
-//'use strict';
-//
-//angular.module('core').factory('ErrorHandleService', ['$httpProvider',
-//    function($httpProvider){
-//    $httpProvider.interceptors.push(['$q',
-//        function ($q) {
-//            return {
-//                responseError: function (rejection) {
-//                    console.log(rejection);
-//                    switch (rejection.status) {
-//                        case 400:
-//                            return '400';
-//                        case 404:
-//                            return '404';
-//                    }
-//
-//                    return $q.reject(rejection);
-//                },
-//                'response': function(response){
-//                    console.log(response);
-//                    return response;
-//                }
-//            };
-//        }
-//    ])
-//}
-//]);
-'use strict';
-
-angular.module('core').service('FullScreenService', [,
-    function() {
-
-        this.fullScreen= function(){
-
-            /**
-             * Full-screen functionality
-             */
-            // Find the right method, call on correct element
-            var launchFullscreen = function(element) {
-                if(element.requestFullscreen) {
-                    element.requestFullscreen();
-                } else if(element.mozRequestFullScreen) {
-                    element.mozRequestFullScreen();
-                } else if(element.webkitRequestFullscreen) {
-                    element.webkitRequestFullscreen();
-                } else if(element.msRequestFullscreen) {
-                    element.msRequestFullscreen();
-                }
-            };
-
-            // Launch fullscreen for browsers that support it
-            //launchFullscreen(document.documentElement); // the whole page
-            //launchFullscreen(document.getElementById("videoElement")); // any individual element
-
-            // Whack fullscreen
-            var exitFullscreen = function(element) {
-                if(document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if(document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if(document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-            };
-
-// Cancel fullscreen for browsers that support it!
-//    exitFullscreen();
+		//todo  'moment' is not defined.  --> from grunt jslint
+		// $scope.dateNow = moment();
 
 
-        };
-    }
-]);
+		$scope.toggleSort = true;
+		$scope.oneAtATime = true;
 
-'use strict';
+		// Create new Contact
+		$scope.create = function() {
+			// Create new Contact object
+			var contact = new Contacts ({
+				firstName: this.firstName,
+				lastName: this.lastName,
+				email: this.email,
+				zip: this.zip,
+				newsletter: this.newsletter,
+				message: this.message
+			});
 
-angular.module('core').service('RandomMapService', [
-    function () {
-        
-        var staticMap = null;
-        
-        var maps = {
-            'mapbox': {
-                'originalMap': 'poetsrock.j5o1g9on',
-                'grayMap': 'poetsrock.b06189bb',
-                'mainMap': 'poetsrock.la999il2',
-                'topoMap': 'poetsrock.la97f747',
-                'greenMap': 'poetsrock.jdgpalp2',
-                'comic': 'poetsrock.23d30eb5',
-                'fancyYouMap': 'poetsrock.m6b73kk7',
-                'pencilMeInMap': 'poetsrock.m6b7f6mj'
-            //},
-            //'thunderforest': {
-            //    'landscape': 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
-            //},
-            //'stamen': {
-            //    'watercolor': 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
-            //    'toner': 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png'
-            }
-        };
-        
-        var url = {
-            'mapbox': 'http://api.tiles.mapbox.com/v4',
-            //'thunderforest': 'http://{s}.tile.thunderforest.com',
-            //'stamen': 'http://maps.stamen.com/m2i',
-            //'ngs': ''
-        };
-        
-        //array of
-        var randomMap = [
-            ['mapbox', maps.mapbox.originalMap],
-            ['mapbox', maps.mapbox.grayMap],
-            ['mapbox', maps.mapbox.mainMap],
-            ['mapbox', maps.mapbox.topoMap],
-            ['mapbox', maps.mapbox.greenMap],
-            ['mapbox', maps.mapbox.comic],
-            ['mapbox', maps.mapbox.fancyYouMap],
-            ['mapbox', maps.mapbox.pencilMeInMap],
-            //['stamen', maps.stamen.watercolor],
-            //['stamen', maps.stamen.toner],
-            //['thunderforest', maps.thunderforest.landscape]
-        ];
-        
-        var getRandomArbitrary = function (min, max) {
-            return Math.random() * (max - min) + min;
-        };
-        
-        var randomLat = function () {
-            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
-            if (randomLngInt === 111) {
-                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
-            } else {
-                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
-                return '-112.0' + randomDecimal;
-            }
-        };
-        
-        var randomLng = function () {
-            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
-        };
+			// Redirect after save
+			contact.$save(function(response) {
+				$location.path('/');
 
-        var randomZoom = function () {
-            return Math.floor(getRandomArbitrary(9, 16));
-        };
-        
-        this.getRandomMap = function () {
-            var randomNum = Math.floor(getRandomArbitrary(0, 7));
-            var mapVendor = randomMap[randomNum][0];
-            var randomMapId = randomMap[randomNum][1];
-
-            if (mapVendor === 'mapbox') {
-                return staticMap = {mapUrl: url.mapbox + '/' + randomMapId + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw'};
-            //} else if (mapVendor === 'stamen') {
-                //return staticMap = {mapUrl: url.stamen + '/#watercolor' + '1280:720/' + randomZoom() + '/' + randomLat() + '/' + randomLng()};
-                //return staticMap = {mapUrl: 'http://maps.stamen.com/m2i/#watercolor/1280:720/14/40.8905/-112.0204'};
-            } else {
-                console.log('Error!\nrandomNum: ', randomNum, '\nmapVendor', mapVendor, '\nrandomMapId: ', randomMapId );
-            }
+				// Clear form fields
+				$scope.firstName = '';
+				$scope.lastName = '';
+				$scope.email = '';
+				$scope.zip = '';
+				$scope.newsletter = '';
+				$scope.message = '';
+        console.log('response:\n', response);
+        if(response.$resolved) {
+          notify({
+            message: 'Thanks for the message!',
+            classes: 'ng-notify-contact-success'
+          })
+        }else{
+          notify({
+            message: 'Something went wrong, and we didn\'t receive your message We apologize.',
+            classes: 'ng-notify-contact-failure'
+          })
         }
-        
-    }
-]);
-
-'use strict';
-
-//Google Places API
-
-angular.module('core').factory('googlePlacesService', ['$http',
-	function ($http) {
-		var googlePlacesMarker = null;
-		var googlePlacesMarkerLayer = null;
-		var googlePlacesMarkerArray = [];
-
-		var googlePlacesData = function () {
-			$http.get('/places').success(function (poiData) {
-
-				var placeLength = poiData.results.length;
-				for (var place = 0; place < placeLength; place++) {
-
-					var mapLat = poiData.results[place].geometry.location.lat;
-					var mapLng = poiData.results[place].geometry.location.lng;
-					var mapTitle = poiData.results[place].name;
-
-					googlePlacesMarker = L.marker([mapLat, mapLng]).toGeoJSON();
-
-					googlePlacesMarkerArray.push(googlePlacesMarker);
-				} //end of FOR loop
-
-				googlePlacesMarkerLayer = L.geoJson(googlePlacesMarkerArray, {
-					style: function (feature) {
-						return {
-							'title': mapTitle,
-							'marker-size': 'large',
-							//'marker-symbol': mapSymbol(),
-							'marker-symbol': 'marker',
-							'marker-color': '#00295A',
-							'riseOnHover': true,
-							'riseOffset': 250,
-							'opacity': 0.5,
-							'clickable': true
-						}
-					}
-				})
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
 			});
 		};
 
+		// Remove existing Contact
+		$scope.remove = function(contact) {
+			if ( contact ) { 
+				contact.$remove();
 
-	}
-]);
-'use strict';
-
-angular.module('core').service('mapService', [
-	function ($scope) {
-		// Various Services for Map Functionality
-
-		this.featuredProjects = function (markerData) {
-			var featureProjectsArray = [];
-			for (var prop in markerData) {
-				var i = 0;
-				if (i < 2 && markerData[prop].featured) {      //setup for loop to end after finding the first three featured projects
-					var featuredProject = {
-						thumb: markerData[prop].thumbnail,
-						projectId: markerData[prop]._id,
-						shortTitle: markerData[prop].shortTitle
-					};
-					featureProjectsArray.push(featuredProject);
-				}
-				i++;
-			}
-		};
-
-		this.markerColorFn = function (markerData, prop) {
-			if (markerData[prop].category === 'video') {
-				return '#ff0011';
-			} else if (markerData[prop].category === 'multimedia') {
-				return '#ff0101';
-			} else if (markerData[prop].category === 'essay') {
-				return '#0015ff';
-			} else if (markerData[prop].category === 'literature') {
-				return '#15ff35';
-			} else if (markerData[prop].category === 'interview') {
-				return 'brown';
-			} else if (markerData[prop].category === 'map') {
-				return 'yellow';
-			} else if (markerData[prop].category === 'audio') {
-				return '#111111';
-			} else {
-				return '#00ff44';
-			}
-		};
-	}
-]);
-'use strict';
-
-angular.module('core').service('MarkerDataService', ['$http',
-    function($http) {
-        // Project Marker Data Service
-
-        this.getMarkerData = function(){
-            return  $http.get('/api/v1/markerData').
-                success(function(projects){
-                    //console.log('projects: \n', projects);
-                    //for (var prop in projects) {
-                    //    console.log('projects[prop].lng: \n', projects[prop].lng);
-                    //}
-
-                })
-                .error(function(error){
-                    console.log('marker data error: \n', error);
-                });
-        };
-    }
-]);
-
-'use strict';
-
-//Menu service used for managing  menus
-angular.module('core').service('Menus', [
-  function () {
-    // Define a set of default roles
-    this.defaultRoles = ['user', 'admin'];
-
-    // Define the menus object
-    this.menus = {};
-
-    // A private function for rendering decision
-    var shouldRender = function (user) {
-      if (!!~this.roles.indexOf('*')) {
-        return true;
-      } else {
-        if(!user) {
-          return false;
-        }
-        for (var userRoleIndex in user.roles) {
-          for (var roleIndex in this.roles) {
-            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    };
-
-    // Validate menu existance
-    this.validateMenuExistance = function (menuId) {
-      if (menuId && menuId.length) {
-        if (this.menus[menuId]) {
-          return true;
-        } else {
-          throw new Error('Menu does not exist');
-        }
-      } else {
-        throw new Error('MenuId was not provided');
-      }
-
-      return false;
-    };
-
-    // Get the menu object by menu id
-    this.getMenu = function (menuId) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Add new menu object by menu id
-    this.addMenu = function (menuId, options) {
-      options = options || {};
-
-      // Create the new menu
-      this.menus[menuId] = {
-        roles: options.roles || this.defaultRoles,
-        items: options.items || [],
-        shouldRender: shouldRender
-      };
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Remove existing menu object by menu id
-    this.removeMenu = function (menuId) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Return the menu object
-      delete this.menus[menuId];
-    };
-
-    // Add menu item object
-    this.addMenuItem = function (menuId, options) {
-      options = options || {};
-
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Push new menu item
-      this.menus[menuId].items.push({
-        title: options.title || '',
-        state: options.state || '',
-        type: options.type || 'item',
-        class: options.class,
-        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
-        position: options.position || 0,
-        items: [],
-        shouldRender: shouldRender
-      });
-
-      // Add submenu items
-      if (options.items) {
-        for (var i in options.items) {
-          this.addSubMenuItem(menuId, options.state, options.items[i]);
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Add submenu item object
-    this.addSubMenuItem = function (menuId, parentItemState, options) {
-      options = options || {};
-
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Search for menu item
-      for (var itemIndex in this.menus[menuId].items) {
-        if (this.menus[menuId].items[itemIndex].state === parentItemState) {
-          // Push new submenu item
-          this.menus[menuId].items[itemIndex].items.push({
-            title: options.title || '',
-            state: options.state || '',
-            roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
-            position: options.position || 0,
-            shouldRender: shouldRender
-          });
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Remove existing menu object by menu id
-    this.removeMenuItem = function (menuId, menuItemState) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Search for menu item to remove
-      for (var itemIndex in this.menus[menuId].items) {
-        if (this.menus[menuId].items[itemIndex].state === menuItemState) {
-          this.menus[menuId].items.splice(itemIndex, 1);
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Remove existing menu object by menu id
-    this.removeSubMenuItem = function (menuId, submenuItemState) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Search for menu item to remove
-      for (var itemIndex in this.menus[menuId].items) {
-        for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-          if (this.menus[menuId].items[itemIndex].items[subitemIndex].state === submenuItemState) {
-            this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
-          }
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    //Adding the topbar menu
-    this.addMenu('topbar', {
-      roles: ['*']
-    });
-  }
-]);
-
-'use strict';
-
-// Create the Socket.io wrapper service
-angular.module('core').service('Socket', ['Authentication', '$state', '$timeout',
-  function (Authentication, $state, $timeout) {
-    // Connect to Socket.io server
-    this.connect = function () {
-      // Connect only when authenticated
-      if (Authentication.user) {
-        this.socket = io();
-      }
-    };
-    this.connect();
-
-    // Wrap the Socket.io 'on' method
-    this.on = function (eventName, callback) {
-      if (this.socket) {
-        this.socket.on(eventName, function (data) {
-          $timeout(function () {
-            callback(data);
-          });
-        });
-      }
-    };
-
-    // Wrap the Socket.io 'emit' method
-    this.emit = function (eventName, data) {
-      if (this.socket) {
-        this.socket.emit(eventName, data);
-      }
-    };
-
-    // Wrap the Socket.io 'removeListener' method
-    this.removeListener = function (eventName) {
-      if (this.socket) {
-        this.socket.removeListener(eventName);
-      }
-    };
-  }
-]);
-
-'use strict';
-
-//Google Places API
-
-angular.module('core').factory('tractDataService', ['$scope', 'ApiKeys',
-	function ($scope, ApiKeys) {
-
-		var dataBoxStaticPopup = null,
-			tractData = {},
-			censusTractData = null;
-
-
-		ApiKeys.getTractData()
-			.success(function (tractData) {
-				tractDataLayer(tractData);
-			})
-			.error(function (tractData) {
-				alert('Failed to load tractData. Status: ' + status);
-			});
-		var tractDataLayer = function (tractData) {
-			censusTractData = L.geoJson(tractData, {
-					style: style,
-					onEachFeature: function (feature, layer) {
-						if (feature.properties) {
-							var popupString = '<div class="popup">';
-							for (var k in feature.properties) {
-								var v = feature.properties[k];
-								popupString += k + ': ' + v + '<br />';
-							}
-							popupString += '</div>';
-							layer.bindPopup(popupString);
-						}
-						if (!(layer instanceof L.Point)) {
-							layer.on('mouseover', function () {
-								layer.setStyle(hoverStyle);
-								//layer.setStyle(hoverOffset);
-							});
-							layer.on('mouseout', function () {
-								layer.setStyle(style);
-								//layer.setStyle(hoverOffset);
-							});
-						}
-
+				for (var i in $scope.contacts) {
+					if ($scope.contacts [i] === contact) {
+						$scope.contacts.splice(i, 1);
 					}
 				}
-			);
+			} else {
+				$scope.contact.$remove(function() {
+					$location.path('contacts');
+				});
+			}
 		};
 
-		$scope.dataBoxStaticPopupFn = function (dataBoxStaticPopup) {
+		// Update existing Contact
+		$scope.update = function() {
+			var contact = $scope.contact;
 
-			// Listen for individual marker clicks.
-			dataBoxStaticPopup.on('mouseover', function (e) {
-				// Force the popup closed.
-				e.layer.closePopup();
+			contact.$update(function() {
+				$location.path('contacts/' + contact._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
 
-				var feature = e.layer.feature;
-				var content = '<div><strong>' + feature.properties.title + '</strong>' +
-					'<p>' + feature.properties.description + '</p></div>';
+		// Find a list of Contacts
+		$scope.find = function() {
+			$scope.contacts = Contacts.query();
+		};
 
-				info.innerHTML = content;
+		// Find existing Contact
+		$scope.findOne = function() {
+			$scope.contact = Contacts.get({ 
+				contactId: $stateParams.contactId
+			});
+		};
+
+		//get data from back end for display in table
+		$http.get('/contacts').
+			success(function(messageData){
+				//console.log(messageData);
+				$scope.messageData = messageData;
+
+				$scope.sentToday = function(){
+					//if(messageData.created === moment()){
+					//	return moment().calendar(messageData.created);
+					//}else{
+						var today = moment().calendar(messageData.created);
+						return today;
+					//}
+				};
+
+			}).
+			error(function(data, status){
+
 			});
 
-			function empty() {
-				info.innerHTML = '<div><strong>Click a marker</strong></div>';
-			}
-
-			// Clear the tooltip when .map is clicked.
-			map.on('move', empty);
-
-			// Trigger empty contents when the script has loaded on the page.
-			empty();
-
-		};
-
-//create toggle/filter functionality for Census Tract Data
-		$scope.toggleCensusData = function () {
-			if (!$scope.censusDataTractLayer) {
-				map.removeLayer(censusTractData);
-				map.removeLayer(dataBoxStaticPopup);
-			} else {
-				map.addLayer(censusTractData);
-				map.addLayer(dataBoxStaticPopup);
-
-			}
-		};
-
 	}
 ]);
+
+
+
 'use strict';
 
-// Underscore service
-angular.module('core').factory('_', [
-	function() {
-		return window._;
+//Contacts service used to communicate Contacts REST endpoints
+angular.module('contacts').factory('Contacts', ['$resource',
+	function($resource) {
+		return $resource('api/v1/contacts/:contactId', { contactId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
 	}
 ]);
-'use strict';
-
-angular.module('core').service('UtilsService', ['$http', '$window',
-  function($http, $window) {
-
-
-    //logic for css on the contact form
-
-    this.cssLayout = function () {
-      [].slice.call(document.querySelectorAll('input.input_field'))
-
-        .forEach(function (inputEl) {
-          // in case the input is already filled
-          if (inputEl.value.trim() !== '') {
-            classie.add(inputEl.parentNode, 'input-filled');
-          }
-          // events
-          inputEl.addEventListener('focus', onInputFocus);
-          inputEl.addEventListener('blur', onInputBlur);
-        });
-
-      function onInputFocus(ev) {
-        classie.add(ev.target.parentNode, 'input-filled');
-      }
-
-      function onInputBlur(ev) {
-        if (ev.target.value.trim() === '') {
-          classie.remove(ev.target.parentNode, 'input-filled');
-        }
-      }
-    };
-
-
-  }
-]);
-
-'use strict';
-
-angular.module('core').directive('featuredProjects', function() {
-        return {
-            restrict: 'E',
-            templateUrl: '/modules/core/client/directives/views/featured-projects.html'
-
-//            controller: function() {
-//              document.getElementById('photo-3').onload = function() {
-//              var c=document.getElementById('inverse-photo-3');
-//              var ctx=c.getContext('2d');
-//              var img=document.getElementById('photo-3');
-//              ctx.drawImage(img,0,0);
-//              var imgData=ctx.getImageData(0,0,c.width,c.height);
-//// invert colors
-//              for (var i=0;i<imgData.data.length;i+=4)
-//              {
-//                imgData.data[i]=255-imgData.data[i];
-//                imgData.data[i+1]=255-imgData.data[i+1];
-//                imgData.data[i+2]=255-imgData.data[i+2];
-//                imgData.data[i+3]=255;
-//              }
-//              ctx.putImageData(imgData,0,0);
-//
-//                //<canvas id="inverse-photo-3" width="220" height="277" style="border:1px solid #d3d3d3;" class="desaturate">
-//                //  Your browser does not support the HTML5 canvas tag.</canvas>
-//
-//            }
-//          }
-
-
-        };
-    });
-
-'use strict';
-
-angular.module('core').directive('footerDirective', ["UtilsService", function (UtilsService) {
-  return {
-    restrict: 'AE',
-    //replace: true,
-    priority: 0,
-    templateUrl: '/modules/core/client/directives/views/footer-directive.html',
-    controller: ["$scope", "$http", function ($scope, $http) {
-      //provides logic for the css in the forms
-      UtilsService.cssLayout();
-
-      //$scope.create = function (isValid) {
-      //  $http({
-      //    method: 'POST',
-      //    url: '/api/v1/auth/signup/newsletter',
-      //    data: {
-      //      email: $scope.email
-      //    }
-      //  }).success(function (data) {
-      //      console.log(data);
-      //      if (data) {
-      //        console.log('YO the DATA', data);
-      //      }
-      //    })
-      //    .error(function (err) {
-      //      console.log(err);
-      //      if (err) {
-      //        $scope.error_message = "Please try again!";
-      //      }
-      //    });
-      //
-      //  $scope.email = '';
-      //}
-    }]
-  };
-}]);
-
-'use strict';
-
-angular.module('core').directive('randomMapDirective', [
-    function ($scope) {
-
-        var staticMap = null;
-
-        var maps = {
-            'originalMap': 'poetsrock.55znsh8b',
-            'grayMap': 'poetsrock.b06189bb',
-            'mainMap': 'poetsrock.la999il2',
-            'topoMap': 'poetsrock.la97f747',
-            'greenMap': 'poetsrock.jdgpalp2',
-            'funkyMap': 'poetsrock.23d30eb5'
-        };
-
-        /**
-         lng: -111.784-999 , -112.0-060,
-         lat: 40.845-674
-         **/
-
-        //array of
-        var randomMap = [maps.originalMap, maps.grayMap, maps.mainMap, maps.topoMap, maps.greenMap, maps.funkyMap];
-
-        var getRandomArbitrary = function (min, max) {
-            return Math.random() * (max - min) + min;
-        };
-
-        var randomLat = function () {
-            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
-            if (randomLngInt === 111) {
-                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
-            } else {
-                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
-                return '-112.0' + randomDecimal;
-            }
-        };
-
-        var randomLng = function () {
-            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
-        };
-
-        var randomMapId = function () {
-            return Math.floor(getRandomArbitrary(0, 7));
-        };
-
-        var randomZoom = function () {
-            return Math.floor(getRandomArbitrary(10, 18));
-        };
-
-        return {
-            template: '<div></div>',
-            restrict: 'EA',
-            link: function postLink(scope, element, attrs) {
-                //staticMap = 'http://api.tiles.mapbox.com/v4/' + randomMap[randomMapId()] + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw';
-            }
-
-        };
-
-    }
-]);
-
-'use strict';
-
-angular.module('core').directive('mainMenu', ["AdminAuthService", function(AdminAuthService) {
-    return {
-      restrict: 'EA',
-      templateUrl: '/modules/core/client/directives/views/main-menu.html',
-
-      controller: ["$scope", function($scope) {
-        $scope.isAdmin = AdminAuthService.user;
-
-
-        $scope.sidebar = L.control.sidebar('sidebar', {
-          closeButton: true,
-          position: 'left'
-        }).addTo(map);
-
-        $scope.sidebar.click = function() {
-          if (L.DomUtil.hasClass(this, 'active')) {
-            $scope.sidebar.close();
-            console.log('here i am close');
-          }
-          else {
-            $scope.sidebar.open(this.firstChild.hash.slice(1));
-            console.log('here i am open');
-          }
-        };
-
-
-
-
-          //if (child.firstChild.hash == '#' + id)
-          //  L.DomUtil.addClass(child, 'active');
-          //else if (L.DomUtil.hasClass(child, 'active'))
-          //  L.DomUtil.removeClass(child, 'active');
-
-          //
-          //if (L.DomUtil.hasClass(this, 'active')) {
-          //  $scope.sidebar.close();
-          //  console.log('here i am close');
-          //}
-          //else {
-          //  $scope.sidebar.open(this.firstChild.hash.slice(1));
-          //  console.log('here i am open');
-          //}
-
-
-      }],
-
-      link: function($scope) {
-        //$scope.sidebar = L.control.sidebar('sidebar', {
-        //  closeButton: true,
-        //  position: 'left'
-        //}).addTo(map);
-
-
-      }
-
-    };
-}]);
-
-
-
-//// add Admin link in menu if user is admin
-//if ($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'superAdmin')
-
-'use strict';
-
-angular.module('core').directive('mainPageOverlay', function() {
-    return {
-        restrict: 'AE',
-        priority: 10,
-        templateUrl:'/modules/core/client/directives/views/main-page-overlay.html'
-    };
-});
-
-'use strict';
-
-angular.module('core').directive('modalDirective', function() {
-        return {
-            restrict: 'E',
-            link: function() {
-
-            $uibModal.open({
-              animation: true,
-              //templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
-              templateUrl: template,
-              controller: function ($scope, $modalInstance, $location) {
-                $scope.stay = function (result) {
-                  //$modalInstance.dismiss('cancel');
-                  console.log('stay just a little bit longer, oh won\'t you stay');
-                  $modalInstance.close(function (result) {
-                    console.log('result: ', result);
-                  });
-                };
-                $scope.leave = function () {
-                  var preventRunning = true;
-                  $scope.stay();
-                  $location.path(toState);
-                };
-              },
-              size: 'lg'
-            });
-
-
-          }
-        };
-    });
-
-'use strict';
-
-angular.module('core').directive('secondaryMenuDirective', function() {
-
-    return {
-
-        restrict: 'E',
-        templateUrl: '/modules/core/client/directives/views/secondary-menu-directive.html',
-
-        controller: ["AdminAuthService", "$scope", function(AdminAuthService, $scope){
-              $scope.isAdmin = AdminAuthService;
-        }],
-
-        link: function(scope) {
-
-            scope.secondMenuOpened = false;
-            scope.toggleSecondMenu = false;
-
-        }
-    }
-});
-
-'use strict';
-
-angular.module('core').directive('secondaryPageDirective', function() {
-    return {
-        restrict: 'AE',
-        //replace: true,
-        priority: 0,
-        templateUrl:'/modules/core/client/directives/views/secondary-page.html'
-    };
-});
-
-'use strict';
-
-/**
- * Edits by Ryan Hutchison
- * Credit: https://github.com/paulyoder/angular-bootstrap-show-errors */
-
-angular.module('core')
-  .directive('showErrors', ['$timeout', '$interpolate', function ($timeout, $interpolate) {
-    var linkFn = function (scope, el, attrs, formCtrl) {
-      var inputEl, inputName, inputNgEl, options, showSuccess, toggleClasses,
-        initCheck = false,
-        showValidationMessages = false,
-        blurred = false;
-
-      options = scope.$eval(attrs.showErrors) || {};
-      showSuccess = options.showSuccess || false;
-      inputEl = el[0].querySelector('.form-control[name]') || el[0].querySelector('[name]');
-      inputNgEl = angular.element(inputEl);
-      inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
-
-      if (!inputName) {
-        throw 'show-errors element has no child input elements with a \'name\' attribute class';
-      }
-
-      var reset = function () {
-        return $timeout(function () {
-          el.removeClass('has-error');
-          el.removeClass('has-success');
-          showValidationMessages = false;
-        }, 0, false);
-      };
-
-      scope.$watch(function () {
-        return formCtrl[inputName] && formCtrl[inputName].$invalid;
-      }, function (invalid) {
-        return toggleClasses(invalid);
-      });
-
-      scope.$on('show-errors-check-validity', function (event, name) {
-        if (angular.isUndefined(name) || formCtrl.$name === name) {
-          initCheck = true;
-          showValidationMessages = true;
-
-          return toggleClasses(formCtrl[inputName].$invalid);
-        }
-      });
-
-      scope.$on('show-errors-reset', function (event, name) {
-        if (angular.isUndefined(name) || formCtrl.$name === name) {
-          return reset();
-        }
-      });
-
-      toggleClasses = function (invalid) {
-        el.toggleClass('has-error', showValidationMessages && invalid);
-        if (showSuccess) {
-          return el.toggleClass('has-success', showValidationMessages && !invalid);
-        }
-      };
-    };
-
-    return {
-      restrict: 'A',
-      require: '^form',
-      compile: function (elem, attrs) {
-        if (attrs.showErrors.indexOf('skipFormGroupCheck') === -1) {
-          if (!(elem.hasClass('form-group') || elem.hasClass('input-group'))) {
-            throw 'show-errors element does not have the \'form-group\' or \'input-group\' class';
-          }
-        }
-        return linkFn;
-      }
-    };
-}]);
-
-'use strict';
-
-angular.module('core').directive('signInDirective', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: '/modules/core/client/directives/views/sign-in-directive.html',
-          controller: ["$scope", "$http", "Authentication", function($scope, $http, Authentication) {
-            var userProfileImage = '';
-            $scope.user = Authentication.user;
-
-            if ($scope.user === '') {
-              console.log('directive profilePic Service - calling nothing, just `return`');
-              return
-            } else if(Authentication.user.profileImageFileName === 'default.png' || Authentication.user.profileImageFileName === '') {
-              $scope.user.profileImage = 'modules/users/client/img/profile/default.png';
-            } else if (Authentication.user.profileImageFileName !== '' ) {
-              $scope.user.profileImage = 'modules/users/client/img/profile/uploads/uploaded-profile-image.jpg';
-            }
-
-
-            /**
-             *
-             * turning the s3 get image function off for now ...
-             * it returns data... just don't know how to parse what i'm getting back
-             * uncomment and load home page and look in console log to see a few options for how i'm
-             *    trying to parse.
-             */
-            /**
-            else {
-
-              $scope.getUploadedProfilePic = function() {
-                var user = Authentication.user;
-                //var configObj = {cache: true, responseType: 'arraybuffer'};
-                var configObj = {cache: true};
-
-
-                $http.get('api/v1/users/' + user._id + '/media/' + user.profileImageFileName, configObj)
-                  .then(function successCallback(successCallback) {
-                    console.log('profilePic - successCallback\n', successCallback);
-                    console.log('successCallback.data.imageAsBase64Array\n', successCallback.data.imageAsBase64Array);
-                    console.log('successCallback.data.imageAsUtf8\n', successCallback.data.imageAsUtf8);
-                    console.log('successCallback.data.imageObjectAsString\n', successCallback.data.imageObjectAsString);
-                    return userProfileImage = successCallback.data.imageAsBase64Array;
-                  }, function errorCallback(errorCallback) {
-                    console.log('profile photo error', errorCallback);
-                    return userProfileImage = 'modules/users/client/img/profile/default.png';
-                  });
-
-              };
-              $scope.getUploadedProfilePic();
-              $scope.user.profileImage = userProfileImage;
-
-
-            }
-             **/
-
-          }]
-        };
-
-    });
-
-/**
-* Created by poetsrock on 3/11/15.
-*/
-
-'use strict';
-
-angular.module('core').directive('submitProjectDirective', function() {
-        return {
-            restrict: 'E',
-            templateUrl: '/modules/core/client/directives/views/submit-project-directive.html'
-        };
-    });
 
 //'use strict';
 //
@@ -4403,24 +1862,2542 @@ angular.module('users.admin').factory('Admin', ['$resource',
 **/
 'use strict';
 
-angular.module('core').factory('authInterceptor', ['$q', '$injector',
-  function ($q, $injector) {
-    return {
-      responseError: function(rejection) {
-        if (!rejection.config.ignoreAuthModule) {
-          switch (rejection.status) {
-            case 401:
-              $injector.get('$state').transitionTo('authentication.signin');
-              break;
-            case 403:
-              $injector.get('$state').transitionTo('forbidden');
-              break;
-          }
+//Setting up route
+angular.module('projects').config(['$compileProvider',
+      function ($compileProvider) {
+
+        //turn off debugging for  prod
+        // https://docs.angularjs.org/guide/production
+        $compileProvider.debugInfoEnabled(false);
+  }
+]);
+
+//.run(function($rootScope) {
+//    angular.element(document).on('click', function(e) {
+//      $rootScope.$broadcast('documentClicked', angular.element(e.target));
+//    });
+//  });
+
+
+
+
+
+
+'use strict';
+
+//Setting up route
+angular.module('projects').config(['$stateProvider',
+  function ($stateProvider) {
+    // Projects state routing
+    $stateProvider.
+    state('listProjects', {
+      url: '/projects',
+      templateUrl: 'modules/projects/client/views/list-projects.client.view.html'
+    }).
+    state('createProject', {
+      url: '/projects/create',
+      templateUrl: 'modules/projects/client/views/create-project.client.view.html',
+      loginRequired: true
+    }).
+    state('viewProject', {
+      url: '/projects/:projectId',
+      templateUrl: 'modules/projects/client/views/view-project.client.view.html'
+    }).
+    state('editProject', {
+      url: '/projects/:projectId/edit',
+      templateUrl: 'modules/projects/client/views/edit-project.client.view.html',
+      data: {
+        authenticate: true,
+        roles: ['contributor', 'admin', 'superUser']
+      }
+    }).
+    state('confirmCreateProject', {
+      url: '/projects/:projectId/status',
+      //data: {
+      //  authenticate: true,
+      //  roles: ['contributor', 'admin', 'superUser']
+      //}
+      templateUrl: 'modules/projects/client/views/project-for-submission.client.view.html'
+    });
+  }
+]);
+
+//'use strict';
+//
+//angular.module('projects').directive('dropdownList', function($rootScope) {
+//  return {
+//    restrict: 'E',
+//    templateUrl: 'modules/projects/client/directives/views/dropdown-list.html',
+//    scope: {
+//      placeholder: '@',
+//      list: '=',
+//      selected: '=',
+//      property: '@'
+//    },
+//    link: function(scope) {
+//      scope.listVisible = false;
+//      scope.isPlaceholder = true;
+//
+//      scope.select = function(item) {
+//        scope.isPlaceholder = false;
+//        scope.selected = item;
+//      };
+//
+//      scope.isSelected = function(item) {
+//        return item[scope.property] === scope.selected[scope.property];
+//      };
+//
+//      scope.show = function() {
+//        scope.listVisible = true;
+//      };
+//
+//      $rootScope.$on('documentClicked', function(inner, target) {
+//
+//        var parent = angular.element(target.parent()[0]);
+//    if (!(target.hasClass('dropdown-display') && target.hasClass('clicked-add')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked-add'))) {
+//
+//          scope.$apply(function() {
+//            scope.listVisible = false;
+//          });
+//        }
+//
+//      //  var parent = angular.element(target.parent()[0]);
+//      //  if (!parent.hasClass('clicked')) {
+//      //    scope.$apply(function () {
+//      //      scope.listVisible = false;
+//      //    });
+//      //  }
+//
+//
+//      });
+//
+//      scope.$watch('selected', function(value) {
+//        //scope.isPlaceholder = scope.selected[scope.property] === undefined;
+//        //scope.display = scope.selected[scope.property];
+//      });
+//    }
+//  }
+//});
+
+'use strict';
+
+angular.module('projects').directive('projectStatusOverview', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: 'modules/projects/client/directives/views/project-status-overview.html'
+        };
+    });
+
+'use strict';
+
+angular.module('projects').directive('projectStatusProjectEditor', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: 'modules/projects/client/directives/views/project-status-project-editor.html'
+        };
+    });
+
+'use strict';
+
+angular.module('projects').directive('projectStatusProjectInfo', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: 'modules/projects/client/directives/views/project-status-project-info.html'
+        };
+    });
+
+'use strict';
+
+angular.module('projects').directive('projectStatusUserBio', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: 'modules/projects/client/directives/views/project-status-user-bio.html'
+        };
+    });
+
+'use strict';
+
+angular.module('projects').directive('projectStatusUserInfo', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: 'modules/projects/client/directives/views/project-status-user-info.html'
+        };
+    });
+
+'use strict';
+
+angular.module('projects').directive('projectUploaderDirective', function () {
+  return {
+    restrict: 'AE',
+    templateUrl:'/modules/projects/client/directives/views/projectUploader.html',
+    controller: ["$scope", "$http", function($scope,$http) {
+
+
+      // Project Uploader Service logic
+
+      $scope.uploading = false;
+
+      $scope.projectUpload = function (files) {
+
+        if (files.length > 0) {
+          $scope.uploading = true;
+          var filename = files[0].name;
+          var type = files[0].type;
+          var query = {
+            filename: filename,
+            type: type,
+            user: $scope.user,
+            project: $scope.project
+          };
+          var configObj = {cache: true};
+          $http.post('api/v1/s3/upload/project', query, configObj)
+            .success(function (result) {
+              console.log('result v1\n', result);
+              Upload.upload({
+                url: result.url, //s3Url
+                transformRequest: function (data, headersGetter) {
+                  var headers = headersGetter();
+                  delete headers.Authorization;
+                  console.log('data v1\n', data);
+                  return data;
+                },
+                fields: result.fields, //credentials
+                method: 'POST',
+                file: files[0]
+              }).progress(function (evt) {
+
+                console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
+
+              }).success(function (data, status, headers, config) {
+
+                // file is uploaded successfully
+                $scope.uploading = false;
+
+                console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
+
+                // need to set image on front end
+                if (data && data.s3Url) {
+                  console.log('data v2\n', data);
+                  $scope.project.file = data.s3Url;
+                }
+                console.log('$scope.imageURL:\n', $scope.imageURL);
+
+
+              }).error(function () {
+
+              });
+
+              if (result && result.s3Url) {
+                console.log('result v2\n', result);
+                $scope.user.profileImageURL = result.s3Url;
+                $scope.imageURL = result.s3Url;
+              }
+            })
+            .error(function (data, status, headers, config) {
+              // called asynchronously if an error occurs
+              // or server returns response with an error status.
+              $scope.uploading = false;
+            });
+
+          //  .xhr(function(xhr) {
+          //    $scope.abort = function() {
+          //    xhr.abort();
+          //    $scope.uploading = false;
+          //  };
+          //});
+
         }
-        // otherwise, default behaviour
-        return $q.reject(rejection);
+
+      }
+
+    }]
+
+  }
+});
+
+//'use strict';
+//
+//angular.module('projects').directive('staticMap', ['$scope',
+//	function($scope) {
+//		return {
+//			template: '<div></div>',
+//			restrict: 'E',
+//			link: function postLink(scope, element, attrs) {
+//
+//				//create static map from lat and long
+//
+//				$scope.mapImage =
+//					'http://api.tiles.mapbox.com/v4/{' +
+//					data.mapboxKey + '/' +
+//					this.geocode.long + ',' +
+//					this.geocode.lat +
+//					',10/' + //set the map zoom: default '10'
+//					width + 'x' + height + '.png?access_token=' +
+//					data.mapboxSecret;
+//
+//				//{name}-{label}+{color}({lon},{lat})
+//				//var width = '100%';
+//				//var height = 'auto';
+//
+//				element.text('this is the staticMap directive');
+//			}
+//		};
+//	}
+//]);
+'use strict';
+
+angular.module('projects').controller('ProjectsUploadController', ['$scope', '$timeout', '$window', 'Authentication', 'Upload', '$http',
+  function ($scope, $timeout, $window, Authentication, Upload, $http) {
+    $scope.user = Authentication.user;
+    $scope.imageURL = $scope.user.profileImageURL;
+    $scope.uploading = false;
+
+    $scope.onFileSelect = function(files) {
+
+      if (files.length > 0) {
+        $scope.uploading = true;
+        var filename = files[0].name;
+        var type = files[0].type;
+        var query = {
+          filename: filename,
+          type: type,
+          user: $scope.user,
+          project: $scope.project
+        };
+        var configObj = {cache: true};
+        $http.post('api/v1/s3/upload/project', query, configObj)
+          .success(function(result) {
+            console.log('result v1\n', result);
+            Upload.upload({
+              url: result.url, //s3Url
+              transformRequest: function(data, headersGetter) {
+                var headers = headersGetter();
+                delete headers.Authorization;
+                console.log('data v1\n', data);
+                return data;
+              },
+              fields: result.fields, //credentials
+              method: 'POST',
+              file: files[0]
+            }).progress(function(evt) {
+
+              console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
+
+            }).success(function(data, status, headers, config) {
+
+              // file is uploaded successfully
+              $scope.uploading = false;
+
+              console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
+
+              // need to set image on front end
+              if(data && data.s3Url) {
+                console.log('data v2\n', data);
+                $scope.user.profileImageURL = data.s3Url;
+                $scope.imageURL = data.s3Url;
+              }
+              console.log('$scope.imageURL:\n', $scope.imageURL);
+              //$http({
+              //  url: '',
+              //  method: 'PUT'
+              //})
+              //  .then(function(data) {
+              //
+              //  })
+              //  .finally(function(data) {
+              //
+              //  });
+
+              // and need to update mongodb
+
+
+            }).error(function() {
+
+            });
+
+            if(result && result.s3Url) {
+              console.log('result v2\n', result);
+              $scope.user.profileImageURL = result.s3Url;
+              $scope.imageURL = result.s3Url;
+            }
+          })
+          .error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            $scope.uploading = false;
+          });
+
+        //  .xhr(function(xhr) {
+        //    $scope.abort = function() {
+        //    xhr.abort();
+        //    $scope.uploading = false;
+        //  };
+        //});
+
+      }
+
+
+    };
+
+
+  }
+]);
+
+'use strict';
+
+// Projects controller
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document) {
+    $scope.user = Authentication.user;
+    $scope.isAdmin = AdminAuthService;
+    $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
+    var width = '800';
+    var height = '250';
+    var markerUrl = 'url-http%3A%2F%2Fwww.mappingslc.org%2Fimages%2Fsite_img%2Flogo_marker_150px.png';
+    $scope.mapImage = '';
+    $rootScope.signInBeforeProject = false;
+    $scope.updateToContrib = null;
+    $scope.isPublished = false;
+    $scope.userToEdit = {};
+    $scope.images = [];
+    $scope.override = false;
+    $scope.isFavorite = false;
+    $scope.trustAsHtml = $sce.trustAsHtml;
+
+    $scope.init = function () {
+      $scope.publishedProjects();
+    };
+
+    $scope.initSubmissionStatus = function () {
+      $scope.findOne();
+    };
+
+    //provides logic for the css in the forms
+    UtilsService.cssLayout();
+
+    $scope.showUpload = false;
+    $scope.showSubmit = false;
+    $scope.showUploadFunction = function () {
+      if (project.street !== '') {
+        $scope.showUpload = true;
+      }
+      if ($scope.showUpload && this.project.story !== '') {
+        $scope.showSubmit = true;
       }
     };
+
+    /**
+     * called when $scope.project.status updates
+     */
+    $scope.projectStatusChanged = function () {
+      if ($scope.project.status === 'published') {
+        $scope.publishProject();
+        $scope.toggleEdit = false;
+      } else {
+        $scope.update();
+        $scope.toggleEdit = false;
+      }
+    };
+
+    $scope.confirmPublishModal = function () {
+      $scope.animationsEnabled = true;
+      $uibModal.open({
+        animation: $scope.animationsEnabled,
+        templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
+        controller: 'ModalController',
+        size: 'lg'
+      });
+    };
+
+    var publishUser = function (project) {
+      AdminUpdateUser.get({userId: project.user._id},
+        function (userData, getResponseHeader) {
+          userData.associatedProjects.push(project._id);
+          if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser') {
+            userData.roles[0] = 'contributor';
+          }
+          userData.$update(function (userData, putResponseHeaders) {
+          });
+        });
+    };
+
+    $scope.publishProject = function () {
+      //todo need to call on a confirm modal first
+      $scope.confirmPublishModal();
+      $scope.project.publishedDate = new Date();
+      $scope.update();
+      publishUser($scope.project); //call method to display contributor bio
+    };
+
+    var saveProject = null;
+    $scope.updateLatLng = function (project) {
+      console.log('project ctrl', project);
+      $http.get('/api/v1/keys').success(function (data) {
+        var mapboxKey = data.mapboxKey;
+        var mapboxSecret = data.mapboxSecret;
+        var hereKey = data.hereKey;
+        var hereSecret = data.hereSecret;
+
+        GeoCodeApi.callGeoCodeApi(project, hereKey, hereSecret, saveProject)
+          .success(function (data) {
+            project.lat = data.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
+            project.lng = data.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
+            project.mapImage = 'http://api.tiles.mapbox.com/v4/' + mapboxKey + '/' + markerUrl + '(' + project.lng + ',' + project.lat + ')/' + project.lng + ',' + project.lat + ',15/' + width + 'x' + height + '.png?access_token=' + mapboxSecret;
+            saveProject();
+          })
+          .error(function (data, status) {
+
+          })
+      });
+    };
+
+    // Find a list of all published projects
+    $scope.publishedProjects = function () {
+      $http.get('/api/v1/projects/published').
+      success(function (publishedProjects) {
+        $scope.publishedProjects = publishedProjects;
+        console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
+      }).
+      error(function (data, status) {
+
+      });
+    };
+
+    // Create new Project
+    $scope.create = function (isValid) {
+      $scope.error = null;
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'projectForm');
+        return false;
+      }
+
+      // Create new Project object
+      var project = new Projects({
+        createdBy: Authentication.user._id,
+        street: this.project.street,
+        city: this.project.city,
+        state: 'UT',
+        zip: this.project.zip,
+        story: '',
+        title: this.project.title
+      });
+
+      saveProject = function () {
+        project.$save(function (response) {
+          $scope.override = true;
+          $location.path('projects/' + response._id + '/status');
+          // Clear form fields
+          $scope.street = '';
+          $scope.city = '';
+          $scope.state = '';
+          $scope.zip = '';
+          $scope.story = '';
+          $scope.title = '';
+        }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+        });
+      };
+
+      $scope.updateLatLng(project);
+      $scope.override = false;
+    };
+
+    // Remove existing Project
+    $scope.remove = function (project) {
+      if (project) {
+        project.$remove();
+
+        for (var i in $scope.projects) {
+          if ($scope.projects [i] === project) {
+            $scope.projects.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.project.$remove(function () {
+          if ($location.path() === '/admin/edit-project/' + $scope.project._id) {
+            $location.path('admin/projects-queue');
+          } else {
+            $location.path('projects');
+          }
+        });
+      }
+    };
+
+    // Update existing Project
+    $scope.update = function () {
+      var project = $scope.project;
+      project.$update(function (response) {
+        if (response.$resolved) {
+          if ($location.path() === '/admin/edit-project/' + project._id) {
+            $location.path('/admin/edit-project/' + project._id);
+            $scope.toggleEditFn(0);
+          } else {
+            $location.path('projects/' + project._id);
+            $scope.toggleEditFn(0);
+          }
+          notify({
+            message: 'Project updated successfully',
+            classes: 'ng-notify-contact-success'
+          })
+        } else {
+          notify({
+            message: 'Something went wrong, and we didn\'t receive your message. We apologize.',
+            classes: 'ng-notify-contact-failure'
+          })
+        }
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+
+    // Find a list of Projects
+    $scope.find = function () {
+      $scope.projects = Projects.query();
+    };
+
+    // Find existing Project
+    $scope.findOne = function () {
+
+      Projects.get({
+        projectId: $stateParams.projectId
+      }, function (project) {
+        $scope.project = project;
+        if (project.vimeoId) {
+          $scope.vimeo = {
+            video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
+            width: $window.innerWidth / 1.75,
+            height: $window.innerHeight / 1.75
+          };
+        }
+        if (project.soundCloudId) {
+          $scope.soundCloud = {
+            audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
+            width: $window.innerWidth / 1.75,
+            height: $window.innerHeight / 1.75
+          };
+        }
+        if (project.imageGallery) {
+          for (var i = 0; i < project.imageGallery.length; i++) {
+            $scope.images.push(project.imageGallery[i]);
+          }
+        }
+        getUserFavoriteStories($scope.user.favorites, $scope.project.id);
+      });
+
+    };
+
+    $scope.completed = function () {
+      var formField;
+      for (formField in $scope.createProject) {
+        if ($scope.createProject === null) {
+          return $scope.completed = false;
+        } else {
+          $scope.completed = true;
+        }
+      }
+    };
+
+
+    //CKEDITOR.replace('story');
+    //$scope.editorOptions = {
+    //  language: 'en',
+    //  uiColor: '#02211D'
+    //};
+    //CKEDITOR.replaceClass = 'ck-crazy';
+
+    /**
+     * Checks to see if a user is logged in before allowing a user to create a project
+     * @type {function}
+     * @params: none
+     */
+
+    $rootScope.previousState = '';
+    $rootScope.currentState = '';
+    $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
+      $rootScope.previousState = from.name;
+      $rootScope.currentState = to.name;
+    });
+    $scope.goBack = function () {
+      if ($rootScope.previousState === 'listProjects') {
+        $state.go($rootScope.previousState);
+      } else {
+        $state.go('admin');
+      }
+    };
+    $scope.run = function ($rootScope, $state, Authentication) {
+      $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        if (toState.authenticate && !Authentication.isLoggedIn()) {
+        }
+        event.preventDefault();
+      });
+    };
+
+    $scope.userLoggedin = function () {
+      // get request to /users/me
+      if ($location.path() === '/projects/create') {
+        $http.get('/api/v1/users/me')
+          .success(function (data) {
+            if (data === null) {
+              $rootScope.signInBeforeProject = true;
+              $location.path('/authentication/signin');
+            }
+          });
+      }
+    }();
+
+    /**
+     * Favorite project function
+     */
+
+    //getUserFavorites.getUserFavoriteStories(userFavoriteProjects, projectId);
+    //getUserFavorites.toggleFavProject();
+
+    var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
+      userFavoriteProjects.forEach(function (userFavoriteProject) {
+        if (userFavoriteProject === projectId) {
+          $scope.isFavorite = true;
+        }
+      });
+    };
+    $scope.toggleFavProject = function () {
+      $scope.isFavorite = !$scope.isFavorite;
+
+      var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
+      if (!$scope.isFavorite) {
+        updateFavoriteObj.isFavorite = false;
+      }
+      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+    };
+
+
+    /**
+     * modal for leaving projects, will give user warning if leaving form
+     *
+     */
+
+    $scope.preventRunning = true;
+    $scope.$on('$stateChangeStart',
+      function (event, toState, toParams, fromState, fromParams) {
+        var state = {
+          event: event,
+          toState: toState,
+          toParams: toParams,
+          fromState: fromState,
+          fromParams: fromParams
+        };
+        if (!$scope.preventRunning || $scope.override) {
+          return
+        } else {
+          var template = '';
+          $scope.items = [];
+
+          if (fromState.url === '/projects/create' && toState.url !== "/signin?err") {
+            event.preventDefault();
+            $scope.items.toStateUrl = toState.url;
+            template = '/modules/projects/client/directives/views/project-warning-modal.html';
+            $scope.openModal('lg', template);
+          }
+
+        }
+      });
+
+
+    $scope.animationsEnabled = true;
+    $scope.openModal = function (size, template, backdropClass, windowClass) {
+
+      var modalInstance = $uibModal.open({
+        templateUrl: template,
+        controller: 'ModalController',
+        animation: $scope.animationsEnabled,
+        backdrop: 'static',
+        backdropClass: backdropClass,
+        windowClass: windowClass,
+        size: size,
+        resolve: {
+          items: function () {
+            return $scope.items;
+          }
+        }
+      });
+      modalInstance.result.then(function (selectedItem) {
+        $scope.preventRunning = false;
+        return $location.path(selectedItem);
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+      $scope.toggleAnimation = function () {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+      };
+    };
+
+
+    /**
+     * admin panel editing
+     */
+
+    $scope.toggleEdit = false;
+    $scope.toggleId = 0;
+
+    $scope.toggleEditFn = function (editNum) {
+      $scope.toggleEdit = !$scope.toggle;
+      $scope.toggleId = editNum;
+    };
+
+    /**
+     * nlp
+     **/
+      //$scope.update()
+    $scope.nlpData = null;
+    var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
+    $scope.processNlpData = function () {
+      $http.get('api/v1/nlp').
+      success(function (nlpData) {
+        console.log(nlpData);
+        $scope.nlpData = nlpData;
+      }).
+      error(function () {
+      });
+    };
+
+
+
+
+    //
+    //var documentClicked = function(e) {
+    //  var target = angular.element(e.target),
+    //    parent = angular.element(target.parent()[0]);
+    //
+    //  if (!(target.hasClass('dropdown-display') && target.hasClass('clicked')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked'))) {
+    //    $scope.$applyAsync(function() {
+    //      $scope.listVisible = false;
+    //    });
+    //  }
+    //};
+    //
+    //$document.bind('click', documentClicked);
+    //
+    //
+    //
+    ////$scope.dropdownList = function($scope) {
+    //  $scope.listVisible = false;
+    //  $scope.isPlaceholder = true;
+    //
+    //  $scope.select = function(item) {
+    //    $scope.isPlaceholder = false;
+    //    $scope.selected = item;
+    //  };
+    //
+    //  $scope.isSelected = function(item) {
+    //    return item[$scope.property] === $scope.selected[$scope.property];
+    //  };
+    //
+    //  $scope.show = function() {
+    //    $scope.listVisible = true;
+    //  };
+    //
+    //  $rootScope.$on('documentClicked', function(inner, target) {
+    //
+    //    var parent = angular.element(target.parent()[0]);
+    //    if (!(target.hasClass('dropdown-display') && target.hasClass('clicked-add')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked-add'))) {
+    //
+    //      $scope.$apply(function() {
+    //        $scope.listVisible = false;
+    //      });
+    //    }
+    //
+    //    //  var parent = angular.element(target.parent()[0]);
+    //    //  if (!parent.hasClass('clicked')) {
+    //    //    $scope.$apply(function () {
+    //    //      $scope.listVisible = false;
+    //    //    });
+    //    //  }
+    //
+    //
+    //  });
+    //
+    //  $scope.$watch('selected', function(value) {
+    //    //$scope.isPlaceholder = $scope.selected[$scope.property] === undefined;
+    //    //$scope.display = $scope.selected[$scope.property];
+    //  });
+    ////};
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //$scope.colours = [{
+    //  name: 'Red',
+    //  hex: '#F21B1B'
+    //}, {
+    //  name: 'Blue',
+    //  hex: '#1B66F2'
+    //}, {
+    //  name: 'Green',
+    //  hex: '#07BA16'
+    //}];
+    //$scope.colour = '';
+    //
+
+
+  }
+
+]);
+
+
+'use strict';
+
+angular.module('projects').service('GeoCodeApi', ['$http',
+  function ($http) {
+
+    // Geocodeapi service logic
+
+    this.callGeoCodeApi = function (project, key, secret, projectSaveCallback) {
+      console.log('project:\n', project, '\nkey:\n', key, '\nsecret:\n', secret);
+      if (!project || !project.state || !project.city || !project.zip || !project.street || !key || !secret) {
+        projectSaveCallback();
+        console.log('err, there\'s an error, yo.');
+        return;
+      }
+
+      return $http.get('http://geocoder.cit.api.here.com/6.2/geocode.json' +
+          '?state=' + project.state +
+          '&city=' + project.city +
+          '&postalcode=' + project.zip +
+          '&street=' + project.street +
+          '&gen=8' +
+          '&app_id=' + key +
+          '&app_code=' + secret)
+        .success(function (geoData) {
+          console.log('success:  modules/projects/client/services/geoCodeApi.client.service.js line 24');
+          project.lat = geoData.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
+          project.lng = geoData.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
+
+        }).error(function (data, status) {
+          console.log('geocode error:\n', data, 'status:\n', status);
+          //TODO: handle this gracefully
+        });
+
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('projects').service('getUserFavorites', ['$scope', '$http',
+  function ($scope, $http) {
+      this.getUserFavoriteStories = function (userFavoriteProjects, projectId) {
+        userFavoriteProjects.forEach(function (userFavoriteProject) {
+          if (userFavoriteProject === projectId) {
+            $scope.isFavorite = true;
+          }
+        });
+      };
+      this.toggleFavProject = function () {
+        $scope.isFavorite = !$scope.isFavorite;
+
+        var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
+        if (!$scope.isFavorite) {
+          updateFavoriteObj.isFavorite = false;
+        }
+        $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+      };
+  }
+]);
+
+'use strict';
+
+//Projects service used to communicate Projects REST endpoints
+angular.module('projects').factory('Projects', ['$resource',
+	function($resource) {
+		return $resource('api/v1/projects/:projectId', {
+			projectId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		}, {
+			create: {
+				method: 'POST'
+			}
+		}, {
+			read: {
+				method: 'GET'
+			}
+		}
+		);
+	}
+]);
+
+'use strict';
+
+angular.module('projects').service('PublishingService', ['$http',
+  function ($http) {
+
+    this.getPublishedProjects = function () {
+      console.log('publishing service');
+      $http.get('/api/v1/projects/published');
+      //.success(function (data) {
+      //  console.log('published list data:\n', data);
+      //  return data;
+      //}).
+      //error(function (data, error) {
+      //  console.log('publishing error:\n', data, '\n', error);
+      //});
+
+    };
+
+  }
+]);
+
+//'use strict';
+//
+//angular.module('core.admin').run(['Menus',
+//  function (Menus) {
+//    Menus.addMenuItem('topbar', {
+//      title: 'Admin',
+//      state: 'admin',
+//      type: 'dropdown',
+//      roles: ['admin']
+//    });
+//  }
+//]);
+
+//'use strict';
+//
+//// Setting up route
+//angular.module('core.menu').config(['$stateProvider',
+//  function ($stateProvider) {
+//    $stateProvider
+//      .state('menu', {
+//        abstract: true,
+//        url: '/menu',
+//        template: '<ui-view/>'
+//        //data: {
+//        //  roles: ['admin']
+//        //}
+//      })
+//    .state('settings', {
+//      //url: '/subscribe-form',
+//      templateUrl: 'modules/projects/client/directives/views/dropdown-list.html'
+//    })
+//    .state('uploads', {
+//      url: '/uploads',
+//      templateUrl: 'modules/core/views/file-upload.client.view.html'
+//    })
+//    .state('uploadFile', {
+//      url: '/uploads/:fileHash'
+//      //templateUrl: 'modules/users/views/create-user.client.view.html'
+//    });
+//  }
+//]);
+
+'use strict';
+
+//Setting up route
+angular.module('core').config(['$compileProvider',
+  function ($compileProvider) {
+
+    // when `false`, turns off debugging for prod
+    // https://docs.angularjs.org/guide/production
+    $compileProvider.debugInfoEnabled(false);
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('core').config(['$stateProvider', '$urlRouterProvider',
+  function ($stateProvider, $urlRouterProvider) {
+
+    // Redirect to 404 when route not found
+    $urlRouterProvider.otherwise(function ($injector, $location) {
+      $injector.get('$state').transitionTo('not-found', null, {
+        location: false
+      });
+    });
+
+    // Home state routing
+    $stateProvider
+    .state('home', {
+      url: '/',
+      templateUrl: 'modules/core/client/views/home.client.view.html'
+    })
+    .state('not-found', {
+      url: '/not-found',
+      templateUrl: 'modules/core/client/views/404.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    })
+    .state('bad-request', {
+      url: '/bad-request',
+      templateUrl: 'modules/core/client/views/400.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    })
+    .state('forbidden', {
+      url: '/forbidden',
+      templateUrl: 'modules/core/client/views/403.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    });
+  }
+]);
+
+'use strict';
+
+// Controller that serves a random static map for secondary views
+angular.module('core').controller('RandomMapController', ['$scope', 'RandomMapService',
+    function($scope, RandomMapService) {
+
+        $scope.staticMap = RandomMapService.getRandomMap();
+        $scope.myFunction = function(){
+            console.log('error loading that map!');
+        };
+
+    }
+]);
+
+
+'use strict';
+
+angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
+  function ($scope, $state, Authentication, Menus) {
+    // Expose view variables
+    $scope.$state = $state;
+    $scope.authentication = Authentication;
+
+    // Get the topbar menu
+    $scope.menu = Menus.getMenu('topbar');
+
+    // Toggle the menu items
+    $scope.isCollapsed = false;
+    $scope.toggleCollapsibleMenu = function () {
+      $scope.isCollapsed = !$scope.isCollapsed;
+    };
+
+    // Collapsing the menu after navigation
+    $scope.$on('$stateChangeSuccess', function () {
+      $scope.isCollapsed = false;
+    });
+  }
+]);
+
+'use strict';
+
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
+  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
+
+    $scope.authentication = Authentication;
+    $scope.isAdmin = AdminAuthService;
+    console.log('current user:\n', $scope.authentication.user);
+
+    //for overlay
+    $scope.featuredProjects = {};
+
+    //provides logic for the css in the forms
+    UtilsService.cssLayout();
+
+    //menu functions
+    $scope.trustAsHtml = $sce.trustAsHtml;
+    $scope.goToProject = function (id) {
+      $location.path('projects/' + id);
+    };
+
+    //placeholder for featured projects images
+    //todo once admin module is built, create a function that makes photo1 and 2 dynamic rather than hard-coded
+    $scope.photo0 = 'chris--bw-2.jpg';
+    $scope.photo1 = 'as_thumb_150.jpg';
+    $scope.photo2 = 'wli_thumb_150.jpg';
+    $scope.photo3 = 'dw_thumb_150.jpg';
+    $scope.photo4 = 'as_thumb_bw.png';
+
+    $scope.projectMarker = null;
+    $scope.markerData = null;
+
+    /**
+     * test for getting and setting cookies
+     */
+
+    /**
+     *
+     * Animation Functionality
+     *
+     **/
+
+    $scope.overlayActive = true;
+    $scope.menuOpen = false;
+    //var changeMapFrom = null;
+    $scope.shadeMap = false;
+
+    $scope.toggleTest = function(){
+      $scope.shadeMap = !$scope.shadeMap;
+      console.log('$scope.shadeMap: ', $scope.shadeMap);
+    };
+
+
+    $scope.toggleOverlayFunction = function (source) {
+      if ($scope.overlayActive && source === 'overlay') {
+        $scope.overlayActive = !$scope.overlayActive;
+        $scope.shadeMap = true;
+      } else if ($scope.overlayActive && source === 'menu-closed') {
+        $scope.overlayActive = false;
+        $scope.menuOpen = true;
+        $scope.shadeMap = true;
+      } else if (!$scope.overlayActive && source === 'menu-closed' && !$scope.menuOpen) {
+        $scope.menuOpen = !$scope.menuOpen;
+        $scope.shadeMap = false;
+      } else if (!$scope.overlayActive && source === 'home') {
+        $scope.menuOpen = false;
+        $scope.overlayActive = true;
+        $scope.shadeMap = false;
+      }
+    };
+
+    //atrribution toggle
+    $scope.attributionFull = false;
+    $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a> & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
+
+    /**
+     *
+     * Map Functionality
+     *
+     **/
+
+    $scope.markers = true;
+    $scope.filters = true;
+    $scope.censusDataTractLayer = true;
+    $scope.googlePlacesLayer = false;
+    //$scope.toggleProjectDetails = false;
+    $scope.sidebarToggle = false;
+
+
+    //service that returns api keys
+    ApiKeys.getApiKeys()
+      .success(function (data) {
+        mapFunction(data.mapboxKey, data.mapboxSecret);
+      })
+      .error(function (data, status) {
+        alert('Failed to load Mapbox API key. Status: ' + status);
+      });
+
+    var popupIndex = 0;
+
+//
+// call map and add functionality
+//
+
+
+    var mapFunction = function (key, accessToken) {
+      //creates a Mapbox Map
+      L.mapbox.accessToken = accessToken;
+
+      //'info' id is part of creating tooltip with absolute position
+      var info = document.getElementById('info');
+
+      var map = L.mapbox.map('map', null, {
+          infoControl: false, attributionControl: false
+        })
+        .setView([40.7630772, -111.8689467], 12)
+        .addControl(L.mapbox.geocoderControl('mapbox.places', { position: 'topright' }))
+        .addControl( L.control.zoom({position: 'topright'}) );
+        //.addControl(L.mapbox.Zoom({ position: 'topright' }));
+
+      var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
+        mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
+        topoMap = L.mapbox.tileLayer('poetsrock.la97f747'),
+        greenMap = L.mapbox.tileLayer('poetsrock.jdgpalp2'),
+        landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'),
+        comic = L.mapbox.tileLayer('poetsrock.23d30eb5'),
+        watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png');
+
+      var layers = {
+        'Main Map': mainMap,
+        'Topo Map': topoMap,
+        'Green Map': greenMap,
+        'Landscape': landscape,
+        'Comically Yours': comic,
+        'Gray Day': grayMap,
+        'Watercolor': watercolor
+      };
+
+      mainMap.addTo(map);
+      L.control.layers(layers).addTo(map);
+
+      //var markers = new L.MarkerClusterGroup();
+      //markers.addLayer(new L.Marker(getRandomLatLng(map)));
+      //map.addLayer(markers);
+
+
+      //service that returns project markers
+      MarkerDataService.getMarkerData()
+        .success(function (markerData) {
+          //$scope.getProjectMarkers(markerData);
+          $scope.addProjectMarkers(markerData);
+        })
+        .error(function (data, status) {
+          alert('Failed to load project markers. Status: ' + status);
+        });
+
+      $scope.markerArray = [];
+
+      //add markers from marker data
+      $scope.addProjectMarkers = function (markerData) {
+        $scope.markerData = markerData;
+        var index = 0;
+
+
+        //loop through markers array and return values for each property
+        for (var prop in markerData) {
+
+          $scope.projectMarker = L.mapbox.featureLayer({
+              //var singleMarker = L.mapbox.featureLayer({
+              // this feature is in the GeoJSON format: see geojson.org for full specs
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                // coordinates here are in longitude, latitude order because
+                // x, y is the standard for GeoJSON and many formats
+                coordinates: [markerData[prop].lng, markerData[prop].lat]
+              },
+              properties: {
+                // one can customize markers by adding simplestyle properties
+                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                'marker-size': 'large',
+                'marker-color': mapService.markerColorFn(markerData, prop),
+                //'marker-color': '#00ff00',
+                'marker-symbol': 'heart',
+                projectId: markerData[prop]._id,
+                summary: markerData[prop].storySummary,
+                title: markerData[prop].title,
+                mainImage: markerData[prop].mainImage,
+                category: markerData[prop].category,
+                mapImage: markerData[prop].mapImage,
+                lat: markerData[prop].lat,
+                lng: markerData[prop].lng,
+                published: markerData[prop].created,
+                leafletId: null,
+                arrayIndexId: index
+              }
+            })
+            //create toogle for marker event that toggles sidebar on marker click
+            .on('click', function (e) {
+              $scope.$apply(function () {
+                $scope.storyEvent = e.target._geojson.properties;
+              });
+              map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
+              popupMenuToggle(e);
+              return $scope.projectMarker[prop];
+            });
+
+          $scope.projectMarker.addTo(map);
+          $scope.markerArray.push($scope.projectMarker);
+          index++;
+        }
+        return $scope.markerArray;
+      };
+
+      //style the polygon tracts
+      var style = {
+        'stroke': true,
+        'clickable': true,
+        'color': "#00D",
+        'fillColor': "#00D",
+        'weight': 1.0,
+        'opacity': 0.2,
+        'fillOpacity': 0.0,
+        'className': ''  //String that sets custom class name on an element
+      };
+      var hoverStyle = {
+        'color': "#00D",
+        "fillOpacity": 0.5,
+        'weight': 1.0,
+        'opacity': 0.2,
+        'className': ''  //String that sets custom class name on an element
+      };
+
+      var hoverOffset = new L.Point(30, -16);
+
+
+      //create toggle/filter functionality for Census Tract Data
+
+      $scope.toggleGooglePlacesData = function () {
+        if ($scope.googlePlacesLayer) {
+          map.removeLayer(googlePlacesMarkerLayer);
+        } else {
+          map.addLayer(googlePlacesMarkerLayer);
+        }
+      };
+
+      map.on('click', function (e) {
+        if ($scope.menuOpen) {
+          $scope.sidebar.close();
+          $scope.shadeMap = false;
+        } else {
+          console.log('map click!');
+          $scope.overlayActive = false;
+        }
+      });
+
+      $scope.getProjectMarkers = function (markerData) {
+      };
+    };
+
+    var popupMenuToggle = function (e) {
+      if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
+        $scope.toggleOverlayFunction('menu-closed');
+        //$scope.populateStorySummary($scope.projectDetails);
+        $scope.sidebar.open('details');
+        popupIndex = e.target._leaflet_id;
+      } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
+        //$scope.populateStorySummary($scope.projectDetails);
+      } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
+        //$scope.populateStorySummary($scope.projectDetails);
+        $scope.sidebar.open('details');
+        popupIndex = e.target._leaflet_id;
+      } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
+        $scope.sidebar.close();
+        popupIndex = 0;
+      }
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance', 'items',
+    function($scope, $uibModalInstance, items) {
+        $scope.items = items;
+        $scope.selected = {
+          item: $scope.items[0],
+          toStateUrl: items.toStateUrl
+        };
+      console.log('$scope.selected', $scope.selected);
+
+
+      if ($scope.selected.item) {
+        console.log('$scope.selected.item', $scope.selected.item);
+        $scope.ok = function () {
+          $uibModalInstance.close($scope.selected.item);
+        };
+      } else {
+        console.log('$scope.selected.toStateName', $scope.selected.toStateUrl);
+        $scope.ok = function () {
+          $uibModalInstance.close($scope.selected.toStateUrl);
+        };
+      }
+
+      $scope.cancel = function () {
+          $uibModalInstance.dismiss('user cancelled modal');
+      };
+    }
+]);
+
+'use strict';
+
+angular.module('core').directive('featuredProjects', function() {
+        return {
+            restrict: 'E',
+            templateUrl: '/modules/core/client/directives/views/featured-projects.html'
+
+//            controller: function() {
+//              document.getElementById('photo-3').onload = function() {
+//              var c=document.getElementById('inverse-photo-3');
+//              var ctx=c.getContext('2d');
+//              var img=document.getElementById('photo-3');
+//              ctx.drawImage(img,0,0);
+//              var imgData=ctx.getImageData(0,0,c.width,c.height);
+//// invert colors
+//              for (var i=0;i<imgData.data.length;i+=4)
+//              {
+//                imgData.data[i]=255-imgData.data[i];
+//                imgData.data[i+1]=255-imgData.data[i+1];
+//                imgData.data[i+2]=255-imgData.data[i+2];
+//                imgData.data[i+3]=255;
+//              }
+//              ctx.putImageData(imgData,0,0);
+//
+//                //<canvas id="inverse-photo-3" width="220" height="277" style="border:1px solid #d3d3d3;" class="desaturate">
+//                //  Your browser does not support the HTML5 canvas tag.</canvas>
+//
+//            }
+//          }
+
+
+        };
+    });
+
+'use strict';
+
+angular.module('core').directive('footerDirective', ["UtilsService", function (UtilsService) {
+  return {
+    restrict: 'AE',
+    //replace: true,
+    priority: 0,
+    templateUrl: '/modules/core/client/directives/views/footer-directive.html',
+    controller: ["$scope", "$http", function ($scope, $http) {
+      //provides logic for the css in the forms
+      UtilsService.cssLayout();
+
+      //$scope.create = function (isValid) {
+      //  $http({
+      //    method: 'POST',
+      //    url: '/api/v1/auth/signup/newsletter',
+      //    data: {
+      //      email: $scope.email
+      //    }
+      //  }).success(function (data) {
+      //      console.log(data);
+      //      if (data) {
+      //        console.log('YO the DATA', data);
+      //      }
+      //    })
+      //    .error(function (err) {
+      //      console.log(err);
+      //      if (err) {
+      //        $scope.error_message = "Please try again!";
+      //      }
+      //    });
+      //
+      //  $scope.email = '';
+      //}
+    }]
+  };
+}]);
+
+'use strict';
+
+angular.module('core').directive('randomMapDirective', [
+    function ($scope) {
+
+        var staticMap = null;
+
+        var maps = {
+            'originalMap': 'poetsrock.55znsh8b',
+            'grayMap': 'poetsrock.b06189bb',
+            'mainMap': 'poetsrock.la999il2',
+            'topoMap': 'poetsrock.la97f747',
+            'greenMap': 'poetsrock.jdgpalp2',
+            'funkyMap': 'poetsrock.23d30eb5'
+        };
+
+        /**
+         lng: -111.784-999 , -112.0-060,
+         lat: 40.845-674
+         **/
+
+        //array of
+        var randomMap = [maps.originalMap, maps.grayMap, maps.mainMap, maps.topoMap, maps.greenMap, maps.funkyMap];
+
+        var getRandomArbitrary = function (min, max) {
+            return Math.random() * (max - min) + min;
+        };
+
+        var randomLat = function () {
+            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
+            if (randomLngInt === 111) {
+                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
+            } else {
+                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
+                return '-112.0' + randomDecimal;
+            }
+        };
+
+        var randomLng = function () {
+            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
+        };
+
+        var randomMapId = function () {
+            return Math.floor(getRandomArbitrary(0, 7));
+        };
+
+        var randomZoom = function () {
+            return Math.floor(getRandomArbitrary(10, 18));
+        };
+
+        return {
+            template: '<div></div>',
+            restrict: 'EA',
+            link: function postLink(scope, element, attrs) {
+                //staticMap = 'http://api.tiles.mapbox.com/v4/' + randomMap[randomMapId()] + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw';
+            }
+
+        };
+
+    }
+]);
+
+'use strict';
+
+angular.module('core').directive('mainMenu', ["AdminAuthService", function(AdminAuthService) {
+    return {
+      restrict: 'EA',
+      templateUrl: '/modules/core/client/directives/views/main-menu.html',
+
+      controller: ["$scope", function($scope) {
+        $scope.isAdmin = AdminAuthService.user;
+
+
+        $scope.sidebar = L.control.sidebar('sidebar', {
+          closeButton: true,
+          position: 'left'
+        }).addTo(map);
+
+        $scope.sidebar.click = function() {
+          if (L.DomUtil.hasClass(this, 'active')) {
+            $scope.sidebar.close();
+            console.log('here i am close');
+          }
+          else {
+            $scope.sidebar.open(this.firstChild.hash.slice(1));
+            console.log('here i am open');
+          }
+        };
+
+
+
+
+          //if (child.firstChild.hash == '#' + id)
+          //  L.DomUtil.addClass(child, 'active');
+          //else if (L.DomUtil.hasClass(child, 'active'))
+          //  L.DomUtil.removeClass(child, 'active');
+
+          //
+          //if (L.DomUtil.hasClass(this, 'active')) {
+          //  $scope.sidebar.close();
+          //  console.log('here i am close');
+          //}
+          //else {
+          //  $scope.sidebar.open(this.firstChild.hash.slice(1));
+          //  console.log('here i am open');
+          //}
+
+
+      }],
+
+      link: function($scope) {
+        //$scope.sidebar = L.control.sidebar('sidebar', {
+        //  closeButton: true,
+        //  position: 'left'
+        //}).addTo(map);
+
+
+      }
+
+    };
+}]);
+
+
+
+//// add Admin link in menu if user is admin
+//if ($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'superAdmin')
+
+'use strict';
+
+angular.module('core').directive('mainPageOverlay', function() {
+    return {
+        restrict: 'AE',
+        priority: 10,
+        templateUrl:'/modules/core/client/directives/views/main-page-overlay.html'
+    };
+});
+
+'use strict';
+
+angular.module('core').directive('modalDirective', function() {
+        return {
+            restrict: 'E',
+            link: function() {
+
+            $uibModal.open({
+              animation: true,
+              //templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
+              templateUrl: template,
+              controller: function ($scope, $modalInstance, $location) {
+                $scope.stay = function (result) {
+                  //$modalInstance.dismiss('cancel');
+                  console.log('stay just a little bit longer, oh won\'t you stay');
+                  $modalInstance.close(function (result) {
+                    console.log('result: ', result);
+                  });
+                };
+                $scope.leave = function () {
+                  var preventRunning = true;
+                  $scope.stay();
+                  $location.path(toState);
+                };
+              },
+              size: 'lg'
+            });
+
+
+          }
+        };
+    });
+
+'use strict';
+
+angular.module('core').directive('secondaryMenuDirective', function() {
+
+    return {
+
+        restrict: 'E',
+        templateUrl: '/modules/core/client/directives/views/secondary-menu-directive.html',
+
+        controller: ["AdminAuthService", "$scope", function(AdminAuthService, $scope){
+              $scope.isAdmin = AdminAuthService;
+        }],
+
+        link: function(scope) {
+
+            scope.secondMenuOpened = false;
+            scope.toggleSecondMenu = false;
+
+        }
+    }
+});
+
+'use strict';
+
+angular.module('core').directive('secondaryPageDirective', function() {
+    return {
+        restrict: 'AE',
+        //replace: true,
+        priority: 0,
+        templateUrl:'/modules/core/client/directives/views/secondary-page.html'
+    };
+});
+
+'use strict';
+
+/**
+ * Edits by Ryan Hutchison
+ * Credit: https://github.com/paulyoder/angular-bootstrap-show-errors */
+
+angular.module('core')
+  .directive('showErrors', ['$timeout', '$interpolate', function ($timeout, $interpolate) {
+    var linkFn = function (scope, el, attrs, formCtrl) {
+      var inputEl, inputName, inputNgEl, options, showSuccess, toggleClasses,
+        initCheck = false,
+        showValidationMessages = false,
+        blurred = false;
+
+      options = scope.$eval(attrs.showErrors) || {};
+      showSuccess = options.showSuccess || false;
+      inputEl = el[0].querySelector('.form-control[name]') || el[0].querySelector('[name]');
+      inputNgEl = angular.element(inputEl);
+      inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
+
+      if (!inputName) {
+        throw 'show-errors element has no child input elements with a \'name\' attribute class';
+      }
+
+      var reset = function () {
+        return $timeout(function () {
+          el.removeClass('has-error');
+          el.removeClass('has-success');
+          showValidationMessages = false;
+        }, 0, false);
+      };
+
+      scope.$watch(function () {
+        return formCtrl[inputName] && formCtrl[inputName].$invalid;
+      }, function (invalid) {
+        return toggleClasses(invalid);
+      });
+
+      scope.$on('show-errors-check-validity', function (event, name) {
+        if (angular.isUndefined(name) || formCtrl.$name === name) {
+          initCheck = true;
+          showValidationMessages = true;
+
+          return toggleClasses(formCtrl[inputName].$invalid);
+        }
+      });
+
+      scope.$on('show-errors-reset', function (event, name) {
+        if (angular.isUndefined(name) || formCtrl.$name === name) {
+          return reset();
+        }
+      });
+
+      toggleClasses = function (invalid) {
+        el.toggleClass('has-error', showValidationMessages && invalid);
+        if (showSuccess) {
+          return el.toggleClass('has-success', showValidationMessages && !invalid);
+        }
+      };
+    };
+
+    return {
+      restrict: 'A',
+      require: '^form',
+      compile: function (elem, attrs) {
+        if (attrs.showErrors.indexOf('skipFormGroupCheck') === -1) {
+          if (!(elem.hasClass('form-group') || elem.hasClass('input-group'))) {
+            throw 'show-errors element does not have the \'form-group\' or \'input-group\' class';
+          }
+        }
+        return linkFn;
+      }
+    };
+}]);
+
+'use strict';
+
+angular.module('core').directive('signInDirective', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: '/modules/core/client/directives/views/sign-in-directive.html',
+          controller: ["$scope", "$http", "Authentication", function($scope, $http, Authentication) {
+            var userProfileImage = '';
+            $scope.user = Authentication.user;
+
+            if ($scope.user === '') {
+              console.log('directive profilePic Service - calling nothing, just `return`');
+              return
+            } else if(Authentication.user.profileImageFileName === 'default.png' || Authentication.user.profileImageFileName === '') {
+              $scope.user.profileImage = 'modules/users/client/img/profile/default.png';
+            } else if (Authentication.user.profileImageFileName !== '' ) {
+              $scope.user.profileImage = 'modules/users/client/img/profile/uploads/uploaded-profile-image.jpg';
+            }
+
+
+            /**
+             *
+             * turning the s3 get image function off for now ...
+             * it returns data... just don't know how to parse what i'm getting back
+             * uncomment and load home page and look in console log to see a few options for how i'm
+             *    trying to parse.
+             */
+            /**
+            else {
+
+              $scope.getUploadedProfilePic = function() {
+                var user = Authentication.user;
+                //var configObj = {cache: true, responseType: 'arraybuffer'};
+                var configObj = {cache: true};
+
+
+                $http.get('api/v1/users/' + user._id + '/media/' + user.profileImageFileName, configObj)
+                  .then(function successCallback(successCallback) {
+                    console.log('profilePic - successCallback\n', successCallback);
+                    console.log('successCallback.data.imageAsBase64Array\n', successCallback.data.imageAsBase64Array);
+                    console.log('successCallback.data.imageAsUtf8\n', successCallback.data.imageAsUtf8);
+                    console.log('successCallback.data.imageObjectAsString\n', successCallback.data.imageObjectAsString);
+                    return userProfileImage = successCallback.data.imageAsBase64Array;
+                  }, function errorCallback(errorCallback) {
+                    console.log('profile photo error', errorCallback);
+                    return userProfileImage = 'modules/users/client/img/profile/default.png';
+                  });
+
+              };
+              $scope.getUploadedProfilePic();
+              $scope.user.profileImage = userProfileImage;
+
+
+            }
+             **/
+
+          }]
+        };
+
+    });
+
+/**
+* Created by poetsrock on 3/11/15.
+*/
+
+'use strict';
+
+angular.module('core').directive('submitProjectDirective', function() {
+        return {
+            restrict: 'E',
+            templateUrl: '/modules/core/client/directives/views/submit-project-directive.html'
+        };
+    });
+
+'use strict';
+
+angular.module('core').service('ApiKeys', ['$http',
+	function($http) {
+		// ApiKeys service logic
+		// ...
+        this.getApiKeys = function(){
+            return  $http.get('/api/v1/keys');
+        };
+        this.getTractData = function(){
+            return  $http.get('api/v1/tractData');
+        };
+    }
+]);
+
+'use strict';
+
+// Authentication service for user variables
+angular.module('core').factory('Authentication', [
+	function() {
+		var _this = this;
+
+		_this._data = {
+			user: window.user
+		};
+
+		return _this._data;
+	}
+]);
+'use strict';
+
+angular.module('core').service('CensusDataService', ['$http', 'ApiKeys',
+    function ($http, ApiKeys) {
+
+        //Census Data for Population Stats service logic
+
+        var censusData = null;
+        var censusDataKey = 'P0010001';
+        var censusYear = [2000, 2010, 2011, 2012, 2013, 2014];
+        var population = '';
+
+        this.callCensusApi = function () {
+            ApiKeys.getApiKeys()
+                .success(function (data) {
+                    censusData(data.censusKey);
+                })
+                .error(function (data, status) {
+                    alert('Failed to load Mapbox API key. Status: ' + status);
+                });
+
+            censusData = function (censusKey){
+                return $http.get('http://api.census.gov/data/' + censusYear[1] + '/sf1?get=' + population + '&for=tract:*&in=state:49+county:035&key=' + censusKey);
+            }
+        };
+    }
+]);
+
+
+//'use strict';
+//
+//angular.module('core').factory('ErrorHandleService', ['$httpProvider',
+//    function($httpProvider){
+//    $httpProvider.interceptors.push(['$q',
+//        function ($q) {
+//            return {
+//                responseError: function (rejection) {
+//                    console.log(rejection);
+//                    switch (rejection.status) {
+//                        case 400:
+//                            return '400';
+//                        case 404:
+//                            return '404';
+//                    }
+//
+//                    return $q.reject(rejection);
+//                },
+//                'response': function(response){
+//                    console.log(response);
+//                    return response;
+//                }
+//            };
+//        }
+//    ])
+//}
+//]);
+'use strict';
+
+angular.module('core').service('FullScreenService', [,
+    function() {
+
+        this.fullScreen= function(){
+
+            /**
+             * Full-screen functionality
+             */
+            // Find the right method, call on correct element
+            var launchFullscreen = function(element) {
+                if(element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if(element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if(element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if(element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            };
+
+            // Launch fullscreen for browsers that support it
+            //launchFullscreen(document.documentElement); // the whole page
+            //launchFullscreen(document.getElementById("videoElement")); // any individual element
+
+            // Whack fullscreen
+            var exitFullscreen = function(element) {
+                if(document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if(document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if(document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            };
+
+// Cancel fullscreen for browsers that support it!
+//    exitFullscreen();
+
+
+        };
+    }
+]);
+
+'use strict';
+
+angular.module('core').service('RandomMapService', [
+    function () {
+        
+        var staticMap = null;
+        
+        var maps = {
+            'mapbox': {
+                'originalMap': 'poetsrock.j5o1g9on',
+                'grayMap': 'poetsrock.b06189bb',
+                'mainMap': 'poetsrock.la999il2',
+                'topoMap': 'poetsrock.la97f747',
+                'greenMap': 'poetsrock.jdgpalp2',
+                'comic': 'poetsrock.23d30eb5',
+                'fancyYouMap': 'poetsrock.m6b73kk7',
+                'pencilMeInMap': 'poetsrock.m6b7f6mj'
+            //},
+            //'thunderforest': {
+            //    'landscape': 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+            //},
+            //'stamen': {
+            //    'watercolor': 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+            //    'toner': 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png'
+            }
+        };
+        
+        var url = {
+            'mapbox': 'http://api.tiles.mapbox.com/v4',
+            //'thunderforest': 'http://{s}.tile.thunderforest.com',
+            //'stamen': 'http://maps.stamen.com/m2i',
+            //'ngs': ''
+        };
+        
+        //array of
+        var randomMap = [
+            ['mapbox', maps.mapbox.originalMap],
+            ['mapbox', maps.mapbox.grayMap],
+            ['mapbox', maps.mapbox.mainMap],
+            ['mapbox', maps.mapbox.topoMap],
+            ['mapbox', maps.mapbox.greenMap],
+            ['mapbox', maps.mapbox.comic],
+            ['mapbox', maps.mapbox.fancyYouMap],
+            ['mapbox', maps.mapbox.pencilMeInMap],
+            //['stamen', maps.stamen.watercolor],
+            //['stamen', maps.stamen.toner],
+            //['thunderforest', maps.thunderforest.landscape]
+        ];
+        
+        var getRandomArbitrary = function (min, max) {
+            return Math.random() * (max - min) + min;
+        };
+        
+        var randomLat = function () {
+            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
+            if (randomLngInt === 111) {
+                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
+            } else {
+                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
+                return '-112.0' + randomDecimal;
+            }
+        };
+        
+        var randomLng = function () {
+            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
+        };
+
+        var randomZoom = function () {
+            return Math.floor(getRandomArbitrary(9, 16));
+        };
+        
+        this.getRandomMap = function () {
+            var randomNum = Math.floor(getRandomArbitrary(0, 7));
+            var mapVendor = randomMap[randomNum][0];
+            var randomMapId = randomMap[randomNum][1];
+
+            if (mapVendor === 'mapbox') {
+                return staticMap = {mapUrl: url.mapbox + '/' + randomMapId + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw'};
+            //} else if (mapVendor === 'stamen') {
+                //return staticMap = {mapUrl: url.stamen + '/#watercolor' + '1280:720/' + randomZoom() + '/' + randomLat() + '/' + randomLng()};
+                //return staticMap = {mapUrl: 'http://maps.stamen.com/m2i/#watercolor/1280:720/14/40.8905/-112.0204'};
+            } else {
+                console.log('Error!\nrandomNum: ', randomNum, '\nmapVendor', mapVendor, '\nrandomMapId: ', randomMapId );
+            }
+        }
+        
+    }
+]);
+
+'use strict';
+
+//Google Places API
+
+angular.module('core').factory('googlePlacesService', ['$http',
+	function ($http) {
+		var googlePlacesMarker = null;
+		var googlePlacesMarkerLayer = null;
+		var googlePlacesMarkerArray = [];
+
+		var googlePlacesData = function () {
+			$http.get('/places').success(function (poiData) {
+
+				var placeLength = poiData.results.length;
+				for (var place = 0; place < placeLength; place++) {
+
+					var mapLat = poiData.results[place].geometry.location.lat;
+					var mapLng = poiData.results[place].geometry.location.lng;
+					var mapTitle = poiData.results[place].name;
+
+					googlePlacesMarker = L.marker([mapLat, mapLng]).toGeoJSON();
+
+					googlePlacesMarkerArray.push(googlePlacesMarker);
+				} //end of FOR loop
+
+				googlePlacesMarkerLayer = L.geoJson(googlePlacesMarkerArray, {
+					style: function (feature) {
+						return {
+							'title': mapTitle,
+							'marker-size': 'large',
+							//'marker-symbol': mapSymbol(),
+							'marker-symbol': 'marker',
+							'marker-color': '#00295A',
+							'riseOnHover': true,
+							'riseOffset': 250,
+							'opacity': 0.5,
+							'clickable': true
+						}
+					}
+				})
+			});
+		};
+
+
+	}
+]);
+'use strict';
+
+angular.module('core').service('mapService', [
+	function ($scope) {
+		// Various Services for Map Functionality
+
+		this.featuredProjects = function (markerData) {
+			var featureProjectsArray = [];
+			for (var prop in markerData) {
+				var i = 0;
+				if (i < 2 && markerData[prop].featured) {      //setup for loop to end after finding the first three featured projects
+					var featuredProject = {
+						thumb: markerData[prop].thumbnail,
+						projectId: markerData[prop]._id,
+						shortTitle: markerData[prop].shortTitle
+					};
+					featureProjectsArray.push(featuredProject);
+				}
+				i++;
+			}
+		};
+
+		this.markerColorFn = function (markerData, prop) {
+			if (markerData[prop].category === 'video') {
+				return '#ff0011';
+			} else if (markerData[prop].category === 'multimedia') {
+				return '#ff0101';
+			} else if (markerData[prop].category === 'essay') {
+				return '#0015ff';
+			} else if (markerData[prop].category === 'literature') {
+				return '#15ff35';
+			} else if (markerData[prop].category === 'interview') {
+				return 'brown';
+			} else if (markerData[prop].category === 'map') {
+				return 'yellow';
+			} else if (markerData[prop].category === 'audio') {
+				return '#111111';
+			} else {
+				return '#00ff44';
+			}
+		};
+	}
+]);
+'use strict';
+
+angular.module('core').service('MarkerDataService', ['$http',
+    function($http) {
+        // Project Marker Data Service
+
+        this.getMarkerData = function(){
+            return  $http.get('/api/v1/markerData').
+                success(function(projects){
+                    //console.log('projects: \n', projects);
+                    //for (var prop in projects) {
+                    //    console.log('projects[prop].lng: \n', projects[prop].lng);
+                    //}
+
+                })
+                .error(function(error){
+                    console.log('marker data error: \n', error);
+                });
+        };
+    }
+]);
+
+'use strict';
+
+//Menu service used for managing  menus
+angular.module('core').service('Menus', [
+  function () {
+    // Define a set of default roles
+    this.defaultRoles = ['user', 'admin'];
+
+    // Define the menus object
+    this.menus = {};
+
+    // A private function for rendering decision
+    var shouldRender = function (user) {
+      if (!!~this.roles.indexOf('*')) {
+        return true;
+      } else {
+        if(!user) {
+          return false;
+        }
+        for (var userRoleIndex in user.roles) {
+          for (var roleIndex in this.roles) {
+            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    };
+
+    // Validate menu existance
+    this.validateMenuExistance = function (menuId) {
+      if (menuId && menuId.length) {
+        if (this.menus[menuId]) {
+          return true;
+        } else {
+          throw new Error('Menu does not exist');
+        }
+      } else {
+        throw new Error('MenuId was not provided');
+      }
+
+      return false;
+    };
+
+    // Get the menu object by menu id
+    this.getMenu = function (menuId) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Add new menu object by menu id
+    this.addMenu = function (menuId, options) {
+      options = options || {};
+
+      // Create the new menu
+      this.menus[menuId] = {
+        roles: options.roles || this.defaultRoles,
+        items: options.items || [],
+        shouldRender: shouldRender
+      };
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Remove existing menu object by menu id
+    this.removeMenu = function (menuId) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Return the menu object
+      delete this.menus[menuId];
+    };
+
+    // Add menu item object
+    this.addMenuItem = function (menuId, options) {
+      options = options || {};
+
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Push new menu item
+      this.menus[menuId].items.push({
+        title: options.title || '',
+        state: options.state || '',
+        type: options.type || 'item',
+        class: options.class,
+        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
+        position: options.position || 0,
+        items: [],
+        shouldRender: shouldRender
+      });
+
+      // Add submenu items
+      if (options.items) {
+        for (var i in options.items) {
+          this.addSubMenuItem(menuId, options.state, options.items[i]);
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Add submenu item object
+    this.addSubMenuItem = function (menuId, parentItemState, options) {
+      options = options || {};
+
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Search for menu item
+      for (var itemIndex in this.menus[menuId].items) {
+        if (this.menus[menuId].items[itemIndex].state === parentItemState) {
+          // Push new submenu item
+          this.menus[menuId].items[itemIndex].items.push({
+            title: options.title || '',
+            state: options.state || '',
+            roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
+            position: options.position || 0,
+            shouldRender: shouldRender
+          });
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Remove existing menu object by menu id
+    this.removeMenuItem = function (menuId, menuItemState) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Search for menu item to remove
+      for (var itemIndex in this.menus[menuId].items) {
+        if (this.menus[menuId].items[itemIndex].state === menuItemState) {
+          this.menus[menuId].items.splice(itemIndex, 1);
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Remove existing menu object by menu id
+    this.removeSubMenuItem = function (menuId, submenuItemState) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Search for menu item to remove
+      for (var itemIndex in this.menus[menuId].items) {
+        for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
+          if (this.menus[menuId].items[itemIndex].items[subitemIndex].state === submenuItemState) {
+            this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
+          }
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    //Adding the topbar menu
+    this.addMenu('topbar', {
+      roles: ['*']
+    });
+  }
+]);
+
+'use strict';
+
+// Create the Socket.io wrapper service
+angular.module('core').service('Socket', ['Authentication', '$state', '$timeout',
+  function (Authentication, $state, $timeout) {
+    // Connect to Socket.io server
+    this.connect = function () {
+      // Connect only when authenticated
+      if (Authentication.user) {
+        this.socket = io();
+      }
+    };
+    this.connect();
+
+    // Wrap the Socket.io 'on' method
+    this.on = function (eventName, callback) {
+      if (this.socket) {
+        this.socket.on(eventName, function (data) {
+          $timeout(function () {
+            callback(data);
+          });
+        });
+      }
+    };
+
+    // Wrap the Socket.io 'emit' method
+    this.emit = function (eventName, data) {
+      if (this.socket) {
+        this.socket.emit(eventName, data);
+      }
+    };
+
+    // Wrap the Socket.io 'removeListener' method
+    this.removeListener = function (eventName) {
+      if (this.socket) {
+        this.socket.removeListener(eventName);
+      }
+    };
+  }
+]);
+
+'use strict';
+
+//Google Places API
+
+angular.module('core').factory('tractDataService', ['$scope', 'ApiKeys',
+	function ($scope, ApiKeys) {
+
+		var dataBoxStaticPopup = null,
+			tractData = {},
+			censusTractData = null;
+
+
+		ApiKeys.getTractData()
+			.success(function (tractData) {
+				tractDataLayer(tractData);
+			})
+			.error(function (tractData) {
+				alert('Failed to load tractData. Status: ' + status);
+			});
+		var tractDataLayer = function (tractData) {
+			censusTractData = L.geoJson(tractData, {
+					style: style,
+					onEachFeature: function (feature, layer) {
+						if (feature.properties) {
+							var popupString = '<div class="popup">';
+							for (var k in feature.properties) {
+								var v = feature.properties[k];
+								popupString += k + ': ' + v + '<br />';
+							}
+							popupString += '</div>';
+							layer.bindPopup(popupString);
+						}
+						if (!(layer instanceof L.Point)) {
+							layer.on('mouseover', function () {
+								layer.setStyle(hoverStyle);
+								//layer.setStyle(hoverOffset);
+							});
+							layer.on('mouseout', function () {
+								layer.setStyle(style);
+								//layer.setStyle(hoverOffset);
+							});
+						}
+
+					}
+				}
+			);
+		};
+
+		$scope.dataBoxStaticPopupFn = function (dataBoxStaticPopup) {
+
+			// Listen for individual marker clicks.
+			dataBoxStaticPopup.on('mouseover', function (e) {
+				// Force the popup closed.
+				e.layer.closePopup();
+
+				var feature = e.layer.feature;
+				var content = '<div><strong>' + feature.properties.title + '</strong>' +
+					'<p>' + feature.properties.description + '</p></div>';
+
+				info.innerHTML = content;
+			});
+
+			function empty() {
+				info.innerHTML = '<div><strong>Click a marker</strong></div>';
+			}
+
+			// Clear the tooltip when .map is clicked.
+			map.on('move', empty);
+
+			// Trigger empty contents when the script has loaded on the page.
+			empty();
+
+		};
+
+//create toggle/filter functionality for Census Tract Data
+		$scope.toggleCensusData = function () {
+			if (!$scope.censusDataTractLayer) {
+				map.removeLayer(censusTractData);
+				map.removeLayer(dataBoxStaticPopup);
+			} else {
+				map.addLayer(censusTractData);
+				map.addLayer(dataBoxStaticPopup);
+
+			}
+		};
+
+	}
+]);
+'use strict';
+
+// Underscore service
+angular.module('core').factory('_', [
+	function() {
+		return window._;
+	}
+]);
+'use strict';
+
+angular.module('core').service('UtilsService', ['$http', '$window',
+  function($http, $window) {
+
+
+    //logic for css on the contact form
+
+    this.cssLayout = function () {
+      [].slice.call(document.querySelectorAll('input.input_field'))
+
+        .forEach(function (inputEl) {
+          // in case the input is already filled
+          if (inputEl.value.trim() !== '') {
+            classie.add(inputEl.parentNode, 'input-filled');
+          }
+          // events
+          inputEl.addEventListener('focus', onInputFocus);
+          inputEl.addEventListener('blur', onInputBlur);
+        });
+
+      function onInputFocus(ev) {
+        classie.add(ev.target.parentNode, 'input-filled');
+      }
+
+      function onInputBlur(ev) {
+        if (ev.target.value.trim() === '') {
+          classie.remove(ev.target.parentNode, 'input-filled');
+        }
+      }
+    };
+
+
   }
 ]);
 
@@ -4816,6 +4793,29 @@ angular.module('users').controller('SettingsController', ['$scope', 'Authenticat
   }
 ]);
 
+'use strict';
+
+angular.module('core').factory('authInterceptor', ['$q', '$injector',
+  function ($q, $injector) {
+    return {
+      responseError: function(rejection) {
+        if (!rejection.config.ignoreAuthModule) {
+          switch (rejection.status) {
+            case 401:
+              $injector.get('$state').transitionTo('authentication.signin');
+              break;
+            case 403:
+              $injector.get('$state').transitionTo('forbidden');
+              break;
+          }
+        }
+        // otherwise, default behaviour
+        return $q.reject(rejection);
+      }
+    };
+  }
+]);
+
 (function () {
 	'use strict';
 
@@ -4863,6 +4863,10 @@ angular.module('users').controller('SettingsController', ['$scope', 'Authenticat
 		$templateCache.put('modules/users/views/contributors/contributors.client.list.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n      <section data-ng-controller=\"ContributorController\" data-ng-init=\"init()\" class=\"contributors\">\n        <div class=\"contrib\">\n          <div class=\"row\">\n            <div class=\"col-md-12\">\n              <div class=\"main-content-inner\">\n\n                <div class=\"row\">\n                  <div><h1 class=\"col-md-6\">Contributors</h1></div>\n\n                  <div class=\"col-md-6 search-input-div\">\n                    <span class=\"input input-secondary pull-right\">\n                        <input class=\"input_field input_field-secondary\" type=\"text\" id=\"search\"\n                               data-ng-model=\"searchContributors\"/>\n                        <label class=\"input_label input_label-secondary\" for=\"search\">\n                          <span class=\"input_label-content input_label-content-secondary\">Search Contributors</span>\n                        </label>\n                    </span>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n\n                  <ul id=\"grid-view\">\n                    <a ng-click=\"openLightboxModal($index)\" data-ng-repeat=\"contributor in contributors | filter:searchContributors\" class=\"col-md-3\">\n                      <li>\n                        <div>\n                            <img ng-src=\"{{contributor.profileImageURL}}\" class=\"img-thumbnail\">\n                            <p>{{contributor.firstName}} {{contributor.lastName}}</p>\n                        </div>\n                      </li>\n                    </a>\n                  </ul>\n\n\n                </div>\n              </div>\n\n            </div>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/users/views/contributors/contributors.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n      <section data-ng-controller=\"ContributorController\" data-ng-init=\"findContributor()\" class=\"contributors\">\n        <div class=\"contrib-view\">\n          <div class=\"row\">\n            <div class=\"col-md-12\">\n              <div class=\"main-content-inner\">\n\n                <div class=\"row\">\n                  <div><h1 class=\"col-md-6\">{{contributor.firstName}} {{contributor.lastName}}</h1></div>\n                  <div><img class=\"col-md-6 pull-right\" data-ng-src=\"{{contributor.profileImageURL}}\"/></div>\n                </div>\n\n                <div class=\"row\">\n                  <div><p class=\"col-md-12\">{{contributor.bio}}</p></div>\n                </div>\n\n                <hr/>\n\n                <h4>Other Projects by {{contributor.firstName}}</h4>\n                <div class=\"row\">\n                  <div><p class=\"col-md-12\" data-ng-repeat=\"contributorProject in contributorProjects\"><a data-ng-href=\"/projects/{{contributorProject._id}}\">\n                    {{contributorProject.title}}\n                    </a>\n                  </p></div>\n                </div>\n\n\n                <!--<div class=\"row\">-->\n\n                  <!--<ul id=\"grid-view\">-->\n                    <!--<a ng-click=\"openLightboxModal($index)\" data-ng-repeat=\"contributor in contributors | filter:searchContributors\" class=\"col-md-3\">-->\n                      <!--<li>-->\n                        <!--<div>-->\n                            <!--<img ng-src=\"{{contributor.profileImageURL}}\" class=\"img-thumbnail\">-->\n                            <!--<p>{{contributor.firstName}} {{contributor.lastName}}</p>-->\n                        <!--</div>-->\n                      <!--</li>-->\n                    <!--</a>-->\n                  <!--</ul>-->\n\n\n                <!--</div>-->\n              </div>\n\n            </div>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/users/views/contributors/lightbox.html', '<section data-ng-controller=\"ContributorController\">\n  <div class=\"modal-body\" id=\"lightbox-modal\"\n       ng-swipe-left=\"Lightbox.nextImage()\"\n       ng-swipe-right=\"Lightbox.prevImage()\">\n\n    <div class=lightbox-nav>\n      <button class=close aria-hidden=true ng-click=$dismiss()>×</button>\n      <div class=btn-group>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.prevImage()><i class=\"fa fa-chevron-left\"></i></a>\n        <a ng-href={{Lightbox.imageUrl}} target=_blank class=\"btn btn-xs btn-default\" title=\"Open in new tab\">Open image\n          in new tab</a>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.nextImage()><i class=\"fa fa-chevron-right\"></i></a>\n      </div>\n    </div>\n\n    <!-- image -->\n    <div class=\"lightbox-image-container\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n\n\n          <div class=lightbox-image-caption>\n            <div><img lightbox-src=\"{{Lightbox.imageUrl}}\"></div>\n\n            <div>{{Lightbox.imageCaption}}</div>\n          </div>\n\n        </div>\n      </div>\n\n    </div>\n  </div>\n</section>\n');
+		$templateCache.put('modules/users/views/password/forgot-password.client.view.html', '<section class=\"row\" ng-controller=\"PasswordController\">\n  <h3 class=\"col-md-12 text-center\">Restore your password</h3>\n  <p class=\"small text-center\">Enter your account username.</p>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">\n    <form name=\"forgotPasswordForm\" ng-submit=\"askForPasswordReset(forgotPasswordForm.$valid)\" class=\"form-horizontal\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" ng-model=\"credentials.username\" placeholder=\"Username\" lowercase required>\n          <div ng-messages=\"forgotPasswordForm.username.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter a username.</p>\n          </div>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n        <div ng-show=\"success\" class=\"text-center text-success\">\n          <strong ng-bind=\"success\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');
+		$templateCache.put('modules/users/views/password/reset-password-invalid.client.view.html', '<section class=\"row text-center\">\n  <h3 class=\"col-md-12\">Password reset is invalid</h3>\n  <a ui-sref=\"password.forgot\" class=\"col-md-12\">Ask for a new password reset</a>\n</section>\n');
+		$templateCache.put('modules/users/views/password/reset-password-success.client.view.html', '<section class=\"row text-center\">\n  <h3 class=\"col-md-12\">Password successfully reset</h3>\n  <a ui-sref=\"home\" class=\"col-md-12\">Continue to home page</a>\n</section>\n');
+		$templateCache.put('modules/users/views/password/reset-password.client.view.html', '<section class=\"row\" ng-controller=\"PasswordController\">\n  <h3 class=\"col-md-12 text-center\">Reset your password</h3>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4\">\n    <form name=\"resetPasswordForm\" ng-submit=\"resetUserPassword(resetPasswordForm.$valid)\" class=\"signin form-horizontal\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <label for=\"newPassword\">New Password</label>\n          <input type=\"password\" id=\"newPassword\" name=\"newPassword\" class=\"form-control\" ng-model=\"passwordDetails.newPassword\" placeholder=\"New Password\" autocomplete=\"new-password\" popover=\"{{popoverMsg}}\" popover-trigger=\"focus\" popover-placement=\"top\" password-validator required>\n          <div ng-messages=\"resetPasswordForm.newPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter a new password.</p>\n            <div ng-repeat=\"passwordError in passwordErrors\">\n              <p class=\"help-block error-text\" ng-show=\"resetPasswordForm.newPassword.$error.requirements\">{{passwordError}}</p>\n            </div>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"verifyPassword\">Verify Password</label>\n          <input type=\"password\" id=\"verifyPassword\" name=\"verifyPassword\" class=\"form-control\" ng-model=\"passwordDetails.verifyPassword\" placeholder=\"Verify Password\" password-verify=\"passwordDetails.newPassword\" required>\n          <div ng-messages=\"resetPasswordForm.verifyPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter the password again to verify.</p>\n            <p class=\"help-block error-text\" ng-show=resetPasswordForm.verifyPassword.$error.passwordVerify>Passwords do not match.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" ng-show=\"!resetPasswordForm.newPassword.$error.required\">\n          <label>Password Requirements</label>\n          <progressbar value=\"requirementsProgress\" type=\"{{requirementsColor}}\"><span style=\"color:white; white-space:nowrap;\">{{requirementsProgress}}%</span></progressbar>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Update Password</button>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n        <div ng-show=\"success\" class=\"text-center text-success\">\n          <strong ng-bind=\"success\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');
 		$templateCache.put('modules/users/views/settings/change-password.client.view.html', '<section class=\"row\" ng-controller=\"ChangePasswordController\">\n  <div class=\"col-xs-offset-1 col-xs-10 col-md-offset-4 col-md-4\">\n    <form name=\"passwordForm\" ng-submit=\"changeUserPassword(passwordForm.$valid)\" class=\"signin\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <label for=\"currentPassword\">Current Password</label>\n          <input type=\"password\" id=\"currentPassword\" name=\"currentPassword\" class=\"form-control\" ng-model=\"passwordDetails.currentPassword\" placeholder=\"Current Password\" required>\n          <div ng-messages=\"passwordForm.currentPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Your current password is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"newPassword\">New Password</label>\n          <input type=\"password\" id=\"newPassword\" name=\"newPassword\" class=\"form-control\" ng-model=\"passwordDetails.newPassword\" placeholder=\"New Password\" popover=\"{{popoverMsg}}\" popover-trigger=\"focus\" password-validator required>\n          <div ng-messages=\"passwordForm.newPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter a new password.</p>\n            <div ng-repeat=\"passwordError in passwordErrors\">\n              <p class=\"help-block error-text\" ng-show=\"passwordForm.newPassword.$error.requirements\">{{passwordError}}</p>\n            </div>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"verifyPassword\">Verify Password</label>\n          <input type=\"password\" id=\"verifyPassword\" name=\"verifyPassword\" class=\"form-control\" ng-model=\"passwordDetails.verifyPassword\" placeholder=\"Verify Password\" password-verify=\"passwordDetails.newPassword\" required>\n          <div ng-messages=\"passwordForm.verifyPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Verify your new password.</p>\n            <p class=\"help-block error-text\" ng-show=passwordForm.verifyPassword.$error.passwordVerify>Passwords do not match.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" ng-show=\"!passwordForm.newPassword.$error.required\">\n          <label>Password Requirements</label>\n          <progressbar value=\"requirementsProgress\" type=\"{{requirementsColor}}\"><span style=\"color:white; white-space:nowrap;\">{{requirementsProgress}}%</span></progressbar>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Save Password</button>\n        </div>\n        <div ng-show=\"success\" class=\"text-center text-success\">\n          <strong>Password Changed Successfully</strong>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');
 		$templateCache.put('modules/users/views/settings/change-profile-picture.client.view.html', '<section class=\"row\" ng-controller=\"ChangeProfilePictureController\" data-ng-init=\"init();\">\n\n  <div class=\"file-upload\">\n\n  <div class=\"col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8\">\n\n    <!--<h4>Upload on file select</h4>-->\n    <!--<button type=\"file\" ngf-select=\"uploadFiles($file, $invalidFiles)\" accept=\"image/*\" ngf-max-height=\"3000\" ngf-max-size=\"5MB\">-->\n      <!--Select File</button>-->\n    <!--<br><br>-->\n    <!--File:-->\n    <!--<div>{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->\n      <!--<span class=\"progress\" ng-show=\"f.progress >= 0\">-->\n          <!--<div style=\"width:{{f.progress}}%\" ng-bind=\"f.progress + \'%\'\"></div>-->\n      <!--</span>-->\n    <!--</div>-->\n    <!--{{errorMsg}}-->\n\n\n\n    <!--<a data-ng-repeat=\"file in listOfImages\" data-ng-href=\"{{file.imagepath}}{{file.imagename}}\" class=\"list-group-item\">-->\n      <!--<img data-ng-src=\"{{imageURL}}\" />-->\n    <!--</a>-->\n\n    <img data-ng-src=\"{{user.profileImage}}\" class=\"img-thumbnail user-profile-picture\"/>\n\n    <div>\n        <button type=\"file\" class=\"btn btn-main btn-footer-overlay grow\" data-ng-hide=\"uploading\" ngf-select ngf-change=\"onFileSelect($files)\">Choose File</button>\n    </div>\n\n    <!--<button class=\"button\" ng-file-select ngf-select ngf-change=\"onFileSelect($files)\">Upload on file change</button>-->\n\n    <button data-ng-click=\"abort();\" data-ng-hide=\"!uploading\" class=\"btn btn-main btn-footer-overlay grow\" >Cancel</button>\n\n    <!--Drop File:-->\n    <div ngf-file-drop ng-model=\"files\" class=\"drop-box\" ngf-select ngf-change=\"onFileSelect($files)\" drag-over-class=\"dragover\" ngf-multiple=\"true\" allow-dir=\"true\" accept=\".jpg,.png,.pdf\" data-ng-hide=\"uploading\">\n      Drop Images or PDFs Files Here\n    </div>\n\n    <div ngf-no-file-drop data-ng-hide=\"uploading\" class=\"drag-drop-alert\">File Drag/Drop is not supported for this browser</div>\n\n\n\n    <!--<form name=\"profileImg\" class=\"signin form-horizontal\">-->\n      <!--<fieldset>-->\n\n\n        <!--<div class=\"form-group text-center\">-->\n          <!--<img ng-src=\"{{imageURL}}\" alt=\"{{user.displayName}}\" class=\"img-thumbnail user-profile-picture\">-->\n          <!--Image thumbnail: <img ngf-thumbnail=\"file || \'/thumb.jpg\'\">-->\n        <!--</div>-->\n\n        <!--<legend>Upload on form submit</legend>-->\n        <!--Username:-->\n        <!---->\n        <!--<input type=\"text\" name=\"userName\" ng-model=\"username\" size=\"31\" required>-->\n\n        <!--<i ng-show=\"profileImg.userName.$error.required\">*required</i>-->\n\n        <!--<br>-->\n\n        <!--Photo:-->\n        <!--<input type=\"file\" ngf-select ng-model=\"picFile\" name=\"file\" accept=\"image/*\" ngf-max-size=\"2MB\" required>-->\n\n        <!--<i ng-show=\"profileImg.file.$error.required\">*required</i>-->\n\n        <!--<br>-->\n\n        <!--<i ng-show=\"profileImg.file.$error.maxSize\">File too large {{picFile.size / 1000000|number:1}}MB: max 2M</i>-->\n\n        <!--<img ng-show=\"myForm.file.$valid\" ngf-thumbnail=\"picFile\" class=\"thumb\">-->\n        <!--<button ng-click=\"picFile = null\" ng-show=\"picFile\">Remove</button>-->\n\n        <!--<br>-->\n\n        <!--<button ng-disabled=\"!myForm.$valid\" data-ng-click=\"uploadPic(picFile)\">Submit</button>-->\n\n        <span class=\"progress\" ng-show=\"picFile.progress >= 0\">\n          <div style=\"width:{{picFile.progress}}%\" ng-bind=\"picFile.progress + \'%\'\"></div>\n        </span>\n\n        <!--<span ng-show=\"picFile.result\">Upload Successful</span>-->\n        <!--<span class=\"err\" ng-show=\"errorMsg\">{{errorMsg}}</span>-->\n\n        <!--<div ng-show=\"success\" class=\"text-center text-success\">-->\n          <!--<strong>Profile Picture Changed Successfully</strong>-->\n        <!--</div>-->\n\n        <!--<div ng-show=\"error\" class=\"text-center text-danger\">-->\n          <!--<strong ng-bind=\"error\"></strong>-->\n        <!--</div>-->\n\n\n      <!--</fieldset>-->\n    <!--</form>-->\n  </div>\n\n  </div>\n</section>\n');
 		$templateCache.put('modules/users/views/settings/edit-profile.client.view.html', '<section data-ng-controller=\"EditProfileController\" class=\"row\">\n    <div class=\"col-xs-offset-1 col-xs-10 col-md-offset-4 col-md-4\">\n      <form name=\"userForm\" ng-submit=\"updateUserProfile(userForm.$valid)\" class=\"signin\" novalidate autocomplete=\"off\">\n            \n        <fieldset>\n          <div class=\"form-group\" show-errors>\n            <label for=\"firstName\">First Name</label>\n          <input type=\"text\" id=\"firstName\" name=\"firstName\" class=\"form-control\" ng-model=\"user.firstName\" placeholder=\"First Name\" required>\n            <div ng-messages=\"userForm.firstName.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">First name is required.</p>\n            </div>\n          </div>\n          <div class=\"form-group\" show-errors>\n            <label for=\"lastName\">Last Name</label>\n          <input type=\"text\" id=\"lastName\" name=\"lastName\" class=\"form-control\" ng-model=\"user.lastName\" placeholder=\"Last Name\" required>\n            <div ng-messages=\"userForm.lastName.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Last name is required.</p>\n            </div>\n          </div>\n          <div class=\"form-group\" show-errors>\n            <label for=\"email\">Email</label>\n          <input type=\"email\" id=\"email\" name=\"email\" class=\"form-control\" ng-model=\"user.email\" placeholder=\"Email\" required>\n            <div ng-messages=\"userForm.email.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Email address is required.</p>\n              <p class=\"help-block error-text\" ng-message=\"email\">Email address is invalid.</p>\n            </div>\n          </div>\n          <div class=\"form-group\" show-errors>\n            <label for=\"username\">Username</label>\n          <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" ng-model=\"user.username\" placeholder=\"Username\" required>\n            <div ng-messages=\"userForm.username.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Username is required.</p>\n            </div>\n          </div>\n          <div class=\"text-center form-group\">\n            <button type=\"submit\" class=\"btn btn-primary\">Save Profile</button>\n          </div>\n          <div ng-show=\"success\" class=\"text-center text-success\">\n            <strong>Profile Saved Successfully</strong>\n          </div>\n          <div ng-show=\"error\" class=\"text-center text-danger\">\n            <strong ng-bind=\"error\"></strong>\n          </div>\n        </fieldset>\n      </form>\n    </div>\n</section>\n');
@@ -4870,9 +4874,5 @@ angular.module('users').controller('SettingsController', ['$scope', 'Authenticat
 		$templateCache.put('modules/users/views/settings/manage-social-accounts.client.view.html', '<section class=\"row\" ng-controller=\"SocialAccountsController\">\n  <h3 class=\"col-md-12 text-center\" ng-show=\"hasConnectedAdditionalSocialAccounts()\">Connected social accounts:</h3>\n  <div class=\"col-md-12 text-center\">\n    <div ng-repeat=\"(providerName, providerData) in user.additionalProvidersData\" class=\"social-account-container\">\n      <img ng-src=\"/modules/users/client/img/buttons/{{providerName}}.png\">\n      <a class=\"btn btn-danger btn-remove-account\" ng-click=\"removeUserSocialAccount(providerName)\">\n        <i class=\"glyphicon glyphicon-trash\"></i>\n      </a>\n    </div>\n  </div>\n  <h3 class=\"col-md-12 text-center\" ng-show=\"hasConnectedAdditionalSocialAccounts()\">Unconnected social accounts:</h3>\n  <div class=\"col-md-12 text-center\">\n    <div class=\"social-account-container\" ng-hide=\"isConnectedSocialAccount(\'facebook\')\">\n      <img ng-src=\"/modules/users/client/img/buttons/facebook.png\">\n      <a class=\"btn btn-success btn-remove-account\" href=\"/api/v1/auth/facebook\" target=\"_self\">\n        <i class=\"glyphicon glyphicon-plus\"></i>\n      </a>\n    </div>\n    <div class=\"social-account-container\" ng-hide=\"isConnectedSocialAccount(\'twitter\')\">\n      <img ng-src=\"/modules/users/client/img/buttons/twitter.png\">\n      <a class=\"btn btn-success btn-remove-account\" href=\"/api/v1/auth/twitter\" target=\"_self\">\n        <i class=\"glyphicon glyphicon-plus\"></i>\n      </a>\n    </div>\n  </div>\n</section>\n');
 		$templateCache.put('modules/users/views/settings/settings.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <section ng-controller=\"UserController\" class=\"main-content-inner\">\n        <div class=\"page-header\">\n          <h1>Settings</h1>\n        </div>\n        <div class=\"row\">\n          <nav class=\"col-sm-3 col-md-3\">\n            <ul class=\"nav nav-pills nav-stacked\">\n              <li ui-sref-active=\"active\">\n                <a ui-sref=\"settings.profile\">Edit Profile</a>\n              </li>\n              <li ui-sref-active=\"active\">\n                <a ui-sref=\"settings.picture\">Change Profile Picture</a>\n              </li>\n              <li ui-sref-active=\"active\" ng-show=\"user.provider === \'local\'\">\n                <a ui-sref=\"settings.password\">Change Password</a>\n              </li>\n              <li ui-sref-active=\"active\">\n                <a ui-sref=\"settings.accounts\">Manage Social Accounts</a>\n              </li>\n              <li ui-sref-active=\"active\">\n                <a ui-sref=\"settings.favorites\">Favorite Projects</a>\n              </li>\n              <li ui-sref-active=\"active\">\n                <a ui-sref=\"settings.submissions\">Current Submissions</a>\n              </li>\n            </ul>\n          </nav>\n          <div class=\"col-sm-9 col-md-8 settings-view\">\n            <div ui-view></div>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/users/views/settings/submissions-list.client.view.html', '<section data-ng-controller=\"UserController\" class=\"row\" style=\"height: 600px;\" data-ng-init=\"findCurrentUserSubmissions()\">\n\n  <div class=\"user-submissions\">\n\n    <div class=\"list-group\">\n      <div class=\"row\">\n\n        <a data-ng-repeat=\"userProject in userProjects\" ui-sref=\"settings.submissionsView({projectId: userProject.id})\"\n           class=\"col-md-12 admin-list\">\n          <div class=\"row\">\n\n            <div class=\"col-md-2\">\n              <img data-ng-src=\"{{userProject.mainImgThumbnail}}\"/>\n            </div>\n\n            <div class=\"col-md-10\">\n              <h4 class=\"list-group-item-heading\" data-ng-bind=\"userProject.title\"></h4>\n              <small>\n                Submitted on <span data-ng-bind=\"userProject.createdOn | date:\'medium\'\"></span>\n                <div data-ng-bind=\"userProject.id\"></div>\n              </small>\n\n            </div>\n\n          </div>\n        </a>\n\n      </div>\n    </div>\n\n  </div>\n\n</section>\n\n\n<!--<section data-ng-controller=\"UserController\" class=\"row\" style=\"height: 600px;\" data-ng-init=\"findCurrentUserSubmissions()\">-->\n\n  <!--<div class=\"user-submissions\">-->\n\n    <!--<div class=\"list-group\">-->\n      <!--<div class=\"row\">-->\n\n        <!--<a data-ng-repeat=\"userProject in userProjects\" ui-sref=\"settings.submissionsView({projectId: userProjects.id})\"-->\n           <!--class=\"col-md-12 admin-list\">-->\n          <!--<div class=\"row\">-->\n\n            <!--<div class=\"col-md-2\">-->\n              <!--<img data-ng-src=\"{{userProject.mainImgThumbnail}}\"/>-->\n            <!--</div>-->\n\n            <!--<div class=\"col-md-10\">-->\n              <!--<h4 class=\"list-group-item-heading\" data-ng-bind=\"userProject.title\"></h4>-->\n              <!--<small>-->\n                <!--Submitted on <span data-ng-bind=\"userProject.createdOn | date:\'medium\'\"></span>-->\n                <!--<div data-ng-bind=\"userProject.id\"></div>-->\n              <!--</small>-->\n\n            <!--</div>-->\n\n          <!--</div>-->\n        <!--</a>-->\n\n      <!--</div>-->\n    <!--</div>-->\n\n  <!--</div>-->\n\n<!--</section>-->\n\n\n<!--<user-submissions-list></user-submissions-list>-->\n');
-		$templateCache.put('modules/users/views/settings/submissions-view.client.view.html', '<section class=\"row\" style=\"height: 600px;\">\n\n    <user-submissions-view></user-submissions-view>\n    <!--<project-status-overview></project-status-overview>-->\n\n    <!--http://localhost:3000/settings/5636e404ec3e7a2b81c3d1b9/status/-->\n\n</section>\n');
-		$templateCache.put('modules/users/views/password/forgot-password.client.view.html', '<section class=\"row\" ng-controller=\"PasswordController\">\n  <h3 class=\"col-md-12 text-center\">Restore your password</h3>\n  <p class=\"small text-center\">Enter your account username.</p>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">\n    <form name=\"forgotPasswordForm\" ng-submit=\"askForPasswordReset(forgotPasswordForm.$valid)\" class=\"form-horizontal\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" ng-model=\"credentials.username\" placeholder=\"Username\" lowercase required>\n          <div ng-messages=\"forgotPasswordForm.username.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter a username.</p>\n          </div>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n        <div ng-show=\"success\" class=\"text-center text-success\">\n          <strong ng-bind=\"success\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');
-		$templateCache.put('modules/users/views/password/reset-password-invalid.client.view.html', '<section class=\"row text-center\">\n  <h3 class=\"col-md-12\">Password reset is invalid</h3>\n  <a ui-sref=\"password.forgot\" class=\"col-md-12\">Ask for a new password reset</a>\n</section>\n');
-		$templateCache.put('modules/users/views/password/reset-password-success.client.view.html', '<section class=\"row text-center\">\n  <h3 class=\"col-md-12\">Password successfully reset</h3>\n  <a ui-sref=\"home\" class=\"col-md-12\">Continue to home page</a>\n</section>\n');
-		$templateCache.put('modules/users/views/password/reset-password.client.view.html', '<section class=\"row\" ng-controller=\"PasswordController\">\n  <h3 class=\"col-md-12 text-center\">Reset your password</h3>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4\">\n    <form name=\"resetPasswordForm\" ng-submit=\"resetUserPassword(resetPasswordForm.$valid)\" class=\"signin form-horizontal\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <label for=\"newPassword\">New Password</label>\n          <input type=\"password\" id=\"newPassword\" name=\"newPassword\" class=\"form-control\" ng-model=\"passwordDetails.newPassword\" placeholder=\"New Password\" autocomplete=\"new-password\" popover=\"{{popoverMsg}}\" popover-trigger=\"focus\" popover-placement=\"top\" password-validator required>\n          <div ng-messages=\"resetPasswordForm.newPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter a new password.</p>\n            <div ng-repeat=\"passwordError in passwordErrors\">\n              <p class=\"help-block error-text\" ng-show=\"resetPasswordForm.newPassword.$error.requirements\">{{passwordError}}</p>\n            </div>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"verifyPassword\">Verify Password</label>\n          <input type=\"password\" id=\"verifyPassword\" name=\"verifyPassword\" class=\"form-control\" ng-model=\"passwordDetails.verifyPassword\" placeholder=\"Verify Password\" password-verify=\"passwordDetails.newPassword\" required>\n          <div ng-messages=\"resetPasswordForm.verifyPassword.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter the password again to verify.</p>\n            <p class=\"help-block error-text\" ng-show=resetPasswordForm.verifyPassword.$error.passwordVerify>Passwords do not match.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" ng-show=\"!resetPasswordForm.newPassword.$error.required\">\n          <label>Password Requirements</label>\n          <progressbar value=\"requirementsProgress\" type=\"{{requirementsColor}}\"><span style=\"color:white; white-space:nowrap;\">{{requirementsProgress}}%</span></progressbar>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Update Password</button>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n        <div ng-show=\"success\" class=\"text-center text-success\">\n          <strong ng-bind=\"success\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');	}
+		$templateCache.put('modules/users/views/settings/submissions-view.client.view.html', '<section class=\"row\" style=\"height: 600px;\">\n\n    <user-submissions-view></user-submissions-view>\n    <!--<project-status-overview></project-status-overview>-->\n\n    <!--http://localhost:3000/settings/5636e404ec3e7a2b81c3d1b9/status/-->\n\n</section>\n');	}
 })();
