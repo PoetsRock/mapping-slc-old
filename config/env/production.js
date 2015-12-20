@@ -44,11 +44,11 @@ module.exports = {
       }
     }
   },
-  facebook: {
-    clientID: process.env.FACEBOOK_ID || 'APP_ID',
-    clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
-    callbackURL: '/api/v1/auth/facebook/callback'
-  },
+
+  FACEBOOK_ID: process.env.FACEBOOK_ID || 'CONSUMER_KEY',
+  FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'CONSUMER_KEY',
+  FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
+
   twitter: {
     clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
     clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
