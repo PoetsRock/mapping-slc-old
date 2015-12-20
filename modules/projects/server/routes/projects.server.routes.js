@@ -1,16 +1,20 @@
 'use strict';
 
-module.exports = function(app) {
-    var users = require('../../../users/server/controllers/users.server.controller.js'),
-        projectsPolicy = require('../policies/projects.server.policy'),
-        projects = require('../controllers/projects.server.controller'),
-        mongoose = require('mongoose'),
-        Project = mongoose.model('Project'),
-        //tractData = require('../models/data/utahTract.json'),
-        markerData = require('../models/project.server.model.js'),
-        request = require('request'),
-        s3 = require('../controllers/s3.server.controller'),
-        vimeo = require('../controllers/vimeo.server.controller');
+module.exports = function (app) {
+  var fs = require('fs'),
+    nconf = require('nconf'),
+    users = require('../../../users/server/controllers/users.server.controller.js'),
+    envVars = require('../../../core/server/controllers/envVars.server.controller.js'),
+    projectsPolicy = require('../policies/projects.server.policy'),
+    projects = require('../controllers/projects.server.controller'),
+    mongoose = require('mongoose'),
+    Project = mongoose.model('Project'),
+  //tractData = require('../models/data/utahTract.json'),
+    markerData = require('../models/project.server.model.js'),
+    request = require('request'),
+    s3 = require('../controllers/s3.server.controller'),
+  //localEnvVars = require('../../../../config/env/localEnvVars.js'),
+    vimeo = require('../controllers/vimeo.server.controller');
 
 
 // Projects collection routes
@@ -39,19 +43,17 @@ module.exports = function(app) {
     .delete(projects.delete);
 
   // Single project routes for different genres
-    app.route('/api/v1/projects/:projectId/video/:videoId')
-      .get(vimeo.getOneVideo);
+  app.route('/api/v1/projects/:projectId/video/:videoId')
+    .get(vimeo.getOneVideo);
 
-    app.route('/api/v1/projects/:projectId/videos')
-        .get(projects.findOneVideoId);
+  app.route('/api/v1/projects/:projectId/videos')
+    .get(projects.findOneVideoId);
 
 
 // Project Markers Routes
-    app.route('/api/v1/markerData')
-        .get(projects.markerList);
+  app.route('/api/v1/markerData')
+    .get(projects.markerList);
 
-    // Finish by binding the Project middleware
-    app.param('projectId', projects.projectByID);
 
 ///**
 //** Admin Routes
@@ -66,69 +68,92 @@ module.exports = function(app) {
 //        .delete(users.requiresLogin, admins.hasAuthorization, admins.delete);
 
 
-    /**
-     * routes for Natural Language Processing Engine
-     */
-    app.route('/api/v1/nlp')
-        .get(projects.nlpProjects);
+  /**
+   * routes for Natural Language Processing Engine
+   */
+  app.route('/api/v1/nlp')
+    .get(projects.nlpProjects);
 
 
-    // This is the search route, make a GET request on this endpoitn to return search results
-    app.route('/api/v1/search').all(projectsPolicy.isAllowed)
-        .post(function(req,res){
-            Project.search({query:req.body.q}, function(err, results){
-                res.send(results);
-            });
+  // This is the search route, make a GET request on this endpoitn to return search results
+  app.route('/api/v1/search').all(projectsPolicy.isAllowed)
+    .post(function (req, res) {
+      Project.search({query: req.body.q}, function (err, results) {
+        res.send(results);
+      });
     });
 
 
+  //Google Places API Call
+  app.route('/api/v1/places')
+    .get(function (req, res) {
+      var results = {};
+      var tempResults = [];
+      var query = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0&location=40.773,-111.902&radius=1000';
+      request(query, function (error, response, body) {
+        body = JSON.parse(body);
+        res.jsonp(body);
+        var pageToken = body['next_page_token'];
+        console.log('pageToken: ', pageToken);
+        console.log('body2: ', body);
+        results = body;
 
-    //Google Places API Call
-    app.route('/api/v1/places')
-      .get(function (req, res) {
-          var results = {};
-          var tempResults = [];
-          var query = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0&location=40.773,-111.902&radius=1000';
-          request(query, function (error, response, body) {
-              body = JSON.parse(body);
-              res.jsonp(body);
-              var pageToken = body['next_page_token'];
-              console.log('pageToken: ', pageToken);
-              console.log('body2: ', body);
-              results = body;
-
-              var secondQuery = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?pagetoken=' + pageToken + '&key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0';
-              console.log('secondQuery: ', secondQuery);
-              request(secondQuery, function (error, response, body) {
-                  console.log('body2: ', body);
-                  tempResults = results.push(body);
-                  console.log('final results: ', results);
-              });
-          });
+        var secondQuery = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?pagetoken=' + pageToken + '&key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0';
+        console.log('secondQuery: ', secondQuery);
+        request(secondQuery, function (error, response, body) {
+          console.log('body2: ', body);
+          tempResults = results.push(body);
+          console.log('final results: ', results);
+        });
       });
-
+    });
 
 
 // Utah Census Tract Routes
-    app.route('/api/v1/tractData')
-      .get(function (req, res) {
-          res.jsonp(tractData);
-      });
+  app.route('/api/v1/tractData')
+    .get(function (req, res) {
+      res.jsonp(tractData);
+    });
 
 
 // API Keys Routes
   app.route('/api/v1/keys')
     .get(function (req, res) {
-        console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
-        if(process.env.NODE_ENV === 'production') {
-          var defaultEnvConfig = require('../../../../config/env/default');
-          res.jsonp(defaultEnvConfig);
-        } else if (process.env.NODE_ENV === 'development') {
-          var keys = require('../../../users/server/config/private/keys.js');
-          res.jsonp(keys);
+      console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
+      //if(process.env.NODE_ENV === 'production') {
+      var defaultEnvConfig = require('../../../../config/env/default');
+      //console.log('defaultEnvConfig :::::::::::::::::::::::::::::::::::::::::::\n', defaultEnvConfig);
+      //console.log('defaultEnvConfig.mapboxKey:\n', defaultEnvConfig.mapboxKey);
+      //console.log('localEnvVars:\n', localEnvVars);
+      var publicKeys = {
+        mapbox: {
+          key: process.env.MAPBOX_KEY,
+          secret: process.env.MAPBOX_SECRET
+        },
+        here: {
+          key: process.env.HERE_KEY,
+          secret: process.env.HERE_SECRET
+        },
+        census: {
+          key: process.env.CENSUS_KEY
         }
+      };
+      //console.log('publicKeys.mapbox.key --- publicKeys.mapbox.key --- publicKeys.mapbox.key:\n', publicKeys.mapbox.key);
+      res.jsonp(publicKeys);
+      //} else if (process.env.NODE_ENV === 'development') {
+      //  var keys = require('../../../users/server/config/private/keys.js');
+      //  res.jsonp(keys);
+      //}
     });
 
+
+  ////route for getting the Featured Projects Array
+  app.route('/api/v1/featured')
+    .get(projects.getFeaturedProjects);
+
+  ////route for updating the Featured Projects Array
+  //app.route('api/v1/featured/:projectId')
+  //  .patch(projects.updateFeaturedProject);
 
 
 // Cloudinary File Storage and Opt
@@ -144,5 +169,10 @@ module.exports = function(app) {
     .put(s3.update)
     .delete(s3.delete);
 
+
+
+
+  // Finish by binding the Project middleware
+  app.param('projectId', projects.projectByID);
 
 };

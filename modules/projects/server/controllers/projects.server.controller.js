@@ -281,6 +281,22 @@ exports.hasAuthorization = function (req, res, next) {
 };
 
 
+/**
+ * Returns an array of objects that contains the featured projects
+ */
+exports.getFeaturedProjects = function (req, res) {
+  Project.find({featured: true})
+    .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(projects);
+      }
+    });
+};
+
 //var dirtyText = 'All decent people feel sorrow and righteous fury about the latest slaughter of innocents, in California. Law enforcement and intelligence agencies are searching for motivations, including the vital question of how the murderers might have been connected to international terrorism. That is right and proper. But motives do not matter to the dead in California, nor did they in Colorado, Oregon, South Carolina, Virginia, Connecticut and far too many other places. The attention and anger of Americans should also be directed at the elected leaders whose job is to keep us safe but who place a higher premium on the money and political power of an industry dedicated to profiting from the unfettered spread of ever more powerful firearms. It is a moral outrage and a national disgrace that civilians can legally purchase weapons designed specifically to kill people with brutal speed and efficiency. These are weapons of war, barely modified and deliberately marketed as tools of macho vigilantism and even insurrection. America’s elected leaders offer prayers for gun victims and then, callously and without fear of consequence, reject the most basic restrictions on weapons of mass killing, as they did on Thursday. They distract us with arguments about the word terrorism. Let’s be clear: These spree killings are all, in their own ways, acts of terrorism. Every weekday, get thought-provoking commentary from Op-Ed columnists, The Times editorial board and contributing writers from around the world. Opponents of gun control are saying, as they do after every killing, that no law can unfailingly forestall a specific criminal. That is true. They are talking, many with sincerity, about the constitutional challenges to effective gun regulation. Those challenges exist. They point out that determined killers obtained weapons illegally in places like France, England and Norway that have strict gun laws. Yes, they did. But at least those countries are trying. The United States is not. Worse, politicians abet would-be killers by creating gun markets for them, and voters allow those politicians to keep their jobs. It is past time to stop talking about halting the spread of firearms, and instead to reduce their number drastically — eliminating some large categories of weapons and ammunition. It is not necessary to debate the peculiar wording of the Second Amendment. No right is unlimited and immune from reasonable regulation. Certain kinds of weapons, like the slightly modified combat rifles used in California, and certain kinds of ammunition, must be outlawed for civilian ownership. It is possible to define those guns in a clear and effective way and, yes, it would require Americans who own those kinds of weapons to give them up for the good of their fellow citizens. What better time than during a presidential election to show, at long last, that our nation has retained its sense of decency?';
 
 /**
