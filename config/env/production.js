@@ -1,5 +1,14 @@
 'use strict';
 
+var defaultEnvConfig = require('./default'),
+    bodyParser = require('body-parser'),
+    path = require('path'),
+    config = require(path.resolve('./config/config'));
+
+  console.log('path::::::CONFIG MY WIG:::::--- env dev\n', path);
+  console.log('config::::::CONFIG MY WIG::::: --- env dev\n', config);
+  console.log('config::::::CONFIG MY WIG::::: --- process.env   process.env   process.env\n', process.env);
+
 module.exports = {
   secure: {
     ssl: true,
@@ -124,7 +133,7 @@ seedDB: {
   here: {
     hereKey: process.env.HERE_KEY,
     hereSecret: process.env.HERE_SECRET,
-    callbackUrl: '/api/v1/auth/mapbox/callback'
+    callbackUrl: '/api/v1/auth/here/callback'
   },
   mapbox: {
     mapboxKey: process.env.MAPBOX_KEY,

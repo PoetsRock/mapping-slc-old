@@ -1,7 +1,10 @@
 'use strict';
 
 var   keys = require('../../modules/users/server/config/private/keys.js'),
-      defaultEnvConfig = require('./default');
+      defaultEnvConfig = require('./default'),
+      bodyParser = require('body-parser'),
+      path = require('path'),
+      config = require(path.resolve('./config/config'));
 
 module.exports = {
   secure: {
@@ -22,20 +25,20 @@ module.exports = {
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
     // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
-    format: 'dev',
+    format: 'combined',
     options: {
       // Stream defaults to process.stdout
       // Uncomment/comment to toggle the logging to a log on the file system
-      //stream: {
-      //  directoryPath: process.cwd(),
-      //  fileName: 'access.log',
-      //  rotatingLogs: { // for more info on rotating logs - https://github.com/holidayextras/file-stream-rotator#usage
-      //    active: false, // activate to use rotating logs 
-      //    fileName: 'access-%DATE%.log', // if rotating logs are active, this fileName setting will be used
-      //    frequency: 'daily',
-      //    verbose: false
-      //  }
-      //}
+      stream: {
+        directoryPath: process.cwd(),
+        fileName: 'access.log',
+        rotatingLogs: { // for more info on rotating logs - https://github.com/holidayextras/file-stream-rotator#usage
+          active: false, // activate to use rotating logs
+          fileName: 'access-%DATE%.log', // if rotating logs are active, this fileName setting will be used
+          frequency: 'daily',
+          verbose: false
+        }
+      }
     }
   },
   app: {
@@ -90,6 +93,24 @@ module.exports = {
   alchemyApi: {
     alchemyKey: process.env.ALCHEMY_ID || keys.alchemyKey,
     callbackUrl: '/api/v1/auth/alchemy/callback'
+  },
+  census: {
+    censusKey: process.env.CENSUS_KEY,
+    callbackUrl: '/api/v1/auth/census/callback'
+  },
+  googleAnalytics: {
+    googleAnalyticsID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
+    callbackUrl: '/api/v1/auth/google-analytics/callback'
+  },
+  here: {
+    hereKey: process.env.HERE_KEY,
+    hereSecret: process.env.HERE_SECRET,
+    callbackUrl: '/api/v1/auth/here/callback'
+  },
+  mapbox: {
+    MAPBOX_KEY: 'pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw',
+    MAPBOX_SECRET: 'poetsrock.map-55znsh8b',
+    callbackUrl: '/api/v1/auth/mapbox/callback'
   },
 
   livereload: true,

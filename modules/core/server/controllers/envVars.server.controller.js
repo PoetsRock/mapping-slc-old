@@ -1,47 +1,44 @@
-'use strict';
-
-var projects = require('../../../projects/server/controllers/projects.server.controller'),
-    mongoose = require('mongoose'),
-    Project = mongoose.model('Project'),
-    Core = mongoose.model('Core');
-
-/**
- * Render the main application page
- */
-exports.renderIndex = function (req, res) {
-  res.render('modules/core/server/views/index', {
-    user: req.user || null
-  });
-};
-
-/**
- * Render the server error page
- */
-exports.renderServerError = function (req, res) {
-  res.status(500).render('modules/core/server/views/500', {
-    error: 'Oops! Something went wrong...'
-  });
-};
-
-/**
- * Render the server not found responses
- * Performs content-negotiation on the Accept HTTP header
- */
-exports.renderNotFound = function (req, res) {
-
-  res.status(404).format({
-    'text/html': function () {
-      res.render('modules/core/server/views/404', {
-        url: req.originalUrl
-      });
-    },
-    'application/json': function () {
-      res.json({
-        error: 'Path not found'
-      });
-    },
-    'default': function () {
-      res.send('Path not found');
-    }
-  });
-};
+//'use strict';
+//
+//  var fs = require('fs'),
+//      nconf = require('nconf'),
+//      development = require('../../../../config/env/development.js'),
+//      localDev = require('../../../../config/env/local-development.js');
+//
+//  // add env vars and args
+//  nconf.env().argv();
+//
+//// load in configs from the config files
+//  var envVars = {},
+//  // so we can iterate over each config file
+//      confs = [development, localDev];
+//
+//// for every config file
+//  confs.forEach(function(conf) {
+//    // get each key
+//    for (var key in conf) {
+//      // and add it to the envVars object
+//      envVars[key] = conf[key]
+//    }
+//  });
+//// save the envVars object
+//  nconf.envVars(envVars);
+//
+//// logging this here works and properly shows the port setting
+//  console.log('envVars : ' + nconf.get('mapbox:MAPBOX_KEY'));
+//
+//
+//
+//  //
+//  ////
+//  //// Save the configuration object to disk
+//  ////
+//  //nconf.save(function (err) {
+//  //  fs.readFile('modules/users/server/config/private/keys.json', function (err, data) {
+//  //    console.dir(JSON.parse(data.toString()))
+//  //  });
+//  //});
+//
+//
+//
+//module.exports = nconf;
