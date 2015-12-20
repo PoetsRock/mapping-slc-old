@@ -10,9 +10,9 @@ var passport = require('passport'),
 module.exports = function (config) {
   // Use twitter strategy
   passport.use(new TwitterStrategy({
-      consumerKey: config.twitter.clientID,
-      consumerSecret: config.twitter.clientSecret,
-      callbackURL: config.twitter.callbackURL,
+      consumerKey: config.TWITTER_KEY,
+      consumerSecret: config.TWITTER_SECRET,
+      callbackURL: config.TWITTER_CALLBACK_URL,
       passReqToCallback: true
     },
     function (req, token, tokenSecret, profile, done) {

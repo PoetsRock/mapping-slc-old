@@ -199,10 +199,6 @@ ProjectSchema.virtual('address').get(function () {
   return this.street + ' ' + this.city + ' ' + this.state + ' ' + this.zip;
 });
 
-//create virtual attribute for full name
-ProjectSchema.virtual('fullName').get(function () {
-  return this.firstName + ' ' + this.lastName;
-});
 
 //create virtual attribute setter for to spilt coordinates into lat and lng
 ProjectSchema.virtual('geoCoordinates').get(function () {

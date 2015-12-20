@@ -5,9 +5,15 @@ angular.module('projects').service('GeoCodeApi', ['$http',
 
     // Geocodeapi service logic
 
-    this.callGeoCodeApi = function (project, key, secret, projectSaveCallback) {
-      console.log('project:\n', project, '\nkey:\n', key, '\nsecret:\n', secret);
-      if (!project || !project.state || !project.city || !project.zip || !project.street || !key || !secret) {
+    this.callGeoCodeApi = function (project, keys, projectSaveCallback) {
+      console.log('keys::::::::\n', keys);
+      console.log('keys.data.::::::::\n', keys.data);
+      console.log('data.HERE_KEY::::::::\n', keys.data.HERE_KEY);
+      console.log('data.HERE_SECRET::::::::\n', keys.data.HERE_SECRET);
+      var hereKey = keys.data.HERE_KEY;
+      var hereSecret = keys.data.HERE_SECRET;
+
+      if (!project || !project.state || !project.city || !project.zip || !project.street || !hereKey || !hereSecret) {
         projectSaveCallback();
         console.log('err, there\'s an error, yo.');
         return;
@@ -19,10 +25,9 @@ angular.module('projects').service('GeoCodeApi', ['$http',
           '&postalcode=' + project.zip +
           '&street=' + project.street +
           '&gen=8' +
-          '&app_id=' + key +
-          '&app_code=' + secret)
+          '&app_id=' + hereKey +
+          '&app_code=' + hereSecret)
         .success(function (geoData) {
-          console.log('success:  modules/projects/client/services/geoCodeApi.client.service.js line 24');
           project.lat = geoData.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
           project.lng = geoData.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
 

@@ -1,5 +1,14 @@
 'use strict';
 
+var defaultEnvConfig = require('./default'),
+    bodyParser = require('body-parser'),
+    path = require('path'),
+    config = require(path.resolve('./config/config'));
+
+  console.log('path::::::CONFIG MY WIG:::::--- env dev\n', path);
+  console.log('config::::::CONFIG MY WIG::::: --- env dev\n', config);
+  console.log('config::::::CONFIG MY WIG::::: --- process.env   process.env   process.env\n', process.env);
+
 module.exports = {
   secure: {
     ssl: true,
@@ -114,7 +123,7 @@ seedDB: {
     callbackUrl: '/api/v1/auth/s3/callback'
   },
   census: {
-    censusKey: process.env.CENSUS_KEY,
+    CENSUS_KEY: process.env.CENSUS_KEY,
     callbackUrl: '/api/v1/auth/census/callback'
   },
   googleAnalytics: {
@@ -122,13 +131,13 @@ seedDB: {
     callbackUrl: '/api/v1/auth/google-analytics/callback'
   },
   here: {
-    hereKey: process.env.HERE_KEY,
-    hereSecret: process.env.HERE_SECRET,
-    callbackUrl: '/api/v1/auth/mapbox/callback'
+    HERE_KEY: process.env.HERE_KEY,
+    HERE_SECRET: process.env.HERE_SECRET,
+    callbackUrl: '/api/v1/auth/here/callback'
   },
   mapbox: {
-    mapboxKey: process.env.MAPBOX_KEY,
-    mapboxSecret: process.env.MAPBOX_SECRET,
+    MAPBOX_KEY: process.env.MAPBOX_KEY,
+    MAPBOX_SECRET: process.env.MAPBOX_SECRET,
     callbackUrl: '/api/v1/auth/mapbox/callback'
   }
   }

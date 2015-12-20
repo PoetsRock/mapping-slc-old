@@ -37,7 +37,7 @@ _site/
 /uploads
 /modules/projects/server/uploads
 /modules/projects/server/models/data/private
-/modules/users/server/config/private
+/modules/users/server/config/.private
 
 
 

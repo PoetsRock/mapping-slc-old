@@ -12,16 +12,18 @@ exports.getOneVideo = function (req, res) {
     util_module = require('util');
 
 
-  if(process.env.NODE_ENV === 'production') {
-    var defaultEnvConfig = require('../../../../config/env/default');
-    res.jsonp(defaultEnvConfig);
-  } else if (process.env.NODE_ENV === 'development') {
-    var keys = require('../../../users/server/config/private/keys.js'),
-      CLIENT_ID = keys.vimeoKey,
-      CLIENT_SECRET = keys.vimeoSecret,
-      ACCESS_TOKEN = keys.vimeoToken;
-    res.jsonp(keys);
-  }
+  //if(process.env.NODE_ENV === 'production') {
+  //  var defaultEnvConfig = require('../../../../config/env/default');
+  //  res.jsonp(defaultEnvConfig);
+  //} else if (process.env.NODE_ENV === 'local-development') {
+    var keys = require('../../../../config/env/local-development.js');
+    var vimeoKeys = {
+      CLIENT_ID: keys.VIMEO_KEY,
+      CLIENT_SECRET: keys.VIMEO_SECRET,
+      ACCESS_TOKEN: keys.VIMEO_TOKEN
+    };
+    res.jsonp(vimeoKeys);
+  //}
 
   /**
    * Get a video from vimeo api

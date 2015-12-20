@@ -16,13 +16,6 @@ var mongoose = require('mongoose'),
   fs = Promise.promisifyAll(require('fs')),
   exports = Promise.promisifyAll(exports);
 
-
-
-
-
-
-
-
 function nlpKeywords(sanitizedText) {
   return new Promise(
     function (resolve, reject) {
@@ -224,9 +217,10 @@ exports.listPublished = function (req, res) {
 
 
 /**
- * List of GeoCoordinates for Projects
+ * List of Markers for Home Page Map
  */
 exports.markerList = function (req, res) {
+  //todo filter this response to contain just what's needed for markers
   Project.find({
       'status': 'published'
     })

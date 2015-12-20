@@ -5,15 +5,14 @@ angular.module('core').service('CensusDataService', ['$http', 'ApiKeys',
 
         //Census Data for Population Stats service logic
 
-        var censusData = null;
         var censusDataKey = 'P0010001';
         var censusYear = [2000, 2010, 2011, 2012, 2013, 2014];
         var population = '';
 
         this.callCensusApi = function () {
             ApiKeys.getApiKeys()
-                .success(function (data) {
-                    censusData(data.censusKey);
+                .success(function (keys) {
+                    censusData(keys.CENSUS_KEY);
                 })
                 .error(function (data, status) {
                     alert('Failed to load Mapbox API key. Status: ' + status);

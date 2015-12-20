@@ -26,7 +26,8 @@ var _ = require('lodash'),
   tinify = require('tinify'),
   s3Url = 'https://' + s3.bucket + '.s3-' + s3.region + '.amazonaws.com';
 
-
+//console.log('path::::::CONFIG MY WIG::::: -- users controller:\n', path);
+//console.log('config::::::CONFIG MY WIG::::: --- users controller:\n', config);
 
 
 exports.uploadUserProfileImage = function (req, res) {

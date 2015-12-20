@@ -8,6 +8,9 @@
   <p>City:<br/>{{project.city}}</p>
   <p>Zip Code:<br/>{{project.zip}}</p>
   <p data-ng-show="project.keywords.length > 0">Keywords:<br/>{{project.keywords}}</p>
+  <div>
+    <img ng-src="{{project.mapImage}}" class="img-responsive">
+  </div>
 
 </div>
 
@@ -103,10 +106,6 @@
 
         <div data-ng-show="project.story !== '' && project.status[0]==='accepted'">
           <p data-ng-bind-html="trustAsHtml(project.story)"></p>
-        </div>
-
-        <div>
-          <img ng-src="{{project.mapImage}}" class="img-responsive">
         </div>
 
       </div>

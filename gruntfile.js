@@ -19,7 +19,7 @@ module.exports = function (grunt) {
         NODE_ENV: 'test'
       },
       dev: {
-        NODE_ENV: 'development'
+        NODE_ENV: 'local-development'
       },
       prod: {
         NODE_ENV: 'production'
