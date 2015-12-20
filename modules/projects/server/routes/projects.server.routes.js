@@ -2,18 +2,15 @@
 
 module.exports = function (app) {
   var fs = require('fs'),
-    nconf = require('nconf'),
     users = require('../../../users/server/controllers/users.server.controller.js'),
-    envVars = require('../../../core/server/controllers/envVars.server.controller.js'),
     projectsPolicy = require('../policies/projects.server.policy'),
     projects = require('../controllers/projects.server.controller'),
     mongoose = require('mongoose'),
     Project = mongoose.model('Project'),
-  //tractData = require('../models/data/utahTract.json'),
+    //tractData = require('../models/data/utahTract.json'),
     markerData = require('../models/project.server.model.js'),
     request = require('request'),
     s3 = require('../controllers/s3.server.controller'),
-  //localEnvVars = require('../../../../config/env/localEnvVars.js'),
     vimeo = require('../controllers/vimeo.server.controller');
 
 
@@ -119,31 +116,32 @@ module.exports = function (app) {
 // API Keys Routes
   app.route('/api/v1/keys')
     .get(function (req, res) {
+      console.log('LOG CURRENT NODE ENVIRONMENT:');
       console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
-      //if(process.env.NODE_ENV === 'production') {
-      var defaultEnvConfig = require('../../../../config/env/default');
-      //console.log('defaultEnvConfig :::::::::::::::::::::::::::::::::::::::::::\n', defaultEnvConfig);
-      //console.log('defaultEnvConfig.mapboxKey:\n', defaultEnvConfig.mapboxKey);
-      //console.log('localEnvVars:\n', localEnvVars);
+
+      var environment = null;
+      if(process.env.NODE_ENV === 'production') {
+        environment = process.env;
+      } else {
+        environment = require('../../../../config/env/local-development.js').FRONT_END;
+      }
+      console.log('LOG VARIABLE FOR CURRENT NODE ENVIRONMENT:');
+      console.log('var `environment` =\n', environment);
       var publicKeys = {
-        mapbox: {
-          key: process.env.MAPBOX_KEY,
-          secret: process.env.MAPBOX_SECRET
-        },
-        here: {
-          key: process.env.HERE_KEY,
-          secret: process.env.HERE_SECRET
-        },
-        census: {
-          key: process.env.CENSUS_KEY
-        }
+        MAPBOX_KEY: environment.MAPBOX_KEY,
+        MAPBOX_SECRET: environment.MAPBOX_SECRET,
+
+        HERE_KEY: environment.HERE_KEY,
+        HERE_SECRET: environment.HERE_SECRET,
+
+        CENSUS_KEY: environment.CENSUS_KEY
       };
-      //console.log('publicKeys.mapbox.key --- publicKeys.mapbox.key --- publicKeys.mapbox.key:\n', publicKeys.mapbox.key);
+
+      console.log('LOG API KEYS OBJECT RETURNED FOR CURRENT NODE ENVIRONMENT:');
+      console.log(publicKeys);
+
       res.jsonp(publicKeys);
-      //} else if (process.env.NODE_ENV === 'development') {
-      //  var keys = require('../../../users/server/config/private/keys.js');
-      //  res.jsonp(keys);
-      //}
+
     });
 
 

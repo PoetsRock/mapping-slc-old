@@ -18,7 +18,8 @@ var _ = require('lodash'),
 
 // Set NODE_ENV to 'development'
 gulp.task('env:dev', function () {
-  process.env.NODE_ENV = 'development';
+  //process.env.NODE_ENV = 'development';
+  process.env.NODE_ENV = 'local-development';
 });
 
 // Set NODE_ENV to 'production'

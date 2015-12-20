@@ -123,7 +123,7 @@ seedDB: {
     callbackUrl: '/api/v1/auth/s3/callback'
   },
   census: {
-    censusKey: process.env.CENSUS_KEY,
+    CENSUS_KEY: process.env.CENSUS_KEY,
     callbackUrl: '/api/v1/auth/census/callback'
   },
   googleAnalytics: {
@@ -131,13 +131,13 @@ seedDB: {
     callbackUrl: '/api/v1/auth/google-analytics/callback'
   },
   here: {
-    hereKey: process.env.HERE_KEY,
-    hereSecret: process.env.HERE_SECRET,
+    HERE_KEY: process.env.HERE_KEY,
+    HERE_SECRET: process.env.HERE_SECRET,
     callbackUrl: '/api/v1/auth/here/callback'
   },
   mapbox: {
-    mapboxKey: process.env.MAPBOX_KEY,
-    mapboxSecret: process.env.MAPBOX_SECRET,
+    MAPBOX_KEY: process.env.MAPBOX_KEY,
+    MAPBOX_SECRET: process.env.MAPBOX_SECRET,
     callbackUrl: '/api/v1/auth/mapbox/callback'
   }
   }

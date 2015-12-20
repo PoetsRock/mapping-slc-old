@@ -96,26 +96,21 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.sidebarToggle = false;
 
 
-    //service that returns api keys
+    //service that returns public front end keys
     ApiKeys.getApiKeys()
-      .success(function (data) {
-        console.log(':::::::DATA ME PLEASE!!::::::::::\n', data);
-        mapFunction(data.mapbox.mapboxKey, data.mapbox.mapboxSecret);
-      })
-      .error(function (data, status) {
-        alert('Failed to load Mapbox API key. Status: ' + status);
+      .then(function (resolved, rejected) {
+        mapFunction(resolved.data.MAPBOX_KEY, resolved.data.MAPBOX_SECRET);
       });
 
-    var popupIndex = 0;
-
-//
-// call map and add functionality
-//
 
 
-    var mapFunction = function (key, accessToken) {
+
+    /**
+     *  call map and add functionality
+     */
+    var mapFunction = function (mapboxKey, mapboxAccessToken) {
       //creates a Mapbox Map
-      L.mapbox.accessToken = accessToken;
+      L.mapbox.accessToken = mapboxAccessToken;
 
       //'info' id is part of creating tooltip with absolute position
       var info = document.getElementById('info');
@@ -245,7 +240,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
 
       //create toggle/filter functionality for Census Tract Data
-
       $scope.toggleGooglePlacesData = function () {
         if ($scope.googlePlacesLayer) {
           map.removeLayer(googlePlacesMarkerLayer);
@@ -255,6 +249,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       };
 
       map.on('click', function (e) {
+        console.log('click event', e);
         if ($scope.menuOpen) {
           $scope.sidebar.close();
           $scope.shadeMap = false;
@@ -268,6 +263,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       };
     };
 
+    var popupIndex = 0;
     var popupMenuToggle = function (e) {
       if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         $scope.toggleOverlayFunction('menu-closed');

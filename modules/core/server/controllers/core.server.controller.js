@@ -1,7 +1,6 @@
 'use strict';
 
-var projects = require('../../../projects/server/controllers/projects.server.controller'),
-    mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
     Project = mongoose.model('Project'),
     Core = mongoose.model('Core');
 
