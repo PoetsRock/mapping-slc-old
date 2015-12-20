@@ -40,6 +40,15 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
      *
      **/
 
+
+    var getFeatured = function () {
+      $http.get('/api/v1/featured', {cache: true})
+        .then(function (resolved, rejected) {
+          console.log('resolved:::::::::\n', resolved);
+        });
+    };
+    getFeatured();
+
     $scope.overlayActive = true;
     $scope.menuOpen = false;
     //var changeMapFrom = null;
@@ -90,7 +99,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //service that returns api keys
     ApiKeys.getApiKeys()
       .success(function (data) {
-        mapFunction(data.mapboxKey, data.mapboxSecret);
+        console.log(':::::::DATA ME PLEASE!!::::::::::\n', data);
+        mapFunction(data.mapbox.mapboxKey, data.mapbox.mapboxSecret);
       })
       .error(function (data, status) {
         alert('Failed to load Mapbox API key. Status: ' + status);

@@ -19,6 +19,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
 
+
     $scope.init = function () {
       $scope.publishedProjects();
     };
