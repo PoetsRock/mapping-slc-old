@@ -88,14 +88,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     var saveProject = null;
     $scope.updateLatLng = function (project) {
       console.log('project ctrl', project);
-      $http.get('/api/v1/keys').success(function (data) {
-        var mapboxKey = data.mapboxKey;
-        var mapboxSecret = data.mapboxSecret;
-        var hereKey = data.hereKey;
-        var hereSecret = data.hereSecret;
+      $http.get('/api/v1/keys')
+        .then(function (keys, revoked) {
 
-        GeoCodeApi.callGeoCodeApi(project, hereKey, hereSecret, saveProject)
+        GeoCodeApi.callGeoCodeApi(project, keys, saveProject)
           .success(function (data) {
+            var mapboxKey = keys.data.MAPBOX_KEY;
+            var mapboxSecret = keys.data.MAPBOX_SECRET;
             project.lat = data.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
             project.lng = data.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
             project.mapImage = 'http://api.tiles.mapbox.com/v4/' + mapboxKey + '/' + markerUrl + '(' + project.lng + ',' + project.lat + ')/' + project.lng + ',' + project.lat + ',15/' + width + 'x' + height + '.png?access_token=' + mapboxSecret;
