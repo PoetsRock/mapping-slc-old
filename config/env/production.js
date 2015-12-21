@@ -44,21 +44,20 @@ module.exports = {
       }
     }
   },
-  facebook: {
-    clientID: process.env.FACEBOOK_ID || 'APP_ID',
-    clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
-    callbackURL: '/api/v1/auth/facebook/callback'
-  },
-  twitter: {
-    clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-    clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
-    callbackURL: '/api/v1/auth/twitter/callback'
-  },
-  google: {
-    clientID: process.env.GOOGLE_ID || 'APP_ID',
-    clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
-    callbackURL: '/api/v1/auth/google/callback'
-  },
+
+  FACEBOOK_ID: process.env.FACEBOOK_ID || 'CONSUMER_KEY',
+  FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'CONSUMER_KEY',
+  FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
+
+  TWITTER_KEY: process.env.TWITTER_KEY || '8CcbaDkZ6P5U4AsCyDFpqI2sI',
+  TWITTER_SECRET: process.env.TWITTER_SECRET || 'pNt4bKHblud2TmbqGElP8LkLC9PvyjSa9hdLhk35NmTD9BKzfc',
+  TWITTER_CALLBACK_URL: '/api/v1/auth/twitter/callback',
+
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'DyCpAJnbwQ0p0jbAZSpSg0dzPpvE',
+  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0',
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'PY2QWsCLXHVr5bTAEd_w92sI',
+  GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
+
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
     clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
@@ -109,36 +108,36 @@ seedDB: {
         displayName: 'Admin Local',
         roles: ['user', 'admin']
       }
+    }
   },
 
-  alchemyApi: {
-    alchemyKey: process.env.ALCHEMY_KEY,
-    callbackUrl: '/api/v1/auth/alchemy/callback'
-  },
-  aws: {
-    awsAccessKey: process.env.AWS_ACCESS_KEY,
-    awsSecretKey: process.env.AWS_SECRET_KEY,
-    s3Id: process.env.S3_ID,
-    s3Secret: process.env.S3_SECRET,
-    callbackUrl: '/api/v1/auth/s3/callback'
-  },
-  census: {
-    CENSUS_KEY: process.env.CENSUS_KEY,
-    callbackUrl: '/api/v1/auth/census/callback'
-  },
-  googleAnalytics: {
-    googleAnalyticsID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
-    callbackUrl: '/api/v1/auth/google-analytics/callback'
-  },
-  here: {
-    HERE_KEY: process.env.HERE_KEY,
-    HERE_SECRET: process.env.HERE_SECRET,
-    callbackUrl: '/api/v1/auth/here/callback'
-  },
-  mapbox: {
-    MAPBOX_KEY: process.env.MAPBOX_KEY,
-    MAPBOX_SECRET: process.env.MAPBOX_SECRET,
-    callbackUrl: '/api/v1/auth/mapbox/callback'
-  }
+
+  ALCHEMY_KEY: process.env.ALCHEMY_KEY || '9eb2296b11f66a08cb20ef6771bbe32b523a0840',
+  ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
+
+  S3_ID: process.env.S3_ID || 'AKIAJMZSYDXTHOHLVKVQ',
+  S3_SECRET: process.env.S3_SECRET || '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',
+  S3_BUCKET: process.env.S3_BUCKET || 'MAPPING-SLC-FILE-UPLOAD',
+  S3_CALLBACK_URL: '/api/v1/auth/s3/callback',
+
+
+  VIMEO_KEY: process.env.VIMEO_KEY || '6565bb005d7bffac18d89cbc4ef57af1bccde906',
+  VIMEO_SECRET: process.env.VIMEO_SECRET || 'V7h0cZTU0VqBDjYdnAoBmuJb1/XoQzPQJ09NB9uSit6M8LJnt10bDwO7EQFbs9RbMM2Yruo/UZEeVSuG7dMNZW+W+950+Iny/31V5AJ9pokT6Gezzto3R8qnp0mO6NTs',
+  VIMEO_TOKEN: process.env.VIMEO_TOKEN || 'a72958bf1f855bd7c58f3a354953c183',
+
+  FRONT_END: {
+    CENSUS_KEY: process.env.CENSUS_KEY || '4d396163ae90829a66916a08b3af462608c87316',
+    CENSUS_CALLBACK_URL: '/api/v1/auth/census/callback',
+    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
+    GOOGLE_ANALYTICS_CALLBACK_URL: '/api/v1/auth/google-analytics/callback',
+    HERE_KEY: process.env.HERE_KEY || 'p2ylB3rWtlPf8qVLBeCs',
+    HERE_SECRET: process.env.HERE_SECRET || 'lQ16v8NyFSQ00RpaH3CMMg',
+    HERE_CALLBACK_URL: '/api/v1/auth/here/callback',
+    MAPBOX_KEY: process.env.MAPBOX_KEY || 'poetsrock.map-55znsh8b',
+    MAPBOX_SECRET: process.env.MAPBOX_SECRET || 'pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw',
+    MAPBOX_CALLBACK_URL: '/api/v1/auth/mapbox/callback',
+    SOUND_CLOUD_KEY: process.env.SOUND_CLOUD_KEY || '30373b188823a02f3f389c7dcd99b7d2',
+    SOUND_CLOUD_SECRET: process.env.SOUND_CLOUD_SECRET || '80b00226764d5c2b942a88628b2964d1'
+
   }
 };
