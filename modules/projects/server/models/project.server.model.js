@@ -160,13 +160,13 @@ var ProjectSchema = new Schema({
     type: Boolean,
     default: 'false'
   },
-  //mainImage: {
-  //  type: String,
-  //  trim: true
-  //},
   mainImage: {
-    type: Buffer
+    type: String,
+    trim: true
   },
+  //mainImage: {
+  //  type: Buffer
+  //},
   mainImgThumbnail: {
     type: Buffer
   },
