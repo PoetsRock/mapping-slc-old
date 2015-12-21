@@ -5,10 +5,6 @@ var defaultEnvConfig = require('./default'),
     path = require('path'),
     config = require(path.resolve('./config/config'));
 
-  console.log('path::::::CONFIG MY WIG:::::--- env dev\n', path);
-  console.log('config::::::CONFIG MY WIG::::: --- env dev\n', config);
-  console.log('config::::::CONFIG MY WIG::::: --- process.env   process.env   process.env\n', process.env);
-
 module.exports = {
   secure: {
     ssl: true,
@@ -49,13 +45,13 @@ module.exports = {
   FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'CONSUMER_KEY',
   FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
 
-  TWITTER_KEY: process.env.TWITTER_KEY || '8CcbaDkZ6P5U4AsCyDFpqI2sI',
-  TWITTER_SECRET: process.env.TWITTER_SECRET || 'pNt4bKHblud2TmbqGElP8LkLC9PvyjSa9hdLhk35NmTD9BKzfc',
+  TWITTER_KEY: process.env.TWITTER_KEY,
+  TWITTER_SECRET: process.env.TWITTER_SECRET,
   TWITTER_CALLBACK_URL: '/api/v1/auth/twitter/callback',
 
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'DyCpAJnbwQ0p0jbAZSpSg0dzPpvE',
-  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0',
-  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'PY2QWsCLXHVr5bTAEd_w92sI',
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY,
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET,
   GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
 
   linkedin: {
@@ -112,32 +108,32 @@ seedDB: {
   },
 
 
-  ALCHEMY_KEY: process.env.ALCHEMY_KEY || '9eb2296b11f66a08cb20ef6771bbe32b523a0840',
+  ALCHEMY_KEY: process.env.ALCHEMY_KEY,
   ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
 
-  S3_ID: process.env.S3_ID || 'AKIAJMZSYDXTHOHLVKVQ',
-  S3_SECRET: process.env.S3_SECRET || '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',
+  S3_ID: process.env.S3_ID,
+  S3_SECRET: process.env.S3_SECRET,
   S3_BUCKET: process.env.S3_BUCKET || 'MAPPING-SLC-FILE-UPLOAD',
   S3_CALLBACK_URL: '/api/v1/auth/s3/callback',
 
 
-  VIMEO_KEY: process.env.VIMEO_KEY || '6565bb005d7bffac18d89cbc4ef57af1bccde906',
-  VIMEO_SECRET: process.env.VIMEO_SECRET || 'V7h0cZTU0VqBDjYdnAoBmuJb1/XoQzPQJ09NB9uSit6M8LJnt10bDwO7EQFbs9RbMM2Yruo/UZEeVSuG7dMNZW+W+950+Iny/31V5AJ9pokT6Gezzto3R8qnp0mO6NTs',
-  VIMEO_TOKEN: process.env.VIMEO_TOKEN || 'a72958bf1f855bd7c58f3a354953c183',
+  VIMEO_KEY: process.env.VIMEO_KEY,
+  VIMEO_SECRET: process.env.VIMEO_SECRET,
+  VIMEO_TOKEN: process.env.VIMEO_TOKEN,
 
   FRONT_END: {
-    CENSUS_KEY: process.env.CENSUS_KEY || '4d396163ae90829a66916a08b3af462608c87316',
+    CENSUS_KEY: process.env.CENSUS_KEY,
     CENSUS_CALLBACK_URL: '/api/v1/auth/census/callback',
     GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
     GOOGLE_ANALYTICS_CALLBACK_URL: '/api/v1/auth/google-analytics/callback',
-    HERE_KEY: process.env.HERE_KEY || 'p2ylB3rWtlPf8qVLBeCs',
-    HERE_SECRET: process.env.HERE_SECRET || 'lQ16v8NyFSQ00RpaH3CMMg',
+    HERE_KEY: process.env.HERE_KEY,
+    HERE_SECRET: process.env.HERE_SECRET,
     HERE_CALLBACK_URL: '/api/v1/auth/here/callback',
-    MAPBOX_KEY: process.env.MAPBOX_KEY || 'poetsrock.map-55znsh8b',
-    MAPBOX_SECRET: process.env.MAPBOX_SECRET || 'pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw',
+    MAPBOX_KEY: process.env.MAPBOX_KEY,
+    MAPBOX_SECRET: process.env.MAPBOX_SECRET,
     MAPBOX_CALLBACK_URL: '/api/v1/auth/mapbox/callback',
-    SOUND_CLOUD_KEY: process.env.SOUND_CLOUD_KEY || '30373b188823a02f3f389c7dcd99b7d2',
-    SOUND_CLOUD_SECRET: process.env.SOUND_CLOUD_SECRET || '80b00226764d5c2b942a88628b2964d1'
+    SOUND_CLOUD_KEY: process.env.SOUND_CLOUD_KEY,
+    SOUND_CLOUD_SECRET: process.env.SOUND_CLOUD_SECRET
 
   }
 };
