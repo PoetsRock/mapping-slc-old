@@ -315,6 +315,354 @@ td i .selected {
     width: 250px;
     height: 100px;
 }
+.dropdown {
+    /*border-radius: 0;*/
+    top: -16px;
+    left: 14px;
+    /*position: relative;*/
+
+}
+
+#status  {
+    border-radius: 0;
+    width: 350px;
+    height: 40px;
+    /*top: -16px;*/
+    /*left: 14px;*/
+    position: relative;
+    cursor: pointer;
+    background: none;
+    /*border-image-source: none;*/
+    border-image-width: 0;
+    /*border-image-repeat: stretch;*/
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 7px solid #023a31;
+}
+
+.col-md-6 > label {
+    color: #6E7C8C;
+    position: relative;
+    top: 17px;
+    left: 15px;
+}
+
+.modal-dialog {
+    margin-top: 15%;
+}
+
+.modal-lg {
+    width: 60%;
+}
+
+.modal-content {
+    border-radius: 0;
+    color: #ffffff;
+    background-color: rgba(2, 58, 49, 0.9);
+    border: solid rgba(255, 255, 255, 0.7) 2px;
+    -webkit-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
+    -moz-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
+    box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
+}
+
+/*.modal-body {*/
+    /*background-color: rgba(2, 58, 49, 0.8);*/
+/*}*/
+
+.modal-footer .grow:hover {
+    border-color: #03725e;
+    background: rgba(0, 45, 0, 0.8);
+}
+
+.modal-footer .btn-warning:hover {
+    background: rgba(45, 0, 0, 0.8);
+    border-color: #ff0000;
+}
+
+.text-center.form-group {
+    width: 205%;
+    margin-left: -55%;
+}
+
+.modal-content input[type=text], .modal-content input[type=password] {
+    width: 200%;
+    height: 4rem;
+    margin-left: -45%;
+    font-size: 2.75rem;
+}
+
+.model-content label {
+    margin-left: -45%;
+    font-size: 2rem;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+}
+/* BASIC STYLINGS
+============================================================================= */
+
+pre {
+    margin-bottom:20px;
+}
+
+.create-project .page-header {
+    color: white;
+}
+
+.create-project .row {
+    color: white;
+    margin-top: 20px;
+}
+
+h1 #form-container, h2 #form-container, h3 #form-container, h4 #form-container, h5 #form-container, p #form-container {
+    color: #ffffff;
+}
+
+/* form styling */
+#form-container {
+    background:#2f2f2f;
+    margin-bottom:20px;
+    border-radius:5px;
+}
+
+#form-container .page-header {
+    background:#151515;
+    margin:0;
+    padding:30px;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+
+.form-group .form-inline .form-group{
+    margin-left: 0;
+    margin-right: 0;
+    padding: 5px;
+}
+
+.view-project .pull-right {
+    padding: 15px 40px;
+}
+
+/* numbered buttons */
+#status-buttons {
+
+}
+
+#status-buttons a {
+    color:#FFF;
+    display:inline-block;
+    font-size:12px;
+    margin-right:10px;
+    text-align:center;
+    text-transform:uppercase;
+}
+
+#status-buttons a:hover {
+    text-decoration:none;
+}
+
+#status-buttons span {
+    background:#080808;
+    display:block;
+    height:30px;
+    margin:0 auto 10px;
+    padding-top:5px;
+    width:30px;
+    border-radius:50%;
+}
+
+/* active buttons */
+#status-buttons a.active span {
+    background:#00BC8C;
+}
+
+fieldset > div > div {
+    margin-top: 3%;
+    padding: 1%;
+}
+
+.project-body {
+    font-size: 1.65rem;
+    text-align: justify;
+    margin-top: 3%;
+}
+
+/*ckEditor Styling*/
+.cke_wysiwyg, .cke_chrome, #story.cke_1 .cke_chrome, #cke_story {
+    /*border-color: #023A31;*/
+    border-color: rgb(2,58,49);
+
+}
+
+.ck-crazy {
+    border-color: blue;
+}
+
+.view-projects div.pull-right .btn {
+    margin-top: 13%;
+    top: 13%;
+}
+
+.list-projects .list-group .story-summary, .admin .admin-users .user-summary {
+    border: solid 2px #023a31;
+    border-radius: 5px;
+    margin: 2%;
+    color: #000000;
+    font-size: 1.75rem;
+    width: 45%;
+    height: auto;
+    -webkit-transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -ms-transition: all .25s ease;
+    -o-transition: all .25s ease;
+    transition: all .25s ease;
+}
+
+.list-projects .list-group .story-summary:hover, .admin .admin-users .user-summary:hover {
+    background-color: #006666;
+    border: solid 2px #023a31;
+    color: #fff;
+    z-index: 500;
+    -webkit-transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -ms-transition: all .25s ease;
+    -o-transition: all .25s ease;
+    transition: all .25s ease;
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    transform: scale(1.05);
+
+}
+
+
+/* Thumbnail STYLINGS
+============================================================================= */
+
+.list-group-item {
+    width: 15.5rem;
+    height: 15.5rem;
+    border: solid 2px #000000;
+    /*margin: 1%;*/
+}
+
+.list-group-item:hover{
+
+}
+
+.essay {
+    background-color: rgba(0, 185, 0, 0.4);
+}
+
+div.list-group > a > div {
+
+}
+
+
+/* ANIMATION STYLINGS
+============================================================================= */
+#signup-form {
+    position:relative;
+    min-height:300px;
+    /*overflow:hidden;*/
+    padding:30px;
+}
+
+/* basic styling for entering and leaving */
+/* left and right added to ensure full width */
+#form-views.ng-enter, #form-views.ng-leave {
+    position:absolute;
+    left:30px;
+    right:30px;
+    -moz-transition:0.5s all ease;
+    -webkit-transition:0.5s all ease;
+    transition:0.5s all ease;
+}
+
+/* enter animation */
+#form-views.ng-enter {
+    -webkit-animation:slideInRight 0.5s both ease;
+    -moz-animation:slideInRight 0.5s both ease;
+    animation:slideInRight 0.5s both ease;
+}
+
+/* leave animation */
+#form-views.ng-leave {
+    -webkit-animation:slideOutLeft 0.5s both ease;
+    -moz-animation:slideOutLeft 0.5s both ease;
+    animation:slideOutLeft 0.5s both ease;
+}
+
+/* ANIMATIONS
+============================================================================= */
+/* slide out to the left */
+@keyframes slideOutLeft {
+    to {
+        transform: translateX(-200%);
+    }
+}
+@-moz-keyframes slideOutLeft {
+    to { -moz-transform: translateX(-200%);
+    }
+}
+@-webkit-keyframes slideOutLeft {
+    to { -webkit-transform: translateX(-200%);
+    }
+}
+
+/* slide in from the right */
+@keyframes slideInRight {
+    from {
+transform:translateX(200%);
+}
+to {
+    transform: translateX(0);
+}
+}
+@-moz-keyframes slideInRight {
+    from { -moz-transform:translateX(200%);
+    }
+    to { -moz-transform: translateX(0);
+    }
+}
+@-webkit-keyframes slideInRight {
+    from { -webkit-transform:translateX(200%);
+    }
+    to { -webkit-transform: translateX(0);
+    }
+}
+
+
+/* User Favorites Icon for View Single Project view*/
+.view-project .fa-heart-o, .view-project .fa-heart{
+    float: right;
+}
+
+
+/*project status page*/
+
+project-status-user-info edit-profile {
+    margin-bottom: 5%;
+}
+
+
+project-status-user-info edit-profile .col-md-offset-4 {
+    left: -25%;
+    width: 60%;
+    margin-bottom: 5%;
+}
+
+project-status-user-info edit-profile .form-group {
+    margin-bottom: 0;
+}
+
+.tab-content .fa-pencil {
+    margin: 6px 4px 6px 0;
+}
+
 .about h1, .contact h1 {
     margin: 2% 0 4% 0;
 }
@@ -686,354 +1034,6 @@ span.input.input-secondary .title {
 
 .tab-pane {
     padding: 4%;
-}
-
-.dropdown {
-    /*border-radius: 0;*/
-    top: -16px;
-    left: 14px;
-    /*position: relative;*/
-
-}
-
-#status  {
-    border-radius: 0;
-    width: 350px;
-    height: 40px;
-    /*top: -16px;*/
-    /*left: 14px;*/
-    position: relative;
-    cursor: pointer;
-    background: none;
-    /*border-image-source: none;*/
-    border-image-width: 0;
-    /*border-image-repeat: stretch;*/
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: 7px solid #023a31;
-}
-
-.col-md-6 > label {
-    color: #6E7C8C;
-    position: relative;
-    top: 17px;
-    left: 15px;
-}
-
-.modal-dialog {
-    margin-top: 15%;
-}
-
-.modal-lg {
-    width: 60%;
-}
-
-.modal-content {
-    border-radius: 0;
-    color: #ffffff;
-    background-color: rgba(2, 58, 49, 0.9);
-    border: solid rgba(255, 255, 255, 0.7) 2px;
-    -webkit-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
-    -moz-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
-    box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
-}
-
-/*.modal-body {*/
-    /*background-color: rgba(2, 58, 49, 0.8);*/
-/*}*/
-
-.modal-footer .grow:hover {
-    border-color: #03725e;
-    background: rgba(0, 45, 0, 0.8);
-}
-
-.modal-footer .btn-warning:hover {
-    background: rgba(45, 0, 0, 0.8);
-    border-color: #ff0000;
-}
-
-.text-center.form-group {
-    width: 205%;
-    margin-left: -55%;
-}
-
-.modal-content input[type=text], .modal-content input[type=password] {
-    width: 200%;
-    height: 4rem;
-    margin-left: -45%;
-    font-size: 2.75rem;
-}
-
-.model-content label {
-    margin-left: -45%;
-    font-size: 2rem;
-}
-
-.modal-header, .modal-footer {
-    border: none;
-}
-/* BASIC STYLINGS
-============================================================================= */
-
-pre {
-    margin-bottom:20px;
-}
-
-.create-project .page-header {
-    color: white;
-}
-
-.create-project .row {
-    color: white;
-    margin-top: 20px;
-}
-
-h1 #form-container, h2 #form-container, h3 #form-container, h4 #form-container, h5 #form-container, p #form-container {
-    color: #ffffff;
-}
-
-/* form styling */
-#form-container {
-    background:#2f2f2f;
-    margin-bottom:20px;
-    border-radius:5px;
-}
-
-#form-container .page-header {
-    background:#151515;
-    margin:0;
-    padding:30px;
-    border-top-left-radius:5px;
-    border-top-right-radius:5px;
-}
-
-.form-group .form-inline .form-group{
-    margin-left: 0;
-    margin-right: 0;
-    padding: 5px;
-}
-
-.view-project .pull-right {
-    padding: 15px 40px;
-}
-
-/* numbered buttons */
-#status-buttons {
-
-}
-
-#status-buttons a {
-    color:#FFF;
-    display:inline-block;
-    font-size:12px;
-    margin-right:10px;
-    text-align:center;
-    text-transform:uppercase;
-}
-
-#status-buttons a:hover {
-    text-decoration:none;
-}
-
-#status-buttons span {
-    background:#080808;
-    display:block;
-    height:30px;
-    margin:0 auto 10px;
-    padding-top:5px;
-    width:30px;
-    border-radius:50%;
-}
-
-/* active buttons */
-#status-buttons a.active span {
-    background:#00BC8C;
-}
-
-fieldset > div > div {
-    margin-top: 3%;
-    padding: 1%;
-}
-
-.project-body {
-    font-size: 1.65rem;
-    text-align: justify;
-    margin-top: 3%;
-}
-
-/*ckEditor Styling*/
-.cke_wysiwyg, .cke_chrome, #story.cke_1 .cke_chrome, #cke_story {
-    /*border-color: #023A31;*/
-    border-color: rgb(2,58,49);
-
-}
-
-.ck-crazy {
-    border-color: blue;
-}
-
-.view-projects div.pull-right .btn {
-    margin-top: 13%;
-    top: 13%;
-}
-
-.list-projects .list-group .story-summary, .admin .admin-users .user-summary {
-    border: solid 2px #023a31;
-    border-radius: 5px;
-    margin: 2%;
-    color: #000000;
-    font-size: 1.75rem;
-    width: 45%;
-    height: auto;
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
-    -ms-transition: all .25s ease;
-    -o-transition: all .25s ease;
-    transition: all .25s ease;
-}
-
-.list-projects .list-group .story-summary:hover, .admin .admin-users .user-summary:hover {
-    background-color: #006666;
-    border: solid 2px #023a31;
-    color: #fff;
-    z-index: 500;
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
-    -ms-transition: all .25s ease;
-    -o-transition: all .25s ease;
-    transition: all .25s ease;
-    -webkit-transform: scale(1.05);
-    -moz-transform: scale(1.05);
-    -ms-transform: scale(1.05);
-    -o-transform: scale(1.05);
-    transform: scale(1.05);
-
-}
-
-
-/* Thumbnail STYLINGS
-============================================================================= */
-
-.list-group-item {
-    width: 15.5rem;
-    height: 15.5rem;
-    border: solid 2px #000000;
-    /*margin: 1%;*/
-}
-
-.list-group-item:hover{
-
-}
-
-.essay {
-    background-color: rgba(0, 185, 0, 0.4);
-}
-
-div.list-group > a > div {
-
-}
-
-
-/* ANIMATION STYLINGS
-============================================================================= */
-#signup-form {
-    position:relative;
-    min-height:300px;
-    /*overflow:hidden;*/
-    padding:30px;
-}
-
-/* basic styling for entering and leaving */
-/* left and right added to ensure full width */
-#form-views.ng-enter, #form-views.ng-leave {
-    position:absolute;
-    left:30px;
-    right:30px;
-    -moz-transition:0.5s all ease;
-    -webkit-transition:0.5s all ease;
-    transition:0.5s all ease;
-}
-
-/* enter animation */
-#form-views.ng-enter {
-    -webkit-animation:slideInRight 0.5s both ease;
-    -moz-animation:slideInRight 0.5s both ease;
-    animation:slideInRight 0.5s both ease;
-}
-
-/* leave animation */
-#form-views.ng-leave {
-    -webkit-animation:slideOutLeft 0.5s both ease;
-    -moz-animation:slideOutLeft 0.5s both ease;
-    animation:slideOutLeft 0.5s both ease;
-}
-
-/* ANIMATIONS
-============================================================================= */
-/* slide out to the left */
-@keyframes slideOutLeft {
-    to {
-        transform: translateX(-200%);
-    }
-}
-@-moz-keyframes slideOutLeft {
-    to { -moz-transform: translateX(-200%);
-    }
-}
-@-webkit-keyframes slideOutLeft {
-    to { -webkit-transform: translateX(-200%);
-    }
-}
-
-/* slide in from the right */
-@keyframes slideInRight {
-    from {
-transform:translateX(200%);
-}
-to {
-    transform: translateX(0);
-}
-}
-@-moz-keyframes slideInRight {
-    from { -moz-transform:translateX(200%);
-    }
-    to { -moz-transform: translateX(0);
-    }
-}
-@-webkit-keyframes slideInRight {
-    from { -webkit-transform:translateX(200%);
-    }
-    to { -webkit-transform: translateX(0);
-    }
-}
-
-
-/* User Favorites Icon for View Single Project view*/
-.view-project .fa-heart-o, .view-project .fa-heart{
-    float: right;
-}
-
-
-/*project status page*/
-
-project-status-user-info edit-profile {
-    margin-bottom: 5%;
-}
-
-
-project-status-user-info edit-profile .col-md-offset-4 {
-    left: -25%;
-    width: 60%;
-    margin-bottom: 5%;
-}
-
-project-status-user-info edit-profile .form-group {
-    margin-bottom: 0;
-}
-
-.tab-content .fa-pencil {
-    margin: 6px 4px 6px 0;
 }
 
 /***
