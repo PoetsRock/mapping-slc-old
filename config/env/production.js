@@ -45,13 +45,13 @@ module.exports = {
   FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'CONSUMER_KEY',
   FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
 
-  TWITTER_KEY: process.env.TWITTER_KEY,
-  TWITTER_SECRET: process.env.TWITTER_SECRET,
+  TWITTER_KEY: process.env.TWITTER_KEY || 'CONSUMER_KEY',
+  TWITTER_SECRET: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
   TWITTER_CALLBACK_URL: '/api/v1/auth/twitter/callback',
 
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY,
-  GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'GOOGLE_CLIENT_ID',
+  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'SERVER_KEY',
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE_SECRET',
   GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
 
   linkedin: {
