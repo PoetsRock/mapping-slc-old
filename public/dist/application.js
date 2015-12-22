@@ -114,17 +114,6 @@ ApplicationConfiguration.registerModule('admins');
 ApplicationConfiguration.registerModule('contacts');
 'use strict';
 
-// Use applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('projects');
-'use strict';
-
-// Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('users', ['core']);
-ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
-ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
-
-'use strict';
-
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('core');
 ApplicationConfiguration.registerModule('core.admin', ['core']);
@@ -144,87 +133,14 @@ console.log('#   __    __                            __     __                  
 
 'use strict';
 
-//Setting up route
-angular.module('admins').config(['$compileProvider',
-  function ($compileProvider) {
-
-    // when `false`, turns off debugging for prod
-    // https://docs.angularjs.org/guide/production
-    $compileProvider.debugInfoEnabled(false);
-  }
-]);
-
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('projects');
 'use strict';
 
-//Setting up route
-angular.module('admins').config(['$stateProvider',
-  function ($stateProvider) {
-    // Projects state routing
-    $stateProvider.
-      state('admin', {
-        abstract: true,
-        url: '/admin',
-        template: '<ui-view>',
-        //data property is inherited by child states, so you can place something like this authenticate flag in the parent.
-        data: {
-          authenticate: true,
-          data: {
-            roles: ['admin', 'superUser']
-          }
-        }
-      })
-    //admin projects routes
-      .state('admin.dashboard', {
-        url: '/dashboard',
-        templateUrl: 'modules/admins/client/views/admins.client.view.html',
-        data: {
-          authenticate: true,
-          data: {
-            roles: ['admin', 'superUser']
-          }
-        }
-      })
-      .state('admin.adminProjectsQueue', {
-        url: '/projects-queue',
-        templateUrl: 'modules/admins/client/views/projects/admin-projects-list.client.view.html'
-      })
-      .state('admin.adminEditProject', {
-        url: '/edit-project/:projectId',
-        templateUrl: 'modules/admins/client/views/projects/admin-view-project.client.view.html'
-      })
-
-
-    //admin contact form routes
-      .state('admin.adminListMessages', {
-        url: '/messages',
-        templateUrl: 'modules/admins/client/views/messages/admin-list-messages.client.view.html'
-      })
-      .state('admin.adminViewMessage', {
-        url: '/messages/:contactId',
-        templateUrl: 'modules/admins/client/views/messages/admin-view-message.client.view.html'
-      })
-
-
-    //admin user routes
-      .state('admin.adminListUsers', {
-        url: '/list-users',
-        templateUrl: 'modules/admins/client/views/users/admin-list-users.client.view.html'
-      })
-      .state('admin.adminViewUser', {
-        url: '/users/:userId',
-        templateUrl: 'modules/admins/client/views/users/admin-view-user.client.view.html'
-      }).
-      state('adminEditUser', {
-        url: '/users/:userId/edit',
-        templateUrl: 'modules/admins/client/views/users/admin-edit-user.client.view.html'
-      })
-      .state('admin.createUser', {
-        url: '/create-user',
-        templateUrl: 'modules/users/client/views/create-user.client.view.html'
-      });
-  }
-
-]);
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('users', ['core']);
+ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
+ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
 
 'use strict';
 
@@ -372,17 +288,86 @@ angular.module('admins').controller('AdminsController', ['$scope', 'd3', '$state
 
 'use strict';
 
-//Admins service used for communicating with the articles REST endpoints
-angular.module('admins').factory('Admins', ['$resource',
-  function ($resource) {
-    return $resource('api/v1/admins/:adminId', {
-      adminId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
+//Setting up route
+angular.module('admins').config(['$compileProvider',
+  function ($compileProvider) {
+
+    // when `false`, turns off debugging for prod
+    // https://docs.angularjs.org/guide/production
+    $compileProvider.debugInfoEnabled(false);
   }
+]);
+
+'use strict';
+
+//Setting up route
+angular.module('admins').config(['$stateProvider',
+  function ($stateProvider) {
+    // Projects state routing
+    $stateProvider.
+      state('admin', {
+        abstract: true,
+        url: '/admin',
+        template: '<ui-view>',
+        //data property is inherited by child states, so you can place something like this authenticate flag in the parent.
+        data: {
+          authenticate: true,
+          data: {
+            roles: ['admin', 'superUser']
+          }
+        }
+      })
+    //admin projects routes
+      .state('admin.dashboard', {
+        url: '/dashboard',
+        templateUrl: 'modules/admins/client/views/admins.client.view.html',
+        data: {
+          authenticate: true,
+          data: {
+            roles: ['admin', 'superUser']
+          }
+        }
+      })
+      .state('admin.adminProjectsQueue', {
+        url: '/projects-queue',
+        templateUrl: 'modules/admins/client/views/projects/admin-projects-list.client.view.html'
+      })
+      .state('admin.adminEditProject', {
+        url: '/edit-project/:projectId',
+        templateUrl: 'modules/admins/client/views/projects/admin-view-project.client.view.html'
+      })
+
+
+    //admin contact form routes
+      .state('admin.adminListMessages', {
+        url: '/messages',
+        templateUrl: 'modules/admins/client/views/messages/admin-list-messages.client.view.html'
+      })
+      .state('admin.adminViewMessage', {
+        url: '/messages/:contactId',
+        templateUrl: 'modules/admins/client/views/messages/admin-view-message.client.view.html'
+      })
+
+
+    //admin user routes
+      .state('admin.adminListUsers', {
+        url: '/list-users',
+        templateUrl: 'modules/admins/client/views/users/admin-list-users.client.view.html'
+      })
+      .state('admin.adminViewUser', {
+        url: '/users/:userId',
+        templateUrl: 'modules/admins/client/views/users/admin-view-user.client.view.html'
+      }).
+      state('adminEditUser', {
+        url: '/users/:userId/edit',
+        templateUrl: 'modules/admins/client/views/users/admin-edit-user.client.view.html'
+      })
+      .state('admin.createUser', {
+        url: '/create-user',
+        templateUrl: 'modules/users/client/views/create-user.client.view.html'
+      });
+  }
+
 ]);
 
 //'use strict';
@@ -511,6 +496,59 @@ angular.module('admins').directive('userViewForm', function() {
             templateUrl: '/modules/admins/client/directives/views/user-view-form.html'
         };
     });
+
+'use strict';
+
+//Admins service used for communicating with the articles REST endpoints
+angular.module('admins').factory('Admins', ['$resource',
+  function ($resource) {
+    return $resource('api/v1/admins/:adminId', {
+      adminId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
+//Setting up route
+angular.module('contacts').config(['$compileProvider',
+  function ($compileProvider) {
+
+    // when `false`, turns off debugging for prod
+    // https://docs.angularjs.org/guide/production
+    $compileProvider.debugInfoEnabled(false);
+  }
+]);
+
+'use strict';
+
+//Setting up route
+angular.module('contacts').config(['$stateProvider',
+    function ($stateProvider) {
+        // Contacts state routing
+        $stateProvider.
+            state('createContact', {
+                url: '/contact-us',
+                templateUrl: 'modules/contacts/client/views/contact-us.client.view.html',
+            })
+            .state('editContact', {
+                url: '/contacts/:contactId/edit',
+                templateUrl: 'modules/contacts/client/views/edit-contact.client.view.html'
+            })
+            .state('aboutMappingSlc', {
+                url: '/about-mapping-slc',
+                templateUrl: 'modules/contacts/client/views/about-mapping-slc.client.view.html'
+            })
+            .state('aboutUs', {
+              url: '/about-us',
+              templateUrl: 'modules/contacts/client/views/about-us.client.view.html'
+            });
+    }
+]);
 
 'use strict';
 
@@ -643,44 +681,6 @@ angular.module('contacts').controller('ContactsController', ['$scope', '$statePa
 
 'use strict';
 
-//Setting up route
-angular.module('contacts').config(['$compileProvider',
-  function ($compileProvider) {
-
-    // when `false`, turns off debugging for prod
-    // https://docs.angularjs.org/guide/production
-    $compileProvider.debugInfoEnabled(false);
-  }
-]);
-
-'use strict';
-
-//Setting up route
-angular.module('contacts').config(['$stateProvider',
-    function ($stateProvider) {
-        // Contacts state routing
-        $stateProvider.
-            state('createContact', {
-                url: '/contact-us',
-                templateUrl: 'modules/contacts/client/views/contact-us.client.view.html',
-            })
-            .state('editContact', {
-                url: '/contacts/:contactId/edit',
-                templateUrl: 'modules/contacts/client/views/edit-contact.client.view.html'
-            })
-            .state('aboutMappingSlc', {
-                url: '/about-mapping-slc',
-                templateUrl: 'modules/contacts/client/views/about-mapping-slc.client.view.html'
-            })
-            .state('aboutUs', {
-              url: '/about-us',
-              templateUrl: 'modules/contacts/client/views/about-us.client.view.html'
-            });
-    }
-]);
-
-'use strict';
-
 //Contacts service used to communicate Contacts REST endpoints
 angular.module('contacts').factory('Contacts', ['$resource',
 	function($resource) {
@@ -691,6 +691,1563 @@ angular.module('contacts').factory('Contacts', ['$resource',
 			}
 		});
 	}
+]);
+
+//'use strict';
+//
+//angular.module('core.admin').run(['Menus',
+//  function (Menus) {
+//    Menus.addMenuItem('topbar', {
+//      title: 'Admin',
+//      state: 'admin',
+//      type: 'dropdown',
+//      roles: ['admin']
+//    });
+//  }
+//]);
+
+//'use strict';
+//
+//// Setting up route
+//angular.module('core.menu').config(['$stateProvider',
+//  function ($stateProvider) {
+//    $stateProvider
+//      .state('menu', {
+//        abstract: true,
+//        url: '/menu',
+//        template: '<ui-view/>'
+//        //data: {
+//        //  roles: ['admin']
+//        //}
+//      })
+//    .state('settings', {
+//      //url: '/subscribe-form',
+//      templateUrl: 'modules/projects/client/directives/views/dropdown-list.html'
+//    })
+//    .state('uploads', {
+//      url: '/uploads',
+//      templateUrl: 'modules/core/views/file-upload.client.view.html'
+//    })
+//    .state('uploadFile', {
+//      url: '/uploads/:fileHash'
+//      //templateUrl: 'modules/users/views/create-user.client.view.html'
+//    });
+//  }
+//]);
+
+'use strict';
+
+//Setting up route
+angular.module('core').config(['$compileProvider',
+  function ($compileProvider) {
+
+    // when `false`, turns off debugging for prod
+    // https://docs.angularjs.org/guide/production
+    $compileProvider.debugInfoEnabled(false);
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('core').config(['$stateProvider', '$urlRouterProvider',
+  function ($stateProvider, $urlRouterProvider) {
+
+    // Redirect to 404 when route not found
+    $urlRouterProvider.otherwise(function ($injector, $location) {
+      $injector.get('$state').transitionTo('not-found', null, {
+        location: false
+      });
+    });
+
+    // Home state routing
+    $stateProvider
+    .state('home', {
+      url: '/',
+      templateUrl: 'modules/core/client/views/home.client.view.html'
+    })
+    .state('not-found', {
+      url: '/not-found',
+      templateUrl: 'modules/core/client/views/404.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    })
+    .state('bad-request', {
+      url: '/bad-request',
+      templateUrl: 'modules/core/client/views/400.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    })
+    .state('forbidden', {
+      url: '/forbidden',
+      templateUrl: 'modules/core/client/views/403.client.view.html',
+      data: {
+        ignoreState: true
+      }
+    });
+  }
+]);
+
+'use strict';
+
+// Controller that serves a random static map for secondary views
+angular.module('core').controller('RandomMapController', ['$scope', 'RandomMapService',
+    function($scope, RandomMapService) {
+
+        $scope.staticMap = RandomMapService.getRandomMap();
+        $scope.myFunction = function(){
+            console.log('error loading that map!');
+        };
+
+    }
+]);
+
+
+//'use strict';
+//
+//angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
+//  function ($scope, $state, Authentication, Menus) {
+//    // Expose view variables
+//    $scope.$state = $state;
+//    $scope.authentication = Authentication;
+//
+//    // Get the topbar menu
+//    $scope.menu = Menus.getMenu('topbar');
+//
+//    // Toggle the menu items
+//    $scope.isCollapsed = false;
+//    $scope.toggleCollapsibleMenu = function () {
+//      $scope.isCollapsed = !$scope.isCollapsed;
+//    };
+//
+//    // Collapsing the menu after navigation
+//    $scope.$on('$stateChangeSuccess', function () {
+//      $scope.isCollapsed = false;
+//    });
+//  }
+//]);
+
+'use strict';
+
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
+  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
+
+    $scope.authentication = Authentication;
+    $scope.isAdmin = AdminAuthService;
+    console.log('current user:\n', $scope.authentication.user);
+
+    //for overlay
+    $scope.featuredProjects = {};
+
+    //provides logic for the css in the forms
+    UtilsService.cssLayout();
+
+    //menu functions
+    $scope.trustAsHtml = $sce.trustAsHtml;
+    $scope.goToProject = function (id) {
+      $location.path('projects/' + id);
+    };
+
+    //placeholder for featured projects images
+    //todo once admin module is built, create a function that makes photo1 and 2 dynamic rather than hard-coded
+    $scope.photo0 = 'chris--bw-2.jpg';
+    $scope.photo1 = 'as_thumb_150.jpg';
+    $scope.photo2 = 'wli_thumb_150.jpg';
+    $scope.photo3 = 'dw_thumb_150.jpg';
+    $scope.photo4 = 'as_thumb_bw.png';
+
+    $scope.projectMarker = null;
+    $scope.markerData = null;
+
+    /**
+     * test for getting and setting cookies
+     */
+
+    /**
+     *
+     * Animation Functionality
+     *
+     **/
+
+
+    //var getFeatured = function () {
+    //  $http.get('/api/v1/featured', {cache: true})
+    //    .then(function (resolved, rejected) {
+    //      console.log('resolved:::::::::\n', resolved);
+    //    });
+    //};
+    //getFeatured();
+
+    $scope.overlayActive = true;
+    $scope.menuOpen = false;
+    //var changeMapFrom = null;
+    $scope.shadeMap = false;
+
+    $scope.toggleTest = function(){
+      $scope.shadeMap = !$scope.shadeMap;
+      console.log('$scope.shadeMap: ', $scope.shadeMap);
+    };
+
+
+    $scope.toggleOverlayFunction = function (source) {
+      if ($scope.overlayActive && source === 'overlay') {
+        $scope.overlayActive = !$scope.overlayActive;
+        $scope.shadeMap = true;
+      } else if ($scope.overlayActive && source === 'menu-closed') {
+        $scope.overlayActive = false;
+        $scope.menuOpen = true;
+        $scope.shadeMap = true;
+      } else if (!$scope.overlayActive && source === 'menu-closed' && !$scope.menuOpen) {
+        $scope.menuOpen = !$scope.menuOpen;
+        $scope.shadeMap = false;
+      } else if (!$scope.overlayActive && source === 'home') {
+        $scope.menuOpen = false;
+        $scope.overlayActive = true;
+        $scope.shadeMap = false;
+      }
+    };
+
+    //atrribution toggle
+    $scope.attributionFull = false;
+    $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a> & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
+
+    /**
+     *
+     * Map Functionality
+     *
+     **/
+
+    $scope.markers = true;
+    $scope.filters = true;
+    $scope.censusDataTractLayer = true;
+    $scope.googlePlacesLayer = false;
+    //$scope.toggleProjectDetails = false;
+    $scope.sidebarToggle = false;
+
+
+    //service that returns public front end keys
+    ApiKeys.getApiKeys()
+      .then(function (resolved, rejected) {
+        mapFunction(resolved.data.MAPBOX_KEY, resolved.data.MAPBOX_SECRET);
+      });
+
+
+
+
+    /**
+     *  call map and add functionality
+     */
+    var mapFunction = function (mapboxKey, mapboxAccessToken) {
+      //creates a Mapbox Map
+      L.mapbox.accessToken = mapboxAccessToken;
+
+      //'info' id is part of creating tooltip with absolute position
+      var info = document.getElementById('info');
+
+      var map = L.mapbox.map('map', null, {
+          infoControl: false, attributionControl: false
+        })
+        .setView([40.7630772, -111.8689467], 12)
+        .addControl(L.mapbox.geocoderControl('mapbox.places', { position: 'topright' }))
+        .addControl( L.control.zoom({position: 'topright'}) );
+        //.addControl(L.mapbox.Zoom({ position: 'topright' }));
+
+      var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
+        mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
+        topoMap = L.mapbox.tileLayer('poetsrock.la97f747'),
+        greenMap = L.mapbox.tileLayer('poetsrock.jdgpalp2'),
+        landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'),
+        comic = L.mapbox.tileLayer('poetsrock.23d30eb5'),
+        watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png');
+
+      var layers = {
+        'Main Map': mainMap,
+        'Topo Map': topoMap,
+        'Green Map': greenMap,
+        'Landscape': landscape,
+        'Comically Yours': comic,
+        'Gray Day': grayMap,
+        'Watercolor': watercolor
+      };
+
+      mainMap.addTo(map);
+      L.control.layers(layers).addTo(map);
+
+      //var markers = new L.MarkerClusterGroup();
+      //markers.addLayer(new L.Marker(getRandomLatLng(map)));
+      //map.addLayer(markers);
+
+
+      //service that returns project markers
+      MarkerDataService.getMarkerData()
+        .success(function (markerData) {
+          //$scope.getProjectMarkers(markerData);
+          $scope.addProjectMarkers(markerData);
+        })
+        .error(function (data, status) {
+          alert('Failed to load project markers. Status: ' + status);
+        });
+
+      $scope.markerArray = [];
+
+      //add markers from marker data
+      $scope.addProjectMarkers = function (markerData) {
+        $scope.markerData = markerData;
+        var index = 0;
+
+
+        //loop through markers array and return values for each property
+        for (var prop in markerData) {
+
+          $scope.projectMarker = L.mapbox.featureLayer({
+              //var singleMarker = L.mapbox.featureLayer({
+              // this feature is in the GeoJSON format: see geojson.org for full specs
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                // coordinates here are in longitude, latitude order because
+                // x, y is the standard for GeoJSON and many formats
+                coordinates: [markerData[prop].lng, markerData[prop].lat]
+              },
+              properties: {
+                // one can customize markers by adding simplestyle properties
+                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                'marker-size': 'large',
+                'marker-color': mapService.markerColorFn(markerData, prop),
+                //'marker-color': '#00ff00',
+                'marker-symbol': 'heart',
+                projectId: markerData[prop]._id,
+                summary: markerData[prop].storySummary,
+                title: markerData[prop].title,
+                mainImage: markerData[prop].mainImage,
+                category: markerData[prop].category,
+                mapImage: markerData[prop].mapImage,
+                lat: markerData[prop].lat,
+                lng: markerData[prop].lng,
+                published: markerData[prop].created,
+                leafletId: null,
+                arrayIndexId: index
+              }
+            })
+            //create toogle for marker event that toggles sidebar on marker click
+            .on('click', function (e) {
+              $scope.$apply(function () {
+                $scope.storyEvent = e.target._geojson.properties;
+              });
+              map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
+              popupMenuToggle(e);
+              return $scope.projectMarker[prop];
+            });
+
+          $scope.projectMarker.addTo(map);
+          $scope.markerArray.push($scope.projectMarker);
+          index++;
+        }
+        return $scope.markerArray;
+      };
+
+      //style the polygon tracts
+      var style = {
+        'stroke': true,
+        'clickable': true,
+        'color': "#00D",
+        'fillColor': "#00D",
+        'weight': 1.0,
+        'opacity': 0.2,
+        'fillOpacity': 0.0,
+        'className': ''  //String that sets custom class name on an element
+      };
+      var hoverStyle = {
+        'color': "#00D",
+        "fillOpacity": 0.5,
+        'weight': 1.0,
+        'opacity': 0.2,
+        'className': ''  //String that sets custom class name on an element
+      };
+
+      var hoverOffset = new L.Point(30, -16);
+
+
+      //create toggle/filter functionality for Census Tract Data
+      $scope.toggleGooglePlacesData = function () {
+        if ($scope.googlePlacesLayer) {
+          map.removeLayer(googlePlacesMarkerLayer);
+        } else {
+          map.addLayer(googlePlacesMarkerLayer);
+        }
+      };
+
+      map.on('click', function (e) {
+        console.log('click event', e);
+        if ($scope.menuOpen) {
+          $scope.sidebar.close();
+          $scope.shadeMap = false;
+        } else {
+          console.log('map click!');
+          $scope.overlayActive = false;
+        }
+      });
+
+      $scope.getProjectMarkers = function (markerData) {
+      };
+    };
+
+    var popupIndex = 0;
+    var popupMenuToggle = function (e) {
+      if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
+        $scope.toggleOverlayFunction('menu-closed');
+        //$scope.populateStorySummary($scope.projectDetails);
+        $scope.sidebar.open('details');
+        popupIndex = e.target._leaflet_id;
+      } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
+        //$scope.populateStorySummary($scope.projectDetails);
+      } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
+        //$scope.populateStorySummary($scope.projectDetails);
+        $scope.sidebar.open('details');
+        popupIndex = e.target._leaflet_id;
+      } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
+        $scope.sidebar.close();
+        popupIndex = 0;
+      }
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance', 'items',
+    function($scope, $uibModalInstance, items) {
+        $scope.items = items;
+        $scope.selected = {
+          item: $scope.items[0],
+          toStateUrl: items.toStateUrl
+        };
+      console.log('$scope.selected', $scope.selected);
+
+
+      if ($scope.selected.item) {
+        console.log('$scope.selected.item', $scope.selected.item);
+        $scope.ok = function () {
+          $uibModalInstance.close($scope.selected.item);
+        };
+      } else {
+        console.log('$scope.selected.toStateName', $scope.selected.toStateUrl);
+        $scope.ok = function () {
+          $uibModalInstance.close($scope.selected.toStateUrl);
+        };
+      }
+
+      $scope.cancel = function () {
+          $uibModalInstance.dismiss('user cancelled modal');
+      };
+    }
+]);
+
+'use strict';
+
+angular.module('core').directive('featuredProjects', function() {
+        return {
+            restrict: 'E',
+            templateUrl: '/modules/core/client/directives/views/featured-projects.html'
+
+//            controller: function() {
+//              document.getElementById('photo-3').onload = function() {
+//              var c=document.getElementById('inverse-photo-3');
+//              var ctx=c.getContext('2d');
+//              var img=document.getElementById('photo-3');
+//              ctx.drawImage(img,0,0);
+//              var imgData=ctx.getImageData(0,0,c.width,c.height);
+//// invert colors
+//              for (var i=0;i<imgData.data.length;i+=4)
+//              {
+//                imgData.data[i]=255-imgData.data[i];
+//                imgData.data[i+1]=255-imgData.data[i+1];
+//                imgData.data[i+2]=255-imgData.data[i+2];
+//                imgData.data[i+3]=255;
+//              }
+//              ctx.putImageData(imgData,0,0);
+//
+//                //<canvas id="inverse-photo-3" width="220" height="277" style="border:1px solid #d3d3d3;" class="desaturate">
+//                //  Your browser does not support the HTML5 canvas tag.</canvas>
+//
+//            }
+//          }
+
+
+        };
+    });
+
+'use strict';
+
+angular.module('core').directive('footerDirective', ["UtilsService", function (UtilsService) {
+  return {
+    restrict: 'AE',
+    //replace: true,
+    priority: 0,
+    templateUrl: '/modules/core/client/directives/views/footer-directive.html',
+    controller: ["$scope", "$http", function ($scope, $http) {
+      //provides logic for the css in the forms
+      UtilsService.cssLayout();
+
+      //$scope.create = function (isValid) {
+      //  $http({
+      //    method: 'POST',
+      //    url: '/api/v1/auth/signup/newsletter',
+      //    data: {
+      //      email: $scope.email
+      //    }
+      //  }).success(function (data) {
+      //      console.log(data);
+      //      if (data) {
+      //        console.log('YO the DATA', data);
+      //      }
+      //    })
+      //    .error(function (err) {
+      //      console.log(err);
+      //      if (err) {
+      //        $scope.error_message = "Please try again!";
+      //      }
+      //    });
+      //
+      //  $scope.email = '';
+      //}
+    }]
+  };
+}]);
+
+'use strict';
+
+angular.module('core').directive('randomMapDirective', [
+    function ($scope) {
+
+        var staticMap = null;
+
+        var maps = {
+            'originalMap': 'poetsrock.55znsh8b',
+            'grayMap': 'poetsrock.b06189bb',
+            'mainMap': 'poetsrock.la999il2',
+            'topoMap': 'poetsrock.la97f747',
+            'greenMap': 'poetsrock.jdgpalp2',
+            'funkyMap': 'poetsrock.23d30eb5'
+        };
+
+        /**
+         lng: -111.784-999 , -112.0-060,
+         lat: 40.845-674
+         **/
+
+        //array of
+        var randomMap = [maps.originalMap, maps.grayMap, maps.mainMap, maps.topoMap, maps.greenMap, maps.funkyMap];
+
+        var getRandomArbitrary = function (min, max) {
+            return Math.random() * (max - min) + min;
+        };
+
+        var randomLat = function () {
+            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
+            if (randomLngInt === 111) {
+                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
+            } else {
+                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
+                return '-112.0' + randomDecimal;
+            }
+        };
+
+        var randomLng = function () {
+            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
+        };
+
+        var randomMapId = function () {
+            return Math.floor(getRandomArbitrary(0, 7));
+        };
+
+        var randomZoom = function () {
+            return Math.floor(getRandomArbitrary(10, 18));
+        };
+
+        return {
+            template: '<div></div>',
+            restrict: 'EA',
+            link: function postLink(scope, element, attrs) {
+                //staticMap = 'http://api.tiles.mapbox.com/v4/' + randomMap[randomMapId()] + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw';
+            }
+
+        };
+
+    }
+]);
+
+'use strict';
+
+angular.module('core').directive('mainMenu', ["AdminAuthService", function(AdminAuthService) {
+    return {
+      restrict: 'EA',
+      templateUrl: '/modules/core/client/directives/views/main-menu.html',
+
+      controller: ["$scope", function($scope) {
+        $scope.isAdmin = AdminAuthService.user;
+
+
+        $scope.sidebar = L.control.sidebar('sidebar', {
+          closeButton: true,
+          position: 'left'
+        }).addTo(map);
+
+        $scope.sidebar.click = function() {
+          if (L.DomUtil.hasClass(this, 'active')) {
+            $scope.sidebar.close();
+            console.log('here i am close');
+          }
+          else {
+            $scope.sidebar.open(this.firstChild.hash.slice(1));
+            console.log('here i am open');
+          }
+        };
+
+
+        $scope.sidebar.on('click', function (e) {
+          console.log('sidebar click event', e);
+        });
+
+
+          //if (child.firstChild.hash == '#' + id)
+          //  L.DomUtil.addClass(child, 'active');
+          //else if (L.DomUtil.hasClass(child, 'active'))
+          //  L.DomUtil.removeClass(child, 'active');
+
+          //
+          //if (L.DomUtil.hasClass(this, 'active')) {
+          //  $scope.sidebar.close();
+          //  console.log('here i am close');
+          //}
+          //else {
+          //  $scope.sidebar.open(this.firstChild.hash.slice(1));
+          //  console.log('here i am open');
+          //}
+
+
+      }],
+
+      link: function($scope) {
+        //$scope.sidebar = L.control.sidebar('sidebar', {
+        //  closeButton: true,
+        //  position: 'left'
+        //}).addTo(map);
+
+
+      }
+
+    };
+}]);
+
+
+
+//// add Admin link in menu if user is admin
+//if ($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'superAdmin')
+
+'use strict';
+
+angular.module('core').directive('mainPageOverlay', function() {
+    return {
+        restrict: 'AE',
+        priority: 10,
+        templateUrl:'/modules/core/client/directives/views/main-page-overlay.html'
+    };
+});
+
+'use strict';
+
+angular.module('core').directive('modalDirective', function() {
+        return {
+            restrict: 'E',
+            link: function() {
+
+            $uibModal.open({
+              animation: true,
+              //templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
+              templateUrl: template,
+              controller: ["$scope", "$modalInstance", "$location", function ($scope, $modalInstance, $location) {
+                $scope.stay = function (result) {
+                  //$modalInstance.dismiss('cancel');
+                  console.log('stay just a little bit longer, oh won\'t you stay');
+                  $modalInstance.close(function (result) {
+                    console.log('result: ', result);
+                  });
+                };
+                $scope.leave = function () {
+                  var preventRunning = true;
+                  $scope.stay();
+                  $location.path(toState);
+                };
+              }],
+              size: 'lg'
+            });
+
+
+          }
+        };
+    });
+
+'use strict';
+
+angular.module('core').directive('secondaryMenuDirective', function() {
+
+    return {
+
+        restrict: 'E',
+        templateUrl: '/modules/core/client/directives/views/secondary-menu-directive.html',
+
+        controller: ["AdminAuthService", "$scope", function(AdminAuthService, $scope){
+              $scope.isAdmin = AdminAuthService;
+        }],
+
+        link: function(scope) {
+
+            scope.secondMenuOpened = false;
+            scope.toggleSecondMenu = false;
+
+        }
+    }
+});
+
+'use strict';
+
+angular.module('core').directive('secondaryPageDirective', function() {
+    return {
+        restrict: 'AE',
+        //replace: true,
+        priority: 0,
+        templateUrl:'/modules/core/client/directives/views/secondary-page.html'
+    };
+});
+
+'use strict';
+
+/**
+ * Edits by Ryan Hutchison
+ * Credit: https://github.com/paulyoder/angular-bootstrap-show-errors */
+
+angular.module('core')
+  .directive('showErrors', ['$timeout', '$interpolate', function ($timeout, $interpolate) {
+    var linkFn = function (scope, el, attrs, formCtrl) {
+      var inputEl, inputName, inputNgEl, options, showSuccess, toggleClasses,
+        initCheck = false,
+        showValidationMessages = false,
+        blurred = false;
+
+      options = scope.$eval(attrs.showErrors) || {};
+      showSuccess = options.showSuccess || false;
+      inputEl = el[0].querySelector('.form-control[name]') || el[0].querySelector('[name]');
+      inputNgEl = angular.element(inputEl);
+      inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
+
+      if (!inputName) {
+        throw 'show-errors element has no child input elements with a \'name\' attribute class';
+      }
+
+      var reset = function () {
+        return $timeout(function () {
+          el.removeClass('has-error');
+          el.removeClass('has-success');
+          showValidationMessages = false;
+        }, 0, false);
+      };
+
+      scope.$watch(function () {
+        return formCtrl[inputName] && formCtrl[inputName].$invalid;
+      }, function (invalid) {
+        return toggleClasses(invalid);
+      });
+
+      scope.$on('show-errors-check-validity', function (event, name) {
+        if (angular.isUndefined(name) || formCtrl.$name === name) {
+          initCheck = true;
+          showValidationMessages = true;
+
+          return toggleClasses(formCtrl[inputName].$invalid);
+        }
+      });
+
+      scope.$on('show-errors-reset', function (event, name) {
+        if (angular.isUndefined(name) || formCtrl.$name === name) {
+          return reset();
+        }
+      });
+
+      toggleClasses = function (invalid) {
+        el.toggleClass('has-error', showValidationMessages && invalid);
+        if (showSuccess) {
+          return el.toggleClass('has-success', showValidationMessages && !invalid);
+        }
+      };
+    };
+
+    return {
+      restrict: 'A',
+      require: '^form',
+      compile: function (elem, attrs) {
+        if (attrs.showErrors.indexOf('skipFormGroupCheck') === -1) {
+          if (!(elem.hasClass('form-group') || elem.hasClass('input-group'))) {
+            throw 'show-errors element does not have the \'form-group\' or \'input-group\' class';
+          }
+        }
+        return linkFn;
+      }
+    };
+}]);
+
+'use strict';
+
+angular.module('core').directive('signInDirective', function() {
+        return {
+          restrict: 'EA',
+          templateUrl: '/modules/core/client/directives/views/sign-in-directive.html',
+          controller: ["$scope", "$http", "Authentication", function($scope, $http, Authentication) {
+            var userProfileImage = '';
+            $scope.user = Authentication.user;
+
+            if ($scope.user === '') {
+              console.log('directive profilePic Service - calling nothing, just `return`');
+              return
+            } else if(Authentication.user.profileImageFileName === 'default.png' || Authentication.user.profileImageFileName === '') {
+              $scope.user.profileImage = 'modules/users/client/img/profile/default.png';
+            } else if (Authentication.user.profileImageFileName !== '' ) {
+              $scope.user.profileImage = 'modules/users/client/img/profile/uploads/uploaded-profile-image.jpg';
+            }
+
+
+            /**
+             *
+             * turning the s3 get image function off for now ...
+             * it returns data... just don't know how to parse what i'm getting back
+             * uncomment and load home page and look in console log to see a few options for how i'm
+             *    trying to parse.
+             */
+            /**
+            else {
+
+              $scope.getUploadedProfilePic = function() {
+                var user = Authentication.user;
+                //var configObj = {cache: true, responseType: 'arraybuffer'};
+                var configObj = {cache: true};
+
+
+                $http.get('api/v1/users/' + user._id + '/media/' + user.profileImageFileName, configObj)
+                  .then(function successCallback(successCallback) {
+                    console.log('profilePic - successCallback\n', successCallback);
+                    console.log('successCallback.data.imageAsBase64Array\n', successCallback.data.imageAsBase64Array);
+                    console.log('successCallback.data.imageAsUtf8\n', successCallback.data.imageAsUtf8);
+                    console.log('successCallback.data.imageObjectAsString\n', successCallback.data.imageObjectAsString);
+                    return userProfileImage = successCallback.data.imageAsBase64Array;
+                  }, function errorCallback(errorCallback) {
+                    console.log('profile photo error', errorCallback);
+                    return userProfileImage = 'modules/users/client/img/profile/default.png';
+                  });
+
+              };
+              $scope.getUploadedProfilePic();
+              $scope.user.profileImage = userProfileImage;
+
+
+            }
+             **/
+
+          }]
+        };
+
+    });
+
+/**
+* Created by poetsrock on 3/11/15.
+*/
+
+'use strict';
+
+angular.module('core').directive('submitProjectDirective', function() {
+        return {
+            restrict: 'E',
+            templateUrl: '/modules/core/client/directives/views/submit-project-directive.html'
+        };
+    });
+
+'use strict';
+
+angular.module('core').service('ApiKeys', ['$http',
+	function($http) {
+		// ApiKeys service logic
+		// ...
+        this.getApiKeys = function(){
+            return  $http.get('/api/v1/keys');
+        };
+        this.getTractData = function(){
+            return  $http.get('api/v1/tractData');
+        };
+    }
+]);
+
+'use strict';
+
+// Authentication service for user variables
+angular.module('core').factory('Authentication', [
+	function() {
+		var _this = this;
+
+		_this._data = {
+			user: window.user
+		};
+
+		return _this._data;
+	}
+]);
+'use strict';
+
+angular.module('core').service('CensusDataService', ['$http', 'ApiKeys',
+    function ($http, ApiKeys) {
+
+        //Census Data for Population Stats service logic
+
+        var censusDataKey = 'P0010001';
+        var censusYear = [2000, 2010, 2011, 2012, 2013, 2014];
+        var population = '';
+
+        this.callCensusApi = function () {
+            ApiKeys.getApiKeys()
+                .success(function (keys) {
+                    censusData(keys.CENSUS_KEY);
+                })
+                .error(function (data, status) {
+                    alert('Failed to load Mapbox API key. Status: ' + status);
+                });
+
+            censusData = function (censusKey){
+                return $http.get('http://api.census.gov/data/' + censusYear[1] + '/sf1?get=' + population + '&for=tract:*&in=state:49+county:035&key=' + censusKey);
+            }
+        };
+    }
+]);
+
+
+//'use strict';
+//
+//angular.module('core').factory('ErrorHandleService', ['$httpProvider',
+//    function($httpProvider){
+//    $httpProvider.interceptors.push(['$q',
+//        function ($q) {
+//            return {
+//                responseError: function (rejection) {
+//                    console.log(rejection);
+//                    switch (rejection.status) {
+//                        case 400:
+//                            return '400';
+//                        case 404:
+//                            return '404';
+//                    }
+//
+//                    return $q.reject(rejection);
+//                },
+//                'response': function(response){
+//                    console.log(response);
+//                    return response;
+//                }
+//            };
+//        }
+//    ])
+//}
+//]);
+'use strict';
+
+angular.module('core').service('FullScreenService', [,
+    function() {
+
+        this.fullScreen= function(){
+
+            /**
+             * Full-screen functionality
+             */
+            // Find the right method, call on correct element
+            var launchFullscreen = function(element) {
+                if(element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if(element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if(element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if(element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            };
+
+            // Launch fullscreen for browsers that support it
+            //launchFullscreen(document.documentElement); // the whole page
+            //launchFullscreen(document.getElementById("videoElement")); // any individual element
+
+            // Whack fullscreen
+            var exitFullscreen = function(element) {
+                if(document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if(document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if(document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            };
+
+// Cancel fullscreen for browsers that support it!
+//    exitFullscreen();
+
+
+        };
+    }
+]);
+
+'use strict';
+
+angular.module('core').service('RandomMapService', [
+    function () {
+        
+        var staticMap = null;
+        
+        var maps = {
+            'mapbox': {
+                'originalMap': 'poetsrock.j5o1g9on',
+                'grayMap': 'poetsrock.b06189bb',
+                'mainMap': 'poetsrock.la999il2',
+                'topoMap': 'poetsrock.la97f747',
+                'greenMap': 'poetsrock.jdgpalp2',
+                'comic': 'poetsrock.23d30eb5',
+                'fancyYouMap': 'poetsrock.m6b73kk7',
+                'pencilMeInMap': 'poetsrock.m6b7f6mj'
+            //},
+            //'thunderforest': {
+            //    'landscape': 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+            //},
+            //'stamen': {
+            //    'watercolor': 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+            //    'toner': 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png'
+            }
+        };
+        
+        var url = {
+            'mapbox': 'http://api.tiles.mapbox.com/v4',
+            //'thunderforest': 'http://{s}.tile.thunderforest.com',
+            //'stamen': 'http://maps.stamen.com/m2i',
+            //'ngs': ''
+        };
+        
+        //array of
+        var randomMap = [
+            ['mapbox', maps.mapbox.originalMap],
+            ['mapbox', maps.mapbox.grayMap],
+            ['mapbox', maps.mapbox.mainMap],
+            ['mapbox', maps.mapbox.topoMap],
+            ['mapbox', maps.mapbox.greenMap],
+            ['mapbox', maps.mapbox.comic],
+            ['mapbox', maps.mapbox.fancyYouMap],
+            ['mapbox', maps.mapbox.pencilMeInMap],
+            //['stamen', maps.stamen.watercolor],
+            //['stamen', maps.stamen.toner],
+            //['thunderforest', maps.thunderforest.landscape]
+        ];
+        
+        var getRandomArbitrary = function (min, max) {
+            return Math.random() * (max - min) + min;
+        };
+        
+        var randomLat = function () {
+            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
+            if (randomLngInt === 111) {
+                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
+            } else {
+                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
+                return '-112.0' + randomDecimal;
+            }
+        };
+        
+        var randomLng = function () {
+            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
+        };
+
+        var randomZoom = function () {
+            return Math.floor(getRandomArbitrary(9, 16));
+        };
+        
+        this.getRandomMap = function () {
+            var randomNum = Math.floor(getRandomArbitrary(0, 7));
+            var mapVendor = randomMap[randomNum][0];
+            var randomMapId = randomMap[randomNum][1];
+
+            if (mapVendor === 'mapbox') {
+                return staticMap = {mapUrl: url.mapbox + '/' + randomMapId + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw'};
+            //} else if (mapVendor === 'stamen') {
+                //return staticMap = {mapUrl: url.stamen + '/#watercolor' + '1280:720/' + randomZoom() + '/' + randomLat() + '/' + randomLng()};
+                //return staticMap = {mapUrl: 'http://maps.stamen.com/m2i/#watercolor/1280:720/14/40.8905/-112.0204'};
+            } else {
+                console.log('Error!\nrandomNum: ', randomNum, '\nmapVendor', mapVendor, '\nrandomMapId: ', randomMapId );
+            }
+        }
+        
+    }
+]);
+
+'use strict';
+
+//Google Places API
+
+angular.module('core').factory('googlePlacesService', ['$http',
+	function ($http) {
+		var googlePlacesMarker = null;
+		var googlePlacesMarkerLayer = null;
+		var googlePlacesMarkerArray = [];
+
+		var googlePlacesData = function () {
+			$http.get('/places').success(function (poiData) {
+
+				var placeLength = poiData.results.length;
+				for (var place = 0; place < placeLength; place++) {
+
+					var mapLat = poiData.results[place].geometry.location.lat;
+					var mapLng = poiData.results[place].geometry.location.lng;
+					var mapTitle = poiData.results[place].name;
+
+					googlePlacesMarker = L.marker([mapLat, mapLng]).toGeoJSON();
+
+					googlePlacesMarkerArray.push(googlePlacesMarker);
+				} //end of FOR loop
+
+				googlePlacesMarkerLayer = L.geoJson(googlePlacesMarkerArray, {
+					style: function (feature) {
+						return {
+							'title': mapTitle,
+							'marker-size': 'large',
+							//'marker-symbol': mapSymbol(),
+							'marker-symbol': 'marker',
+							'marker-color': '#00295A',
+							'riseOnHover': true,
+							'riseOffset': 250,
+							'opacity': 0.5,
+							'clickable': true
+						}
+					}
+				})
+			});
+		};
+
+
+	}
+]);
+'use strict';
+
+angular.module('core').service('mapService', [
+	function ($scope) {
+		// Various Services for Map Functionality
+
+		this.featuredProjects = function (markerData) {
+			var featureProjectsArray = [];
+			for (var prop in markerData) {
+				var i = 0;
+				if (i < 2 && markerData[prop].featured) {      //setup for loop to end after finding the first three featured projects
+					var featuredProject = {
+						thumb: markerData[prop].thumbnail,
+						projectId: markerData[prop]._id,
+						shortTitle: markerData[prop].shortTitle
+					};
+					featureProjectsArray.push(featuredProject);
+				}
+				i++;
+			}
+		};
+
+		this.markerColorFn = function (markerData, prop) {
+			if (markerData[prop].category === 'video') {
+				return '#ff0011';
+			} else if (markerData[prop].category === 'multimedia') {
+				return '#ff0101';
+			} else if (markerData[prop].category === 'essay') {
+				return '#0015ff';
+			} else if (markerData[prop].category === 'literature') {
+				return '#15ff35';
+			} else if (markerData[prop].category === 'interview') {
+				return 'brown';
+			} else if (markerData[prop].category === 'map') {
+				return 'yellow';
+			} else if (markerData[prop].category === 'audio') {
+				return '#111111';
+			} else {
+				return '#00ff44';
+			}
+		};
+	}
+]);
+'use strict';
+
+angular.module('core').service('MarkerDataService', ['$http',
+    function($http) {
+        // Project Marker Data Service
+
+        this.getMarkerData = function(){
+            return  $http.get('/api/v1/markerData').
+                success(function(projects){
+                    //console.log('projects: \n', projects);
+                    //for (var prop in projects) {
+                    //    console.log('projects[prop].lng: \n', projects[prop].lng);
+                    //}
+
+                })
+                .error(function(error){
+                    console.log('marker data error: \n', error);
+                });
+        };
+    }
+]);
+
+'use strict';
+
+//Menu service used for managing  menus
+angular.module('core').service('Menus', [
+  function () {
+    // Define a set of default roles
+    this.defaultRoles = ['user', 'admin'];
+
+    // Define the menus object
+    this.menus = {};
+
+    // A private function for rendering decision
+    var shouldRender = function (user) {
+      if (!!~this.roles.indexOf('*')) {
+        return true;
+      } else {
+        if(!user) {
+          return false;
+        }
+        for (var userRoleIndex in user.roles) {
+          for (var roleIndex in this.roles) {
+            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    };
+
+    // Validate menu existance
+    this.validateMenuExistance = function (menuId) {
+      if (menuId && menuId.length) {
+        if (this.menus[menuId]) {
+          return true;
+        } else {
+          throw new Error('Menu does not exist');
+        }
+      } else {
+        throw new Error('MenuId was not provided');
+      }
+
+      return false;
+    };
+
+    // Get the menu object by menu id
+    this.getMenu = function (menuId) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Add new menu object by menu id
+    this.addMenu = function (menuId, options) {
+      options = options || {};
+
+      // Create the new menu
+      this.menus[menuId] = {
+        roles: options.roles || this.defaultRoles,
+        items: options.items || [],
+        shouldRender: shouldRender
+      };
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Remove existing menu object by menu id
+    this.removeMenu = function (menuId) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Return the menu object
+      delete this.menus[menuId];
+    };
+
+    // Add menu item object
+    this.addMenuItem = function (menuId, options) {
+      options = options || {};
+
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Push new menu item
+      this.menus[menuId].items.push({
+        title: options.title || '',
+        state: options.state || '',
+        type: options.type || 'item',
+        class: options.class,
+        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
+        position: options.position || 0,
+        items: [],
+        shouldRender: shouldRender
+      });
+
+      // Add submenu items
+      if (options.items) {
+        for (var i in options.items) {
+          this.addSubMenuItem(menuId, options.state, options.items[i]);
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Add submenu item object
+    this.addSubMenuItem = function (menuId, parentItemState, options) {
+      options = options || {};
+
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Search for menu item
+      for (var itemIndex in this.menus[menuId].items) {
+        if (this.menus[menuId].items[itemIndex].state === parentItemState) {
+          // Push new submenu item
+          this.menus[menuId].items[itemIndex].items.push({
+            title: options.title || '',
+            state: options.state || '',
+            roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
+            position: options.position || 0,
+            shouldRender: shouldRender
+          });
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Remove existing menu object by menu id
+    this.removeMenuItem = function (menuId, menuItemState) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Search for menu item to remove
+      for (var itemIndex in this.menus[menuId].items) {
+        if (this.menus[menuId].items[itemIndex].state === menuItemState) {
+          this.menus[menuId].items.splice(itemIndex, 1);
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    // Remove existing menu object by menu id
+    this.removeSubMenuItem = function (menuId, submenuItemState) {
+      // Validate that the menu exists
+      this.validateMenuExistance(menuId);
+
+      // Search for menu item to remove
+      for (var itemIndex in this.menus[menuId].items) {
+        for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
+          if (this.menus[menuId].items[itemIndex].items[subitemIndex].state === submenuItemState) {
+            this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
+          }
+        }
+      }
+
+      // Return the menu object
+      return this.menus[menuId];
+    };
+
+    //Adding the topbar menu
+    this.addMenu('topbar', {
+      roles: ['*']
+    });
+  }
+]);
+
+'use strict';
+
+// Create the Socket.io wrapper service
+angular.module('core').service('Socket', ['Authentication', '$state', '$timeout',
+  function (Authentication, $state, $timeout) {
+    // Connect to Socket.io server
+    this.connect = function () {
+      // Connect only when authenticated
+      if (Authentication.user) {
+        this.socket = io();
+      }
+    };
+    this.connect();
+
+    // Wrap the Socket.io 'on' method
+    this.on = function (eventName, callback) {
+      if (this.socket) {
+        this.socket.on(eventName, function (data) {
+          $timeout(function () {
+            callback(data);
+          });
+        });
+      }
+    };
+
+    // Wrap the Socket.io 'emit' method
+    this.emit = function (eventName, data) {
+      if (this.socket) {
+        this.socket.emit(eventName, data);
+      }
+    };
+
+    // Wrap the Socket.io 'removeListener' method
+    this.removeListener = function (eventName) {
+      if (this.socket) {
+        this.socket.removeListener(eventName);
+      }
+    };
+  }
+]);
+
+'use strict';
+
+//Google Places API
+
+angular.module('core').factory('tractDataService', ['$scope', 'ApiKeys',
+	function ($scope, ApiKeys) {
+
+		var dataBoxStaticPopup = null,
+			tractData = {},
+			censusTractData = null;
+
+
+		ApiKeys.getTractData()
+			.success(function (tractData) {
+				tractDataLayer(tractData);
+			})
+			.error(function (tractData) {
+				alert('Failed to load tractData. Status: ' + status);
+			});
+		var tractDataLayer = function (tractData) {
+			censusTractData = L.geoJson(tractData, {
+					style: style,
+					onEachFeature: function (feature, layer) {
+						if (feature.properties) {
+							var popupString = '<div class="popup">';
+							for (var k in feature.properties) {
+								var v = feature.properties[k];
+								popupString += k + ': ' + v + '<br />';
+							}
+							popupString += '</div>';
+							layer.bindPopup(popupString);
+						}
+						if (!(layer instanceof L.Point)) {
+							layer.on('mouseover', function () {
+								layer.setStyle(hoverStyle);
+								//layer.setStyle(hoverOffset);
+							});
+							layer.on('mouseout', function () {
+								layer.setStyle(style);
+								//layer.setStyle(hoverOffset);
+							});
+						}
+
+					}
+				}
+			);
+		};
+
+		$scope.dataBoxStaticPopupFn = function (dataBoxStaticPopup) {
+
+			// Listen for individual marker clicks.
+			dataBoxStaticPopup.on('mouseover', function (e) {
+				// Force the popup closed.
+				e.layer.closePopup();
+
+				var feature = e.layer.feature;
+				var content = '<div><strong>' + feature.properties.title + '</strong>' +
+					'<p>' + feature.properties.description + '</p></div>';
+
+				info.innerHTML = content;
+			});
+
+			function empty() {
+				info.innerHTML = '<div><strong>Click a marker</strong></div>';
+			}
+
+			// Clear the tooltip when .map is clicked.
+			map.on('move', empty);
+
+			// Trigger empty contents when the script has loaded on the page.
+			empty();
+
+		};
+
+//create toggle/filter functionality for Census Tract Data
+		$scope.toggleCensusData = function () {
+			if (!$scope.censusDataTractLayer) {
+				map.removeLayer(censusTractData);
+				map.removeLayer(dataBoxStaticPopup);
+			} else {
+				map.addLayer(censusTractData);
+				map.addLayer(dataBoxStaticPopup);
+
+			}
+		};
+
+	}
+]);
+'use strict';
+
+// Underscore service
+angular.module('core').factory('_', [
+	function() {
+		return window._;
+	}
+]);
+'use strict';
+
+angular.module('core').service('UtilsService', ['$http', '$window',
+  function($http, $window) {
+
+
+    //logic for css on the contact form
+
+    this.cssLayout = function () {
+      [].slice.call(document.querySelectorAll('input.input_field'))
+
+        .forEach(function (inputEl) {
+          // in case the input is already filled
+          if (inputEl.value.trim() !== '') {
+            classie.add(inputEl.parentNode, 'input-filled');
+          }
+          // events
+          inputEl.addEventListener('focus', onInputFocus);
+          inputEl.addEventListener('blur', onInputBlur);
+        });
+
+      function onInputFocus(ev) {
+        classie.add(ev.target.parentNode, 'input-filled');
+      }
+
+      function onInputBlur(ev) {
+        if (ev.target.value.trim() === '') {
+          classie.remove(ev.target.parentNode, 'input-filled');
+        }
+      }
+    };
+
+
+  }
 ]);
 
 'use strict';
@@ -2857,1560 +4414,26 @@ angular.module('users.admin').factory('Admin', ['$resource',
 ]);
 
 **/
-//'use strict';
-//
-//angular.module('core.admin').run(['Menus',
-//  function (Menus) {
-//    Menus.addMenuItem('topbar', {
-//      title: 'Admin',
-//      state: 'admin',
-//      type: 'dropdown',
-//      roles: ['admin']
-//    });
-//  }
-//]);
-
-//'use strict';
-//
-//// Setting up route
-//angular.module('core.menu').config(['$stateProvider',
-//  function ($stateProvider) {
-//    $stateProvider
-//      .state('menu', {
-//        abstract: true,
-//        url: '/menu',
-//        template: '<ui-view/>'
-//        //data: {
-//        //  roles: ['admin']
-//        //}
-//      })
-//    .state('settings', {
-//      //url: '/subscribe-form',
-//      templateUrl: 'modules/projects/client/directives/views/dropdown-list.html'
-//    })
-//    .state('uploads', {
-//      url: '/uploads',
-//      templateUrl: 'modules/core/views/file-upload.client.view.html'
-//    })
-//    .state('uploadFile', {
-//      url: '/uploads/:fileHash'
-//      //templateUrl: 'modules/users/views/create-user.client.view.html'
-//    });
-//  }
-//]);
-
 'use strict';
 
-//Setting up route
-angular.module('core').config(['$compileProvider',
-  function ($compileProvider) {
-
-    // when `false`, turns off debugging for prod
-    // https://docs.angularjs.org/guide/production
-    $compileProvider.debugInfoEnabled(false);
-  }
-]);
-
-'use strict';
-
-// Setting up route
-angular.module('core').config(['$stateProvider', '$urlRouterProvider',
-  function ($stateProvider, $urlRouterProvider) {
-
-    // Redirect to 404 when route not found
-    $urlRouterProvider.otherwise(function ($injector, $location) {
-      $injector.get('$state').transitionTo('not-found', null, {
-        location: false
-      });
-    });
-
-    // Home state routing
-    $stateProvider
-    .state('home', {
-      url: '/',
-      templateUrl: 'modules/core/client/views/home.client.view.html'
-    })
-    .state('not-found', {
-      url: '/not-found',
-      templateUrl: 'modules/core/client/views/404.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    })
-    .state('bad-request', {
-      url: '/bad-request',
-      templateUrl: 'modules/core/client/views/400.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    })
-    .state('forbidden', {
-      url: '/forbidden',
-      templateUrl: 'modules/core/client/views/403.client.view.html',
-      data: {
-        ignoreState: true
-      }
-    });
-  }
-]);
-
-'use strict';
-
-// Controller that serves a random static map for secondary views
-angular.module('core').controller('RandomMapController', ['$scope', 'RandomMapService',
-    function($scope, RandomMapService) {
-
-        $scope.staticMap = RandomMapService.getRandomMap();
-        $scope.myFunction = function(){
-            console.log('error loading that map!');
-        };
-
-    }
-]);
-
-
-//'use strict';
-//
-//angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
-//  function ($scope, $state, Authentication, Menus) {
-//    // Expose view variables
-//    $scope.$state = $state;
-//    $scope.authentication = Authentication;
-//
-//    // Get the topbar menu
-//    $scope.menu = Menus.getMenu('topbar');
-//
-//    // Toggle the menu items
-//    $scope.isCollapsed = false;
-//    $scope.toggleCollapsibleMenu = function () {
-//      $scope.isCollapsed = !$scope.isCollapsed;
-//    };
-//
-//    // Collapsing the menu after navigation
-//    $scope.$on('$stateChangeSuccess', function () {
-//      $scope.isCollapsed = false;
-//    });
-//  }
-//]);
-
-'use strict';
-
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
-  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
-
-    $scope.authentication = Authentication;
-    $scope.isAdmin = AdminAuthService;
-    console.log('current user:\n', $scope.authentication.user);
-
-    //for overlay
-    $scope.featuredProjects = {};
-
-    //provides logic for the css in the forms
-    UtilsService.cssLayout();
-
-    //menu functions
-    $scope.trustAsHtml = $sce.trustAsHtml;
-    $scope.goToProject = function (id) {
-      $location.path('projects/' + id);
-    };
-
-    //placeholder for featured projects images
-    //todo once admin module is built, create a function that makes photo1 and 2 dynamic rather than hard-coded
-    $scope.photo0 = 'chris--bw-2.jpg';
-    $scope.photo1 = 'as_thumb_150.jpg';
-    $scope.photo2 = 'wli_thumb_150.jpg';
-    $scope.photo3 = 'dw_thumb_150.jpg';
-    $scope.photo4 = 'as_thumb_bw.png';
-
-    $scope.projectMarker = null;
-    $scope.markerData = null;
-
-    /**
-     * test for getting and setting cookies
-     */
-
-    /**
-     *
-     * Animation Functionality
-     *
-     **/
-
-
-    //var getFeatured = function () {
-    //  $http.get('/api/v1/featured', {cache: true})
-    //    .then(function (resolved, rejected) {
-    //      console.log('resolved:::::::::\n', resolved);
-    //    });
-    //};
-    //getFeatured();
-
-    $scope.overlayActive = true;
-    $scope.menuOpen = false;
-    //var changeMapFrom = null;
-    $scope.shadeMap = false;
-
-    $scope.toggleTest = function(){
-      $scope.shadeMap = !$scope.shadeMap;
-      console.log('$scope.shadeMap: ', $scope.shadeMap);
-    };
-
-
-    $scope.toggleOverlayFunction = function (source) {
-      if ($scope.overlayActive && source === 'overlay') {
-        $scope.overlayActive = !$scope.overlayActive;
-        $scope.shadeMap = true;
-      } else if ($scope.overlayActive && source === 'menu-closed') {
-        $scope.overlayActive = false;
-        $scope.menuOpen = true;
-        $scope.shadeMap = true;
-      } else if (!$scope.overlayActive && source === 'menu-closed' && !$scope.menuOpen) {
-        $scope.menuOpen = !$scope.menuOpen;
-        $scope.shadeMap = false;
-      } else if (!$scope.overlayActive && source === 'home') {
-        $scope.menuOpen = false;
-        $scope.overlayActive = true;
-        $scope.shadeMap = false;
-      }
-    };
-
-    //atrribution toggle
-    $scope.attributionFull = false;
-    $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a> & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
-
-    /**
-     *
-     * Map Functionality
-     *
-     **/
-
-    $scope.markers = true;
-    $scope.filters = true;
-    $scope.censusDataTractLayer = true;
-    $scope.googlePlacesLayer = false;
-    //$scope.toggleProjectDetails = false;
-    $scope.sidebarToggle = false;
-
-
-    //service that returns public front end keys
-    ApiKeys.getApiKeys()
-      .then(function (resolved, rejected) {
-        mapFunction(resolved.data.MAPBOX_KEY, resolved.data.MAPBOX_SECRET);
-      });
-
-
-
-
-    /**
-     *  call map and add functionality
-     */
-    var mapFunction = function (mapboxKey, mapboxAccessToken) {
-      //creates a Mapbox Map
-      L.mapbox.accessToken = mapboxAccessToken;
-
-      //'info' id is part of creating tooltip with absolute position
-      var info = document.getElementById('info');
-
-      var map = L.mapbox.map('map', null, {
-          infoControl: false, attributionControl: false
-        })
-        .setView([40.7630772, -111.8689467], 12)
-        .addControl(L.mapbox.geocoderControl('mapbox.places', { position: 'topright' }))
-        .addControl( L.control.zoom({position: 'topright'}) );
-        //.addControl(L.mapbox.Zoom({ position: 'topright' }));
-
-      var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
-        mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
-        topoMap = L.mapbox.tileLayer('poetsrock.la97f747'),
-        greenMap = L.mapbox.tileLayer('poetsrock.jdgpalp2'),
-        landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'),
-        comic = L.mapbox.tileLayer('poetsrock.23d30eb5'),
-        watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png');
-
-      var layers = {
-        'Main Map': mainMap,
-        'Topo Map': topoMap,
-        'Green Map': greenMap,
-        'Landscape': landscape,
-        'Comically Yours': comic,
-        'Gray Day': grayMap,
-        'Watercolor': watercolor
-      };
-
-      mainMap.addTo(map);
-      L.control.layers(layers).addTo(map);
-
-      //var markers = new L.MarkerClusterGroup();
-      //markers.addLayer(new L.Marker(getRandomLatLng(map)));
-      //map.addLayer(markers);
-
-
-      //service that returns project markers
-      MarkerDataService.getMarkerData()
-        .success(function (markerData) {
-          //$scope.getProjectMarkers(markerData);
-          $scope.addProjectMarkers(markerData);
-        })
-        .error(function (data, status) {
-          alert('Failed to load project markers. Status: ' + status);
-        });
-
-      $scope.markerArray = [];
-
-      //add markers from marker data
-      $scope.addProjectMarkers = function (markerData) {
-        $scope.markerData = markerData;
-        var index = 0;
-
-
-        //loop through markers array and return values for each property
-        for (var prop in markerData) {
-
-          $scope.projectMarker = L.mapbox.featureLayer({
-              //var singleMarker = L.mapbox.featureLayer({
-              // this feature is in the GeoJSON format: see geojson.org for full specs
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                // coordinates here are in longitude, latitude order because
-                // x, y is the standard for GeoJSON and many formats
-                coordinates: [markerData[prop].lng, markerData[prop].lat]
-              },
-              properties: {
-                // one can customize markers by adding simplestyle properties
-                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-                'marker-size': 'large',
-                'marker-color': mapService.markerColorFn(markerData, prop),
-                //'marker-color': '#00ff00',
-                'marker-symbol': 'heart',
-                projectId: markerData[prop]._id,
-                summary: markerData[prop].storySummary,
-                title: markerData[prop].title,
-                mainImage: markerData[prop].mainImage,
-                category: markerData[prop].category,
-                mapImage: markerData[prop].mapImage,
-                lat: markerData[prop].lat,
-                lng: markerData[prop].lng,
-                published: markerData[prop].created,
-                leafletId: null,
-                arrayIndexId: index
-              }
-            })
-            //create toogle for marker event that toggles sidebar on marker click
-            .on('click', function (e) {
-              $scope.$apply(function () {
-                $scope.storyEvent = e.target._geojson.properties;
-              });
-              map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
-              popupMenuToggle(e);
-              return $scope.projectMarker[prop];
-            });
-
-          $scope.projectMarker.addTo(map);
-          $scope.markerArray.push($scope.projectMarker);
-          index++;
-        }
-        return $scope.markerArray;
-      };
-
-      //style the polygon tracts
-      var style = {
-        'stroke': true,
-        'clickable': true,
-        'color': "#00D",
-        'fillColor': "#00D",
-        'weight': 1.0,
-        'opacity': 0.2,
-        'fillOpacity': 0.0,
-        'className': ''  //String that sets custom class name on an element
-      };
-      var hoverStyle = {
-        'color': "#00D",
-        "fillOpacity": 0.5,
-        'weight': 1.0,
-        'opacity': 0.2,
-        'className': ''  //String that sets custom class name on an element
-      };
-
-      var hoverOffset = new L.Point(30, -16);
-
-
-      //create toggle/filter functionality for Census Tract Data
-      $scope.toggleGooglePlacesData = function () {
-        if ($scope.googlePlacesLayer) {
-          map.removeLayer(googlePlacesMarkerLayer);
-        } else {
-          map.addLayer(googlePlacesMarkerLayer);
-        }
-      };
-
-      map.on('click', function (e) {
-        console.log('click event', e);
-        if ($scope.menuOpen) {
-          $scope.sidebar.close();
-          $scope.shadeMap = false;
-        } else {
-          console.log('map click!');
-          $scope.overlayActive = false;
-        }
-      });
-
-      $scope.getProjectMarkers = function (markerData) {
-      };
-    };
-
-    var popupIndex = 0;
-    var popupMenuToggle = function (e) {
-      if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        $scope.toggleOverlayFunction('menu-closed');
-        //$scope.populateStorySummary($scope.projectDetails);
-        $scope.sidebar.open('details');
-        popupIndex = e.target._leaflet_id;
-      } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
-      } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
-        $scope.sidebar.open('details');
-        popupIndex = e.target._leaflet_id;
-      } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        $scope.sidebar.close();
-        popupIndex = 0;
-      }
-    };
-  }
-]);
-
-'use strict';
-
-angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance', 'items',
-    function($scope, $uibModalInstance, items) {
-        $scope.items = items;
-        $scope.selected = {
-          item: $scope.items[0],
-          toStateUrl: items.toStateUrl
-        };
-      console.log('$scope.selected', $scope.selected);
-
-
-      if ($scope.selected.item) {
-        console.log('$scope.selected.item', $scope.selected.item);
-        $scope.ok = function () {
-          $uibModalInstance.close($scope.selected.item);
-        };
-      } else {
-        console.log('$scope.selected.toStateName', $scope.selected.toStateUrl);
-        $scope.ok = function () {
-          $uibModalInstance.close($scope.selected.toStateUrl);
-        };
-      }
-
-      $scope.cancel = function () {
-          $uibModalInstance.dismiss('user cancelled modal');
-      };
-    }
-]);
-
-'use strict';
-
-angular.module('core').directive('featuredProjects', function() {
-        return {
-            restrict: 'E',
-            templateUrl: '/modules/core/client/directives/views/featured-projects.html'
-
-//            controller: function() {
-//              document.getElementById('photo-3').onload = function() {
-//              var c=document.getElementById('inverse-photo-3');
-//              var ctx=c.getContext('2d');
-//              var img=document.getElementById('photo-3');
-//              ctx.drawImage(img,0,0);
-//              var imgData=ctx.getImageData(0,0,c.width,c.height);
-//// invert colors
-//              for (var i=0;i<imgData.data.length;i+=4)
-//              {
-//                imgData.data[i]=255-imgData.data[i];
-//                imgData.data[i+1]=255-imgData.data[i+1];
-//                imgData.data[i+2]=255-imgData.data[i+2];
-//                imgData.data[i+3]=255;
-//              }
-//              ctx.putImageData(imgData,0,0);
-//
-//                //<canvas id="inverse-photo-3" width="220" height="277" style="border:1px solid #d3d3d3;" class="desaturate">
-//                //  Your browser does not support the HTML5 canvas tag.</canvas>
-//
-//            }
-//          }
-
-
-        };
-    });
-
-'use strict';
-
-angular.module('core').directive('footerDirective', ["UtilsService", function (UtilsService) {
-  return {
-    restrict: 'AE',
-    //replace: true,
-    priority: 0,
-    templateUrl: '/modules/core/client/directives/views/footer-directive.html',
-    controller: ["$scope", "$http", function ($scope, $http) {
-      //provides logic for the css in the forms
-      UtilsService.cssLayout();
-
-      //$scope.create = function (isValid) {
-      //  $http({
-      //    method: 'POST',
-      //    url: '/api/v1/auth/signup/newsletter',
-      //    data: {
-      //      email: $scope.email
-      //    }
-      //  }).success(function (data) {
-      //      console.log(data);
-      //      if (data) {
-      //        console.log('YO the DATA', data);
-      //      }
-      //    })
-      //    .error(function (err) {
-      //      console.log(err);
-      //      if (err) {
-      //        $scope.error_message = "Please try again!";
-      //      }
-      //    });
-      //
-      //  $scope.email = '';
-      //}
-    }]
-  };
-}]);
-
-'use strict';
-
-angular.module('core').directive('randomMapDirective', [
-    function ($scope) {
-
-        var staticMap = null;
-
-        var maps = {
-            'originalMap': 'poetsrock.55znsh8b',
-            'grayMap': 'poetsrock.b06189bb',
-            'mainMap': 'poetsrock.la999il2',
-            'topoMap': 'poetsrock.la97f747',
-            'greenMap': 'poetsrock.jdgpalp2',
-            'funkyMap': 'poetsrock.23d30eb5'
-        };
-
-        /**
-         lng: -111.784-999 , -112.0-060,
-         lat: 40.845-674
-         **/
-
-        //array of
-        var randomMap = [maps.originalMap, maps.grayMap, maps.mainMap, maps.topoMap, maps.greenMap, maps.funkyMap];
-
-        var getRandomArbitrary = function (min, max) {
-            return Math.random() * (max - min) + min;
-        };
-
-        var randomLat = function () {
-            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
-            if (randomLngInt === 111) {
-                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
-            } else {
-                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
-                return '-112.0' + randomDecimal;
-            }
-        };
-
-        var randomLng = function () {
-            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
-        };
-
-        var randomMapId = function () {
-            return Math.floor(getRandomArbitrary(0, 7));
-        };
-
-        var randomZoom = function () {
-            return Math.floor(getRandomArbitrary(10, 18));
-        };
-
-        return {
-            template: '<div></div>',
-            restrict: 'EA',
-            link: function postLink(scope, element, attrs) {
-                //staticMap = 'http://api.tiles.mapbox.com/v4/' + randomMap[randomMapId()] + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw';
-            }
-
-        };
-
-    }
-]);
-
-'use strict';
-
-angular.module('core').directive('mainMenu', ["AdminAuthService", function(AdminAuthService) {
+angular.module('core').factory('authInterceptor', ['$q', '$injector',
+  function ($q, $injector) {
     return {
-      restrict: 'EA',
-      templateUrl: '/modules/core/client/directives/views/main-menu.html',
-
-      controller: ["$scope", function($scope) {
-        $scope.isAdmin = AdminAuthService.user;
-
-
-        $scope.sidebar = L.control.sidebar('sidebar', {
-          closeButton: true,
-          position: 'left'
-        }).addTo(map);
-
-        $scope.sidebar.click = function() {
-          if (L.DomUtil.hasClass(this, 'active')) {
-            $scope.sidebar.close();
-            console.log('here i am close');
-          }
-          else {
-            $scope.sidebar.open(this.firstChild.hash.slice(1));
-            console.log('here i am open');
-          }
-        };
-
-
-        $scope.sidebar.on('click', function (e) {
-          console.log('sidebar click event', e);
-        });
-
-
-          //if (child.firstChild.hash == '#' + id)
-          //  L.DomUtil.addClass(child, 'active');
-          //else if (L.DomUtil.hasClass(child, 'active'))
-          //  L.DomUtil.removeClass(child, 'active');
-
-          //
-          //if (L.DomUtil.hasClass(this, 'active')) {
-          //  $scope.sidebar.close();
-          //  console.log('here i am close');
-          //}
-          //else {
-          //  $scope.sidebar.open(this.firstChild.hash.slice(1));
-          //  console.log('here i am open');
-          //}
-
-
-      }],
-
-      link: function($scope) {
-        //$scope.sidebar = L.control.sidebar('sidebar', {
-        //  closeButton: true,
-        //  position: 'left'
-        //}).addTo(map);
-
-
-      }
-
-    };
-}]);
-
-
-
-//// add Admin link in menu if user is admin
-//if ($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'superAdmin')
-
-'use strict';
-
-angular.module('core').directive('mainPageOverlay', function() {
-    return {
-        restrict: 'AE',
-        priority: 10,
-        templateUrl:'/modules/core/client/directives/views/main-page-overlay.html'
-    };
-});
-
-'use strict';
-
-angular.module('core').directive('modalDirective', function() {
-        return {
-            restrict: 'E',
-            link: function() {
-
-            $uibModal.open({
-              animation: true,
-              //templateUrl: '/modules/projects/client/directives/views/project-warning-modal.html',
-              templateUrl: template,
-              controller: ["$scope", "$modalInstance", "$location", function ($scope, $modalInstance, $location) {
-                $scope.stay = function (result) {
-                  //$modalInstance.dismiss('cancel');
-                  console.log('stay just a little bit longer, oh won\'t you stay');
-                  $modalInstance.close(function (result) {
-                    console.log('result: ', result);
-                  });
-                };
-                $scope.leave = function () {
-                  var preventRunning = true;
-                  $scope.stay();
-                  $location.path(toState);
-                };
-              }],
-              size: 'lg'
-            });
-
-
-          }
-        };
-    });
-
-'use strict';
-
-angular.module('core').directive('secondaryMenuDirective', function() {
-
-    return {
-
-        restrict: 'E',
-        templateUrl: '/modules/core/client/directives/views/secondary-menu-directive.html',
-
-        controller: ["AdminAuthService", "$scope", function(AdminAuthService, $scope){
-              $scope.isAdmin = AdminAuthService;
-        }],
-
-        link: function(scope) {
-
-            scope.secondMenuOpened = false;
-            scope.toggleSecondMenu = false;
-
-        }
-    }
-});
-
-'use strict';
-
-angular.module('core').directive('secondaryPageDirective', function() {
-    return {
-        restrict: 'AE',
-        //replace: true,
-        priority: 0,
-        templateUrl:'/modules/core/client/directives/views/secondary-page.html'
-    };
-});
-
-'use strict';
-
-/**
- * Edits by Ryan Hutchison
- * Credit: https://github.com/paulyoder/angular-bootstrap-show-errors */
-
-angular.module('core')
-  .directive('showErrors', ['$timeout', '$interpolate', function ($timeout, $interpolate) {
-    var linkFn = function (scope, el, attrs, formCtrl) {
-      var inputEl, inputName, inputNgEl, options, showSuccess, toggleClasses,
-        initCheck = false,
-        showValidationMessages = false,
-        blurred = false;
-
-      options = scope.$eval(attrs.showErrors) || {};
-      showSuccess = options.showSuccess || false;
-      inputEl = el[0].querySelector('.form-control[name]') || el[0].querySelector('[name]');
-      inputNgEl = angular.element(inputEl);
-      inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
-
-      if (!inputName) {
-        throw 'show-errors element has no child input elements with a \'name\' attribute class';
-      }
-
-      var reset = function () {
-        return $timeout(function () {
-          el.removeClass('has-error');
-          el.removeClass('has-success');
-          showValidationMessages = false;
-        }, 0, false);
-      };
-
-      scope.$watch(function () {
-        return formCtrl[inputName] && formCtrl[inputName].$invalid;
-      }, function (invalid) {
-        return toggleClasses(invalid);
-      });
-
-      scope.$on('show-errors-check-validity', function (event, name) {
-        if (angular.isUndefined(name) || formCtrl.$name === name) {
-          initCheck = true;
-          showValidationMessages = true;
-
-          return toggleClasses(formCtrl[inputName].$invalid);
-        }
-      });
-
-      scope.$on('show-errors-reset', function (event, name) {
-        if (angular.isUndefined(name) || formCtrl.$name === name) {
-          return reset();
-        }
-      });
-
-      toggleClasses = function (invalid) {
-        el.toggleClass('has-error', showValidationMessages && invalid);
-        if (showSuccess) {
-          return el.toggleClass('has-success', showValidationMessages && !invalid);
-        }
-      };
-    };
-
-    return {
-      restrict: 'A',
-      require: '^form',
-      compile: function (elem, attrs) {
-        if (attrs.showErrors.indexOf('skipFormGroupCheck') === -1) {
-          if (!(elem.hasClass('form-group') || elem.hasClass('input-group'))) {
-            throw 'show-errors element does not have the \'form-group\' or \'input-group\' class';
+      responseError: function(rejection) {
+        if (!rejection.config.ignoreAuthModule) {
+          switch (rejection.status) {
+            case 401:
+              $injector.get('$state').transitionTo('authentication.signin');
+              break;
+            case 403:
+              $injector.get('$state').transitionTo('forbidden');
+              break;
           }
         }
-        return linkFn;
+        // otherwise, default behaviour
+        return $q.reject(rejection);
       }
     };
-}]);
-
-'use strict';
-
-angular.module('core').directive('signInDirective', function() {
-        return {
-          restrict: 'EA',
-          templateUrl: '/modules/core/client/directives/views/sign-in-directive.html',
-          controller: ["$scope", "$http", "Authentication", function($scope, $http, Authentication) {
-            var userProfileImage = '';
-            $scope.user = Authentication.user;
-
-            if ($scope.user === '') {
-              console.log('directive profilePic Service - calling nothing, just `return`');
-              return
-            } else if(Authentication.user.profileImageFileName === 'default.png' || Authentication.user.profileImageFileName === '') {
-              $scope.user.profileImage = 'modules/users/client/img/profile/default.png';
-            } else if (Authentication.user.profileImageFileName !== '' ) {
-              $scope.user.profileImage = 'modules/users/client/img/profile/uploads/uploaded-profile-image.jpg';
-            }
-
-
-            /**
-             *
-             * turning the s3 get image function off for now ...
-             * it returns data... just don't know how to parse what i'm getting back
-             * uncomment and load home page and look in console log to see a few options for how i'm
-             *    trying to parse.
-             */
-            /**
-            else {
-
-              $scope.getUploadedProfilePic = function() {
-                var user = Authentication.user;
-                //var configObj = {cache: true, responseType: 'arraybuffer'};
-                var configObj = {cache: true};
-
-
-                $http.get('api/v1/users/' + user._id + '/media/' + user.profileImageFileName, configObj)
-                  .then(function successCallback(successCallback) {
-                    console.log('profilePic - successCallback\n', successCallback);
-                    console.log('successCallback.data.imageAsBase64Array\n', successCallback.data.imageAsBase64Array);
-                    console.log('successCallback.data.imageAsUtf8\n', successCallback.data.imageAsUtf8);
-                    console.log('successCallback.data.imageObjectAsString\n', successCallback.data.imageObjectAsString);
-                    return userProfileImage = successCallback.data.imageAsBase64Array;
-                  }, function errorCallback(errorCallback) {
-                    console.log('profile photo error', errorCallback);
-                    return userProfileImage = 'modules/users/client/img/profile/default.png';
-                  });
-
-              };
-              $scope.getUploadedProfilePic();
-              $scope.user.profileImage = userProfileImage;
-
-
-            }
-             **/
-
-          }]
-        };
-
-    });
-
-/**
-* Created by poetsrock on 3/11/15.
-*/
-
-'use strict';
-
-angular.module('core').directive('submitProjectDirective', function() {
-        return {
-            restrict: 'E',
-            templateUrl: '/modules/core/client/directives/views/submit-project-directive.html'
-        };
-    });
-
-'use strict';
-
-angular.module('core').service('ApiKeys', ['$http',
-	function($http) {
-		// ApiKeys service logic
-		// ...
-        this.getApiKeys = function(){
-            return  $http.get('/api/v1/keys');
-        };
-        this.getTractData = function(){
-            return  $http.get('api/v1/tractData');
-        };
-    }
-]);
-
-'use strict';
-
-// Authentication service for user variables
-angular.module('core').factory('Authentication', [
-	function() {
-		var _this = this;
-
-		_this._data = {
-			user: window.user
-		};
-
-		return _this._data;
-	}
-]);
-'use strict';
-
-angular.module('core').service('CensusDataService', ['$http', 'ApiKeys',
-    function ($http, ApiKeys) {
-
-        //Census Data for Population Stats service logic
-
-        var censusDataKey = 'P0010001';
-        var censusYear = [2000, 2010, 2011, 2012, 2013, 2014];
-        var population = '';
-
-        this.callCensusApi = function () {
-            ApiKeys.getApiKeys()
-                .success(function (keys) {
-                    censusData(keys.CENSUS_KEY);
-                })
-                .error(function (data, status) {
-                    alert('Failed to load Mapbox API key. Status: ' + status);
-                });
-
-            censusData = function (censusKey){
-                return $http.get('http://api.census.gov/data/' + censusYear[1] + '/sf1?get=' + population + '&for=tract:*&in=state:49+county:035&key=' + censusKey);
-            }
-        };
-    }
-]);
-
-
-//'use strict';
-//
-//angular.module('core').factory('ErrorHandleService', ['$httpProvider',
-//    function($httpProvider){
-//    $httpProvider.interceptors.push(['$q',
-//        function ($q) {
-//            return {
-//                responseError: function (rejection) {
-//                    console.log(rejection);
-//                    switch (rejection.status) {
-//                        case 400:
-//                            return '400';
-//                        case 404:
-//                            return '404';
-//                    }
-//
-//                    return $q.reject(rejection);
-//                },
-//                'response': function(response){
-//                    console.log(response);
-//                    return response;
-//                }
-//            };
-//        }
-//    ])
-//}
-//]);
-'use strict';
-
-angular.module('core').service('FullScreenService', [,
-    function() {
-
-        this.fullScreen= function(){
-
-            /**
-             * Full-screen functionality
-             */
-            // Find the right method, call on correct element
-            var launchFullscreen = function(element) {
-                if(element.requestFullscreen) {
-                    element.requestFullscreen();
-                } else if(element.mozRequestFullScreen) {
-                    element.mozRequestFullScreen();
-                } else if(element.webkitRequestFullscreen) {
-                    element.webkitRequestFullscreen();
-                } else if(element.msRequestFullscreen) {
-                    element.msRequestFullscreen();
-                }
-            };
-
-            // Launch fullscreen for browsers that support it
-            //launchFullscreen(document.documentElement); // the whole page
-            //launchFullscreen(document.getElementById("videoElement")); // any individual element
-
-            // Whack fullscreen
-            var exitFullscreen = function(element) {
-                if(document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if(document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if(document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-            };
-
-// Cancel fullscreen for browsers that support it!
-//    exitFullscreen();
-
-
-        };
-    }
-]);
-
-'use strict';
-
-angular.module('core').service('RandomMapService', [
-    function () {
-        
-        var staticMap = null;
-        
-        var maps = {
-            'mapbox': {
-                'originalMap': 'poetsrock.j5o1g9on',
-                'grayMap': 'poetsrock.b06189bb',
-                'mainMap': 'poetsrock.la999il2',
-                'topoMap': 'poetsrock.la97f747',
-                'greenMap': 'poetsrock.jdgpalp2',
-                'comic': 'poetsrock.23d30eb5',
-                'fancyYouMap': 'poetsrock.m6b73kk7',
-                'pencilMeInMap': 'poetsrock.m6b7f6mj'
-            //},
-            //'thunderforest': {
-            //    'landscape': 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
-            //},
-            //'stamen': {
-            //    'watercolor': 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
-            //    'toner': 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png'
-            }
-        };
-        
-        var url = {
-            'mapbox': 'http://api.tiles.mapbox.com/v4',
-            //'thunderforest': 'http://{s}.tile.thunderforest.com',
-            //'stamen': 'http://maps.stamen.com/m2i',
-            //'ngs': ''
-        };
-        
-        //array of
-        var randomMap = [
-            ['mapbox', maps.mapbox.originalMap],
-            ['mapbox', maps.mapbox.grayMap],
-            ['mapbox', maps.mapbox.mainMap],
-            ['mapbox', maps.mapbox.topoMap],
-            ['mapbox', maps.mapbox.greenMap],
-            ['mapbox', maps.mapbox.comic],
-            ['mapbox', maps.mapbox.fancyYouMap],
-            ['mapbox', maps.mapbox.pencilMeInMap],
-            //['stamen', maps.stamen.watercolor],
-            //['stamen', maps.stamen.toner],
-            //['thunderforest', maps.thunderforest.landscape]
-        ];
-        
-        var getRandomArbitrary = function (min, max) {
-            return Math.random() * (max - min) + min;
-        };
-        
-        var randomLat = function () {
-            var randomLngInt = Math.floor(getRandomArbitrary(111, 113));
-            if (randomLngInt === 111) {
-                return '-111.' + Math.floor(getRandomArbitrary(7840, 9999));
-            } else {
-                var randomDecimal = Math.floor(getRandomArbitrary(100, 600));
-                return '-112.0' + randomDecimal;
-            }
-        };
-        
-        var randomLng = function () {
-            return '40.' + Math.floor(getRandomArbitrary(0, 9999));
-        };
-
-        var randomZoom = function () {
-            return Math.floor(getRandomArbitrary(9, 16));
-        };
-        
-        this.getRandomMap = function () {
-            var randomNum = Math.floor(getRandomArbitrary(0, 7));
-            var mapVendor = randomMap[randomNum][0];
-            var randomMapId = randomMap[randomNum][1];
-
-            if (mapVendor === 'mapbox') {
-                return staticMap = {mapUrl: url.mapbox + '/' + randomMapId + '/' + randomLat() + ',' + randomLng() + ',' + randomZoom() + '/' + '1280x720.png32?access_token=pk.eyJ1IjoicG9ldHNyb2NrIiwiYSI6Imc1b245cjAifQ.vwb579x58Ma-CcnfQNamiw'};
-            //} else if (mapVendor === 'stamen') {
-                //return staticMap = {mapUrl: url.stamen + '/#watercolor' + '1280:720/' + randomZoom() + '/' + randomLat() + '/' + randomLng()};
-                //return staticMap = {mapUrl: 'http://maps.stamen.com/m2i/#watercolor/1280:720/14/40.8905/-112.0204'};
-            } else {
-                console.log('Error!\nrandomNum: ', randomNum, '\nmapVendor', mapVendor, '\nrandomMapId: ', randomMapId );
-            }
-        }
-        
-    }
-]);
-
-'use strict';
-
-//Google Places API
-
-angular.module('core').factory('googlePlacesService', ['$http',
-	function ($http) {
-		var googlePlacesMarker = null;
-		var googlePlacesMarkerLayer = null;
-		var googlePlacesMarkerArray = [];
-
-		var googlePlacesData = function () {
-			$http.get('/places').success(function (poiData) {
-
-				var placeLength = poiData.results.length;
-				for (var place = 0; place < placeLength; place++) {
-
-					var mapLat = poiData.results[place].geometry.location.lat;
-					var mapLng = poiData.results[place].geometry.location.lng;
-					var mapTitle = poiData.results[place].name;
-
-					googlePlacesMarker = L.marker([mapLat, mapLng]).toGeoJSON();
-
-					googlePlacesMarkerArray.push(googlePlacesMarker);
-				} //end of FOR loop
-
-				googlePlacesMarkerLayer = L.geoJson(googlePlacesMarkerArray, {
-					style: function (feature) {
-						return {
-							'title': mapTitle,
-							'marker-size': 'large',
-							//'marker-symbol': mapSymbol(),
-							'marker-symbol': 'marker',
-							'marker-color': '#00295A',
-							'riseOnHover': true,
-							'riseOffset': 250,
-							'opacity': 0.5,
-							'clickable': true
-						}
-					}
-				})
-			});
-		};
-
-
-	}
-]);
-'use strict';
-
-angular.module('core').service('mapService', [
-	function ($scope) {
-		// Various Services for Map Functionality
-
-		this.featuredProjects = function (markerData) {
-			var featureProjectsArray = [];
-			for (var prop in markerData) {
-				var i = 0;
-				if (i < 2 && markerData[prop].featured) {      //setup for loop to end after finding the first three featured projects
-					var featuredProject = {
-						thumb: markerData[prop].thumbnail,
-						projectId: markerData[prop]._id,
-						shortTitle: markerData[prop].shortTitle
-					};
-					featureProjectsArray.push(featuredProject);
-				}
-				i++;
-			}
-		};
-
-		this.markerColorFn = function (markerData, prop) {
-			if (markerData[prop].category === 'video') {
-				return '#ff0011';
-			} else if (markerData[prop].category === 'multimedia') {
-				return '#ff0101';
-			} else if (markerData[prop].category === 'essay') {
-				return '#0015ff';
-			} else if (markerData[prop].category === 'literature') {
-				return '#15ff35';
-			} else if (markerData[prop].category === 'interview') {
-				return 'brown';
-			} else if (markerData[prop].category === 'map') {
-				return 'yellow';
-			} else if (markerData[prop].category === 'audio') {
-				return '#111111';
-			} else {
-				return '#00ff44';
-			}
-		};
-	}
-]);
-'use strict';
-
-angular.module('core').service('MarkerDataService', ['$http',
-    function($http) {
-        // Project Marker Data Service
-
-        this.getMarkerData = function(){
-            return  $http.get('/api/v1/markerData').
-                success(function(projects){
-                    //console.log('projects: \n', projects);
-                    //for (var prop in projects) {
-                    //    console.log('projects[prop].lng: \n', projects[prop].lng);
-                    //}
-
-                })
-                .error(function(error){
-                    console.log('marker data error: \n', error);
-                });
-        };
-    }
-]);
-
-'use strict';
-
-//Menu service used for managing  menus
-angular.module('core').service('Menus', [
-  function () {
-    // Define a set of default roles
-    this.defaultRoles = ['user', 'admin'];
-
-    // Define the menus object
-    this.menus = {};
-
-    // A private function for rendering decision
-    var shouldRender = function (user) {
-      if (!!~this.roles.indexOf('*')) {
-        return true;
-      } else {
-        if(!user) {
-          return false;
-        }
-        for (var userRoleIndex in user.roles) {
-          for (var roleIndex in this.roles) {
-            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    };
-
-    // Validate menu existance
-    this.validateMenuExistance = function (menuId) {
-      if (menuId && menuId.length) {
-        if (this.menus[menuId]) {
-          return true;
-        } else {
-          throw new Error('Menu does not exist');
-        }
-      } else {
-        throw new Error('MenuId was not provided');
-      }
-
-      return false;
-    };
-
-    // Get the menu object by menu id
-    this.getMenu = function (menuId) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Add new menu object by menu id
-    this.addMenu = function (menuId, options) {
-      options = options || {};
-
-      // Create the new menu
-      this.menus[menuId] = {
-        roles: options.roles || this.defaultRoles,
-        items: options.items || [],
-        shouldRender: shouldRender
-      };
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Remove existing menu object by menu id
-    this.removeMenu = function (menuId) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Return the menu object
-      delete this.menus[menuId];
-    };
-
-    // Add menu item object
-    this.addMenuItem = function (menuId, options) {
-      options = options || {};
-
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Push new menu item
-      this.menus[menuId].items.push({
-        title: options.title || '',
-        state: options.state || '',
-        type: options.type || 'item',
-        class: options.class,
-        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
-        position: options.position || 0,
-        items: [],
-        shouldRender: shouldRender
-      });
-
-      // Add submenu items
-      if (options.items) {
-        for (var i in options.items) {
-          this.addSubMenuItem(menuId, options.state, options.items[i]);
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Add submenu item object
-    this.addSubMenuItem = function (menuId, parentItemState, options) {
-      options = options || {};
-
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Search for menu item
-      for (var itemIndex in this.menus[menuId].items) {
-        if (this.menus[menuId].items[itemIndex].state === parentItemState) {
-          // Push new submenu item
-          this.menus[menuId].items[itemIndex].items.push({
-            title: options.title || '',
-            state: options.state || '',
-            roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
-            position: options.position || 0,
-            shouldRender: shouldRender
-          });
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Remove existing menu object by menu id
-    this.removeMenuItem = function (menuId, menuItemState) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Search for menu item to remove
-      for (var itemIndex in this.menus[menuId].items) {
-        if (this.menus[menuId].items[itemIndex].state === menuItemState) {
-          this.menus[menuId].items.splice(itemIndex, 1);
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    // Remove existing menu object by menu id
-    this.removeSubMenuItem = function (menuId, submenuItemState) {
-      // Validate that the menu exists
-      this.validateMenuExistance(menuId);
-
-      // Search for menu item to remove
-      for (var itemIndex in this.menus[menuId].items) {
-        for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-          if (this.menus[menuId].items[itemIndex].items[subitemIndex].state === submenuItemState) {
-            this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
-          }
-        }
-      }
-
-      // Return the menu object
-      return this.menus[menuId];
-    };
-
-    //Adding the topbar menu
-    this.addMenu('topbar', {
-      roles: ['*']
-    });
-  }
-]);
-
-'use strict';
-
-// Create the Socket.io wrapper service
-angular.module('core').service('Socket', ['Authentication', '$state', '$timeout',
-  function (Authentication, $state, $timeout) {
-    // Connect to Socket.io server
-    this.connect = function () {
-      // Connect only when authenticated
-      if (Authentication.user) {
-        this.socket = io();
-      }
-    };
-    this.connect();
-
-    // Wrap the Socket.io 'on' method
-    this.on = function (eventName, callback) {
-      if (this.socket) {
-        this.socket.on(eventName, function (data) {
-          $timeout(function () {
-            callback(data);
-          });
-        });
-      }
-    };
-
-    // Wrap the Socket.io 'emit' method
-    this.emit = function (eventName, data) {
-      if (this.socket) {
-        this.socket.emit(eventName, data);
-      }
-    };
-
-    // Wrap the Socket.io 'removeListener' method
-    this.removeListener = function (eventName) {
-      if (this.socket) {
-        this.socket.removeListener(eventName);
-      }
-    };
-  }
-]);
-
-'use strict';
-
-//Google Places API
-
-angular.module('core').factory('tractDataService', ['$scope', 'ApiKeys',
-	function ($scope, ApiKeys) {
-
-		var dataBoxStaticPopup = null,
-			tractData = {},
-			censusTractData = null;
-
-
-		ApiKeys.getTractData()
-			.success(function (tractData) {
-				tractDataLayer(tractData);
-			})
-			.error(function (tractData) {
-				alert('Failed to load tractData. Status: ' + status);
-			});
-		var tractDataLayer = function (tractData) {
-			censusTractData = L.geoJson(tractData, {
-					style: style,
-					onEachFeature: function (feature, layer) {
-						if (feature.properties) {
-							var popupString = '<div class="popup">';
-							for (var k in feature.properties) {
-								var v = feature.properties[k];
-								popupString += k + ': ' + v + '<br />';
-							}
-							popupString += '</div>';
-							layer.bindPopup(popupString);
-						}
-						if (!(layer instanceof L.Point)) {
-							layer.on('mouseover', function () {
-								layer.setStyle(hoverStyle);
-								//layer.setStyle(hoverOffset);
-							});
-							layer.on('mouseout', function () {
-								layer.setStyle(style);
-								//layer.setStyle(hoverOffset);
-							});
-						}
-
-					}
-				}
-			);
-		};
-
-		$scope.dataBoxStaticPopupFn = function (dataBoxStaticPopup) {
-
-			// Listen for individual marker clicks.
-			dataBoxStaticPopup.on('mouseover', function (e) {
-				// Force the popup closed.
-				e.layer.closePopup();
-
-				var feature = e.layer.feature;
-				var content = '<div><strong>' + feature.properties.title + '</strong>' +
-					'<p>' + feature.properties.description + '</p></div>';
-
-				info.innerHTML = content;
-			});
-
-			function empty() {
-				info.innerHTML = '<div><strong>Click a marker</strong></div>';
-			}
-
-			// Clear the tooltip when .map is clicked.
-			map.on('move', empty);
-
-			// Trigger empty contents when the script has loaded on the page.
-			empty();
-
-		};
-
-//create toggle/filter functionality for Census Tract Data
-		$scope.toggleCensusData = function () {
-			if (!$scope.censusDataTractLayer) {
-				map.removeLayer(censusTractData);
-				map.removeLayer(dataBoxStaticPopup);
-			} else {
-				map.addLayer(censusTractData);
-				map.addLayer(dataBoxStaticPopup);
-
-			}
-		};
-
-	}
-]);
-'use strict';
-
-// Underscore service
-angular.module('core').factory('_', [
-	function() {
-		return window._;
-	}
-]);
-'use strict';
-
-angular.module('core').service('UtilsService', ['$http', '$window',
-  function($http, $window) {
-
-
-    //logic for css on the contact form
-
-    this.cssLayout = function () {
-      [].slice.call(document.querySelectorAll('input.input_field'))
-
-        .forEach(function (inputEl) {
-          // in case the input is already filled
-          if (inputEl.value.trim() !== '') {
-            classie.add(inputEl.parentNode, 'input-filled');
-          }
-          // events
-          inputEl.addEventListener('focus', onInputFocus);
-          inputEl.addEventListener('blur', onInputBlur);
-        });
-
-      function onInputFocus(ev) {
-        classie.add(ev.target.parentNode, 'input-filled');
-      }
-
-      function onInputBlur(ev) {
-        if (ev.target.value.trim() === '') {
-          classie.remove(ev.target.parentNode, 'input-filled');
-        }
-      }
-    };
-
-
   }
 ]);
 
@@ -4806,29 +4829,6 @@ angular.module('users').controller('SettingsController', ['$scope', 'Authenticat
   }
 ]);
 
-'use strict';
-
-angular.module('core').factory('authInterceptor', ['$q', '$injector',
-  function ($q, $injector) {
-    return {
-      responseError: function(rejection) {
-        if (!rejection.config.ignoreAuthModule) {
-          switch (rejection.status) {
-            case 401:
-              $injector.get('$state').transitionTo('authentication.signin');
-              break;
-            case 403:
-              $injector.get('$state').transitionTo('forbidden');
-              break;
-          }
-        }
-        // otherwise, default behaviour
-        return $q.reject(rejection);
-      }
-    };
-  }
-]);
-
 (function () {
 	'use strict';
 
@@ -4845,12 +4845,6 @@ angular.module('core').factory('authInterceptor', ['$q', '$injector',
 		$templateCache.put('modules/contacts/views/contact-us.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n            <section data-ng-controller=\"ContactsController\" class=\"main-content-inner\">\n\n                <div class=\"contact-form\">\n\n                    <div class=\"page-header\">\n                        <h1>Contact Us</h1>\n                    </div>\n\n<div class=\"row\">\n    <div class=\"col-md-12\">\n        <p>Thank you for your interest in Mapping Salt Lake City. If you have a general question or would like to get involved, please contact us with the form below.</p>\n\n        <p>If you would like to submit a project, please review the guidelines and <a href=\"/project/create\"> submit your information</a>.</p>\n\n        <div class=\"row\">\n            <div class=\"col-md-8\">\n\n                <form class=\"form-horizontal\" data-ng-submit=\"create()\" novalidate>\n                    <fieldset class=\"contact\">\n                        <div class=\"form-group\">\n\n                            <section class=\"content\">\n                                <div class=\"row\">\n\n                                    <!--<input type=\"text\" data-ng-model=\"state\" id=\"state\" class=\"form-control\" placeholder=\"State\" required>-->\n                                    <div class=\"col-md-6\">\n                                    <span class=\"input input-secondary\">\n                                        <input class=\"input_field input_field-secondary\" type=\"text\" id=\"firstName\" data-ng-model=\"firstName\" required/>\n                                        <label class=\"input_label input_label-secondary\" for=\"firstName\">\n                                            <span class=\"input_label-content input_label-content-secondary\">First Name</span>\n                                        </label>\n                                    </span>\n                                    </div>\n\n                                    <div class=\"col-md-6\">\n                                    <span class=\"input input-secondary\">\n                                        <input class=\"input_field input_field-secondary\" type=\"text\" id=\"lastName\" data-ng-model=\"lastName\">\n                                        <label class=\"input_label input_label-secondary\" for=\"lastName\">\n                                            <span class=\"input_label-content input_label-content-secondary\">Last Name</span>\n                                        </label>\n                                    </span>\n                                    </div>\n\n                                </div>\n\n                                <div class=\"row\">\n                                    <div class=\"col-md-8\">\n                                        <span class=\"input input-secondary\">\n                                            <input class=\"input_field input_field-secondary\" type=\"email\" id=\"email\" data-ng-model=\"email\" required>\n                                            <label class=\"input_label input_label-secondary\" for=\"email\">\n                                                <span class=\"input_label-content input_label-content-secondary\">E-Mail</span>\n                                            </label>\n                                        </span>\n                                    </div>\n                                    <div class=\"col-md-4\">\n                                        <span class=\"input input-secondary\">\n                                            <input class=\"input_field input_field-secondary\" type=\"text\" id=\"zip\" data-ng-model=\"zip\" required>\n                                            <label class=\"input_label input_label-secondary\" for=\"zip\">\n                                                <span class=\"input_label-content input_label-content-secondary\">Zip Code</span>\n                                            </label>\n                                        </span>\n                                    </div>\n                                </div>\n                                <!--<div class=\"row\">-->\n                                    <!--<div class=\"col-md-12\">-->\n                                        <!--<span class=\"input input-secondary\">-->\n                                            <!--<input class=\"input_field input_field-secondary\" type=\"checkbox\" id=\"newsletter\" data-ng-model=\"newsletter\">-->\n                                            <!--<label class=\"input_label input_label-secondary\" for=\"newsletter\">-->\n                                                <!--<span class=\"input_label-content input_label-content-secondary\">Subscribe to our Quarterly Newsletter?</span>-->\n                                            <!--</label>-->\n                                        <!--</span>-->\n                                    <!--</div>-->\n                                <!--</div>-->\n\n\n                                <div class=\"row\">\n                                <div class=\"col-md-12\">\n\n                                <div id=\"check-awesome\" class=\"form-group filter first-filter\">\n                                    <input type=\"checkbox\" name=\"filters\" id=\"newsletter\" value=\"newsletter\">\n                                    <label for=\"newsletter\">\n                                        <span class=\"check\"></span>\n                                        <span class=\"box\"></span>\n                                        Subscribe to our quarterly e-newsletter\n                                    </label>\n                                </div>\n                                </div>\n                                </div>\n\n                                <!--<div class=\"row\">-->\n                                    <!--<div class=\"col-md-12\">-->\n                                        <!--<label class=\"checkbox\">-->\n                                            <!--<input type=\"checkbox\" data-ng-model=\"newsletter\">-->\n                                            <!--Subscribe to our quarterly e-newsletter.-->\n                                        <!--</label>-->\n                                    <!--</div>-->\n                                <!--</div>-->\n\n                                <div class=\"row\">\n                                    <div class=\"col-md-12\">\n                                        <textarea id=\"message\" data-ng-model=\"message\" name=\"styled-textarea\" required>Let us know what you think</textarea>\n                                    </div>\n                                </div>\n\n                            </section>\n\n                        </div>\n\n                        <div class=\"form-group\">\n                            <button class=\"btn btn-main btn-lg grow btn-contact\" type=\"submit\">Send</button>\n                        </div>\n\n                        <div data-ng-show=\"error\" class=\"text-danger\">\n                            <strong data-ng-bind=\"error\"></strong>\n                        </div>\n\n                    </fieldset>\n                </form>\n\n            </div>\n        </div>\n    </div>\n</div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
 		$templateCache.put('modules/contacts/views/edit-contact.client.view.html', '<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\">\n    <section class=\"container\">\n\n        <section data-ng-controller=\"ContactsController\" data-ng-init=\"findOne()\">\n    <div class=\"page-header\">\n        <h1>Edit Contact</h1>\n    </div>\n    <div class=\"col-md-12\">\n        <form class=\"form-horizontal\" data-ng-submit=\"update()\" novalidate>\n            <fieldset>\n                <div class=\"form-group\">\n                    <label class=\"control-label\" for=\"name\">Name</label>\n                    <div class=\"controls\">\n                        <input type=\"text\" data-ng-model=\"contact.name\" id=\"name\" class=\"form-control\" placeholder=\"Name\" required>\n                    </div>\n                </div>\n                <div class=\"form-group\">\n                    <input type=\"submit\" value=\"Update\" class=\"btn btn-default\">\n                </div>\n				<div data-ng-show=\"error\" class=\"text-danger\">\n					<strong data-ng-bind=\"error\"></strong>\n				</div>\n            </fieldset>\n        </form>\n    </div>\n</section>\n</section>\n</section>\n');
 		$templateCache.put('modules/contacts/views/view-contact.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n            <section data-ng-controller=\"ContactsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n\n                <div class=\"row\">\n                    <div class=\"col-xs-12 \">\n\n\n                        <div class=\"img-responsive\">\n                            <a ng-href=\"/\"><img ng-src=\"{{logo}}\"></a>\n                        </div>\n\n                        <div class=\"page-header\">\n                            <h1 data-ng-bind=\"contact.title\"></h1>\n                        </div>\n\n                        <small>\n                            <em class=\"text-muted\">\n\n                                Published\n                                <span data-ng-bind=\"contact.created | date:\'mediumDate\'\"></span>\n                                by\n                                <span data-ng-bind=\"contact.user.firstName\"></span>\n                                <span data-ng-bind=\"contact.user.lastName\"></span>\n                            </em>\n                        </small>\n\n                        <div>\n                            <p data-ng-bind-html=\"contact.message\"></p>\n                        </div>\n\n                        <hr>\n\n                        <!--edit and delete message-->\n                        <div class=\"pull-right\"\n                             data-ng-show=\"(!authentication.admin)\">\n                            <a class=\"btn btn-primary\" href=\"/contacts/{{contact._id}}/edit\">\n                                <i class=\"glyphicon glyphicon-edit\"></i>\n                            </a>\n                            <a class=\"btn btn-primary\" data-ng-click=\"remove();\">\n                                <i class=\"glyphicon glyphicon-trash\"></i>\n                            </a>\n                        </div>\n\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
-		$templateCache.put('modules/projects/views/create-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n      <section data-ng-controller=\"ProjectsController\" class=\"main-content-inner\">\n\n        <div class=\"page-header\">\n          <h1>Project Submission Form</h1>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-md-12\">\n\n            Please include an address for <span>the location of a your essay or project</span>. (Feel free to\n            approximate if there\'s not an exact address.)\n\n            <form name=\"project\" class=\"form-horizontal\" data-ng-submit=\"create(project.$valid)\" novalidate>\n              <fieldset>\n                <div class=\"form-group\">\n\n\n                  <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n                      <span class=\"input input-secondary\">\n                          <input class=\"input_field input_field-secondary\" type=\"text\" id=\"street\"\n                                 data-ng-model=\"project.street\" required ng-change=\"showUploadFunction()\"/>\n                          <label class=\"input_label input_label-secondary\" for=\"street\">\n                            <span\n                              class=\"input_label-content input_label-content-secondary\">Street Address for Project</span>\n                          </label>\n                      </span>\n                    </div>\n\n                    <div class=\"col-md-6\">\n                      <span class=\"input input-secondary\">\n                          <input class=\"input_field input_field-secondary\" type=\"text\" id=\"city\"\n                                 data-ng-model=\"project.city\" required/>\n                          <label class=\"input_label input_label-secondary\" for=\"city\">\n                            <span class=\"input_label-content input_label-content-secondary\">City</span>\n                          </label>\n                      </span>\n                    </div>\n\n                  </div>\n\n                  <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n\n\n\n                      <span class=\"input input-secondary\">\n                          <input class=\"input_field input_field-secondary\" type=\"zip\" id=\"zip\"\n                                 data-ng-model=\"project.zip\" required/>\n                          <label class=\"input_label input_label-secondary\" for=\"zip\">\n                            <span\n                              class=\"input_label-content input_label-content-secondary\">Zip Code</span>\n                          </label>\n                      </span>\n                    </div>\n\n\n                    <div class=\"col-md-6\">\n                      <label for=\"status\">Submission Category\n                        <a href=\"#\" tooltip-placement=\"right\"\n                           uib-tooltip=\"If you\'re unsure of the best  category, just select whatever you feel is close.\">\n                          <i class=\"fa fa-question-circle\"></i>\n                        </a>\n                      </label>\n                      <div class=\"dropdown\">\n                        <select id=\"status\" data-ng-model=\"project.category\">\n                          <option value=\"essay\">Essay</option>\n                          <option value=\"multimedia\">Multimedia</option>\n                          <option value=\"video\">Video</option>\n                          <option value=\"audio\">Audio</option>\n                          <option value=\"photograhpy\">Photography</option>\n                          <option value=\"this was here\">This Was Here</option>\n                        </select>\n                      </div>\n                    </div>\n                  </div>\n\n\n                  <div class=\"row\">\n                    <div class=\"col-md-12\">\n                      <span class=\"input input-secondary title\">\n                          <input class=\"input_field input_field-secondary\" type=\"text\" id=\"title\"\n                                 data-ng-model=\"project.title\" required/>\n                          <label class=\"input_label input_label-secondary title\" for=\"title\">\n                            <span\n                              class=\"input_label-content input_label-content-secondary\">Title</span>\n                          </label>\n                      </span>\n                    </div>\n                  </div>\n\n\n                  <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n                      <project-uploader-directive data-ng-show=\"showUpload\"></project-uploader-directive>\n                    </div>\n\n                  </div>\n\n                  <div class=\"row\">\n                    <div class=\"col-md-offset-8 col-md-2\">\n\n                      <div class=\"form-group pull-right submit-project\">\n                        <input type=\"submit\" class=\"btn btn-primary btn-lg btn-main grow\">\n                      </div>\n\n                      <div data-ng-show=\"error\" class=\"text-danger\">\n                        <strong data-ng-bind=\"error\"></strong>\n                      </div>\n\n                    </div>\n                  </div>\n\n\n                </div>\n\n              </fieldset>\n            </form>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
-		$templateCache.put('modules/projects/views/edit-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n        <div class=\"main-content-outer\">\n\n\n            <section data-ng-controller=\"ProjectsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n            <div class=\"page-header\">\n                <h1>Edit Project</h1>\n            </div>\n            <div class=\"col-md-12\">\n                <div class=\"img-responsive\">\n                    <a ng-href=\"/\"><img ng-src=\"{{logo}}\"></a>\n                </div>\n                <form class=\"form-horizontal\" data-ng-submit=\"update()\" novalidate>\n                    <fieldset>\n                        <div class=\"form-group\">\n\n                            <div class=\"controls\">\n                                <label class=\"control-label\">Street</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"street\" id=\"street\" class=\"form-control\"\n                                           placeholder=\"Street\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">City</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"city\" id=\"city\" class=\"form-control\"\n                                           placeholder=\"City\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">State</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"state\" id=\"state\" class=\"form-control\"\n                                           placeholder=\"State\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">Zip Code</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"number\" data-ng-model=\"zip\" id=\"zip\" class=\"form-control\"\n                                           placeholder=\"Zip Code\"\n                                           required>\n                                </div>\n\n                                <label class=\"control-label\">Project Title</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"title\" id=\"title\" class=\"form-control\"\n                                           placeholder=\"Project Title\"\n                                           required>\n                                </div>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"category\" id=\"category\" class=\"form-control\"\n                                           placeholder=\"Category\">\n                                </div>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"vimeoId\" id=\"vimeoId\" class=\"form-control\"\n                                           placeholder=\"Vimeo ID\">\n                                </div>\n\n\n                                <label class=\"control-label\">Story</label>\n                                <div class=\"controls\">\n                                    <textarea ckeditor=\"editorOptions\" ng-model=\"story\" id=\"story\" required></textarea>\n                                </div>\n\n\n                            </div>\n\n                            <div class=\"form-group\">\n                                <input type=\"submit\" value=\"Update\" class=\"btn btn-primary btn-lg btn-main grow\">\n                            </div>\n\n                            <div data-ng-show=\"error\" class=\"text-danger\">\n                                <strong data-ng-bind=\"error\"></strong>\n                            </div>\n                        </div>\n                    </fieldset>\n                </form>\n            </div>\n        </section>\n            </div>\n    </section>\n</section>\n');
-		$templateCache.put('modules/projects/views/lightbox.html', '<section data-ng-controller=\"ContributorController\">\n  <div class=\"modal-body\" id=\"lightbox-modal\"\n       ng-swipe-left=\"Lightbox.nextImage()\"\n       ng-swipe-right=\"Lightbox.prevImage()\">\n\n    <div class=lightbox-nav>\n      <button class=close aria-hidden=true ng-click=$dismiss()>×</button>\n      <div class=btn-group>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.prevImage()><i class=\"fa fa-chevron-left\"></i></a>\n        <a ng-href={{Lightbox.imageUrl}} target=_blank class=\"btn btn-xs btn-default\" title=\"Open in new tab\">Open image\n          in new tab</a>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.nextImage()><i class=\"fa fa-chevron-right\"></i></a>\n      </div>\n    </div>\n\n    <!-- image -->\n    <div class=\"lightbox-image-container\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n\n\n          <div class=lightbox-image-caption>\n            <div><img lightbox-src=\"{{Lightbox.imageUrl}}\"></div>\n\n            <div>{{Lightbox.imageCaption}}</div>\n          </div>\n\n        </div>\n      </div>\n\n    </div>\n  </div>\n</section>\n');
-		$templateCache.put('modules/projects/views/list-projects.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <section data-ng-controller=\"ProjectsController\" data-ng-init=\"init()\" class=\"main-content-inner\">\n\n        <div class=\"list-projects\">\n\n          <div class=\"page-header\">\n            <h1>Projects</h1>\n          </div>\n\n          <div class=\"list-group\">\n            <div class=\"row\">\n              <div class=\"col-md-12\">\n                <a data-ng-repeat=\"publishedProject in publishedProjects\" data-ng-href=\"/projects/{{publishedProject._id}}\" class=\"col-md-4 story-summary animation-cards\">\n                    <span>\n                        <span>\n                            <img data-ng-src=\"{{publishedProject.mainImgThumbnail}}\"/>\n                        </span>\n\n                        <span class=\"pull-right\">\n                            <span data-ng-bind=\"publishedProject.title\"></span><br/>\n                            <span data-ng-bind=\"publishedProject.user.displayName\">there</span><br/>\n                        </span>\n                    </span>\n                </a>\n              </div>\n            </div>\n\n\n            <div class=\"alert alert-warning text-center\"\n                 data-ng-hide=\"!PublishingService.getPublishedProjects() || projects.length\">\n              No Projects yet, why don\'t you <a href=\"/projects/create\">create one</a>?\n            </div>\n\n          </div>\n        </div>\n        <pagination boundary-links=\"true\" max-size=\"8\" items-per-page=\"itemsPerPage\" total-items=\"filterLength\"\n                    ng-model=\"currentPage\" ng-change=\"pageChanged()\"></pagination>\n\n      </section>\n    </div>\n  </section>\n</section>\n');
-		$templateCache.put('modules/projects/views/project-for-submission.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <project-status-overview></project-status-overview>\n\n    </div>\n  </section>\n</section>\n');
-		$templateCache.put('modules/projects/views/view-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <section data-ng-controller=\"ProjectsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n        <!--<a data-ng-click=\"goBack()\"><span><i class=\"fa fa-chevron-left\"></i></span></a>-->\n\n        <div class=\"view-project\">\n          <div class=\"page-header\">\n              <h1 data-ng-bind=\"project.title\"></h1>\n              <i class=\"fa fa-heart-o\" ng-show=\"!isFavorite\" ng-click=\"toggleFavProject()\"></i>\n              <i class=\"fa fa-heart\" ng-show=\"isFavorite\" ng-click=\"toggleFavProject()\"></i>\n            <em class=\"text-muted\">\n              <span data-ng-bind=\"project.createdOn | date:\'mediumDate\'\"></span>\n              by\n              <a data-ng-href=\"/contributors/{{project.user._id}}\"><span data-ng-bind=\"project.user.displayName\"></span></a>\n            </em>\n          </div>\n\n          <div class=\"row\">\n            <div class=\"col-xs-12\">\n              <div class=\"videoWrapper\" data-ng-show=\"project.vimeoId\">\n                <iframe data-ng-show=\"!videoSizeSelect()\" width=\"{{vimeo.width}}\" height=\"{{vimeo.height}}\"\n                        data-ng-src=\"{{vimeo.video}}\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen\n                        allowfullscreen>\n                </iframe>\n              </div>\n\n              <div class=\"videoWrapper\" data-ng-show=\"project.soundCloudId\">\n                <iframe width=\"100%\" height=\"450\" scrolling=\"no\" frameborder=\"no\" data-ng-src=\"{{soundCloud.audio}}\">\n                </iframe>\n              </div>\n\n              <div data-ng-show=\"project.imageGallery || images\">\n                <div class=\"row\">\n                  <ul id=\"grid-view\">\n                    <a ng-click=\"openLightboxModal($index)\" data-ng-repeat=\"image in images\" class=\"col-md-3\">\n                      <li>\n                        <img ng-src=\"{{image}}\" class=\"img-thumbnail\">\n                      </li>\n                    </a>\n                  </ul>\n                </div>\n\n\n                <div data-ng-show=\"project.story !== \'\'\">\n                  <p data-ng-bind-html=\"trustAsHtml(project.story)\"></p>\n                </div>\n                <hr>\n                <div>\n                  <img ng-src=\"{{project.mapImage}}\" class=\"img-responsive\">\n                </div>\n\n                <hr/>\n                <h3>Related Stories</h3>\n\n                <div class=\"pull-right\"\n                     data-ng-show=\"((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === \'admin\'\">\n                  <a class=\"btn btn-main grow\" href=\"/projects/{{project._id}}/edit\">\n                    <i class=\"glyphicon glyphicon-edit\"></i>\n                  </a>\n                  <a class=\"btn btn-primary btn-warning\" data-ng-click=\"remove();\">\n                    <i class=\"glyphicon glyphicon-trash\"></i>\n                  </a>\n                </div>\n\n              </div>\n            </div>\n          </div>\n        </div>\n\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/core/views/400.client.view.html', '<h1>Bad Request</h1>\n<div class=\"alert alert-danger\" role=\"alert\">\n  <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n  <span class=\"sr-only\">Error:</span>\n  You made a bad request\n</div>\n');
 		$templateCache.put('modules/core/views/403.client.view.html', '<h1>Forbidden</h1>\n<div class=\"alert alert-danger\" role=\"alert\">\n  <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n  <span class=\"sr-only\">Error:</span>\n  You are not authorized to access this resource\n</div>\n');
 		$templateCache.put('modules/core/views/404.client.view.html', '<h1>Page Not Found</h1>\n<div class=\"alert alert-danger\" role=\"alert\">\n  <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n  <span class=\"sr-only\">Error:</span> Page Not Found\n</div>\n');
@@ -4858,24 +4852,30 @@ angular.module('core').factory('authInterceptor', ['$q', '$injector',
 		$templateCache.put('modules/core/views/header.client.view.html', '<div class=\"container\" ng-controller=\"HeaderController\">\n  <div class=\"navbar-header\">\n    <button class=\"navbar-toggle\" type=\"button\" ng-click=\"toggleCollapsibleMenu()\">\n      <span class=\"sr-only\">Toggle navigation</span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n    </button>\n    <a ui-sref=\"home\" class=\"navbar-brand\">MEAN.JS</a>\n  </div>\n  <nav class=\"collapse navbar-collapse\" collapse=\"!isCollapsed\" role=\"navigation\">\n    <ul class=\"nav navbar-nav\" ng-if=\"menu.shouldRender(authentication.user);\">\n      <li ng-repeat=\"item in menu.items | orderBy: \'position\'\" ng-if=\"item.shouldRender(authentication.user);\" ng-switch=\"item.type\" ng-class=\"{ active: $state.includes(item.state), dropdown: item.type === \'dropdown\' }\" class=\"{{item.class}}\" dropdown=\"item.type === \'dropdown\'\">\n        <a ng-switch-when=\"dropdown\" class=\"dropdown-toggle\" dropdown-toggle role=\"button\">{{::item.title}}&nbsp;<span class=\"caret\"></span></a>\n        <ul ng-switch-when=\"dropdown\" class=\"dropdown-menu\">\n          <li ng-repeat=\"subitem in item.items | orderBy: \'position\'\" ng-if=\"subitem.shouldRender(authentication.user);\" ui-sref-active=\"active\">\n            <a ui-sref=\"{{subitem.state}}\" ng-bind=\"subitem.title\"></a>\n          </li>\n        </ul>\n        <a ng-switch-default ui-sref=\"{{item.state}}\" ng-bind=\"item.title\"></a>\n      </li>\n    </ul>\n    <ul class=\"nav navbar-nav navbar-right\" ng-hide=\"authentication.user\">\n      <li ui-sref-active=\"active\">\n        <a ui-sref=\"authentication.signup\">Sign Up</a>\n      </li>\n      <li class=\"divider-vertical\"></li>\n      <li ui-sref-active=\"active\">\n        <a ui-sref=\"authentication.signin\">Sign In</a>\n      </li>\n    </ul>\n    <ul class=\"nav navbar-nav navbar-right\" ng-show=\"authentication.user\">\n      <li class=\"dropdown\" dropdown>\n        <a class=\"dropdown-toggle user-header-dropdown-toggle\" dropdown-toggle role=\"button\">\n          <img ng-src=\"{{authentication.user.profileImageURL}}\" alt=\"{{authentication.user.displayName}}\" class=\"header-profile-image\" />\n          <span ng-bind=\"authentication.user.displayName\"></span> <b class=\"caret\"></b>\n        </a>\n        <ul class=\"dropdown-menu\" role=\"menu\">\n          <li ui-sref-active=\"active\">\n            <a ui-sref=\"settings.profile\">Edit Profile</a>\n          </li>\n          <li ui-sref-active=\"active\">\n            <a ui-sref=\"settings.picture\">Change Profile Picture</a>\n          </li>\n          <li ui-sref-active=\"active\" ng-show=\"authentication.user.provider === \'local\'\">\n            <a ui-sref=\"settings.password\">Change Password</a>\n          </li>\n          <li ui-sref-active=\"active\">\n            <a ui-sref=\"settings.accounts\">Manage Social Accounts</a>\n          </li>\n          <li class=\"divider\"></li>\n          <li>\n            <a href=\"/api/v1/auth/signout\" target=\"_self\">Signout</a>\n          </li>\n        </ul>\n      </li>\n    </ul>\n  </nav>\n</div>\n');
 		$templateCache.put('modules/core/views/home.client.view.html', '<section class=\"container map\" data-ng-controller=\"HomeController\" data-ng-init=\"mapFunction()\">\n\n    <!--logo-->\n    <div data-ng-show=\"!overlayActive && !menuOpen\">\n        <div class=\"small-main-logo logo-on-page img-responsive\" data-ng-click=\"toggleOverlayFunction(\'home\')\"></div>\n    </div>\n\n    <main-page-overlay></main-page-overlay>\n\n    <!--call MapBox map-->\n\n    <div id=\"map\" class=\"map\" data-ng-class=\"{\'leaflet-tile-gray\': !shadeMap}\">\n       <i class=\"fa fa-info-circle\" data-ng-click=\"attributionFull = !attributionFull\" data-ng-class=\"{\'atrrib-clicked\': attributionFull}\"></i>\n        <div class=\"attrib\" data-ng-show=\"attributionFull\" data-ng-bind-html=\"attributionText\"></div>\n    </div>\n\n    <div id=\"main-menu\" class=\"main-menu\">\n        <main-menu></main-menu>\n    </div>\n\n    <div id=\"info\" class=\"info\" data-ng-class=\"{\'info-project-details\': toggleDetails}\"></div>\n\n</section>\n');
 		$templateCache.put('modules/core/views/modal.client.view.html', '<div data-ng-controller=\"ModalController\" >\n\n<signup-modal></signup-modal>\n</div>\n\n');
+		$templateCache.put('modules/projects/views/create-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n      <section data-ng-controller=\"ProjectsController\" class=\"main-content-inner\">\n\n        <div class=\"page-header\">\n          <h1>Project Submission Form</h1>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-md-12\">\n\n            Please include an address for <span>the location of a your essay or project</span>. (Feel free to\n            approximate if there\'s not an exact address.)\n\n            <form name=\"project\" class=\"form-horizontal\" data-ng-submit=\"create(project.$valid)\" novalidate>\n              <fieldset>\n                <div class=\"form-group\">\n\n\n                  <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n                      <span class=\"input input-secondary\">\n                          <input class=\"input_field input_field-secondary\" type=\"text\" id=\"street\"\n                                 data-ng-model=\"project.street\" required ng-change=\"showUploadFunction()\"/>\n                          <label class=\"input_label input_label-secondary\" for=\"street\">\n                            <span\n                              class=\"input_label-content input_label-content-secondary\">Street Address for Project</span>\n                          </label>\n                      </span>\n                    </div>\n\n                    <div class=\"col-md-6\">\n                      <span class=\"input input-secondary\">\n                          <input class=\"input_field input_field-secondary\" type=\"text\" id=\"city\"\n                                 data-ng-model=\"project.city\" required/>\n                          <label class=\"input_label input_label-secondary\" for=\"city\">\n                            <span class=\"input_label-content input_label-content-secondary\">City</span>\n                          </label>\n                      </span>\n                    </div>\n\n                  </div>\n\n                  <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n\n\n\n                      <span class=\"input input-secondary\">\n                          <input class=\"input_field input_field-secondary\" type=\"zip\" id=\"zip\"\n                                 data-ng-model=\"project.zip\" required/>\n                          <label class=\"input_label input_label-secondary\" for=\"zip\">\n                            <span\n                              class=\"input_label-content input_label-content-secondary\">Zip Code</span>\n                          </label>\n                      </span>\n                    </div>\n\n\n                    <div class=\"col-md-6\">\n                      <label for=\"status\">Submission Category\n                        <a href=\"#\" tooltip-placement=\"right\"\n                           uib-tooltip=\"If you\'re unsure of the best  category, just select whatever you feel is close.\">\n                          <i class=\"fa fa-question-circle\"></i>\n                        </a>\n                      </label>\n                      <div class=\"dropdown\">\n                        <select id=\"status\" data-ng-model=\"project.category\">\n                          <option value=\"essay\">Essay</option>\n                          <option value=\"multimedia\">Multimedia</option>\n                          <option value=\"video\">Video</option>\n                          <option value=\"audio\">Audio</option>\n                          <option value=\"photograhpy\">Photography</option>\n                          <option value=\"this was here\">This Was Here</option>\n                        </select>\n                      </div>\n                    </div>\n                  </div>\n\n\n                  <div class=\"row\">\n                    <div class=\"col-md-12\">\n                      <span class=\"input input-secondary title\">\n                          <input class=\"input_field input_field-secondary\" type=\"text\" id=\"title\"\n                                 data-ng-model=\"project.title\" required/>\n                          <label class=\"input_label input_label-secondary title\" for=\"title\">\n                            <span\n                              class=\"input_label-content input_label-content-secondary\">Title</span>\n                          </label>\n                      </span>\n                    </div>\n                  </div>\n\n\n                  <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n                      <project-uploader-directive data-ng-show=\"showUpload\"></project-uploader-directive>\n                    </div>\n\n                  </div>\n\n                  <div class=\"row\">\n                    <div class=\"col-md-offset-8 col-md-2\">\n\n                      <div class=\"form-group pull-right submit-project\">\n                        <input type=\"submit\" class=\"btn btn-primary btn-lg btn-main grow\">\n                      </div>\n\n                      <div data-ng-show=\"error\" class=\"text-danger\">\n                        <strong data-ng-bind=\"error\"></strong>\n                      </div>\n\n                    </div>\n                  </div>\n\n\n                </div>\n\n              </fieldset>\n            </form>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
+		$templateCache.put('modules/projects/views/edit-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n        <div class=\"main-content-outer\">\n\n\n            <section data-ng-controller=\"ProjectsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n            <div class=\"page-header\">\n                <h1>Edit Project</h1>\n            </div>\n            <div class=\"col-md-12\">\n                <div class=\"img-responsive\">\n                    <a ng-href=\"/\"><img ng-src=\"{{logo}}\"></a>\n                </div>\n                <form class=\"form-horizontal\" data-ng-submit=\"update()\" novalidate>\n                    <fieldset>\n                        <div class=\"form-group\">\n\n                            <div class=\"controls\">\n                                <label class=\"control-label\">Street</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"street\" id=\"street\" class=\"form-control\"\n                                           placeholder=\"Street\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">City</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"city\" id=\"city\" class=\"form-control\"\n                                           placeholder=\"City\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">State</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"state\" id=\"state\" class=\"form-control\"\n                                           placeholder=\"State\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">Zip Code</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"number\" data-ng-model=\"zip\" id=\"zip\" class=\"form-control\"\n                                           placeholder=\"Zip Code\"\n                                           required>\n                                </div>\n\n                                <label class=\"control-label\">Project Title</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"title\" id=\"title\" class=\"form-control\"\n                                           placeholder=\"Project Title\"\n                                           required>\n                                </div>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"category\" id=\"category\" class=\"form-control\"\n                                           placeholder=\"Category\">\n                                </div>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"vimeoId\" id=\"vimeoId\" class=\"form-control\"\n                                           placeholder=\"Vimeo ID\">\n                                </div>\n\n\n                                <label class=\"control-label\">Story</label>\n                                <div class=\"controls\">\n                                    <textarea ckeditor=\"editorOptions\" ng-model=\"story\" id=\"story\" required></textarea>\n                                </div>\n\n\n                            </div>\n\n                            <div class=\"form-group\">\n                                <input type=\"submit\" value=\"Update\" class=\"btn btn-primary btn-lg btn-main grow\">\n                            </div>\n\n                            <div data-ng-show=\"error\" class=\"text-danger\">\n                                <strong data-ng-bind=\"error\"></strong>\n                            </div>\n                        </div>\n                    </fieldset>\n                </form>\n            </div>\n        </section>\n            </div>\n    </section>\n</section>\n');
+		$templateCache.put('modules/projects/views/lightbox.html', '<section data-ng-controller=\"ContributorController\">\n  <div class=\"modal-body\" id=\"lightbox-modal\"\n       ng-swipe-left=\"Lightbox.nextImage()\"\n       ng-swipe-right=\"Lightbox.prevImage()\">\n\n    <div class=lightbox-nav>\n      <button class=close aria-hidden=true ng-click=$dismiss()>×</button>\n      <div class=btn-group>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.prevImage()><i class=\"fa fa-chevron-left\"></i></a>\n        <a ng-href={{Lightbox.imageUrl}} target=_blank class=\"btn btn-xs btn-default\" title=\"Open in new tab\">Open image\n          in new tab</a>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.nextImage()><i class=\"fa fa-chevron-right\"></i></a>\n      </div>\n    </div>\n\n    <!-- image -->\n    <div class=\"lightbox-image-container\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n\n\n          <div class=lightbox-image-caption>\n            <div><img lightbox-src=\"{{Lightbox.imageUrl}}\"></div>\n\n            <div>{{Lightbox.imageCaption}}</div>\n          </div>\n\n        </div>\n      </div>\n\n    </div>\n  </div>\n</section>\n');
+		$templateCache.put('modules/projects/views/list-projects.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <section data-ng-controller=\"ProjectsController\" data-ng-init=\"init()\" class=\"main-content-inner\">\n\n        <div class=\"list-projects\">\n\n          <div class=\"page-header\">\n            <h1>Projects</h1>\n          </div>\n\n          <div class=\"list-group\">\n            <div class=\"row\">\n              <div class=\"col-md-12\">\n                <a data-ng-repeat=\"publishedProject in publishedProjects\" data-ng-href=\"/projects/{{publishedProject._id}}\" class=\"col-md-4 story-summary animation-cards\">\n                    <span>\n                        <span>\n                            <img data-ng-src=\"{{publishedProject.mainImgThumbnail}}\"/>\n                        </span>\n\n                        <span class=\"pull-right\">\n                            <span data-ng-bind=\"publishedProject.title\"></span><br/>\n                            <span data-ng-bind=\"publishedProject.user.displayName\">there</span><br/>\n                        </span>\n                    </span>\n                </a>\n              </div>\n            </div>\n\n\n            <div class=\"alert alert-warning text-center\"\n                 data-ng-hide=\"!PublishingService.getPublishedProjects() || projects.length\">\n              No Projects yet, why don\'t you <a href=\"/projects/create\">create one</a>?\n            </div>\n\n          </div>\n        </div>\n        <pagination boundary-links=\"true\" max-size=\"8\" items-per-page=\"itemsPerPage\" total-items=\"filterLength\"\n                    ng-model=\"currentPage\" ng-change=\"pageChanged()\"></pagination>\n\n      </section>\n    </div>\n  </section>\n</section>\n');
+		$templateCache.put('modules/projects/views/project-for-submission.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <project-status-overview></project-status-overview>\n\n    </div>\n  </section>\n</section>\n');
+		$templateCache.put('modules/projects/views/view-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n      <section data-ng-controller=\"ProjectsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n        <!--<a data-ng-click=\"goBack()\"><span><i class=\"fa fa-chevron-left\"></i></span></a>-->\n\n        <div class=\"view-project\">\n          <div class=\"page-header\">\n              <h1 data-ng-bind=\"project.title\"></h1>\n              <i class=\"fa fa-heart-o\" ng-show=\"!isFavorite\" ng-click=\"toggleFavProject()\"></i>\n              <i class=\"fa fa-heart\" ng-show=\"isFavorite\" ng-click=\"toggleFavProject()\"></i>\n            <em class=\"text-muted\">\n              <span data-ng-bind=\"project.createdOn | date:\'mediumDate\'\"></span>\n              by\n              <a data-ng-href=\"/contributors/{{project.user._id}}\"><span data-ng-bind=\"project.user.displayName\"></span></a>\n            </em>\n          </div>\n\n          <div class=\"row\">\n            <div class=\"col-xs-12\">\n              <div class=\"videoWrapper\" data-ng-show=\"project.vimeoId\">\n                <iframe data-ng-show=\"!videoSizeSelect()\" width=\"{{vimeo.width}}\" height=\"{{vimeo.height}}\"\n                        data-ng-src=\"{{vimeo.video}}\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen\n                        allowfullscreen>\n                </iframe>\n              </div>\n\n              <div class=\"videoWrapper\" data-ng-show=\"project.soundCloudId\">\n                <iframe width=\"100%\" height=\"450\" scrolling=\"no\" frameborder=\"no\" data-ng-src=\"{{soundCloud.audio}}\">\n                </iframe>\n              </div>\n\n              <div data-ng-show=\"project.imageGallery || images\">\n                <div class=\"row\">\n                  <ul id=\"grid-view\">\n                    <a ng-click=\"openLightboxModal($index)\" data-ng-repeat=\"image in images\" class=\"col-md-3\">\n                      <li>\n                        <img ng-src=\"{{image}}\" class=\"img-thumbnail\">\n                      </li>\n                    </a>\n                  </ul>\n                </div>\n\n\n                <div data-ng-show=\"project.story !== \'\'\">\n                  <p data-ng-bind-html=\"trustAsHtml(project.story)\"></p>\n                </div>\n                <hr>\n                <div>\n                  <img ng-src=\"{{project.mapImage}}\" class=\"img-responsive\">\n                </div>\n\n                <hr/>\n                <h3>Related Stories</h3>\n\n                <div class=\"pull-right\"\n                     data-ng-show=\"((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === \'admin\'\">\n                  <a class=\"btn btn-main grow\" href=\"/projects/{{project._id}}/edit\">\n                    <i class=\"glyphicon glyphicon-edit\"></i>\n                  </a>\n                  <a class=\"btn btn-primary btn-warning\" data-ng-click=\"remove();\">\n                    <i class=\"glyphicon glyphicon-trash\"></i>\n                  </a>\n                </div>\n\n              </div>\n            </div>\n          </div>\n        </div>\n\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/admins/views/messages/admin-list-messages.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n\n    <div class=\"main-content-outer\">\n\n      <section class=\"main-content-inner\" data-ng-controller=\"ContactsController\" data-ng-init=\"find()\">\n\n\n        <div class=\"admin\">\n\n          <div class=\"admin-messages\">\n\n            <div class=\"admin-nav\">\n              <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                Admin Home Page\n              </a>\n              <a class=\"btn btn-main grow\" ui-sref=\"admin.adminProjectsQueue\">\n                Admin Project Page\n              </a>\n            </div>\n\n            <div class=\"page-header\">\n              <h1>Messages</h1>\n            </div>\n\n            <table class=\"table table-bordered table-striped\">\n              <thead ts-wrapper>\n              <tr>\n                <th ts-criteria=\"firstName\">First Name</th>\n                <th ts-criteria=\"lastName|lowercase\" ts-default>Last Name</th>\n                <th ts-criteria=\"email\">E-Mail</th>\n                <th ts-criteria=\"created\">Date Sent</th>\n                <!--<th ts-criteria=\"read\">Read</th>-->\n                <!--<th ts-criteria=\"flag\">Flag</th>-->\n              </tr>\n              </thead>\n\n\n              <tbody>\n\n              <tr data-ng-repeat=\"contact in contacts | orderBy: \'-created\'\"\n                  data-ng-class=\"{\'message-read\' : contact.read}\" data-ng-click=\"viewMessage(contact._id)\">\n                <td>{{ contact.firstName }}</td>\n                <td>{{ contact.lastName }}</td>\n                <!--<td>{{ contact.email }}</td>-->\n                <td>{{ contact._id }}</td>\n                <td>{{ contact.created | date : short }}</td>\n                <!--<td>{{ contact.read }}</td>-->\n                <!--<td align=\"center\"><i class=\"fa fa-flag\" data-ng-click=\"toggleFlag = !toggleFlag\" data-ng-class=\"{\'select\' : toggleFlag = true}\"></i></td>-->\n              </tr>\n\n              </tbody>\n\n            </table>\n\n            <pagination boundary-links=\"true\" max-size=\"8\" items-per-page=\"itemsPerPage\" total-items=\"filterLength\"\n                        ng-model=\"currentPage\" ng-change=\"pageChanged()\"></pagination>\n\n\n          </div>\n        </div>\n      </section>\n    </div>\n\n\n  </section>\n</section>\n');
 		$templateCache.put('modules/admins/views/messages/admin-view-message.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n\n        <div class=\"main-content-outer admin\">\n\n            <section data-ng-controller=\"ContactsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-messages\">\n\n                        <div class=\"admin-nav\">\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                                Admin Home Page\n                            </a>\n                        </div>\n\n                        <div class=\"page-header\">\n                            <h1 data-ng-bind=\"contact.name\"></h1>\n                        </div>\n\n                        <div class=\"row\">\n\n\n                            <div class=\"row\">\n                                <!--<div class=\"col-md-5\" data-ng-bind=\"contact.fullName\"></div>-->\n                                <div class=\"col-md-8\">{{contact.firstName}} {{contact.lastName}}</div>\n                                <div class=\"col-md-2\" data-ng-bind=\"contact.email\"></div>\n                            </div>\n                            <div class=\"row\">\n                                <div data-ng-bind=\"contact.message\"></div>\n                            </div>\n                            <small>\n                                <em class=\"text-muted\">\n                                    <span data-ng-bind=\"contact.created | date:\'mediumDate\'\"></span>\n                                    from\n                                    <span data-ng-bind=\"contact.user.displayName\"></span>\n                                </em>\n                            </small>\n                        </div>\n\n                        <div class=\"pull-right\" data-ng-show=\"isAdmin.user\">\n                            <a class=\"btn btn-primary btn-warning\" data-ng-click=\"remove();\">\n                                <i class=\"glyphicon glyphicon-trash\"></i>\n                            </a>\n                        </div>\n\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
+		$templateCache.put('modules/admins/views/users/admin-edit-user.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"UserController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n                <div class=\"admin-user\">\n\n                    <div class=\"admin-nav\">\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                            Admin Home Page\n                        </a>\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                            Admin User Page\n                        </a>\n                    </div>\n\n                    <div class=\"page-header\">\n                        <h1>Edit {{user.firstName}} {{user.lastName}}\'s Profile</h1>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">\n                            <form data-ng-submit=\"updateUserProfile()\" class=\"signin form-horizontal\" autocomplete=\"off\">\n\n                                <fieldset>\n                                    <div class=\"form-group\">\n                                        <label for=\"firstName\">First Name</label>\n                                        <input type=\"text\" id=\"firstName\" name=\"firstName\" class=\"form-control\" data-ng-model=\"user.firstName\"\n                                               placeholder=\"First Name\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"lastName\">Last Name</label>\n                                        <input type=\"text\" id=\"lastName\" name=\"lastName\" class=\"form-control\" data-ng-model=\"user.lastName\" placeholder=\"Last Name\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"email\">Email</label>\n                                        <input type=\"text\" id=\"email\" name=\"email\" class=\"form-control\" data-ng-model=\"user.email\" placeholder=\"Email\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"username\">Username</label>\n                                        <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" data-ng-model=\"user.username\" placeholder=\"Username\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"zip\">Zip Code</label>\n                                        <input type=\"number\" id=\"zip\" name=\"zip\" class=\"form-control\" data-ng-model=\"user.zip\" placeholder=\"Zip Code\">\n                                    </div>\n\n                                    <div class=\"text-center form-group\">\n                                        <button type=\"submit\" class=\"btn btn-large btn-primary\">Save Profile</button>\n                                    </div>\n\n\n                                    <div data-ng-show=\"success\" class=\"text-center text-success\">\n                                        <strong>Profile Saved Successfully</strong>\n                                    </div>\n                                    <div data-ng-show=\"error\" class=\"text-center text-danger\">\n                                        <strong data-ng-bind=\"error\"></strong>\n                                    </div>\n                                </fieldset>\n\n\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
+		$templateCache.put('modules/admins/views/users/admin-list-users.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n            <section data-ng-controller=\"UserController\" data-ng-init=\"find()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-user\">\n\n                        <div class=\"admin-nav\">\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                                Admin Home Page\n                            </a>\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                                Admin User Page\n                            </a>\n                        </div>\n\n                        <div class=\"page-header\">\n                            <h1>List of Users</h1>\n                        </div>\n\n                        <div class=\"row\">\n                            <div class=\"col-md-12\">\n                              {{user._id}}\n                                <a data-ng-repeat=\"user in users\" ui-sref=\"admin.adminViewUser({userId: user._id})\" class=\"col-md-6\">\n                                  <div class=\"tile\">\n                                    <div class=\"user-summary\" data-ng-bind=\"user.displayName\">{{user._id}}</div>\n                                    <div><img data-ng-src=\"{{user.profileImage}}\"></div>\n                                  </div>\n                                </a>\n                            </div>\n                        </div>\n\n                    </div>\n\n                    <div class=\"container\">\n                        <div class=\"gridStyle\" data-ng-grid=\"gridOptions\"></div>\n                    </div>\n\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
+		$templateCache.put('modules/admins/views/users/admin-view-user.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"EditProfileController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-user\">\n\n                      <div class=\"admin-nav\">\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                          Admin Home Page\n                        </a>\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                          Admin User Page\n                        </a>\n                      </div>\n\n                        <div class=\"page-header\">\n                            <h1>{{userToEdit.firstName}} {{userToEdit.lastName}}\'s Profile\n                                <a href=\"#\" data-ng-show=\"userToEdit.profileImageURL\"><span><img data-ng-src=\"{{userToEdit.profileImageURL}}\" class=\"header-profile-image pull-right\"/></span>\n                                </a>\n\n                                <a href=\"#\" data-ng-show=\"!userToEdit.profileImageURL\"><span><img data-ng-src=\"\" class=\"header-profile-image pull-right\"/></span>Upload a Pic\n                                </a>\n                            </h1>\n                        </div>\n\n                        <div class=\"row user-profile\">\n                            <div class=\"col-xs-12\">\n                              <form name=\"userAdminForm\" class=\"form-horizontal\" data-ng-submit=\"update(userToEdit.$valid)\" novalidate>\n                                <fieldset>\n                                  <user-view-form></user-view-form>\n                                </fieldset>\n                              </form>\n                            </div>\n                        </div>\n\n\n\n                      <hr>\n\n                        <div class=\"pull-right\">\n                            <!--data-ng-show=\"((authentication.user) && (authentication.user._id == project.user._id))\">-->\n                            <!--<a class=\"btn btn-primary\" href=\"/users/{{user._id}}/edit\">-->\n                            <!--<i class=\"glyphicon glyphicon-edit\"></i>-->\n                            <!--</a>-->\n                            <a class=\"btn btn-main grow btn-warning\" data-ng-click=\"remove();\">\n                                <i class=\"glyphicon glyphicon-trash\"></i>\n                            </a>\n                        </div>\n\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
 		$templateCache.put('modules/admins/views/projects/admin-edit-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n\n        <div class=\"main-content-outer\">\n\n\n            <section data-ng-controller=\"ProjectsController\" data-ng-init=\"findOneProject()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-projects\">\n\n                        <div class=\"admin-nav\">\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                                Admin Home Page\n                            </a>\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                                Admin User Page\n                            </a>\n                        </div>\n\n            <div class=\"page-header\">\n                <h1>Edit Project</h1>\n            </div>\n            <div class=\"col-md-12\">\n                <div class=\"img-responsive\">\n                    <a ng-href=\"/\"><img ng-src=\"{{logo}}\"></a>\n                </div>\n                <form class=\"form-horizontal\" data-ng-submit=\"update()\" novalidate>\n                    <fieldset>\n                        <div class=\"form-group\">\n\n                            <div class=\"controls\">\n                                <label class=\"control-label\">Street</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"street\" id=\"street\" class=\"form-control\"\n                                           placeholder=\"Street\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">City</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"city\" id=\"city\" class=\"form-control\"\n                                           placeholder=\"City\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">State</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"state\" id=\"state\" class=\"form-control\"\n                                           placeholder=\"State\"\n                                           required>\n                                </div>\n                                <label class=\"control-label\">Zip Code</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"number\" data-ng-model=\"zip\" id=\"zip\" class=\"form-control\"\n                                           placeholder=\"Zip Code\"\n                                           required>\n                                </div>\n\n                                <label class=\"control-label\">Project Title</label>\n\n                                <div class=\"controls\">\n                                    <input type=\"text\" data-ng-model=\"title\" id=\"title\" class=\"form-control\"\n                                           placeholder=\"Project Title\"\n                                           required>\n                                </div>\n\n\n                                <label class=\"control-label\">Story</label>\n\n                                <div class=\"controls\">\n                                    <textarea ckeditor=\"editorOptions\" ng-model=\"story\" id=\"story\" required></textarea>\n                                </div>\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"submit\" value=\"Update\" class=\"btn btn-primary btn-lg btn-main grow\">\n                            </div>\n                            <div data-ng-show=\"error\" class=\"text-danger\">\n                                <strong data-ng-bind=\"error\"></strong>\n                            </div>\n                        </div>\n                    </fieldset>\n                </form>\n            </div>\n            </div>\n            </div>\n        </section>\n            </div>\n    </section>\n</section>');
 		$templateCache.put('modules/admins/views/projects/admin-projects-list.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"ProjectsController\" data-ng-init=\"find()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-projects\">\n\n                        <div class=\"admin-nav\">\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                                Admin Home Page\n                            </a>\n                        </div>\n\n                        <div class=\"page-header\">\n                            <h1>Admin Panel</h1>\n                        </div>\n\n                        <div class=\"row\">\n                            <!--<a data-ng-repeat=\"project in projects\" data-ng-href=\"/projects/{{project._id}}\" class=\"col-md-12 admin-list\">-->\n                            <a data-ng-repeat=\"project in projects\" data-ng-href=\"/admin/edit-project/{{project._id}}\" class=\"col-md-12 admin-list\">\n                              <h3 class=\"list-group-item-heading\" data-ng-bind=\"project.title\"></h3>\n                              <div data-ng-bind=\"project.user.displayName\"></div>\n                              <small>\n                                Submitted:\n                                <span data-ng-bind=\"project.createdOn | date:\'medium\'\"></span>\n                              </small>\n\n                            </a>\n                        </div>\n\n                        <div class=\"alert alert-warning text-center\" data-ng-hide=\"!projects.$resolved || projects.length\">\n                            No projects are currently waiting for approval. Check <a href=\"#\">blah blah</a> for blah blah.\n                        </div>\n\n                    </div>\n                </div>\n\n            </section>\n        </div>\n    </section>\n</section>\n');
 		$templateCache.put('modules/admins/views/projects/admin-projects.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"ProjectsController\" data-ng-init=\"find()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-projects\">\n\n                        <div class=\"admin-nav\">\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                                Admin Home Page\n                            </a>\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.adminProjectsQueue\">\n                                Admin Project Page\n                            </a>\n                        </div>\n\n                        <div class=\"page-header\">\n                            <h1>Admin Panel</h1>\n                        </div>\n\n                        <div class=\"row\">\n                            <a data-ng-repeat=\"project in projects\" data-ng-href=\"/projects/{{project._id}}\" class=\"col-md-12 admin-list\">\n                                <small>\n                                    Posted on\n                                    <span data-ng-bind=\"project.created | date:\'medium\'\"></span>\n                                    by\n                                    <span data-ng-bind=\"project.user.displayName\"></span>\n                                </small>\n                                <h4 class=\"list-group-item-heading\" data-ng-bind=\"project.name\"></h4>\n                            </a>\n                        </div>\n\n                        <div class=\"alert alert-warning text-center\" data-ng-hide=\"!projects.$resolved || projects.length\">\n                            No projects are currently waiting for approval. Check <a href=\"#\">blah blah</a> for blah blah.\n                        </div>\n\n                    </div>\n                </div>\n\n            </section>\n        </div>\n    </section>\n</section>\n');
 		$templateCache.put('modules/admins/views/projects/admin-view-project.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\" onerror=\"myFunction()\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"ProjectsController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n                    <div class=\"admin-projects\">\n\n                      <div class=\"admin-nav\">\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                          Admin Home Page\n                        </a>\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.adminProjectsQueue\">\n                          Admin Project Page\n                        </a>\n                      </div>\n\n                        <div class=\"page-header\">\n                            <h1>{{project.title}}\n                                <a href=\"#\" data-ng-show=\"\'modules/core/img/{{photo0}}\'\"><span><img data-ng-src=\"modules/core/img/{{photo0}}\" class=\"header-profile-image pull-right\"/></span></a>\n                                <a href=\"#\" data-ng-hide=\"\'modules/core/img/{{photo0}}\'\"><span><img data-ng-src=\"\" class=\"header-profile-image pull-right\"/></span>Upload\n                                    a Pic</a>\n                            </h1>\n                        </div>\n\n                        <div class=\"row projects-profile\">\n                            <div class=\"col-xs-12\">\n                              <a class=\"btn btn-main grow\" data-ng-click=\"processNlpData()\">\n                                NLP!\n                                <i class=\"fa fa-check\"></i>\n                              </a>\n\n                              <a class=\"btn btn-main grow\" data-ng-click=\"confirmPublishModal()\">\n                                Yodal My Modal\n                                <i class=\"fa fa-check\"></i>\n                              </a>\n\n                                <form class=\"form-horizontal\" data-ng-submit=\"update(toggleId)\" novalidate>\n                                  <fieldset>\n                                        <project-view-form></project-view-form>\n                                    </fieldset>\n                                </form>\n\n                            </div>\n                        </div>\n\n                        <hr>\n\n                        <div class=\"pull-right\">\n                            <a class=\"btn btn-main grow btn-warning\" data-ng-click=\"remove();\">\n                                <i class=\"glyphicon glyphicon-trash\"></i>\n                            </a>\n                        </div>\n\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
-		$templateCache.put('modules/admins/views/users/admin-edit-user.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"UserController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n                <div class=\"admin-user\">\n\n                    <div class=\"admin-nav\">\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                            Admin Home Page\n                        </a>\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                            Admin User Page\n                        </a>\n                    </div>\n\n                    <div class=\"page-header\">\n                        <h1>Edit {{user.firstName}} {{user.lastName}}\'s Profile</h1>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">\n                            <form data-ng-submit=\"updateUserProfile()\" class=\"signin form-horizontal\" autocomplete=\"off\">\n\n                                <fieldset>\n                                    <div class=\"form-group\">\n                                        <label for=\"firstName\">First Name</label>\n                                        <input type=\"text\" id=\"firstName\" name=\"firstName\" class=\"form-control\" data-ng-model=\"user.firstName\"\n                                               placeholder=\"First Name\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"lastName\">Last Name</label>\n                                        <input type=\"text\" id=\"lastName\" name=\"lastName\" class=\"form-control\" data-ng-model=\"user.lastName\" placeholder=\"Last Name\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"email\">Email</label>\n                                        <input type=\"text\" id=\"email\" name=\"email\" class=\"form-control\" data-ng-model=\"user.email\" placeholder=\"Email\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"username\">Username</label>\n                                        <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" data-ng-model=\"user.username\" placeholder=\"Username\">\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"zip\">Zip Code</label>\n                                        <input type=\"number\" id=\"zip\" name=\"zip\" class=\"form-control\" data-ng-model=\"user.zip\" placeholder=\"Zip Code\">\n                                    </div>\n\n                                    <div class=\"text-center form-group\">\n                                        <button type=\"submit\" class=\"btn btn-large btn-primary\">Save Profile</button>\n                                    </div>\n\n\n                                    <div data-ng-show=\"success\" class=\"text-center text-success\">\n                                        <strong>Profile Saved Successfully</strong>\n                                    </div>\n                                    <div data-ng-show=\"error\" class=\"text-center text-danger\">\n                                        <strong data-ng-bind=\"error\"></strong>\n                                    </div>\n                                </fieldset>\n\n\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
-		$templateCache.put('modules/admins/views/users/admin-list-users.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n            <section data-ng-controller=\"UserController\" data-ng-init=\"find()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-user\">\n\n                        <div class=\"admin-nav\">\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                                Admin Home Page\n                            </a>\n                            <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                                Admin User Page\n                            </a>\n                        </div>\n\n                        <div class=\"page-header\">\n                            <h1>List of Users</h1>\n                        </div>\n\n                        <div class=\"row\">\n                            <div class=\"col-md-12\">\n                                <a data-ng-repeat=\"user in users\" data-ng-href=\"/users/{{user._id}}\" class=\"col-md-6\">\n                                  <div class=\"tile\">\n                                    <div class=\"user-summary\" data-ng-bind=\"user.displayName\">{{user._id}}</div>\n                                    <div><img data-ng-src=\"{{user.profileImage}}\"></div>\n                                  </div>\n                                </a>\n                            </div>\n                        </div>\n\n                    </div>\n\n                    <div class=\"container\">\n                        <div class=\"gridStyle\" data-ng-grid=\"gridOptions\"></div>\n                    </div>\n\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
-		$templateCache.put('modules/admins/views/users/admin-view-user.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\" data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n    <section class=\"container\">\n        <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n        <div class=\"main-content-outer\">\n\n            <section data-ng-controller=\"EditProfileController\" data-ng-init=\"findOne()\" class=\"main-content-inner\">\n\n                <div class=\"admin\">\n\n                    <div class=\"admin-user\">\n\n                      <div class=\"admin-nav\">\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.dashboard\">\n                          Admin Home Page\n                        </a>\n                        <a class=\"btn btn-main grow\" ui-sref=\"admin.adminListUsers\">\n                          Admin User Page\n                        </a>\n                      </div>\n\n                        <div class=\"page-header\">\n                            <h1>{{userToEdit.firstName}} {{userToEdit.lastName}}\'s Profile\n                                <a href=\"#\" data-ng-show=\"userToEdit.profileImageURL\"><span><img data-ng-src=\"{{userToEdit.profileImageURL}}\" class=\"header-profile-image pull-right\"/></span>\n                                </a>\n\n                                <a href=\"#\" data-ng-show=\"!userToEdit.profileImageURL\"><span><img data-ng-src=\"\" class=\"header-profile-image pull-right\"/></span>Upload a Pic\n                                </a>\n                            </h1>\n                        </div>\n\n                        <div class=\"row user-profile\">\n                            <div class=\"col-xs-12\">\n                              <form name=\"userAdminForm\" class=\"form-horizontal\" data-ng-submit=\"update(userToEdit.$valid)\" novalidate>\n                                <fieldset>\n                                  <user-view-form></user-view-form>\n                                </fieldset>\n                              </form>\n                            </div>\n                        </div>\n\n\n\n                      <hr>\n\n                        <div class=\"pull-right\">\n                            <!--data-ng-show=\"((authentication.user) && (authentication.user._id == project.user._id))\">-->\n                            <!--<a class=\"btn btn-primary\" href=\"/users/{{user._id}}/edit\">-->\n                            <!--<i class=\"glyphicon glyphicon-edit\"></i>-->\n                            <!--</a>-->\n                            <a class=\"btn btn-main grow btn-warning\" data-ng-click=\"remove();\">\n                                <i class=\"glyphicon glyphicon-trash\"></i>\n                            </a>\n                        </div>\n\n                    </div>\n                </div>\n            </section>\n        </div>\n    </section>\n</section>\n');
 		$templateCache.put('modules/users/views/admin/edit-user.client.view.html', '<section>\n  <div class=\"page-header\">\n    <h1>User <span ng-bind=\"user.username\"></span></h1>\n  </div>\n  <div class=\"col-md-12\">\n    <form name=\"userForm\" ng-submit=\"update(userForm.$valid)\" novalidate>\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <label for=\"firstName\">First Name</label>\n          <input type=\"text\" id=\"firstName\" name=\"firstName\" class=\"form-control\" ng-model=\"user.firstName\" placeholder=\"First Name\" required />\n          <div ng-messages=\"userForm.firstName.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">First name is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"lastName\">Last Name</label>\n          <input type=\"text\" id=\"lastName\" name=\"lastName\" class=\"form-control\" ng-model=\"user.lastName\" placeholder=\"Last Name\" required />\n          <div ng-messages=\"userForm.lastName.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Last name is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label class=\"control-label\" for=\"roles\">Roles</label>\n          <div class=\"controls\">\n            <input class=\"form-control\" type=\"text\" name=\"roles\" ng-model=\"user.roles\" id=\"roles\" ng-list required />\n            <div ng-messages=\"userForm.roles.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">At least one role is required.</p>\n            </div>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <input type=\"submit\" value=\"Update\" class=\"btn btn-default\">\n        </div>\n        <div ng-show=\"error\" class=\"text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');
 		$templateCache.put('modules/users/views/admin/list-users.client.view.html', '<section>\n  <div class=\"page-header\">\n    <div class=\"row\">\n      <div class=\"col-md-4\">\n        <h1>Users</h1>\n      </div>\n      <div class=\"col-md-4\" style=\"margin-top: 2em\">\n        <input class=\"form-control col-md-4\" type=\"text\" ng-model=\"search\" placeholder=\"Search\" ng-change=\"figureOutItemsToDisplay()\" />\n      </div>\n    </div>\n  </div>\n  <div class=\"list-group\">\n    <a ng-repeat=\"user in pagedItems\" ui-sref=\"admin.user({userId: user._id})\" class=\"list-group-item\">\n      <h4 class=\"list-group-item-heading\" ng-bind=\"user.username\"></h4>\n      <p class=\"list-group-item-text pull-right small\" ng-bind=\"user.roles\"></p>\n      <p class=\"list-group-item-text\" ng-bind=\"user.email\"></p>\n    </a>\n  </div>\n\n  <pagination boundary-links=\"true\" max-size=\"8\" items-per-page=\"itemsPerPage\" total-items=\"filterLength\" ng-model=\"currentPage\" ng-change=\"pageChanged()\"></pagination>\n</section>\n');
 		$templateCache.put('modules/users/views/admin/view-user.client.view.html', '<section>\n  <div class=\"page-header\">\n    <div class=\"row\">\n      <div class=\"col-md-6\">\n        <h1 ng-bind=\"user.username\"></h1>\n      </div>\n      <div class=\"col-md-4\">\n        <a class=\"btn btn-primary\" ui-sref=\"admin.user-edit({userId: user._id})\">\n          <i class=\"glyphicon glyphicon-edit\"></i>\n        </a>\n        <a class=\"btn btn-primary\" ng-click=\"remove();\" ng-if=\"user._id !== authentication.user._id\">\n          <i class=\"glyphicon glyphicon-trash\"></i>\n        </a>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-8\">\n      <div class=\"row\">\n        <div class=\"col-md-3\"><strong>First Name</strong></div>\n        <div class=\"col-md-6\" ng-bind=\"user.firstName\"></div>\n      </div>\n      <hr/>\n      <div class=\"row\">\n        <div class=\"col-md-3\"><strong>Last Name</strong></div>\n        <div class=\"col-md-6\" ng-bind=\"user.lastName\"></div>\n      </div>\n      <hr/>\n      <div class=\"row\">\n        <div class=\"col-md-3\"><strong>Email</strong></div>\n        <div class=\"col-md-6\" ng-bind=\"user.email\"></div>\n      </div>\n      <hr/>\n      <div class=\"row\">\n        <div class=\"col-md-3\"><strong>Provider</strong></div>\n        <div class=\"col-md-6\" ng-bind=\"user.provider\"></div>\n      </div>\n      <hr/>\n      <div class=\"row\">\n        <div class=\"col-md-3\"><strong>Created</strong></div>\n        <div class=\"col-md-6\" ng-bind=\"user.created\"></div>\n      </div>\n      <hr/>\n      <div class=\"row\">\n        <div class=\"col-md-3\"><strong>Roles</strong></div>\n        <div class=\"col-md-6\" ng-bind=\"user.roles\"></div>\n      </div>\n    </div>\n  </div>\n</section>\n');
-		$templateCache.put('modules/users/views/authentication/authentication.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n\n      <section ng-controller=\"AuthenticationController\" class=\"main-content-inner\">\n\n        <div class=\"row\">\n\n          <h3 class=\"col-md-12 text-center\">Sign in using your social accounts</h3>\n\n          <div class=\"col-md-12 text-center signin-icons\">\n\n            <a data-ng-click=\"callOauthProvider(\'/api/v1/auth/facebook\')\" class=\"undecorated-link\"><i class=\"fa fa-facebook\"></i></a>\n            <a ng-click=\"callOauthProvider(\'/api/v1/auth/twitter\')\" class=\"undecorated-link\"><i class=\"fa fa-twitter\"></i></a>\n          </div>\n          <div ui-view></div>\n        </div>\n      </section>\n\n    </div>\n\n  </section>\n</section>\n');
-		$templateCache.put('modules/users/views/authentication/signin.client.view.html', '<section data-ng-controller=\"AuthenticationController\">\n  <div class=\"auth-form\">\n    <h3 class=\"col-md-12 text-center\">Or with your account</h3>\n    <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-5\">\n      <form name=\"userForm\" ng-submit=\"signin(userForm.$valid)\" class=\"signin form-horizontal\" autocomplete=\"off\">\n        <fieldset>\n          <div class=\"form-group\" show-errors>\n\n            <div class=\"row\"> <!-- Row #1 -->\n              <div class=\"col-md-12\">\n                      <span class=\"input input-secondary\" data-ng-class=\"{\'input-filled\': credentials.username }\">\n                      <input class=\"input_field input_field-secondary\" placeholder=\"Username\" type=\"text\" id=\"username\" value=\"\" name=\"username\" data-ng-model=\"credentials.username\"/>\n                      <label class=\"input_label input_label-secondary\" for=\"username\">\n                        <span class=\"input_label-content input_label-content-secondary\">Username</span>\n                      </label>\n                  </span>\n              </div>\n            </div>\n\n            <div ng-messages=\"userForm.username.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Username is required.</p>\n            </div>\n          </div>\n          <div class=\"form-group\" show-errors>\n            <div class=\"row\">  <!-- Row #2 -->\n              <div class=\"col-md-12\">\n                  <span class=\"input input-secondary\" data-ng-class=\"{\'input-filled\': credentials.password }\">\n                      <input class=\"input_field input_field-secondary\" type=\"password\" id=\"password\" name=\"password\" value=\"\" data-ng-model=\"credentials.password\" placeholder=\"Password\" required/>\n                      <label class=\"input_label input_label-secondary\" for=\"password\">\n                        <span class=\"input_label-content input_label-content-secondary\">Password</span>\n                      </label>\n                  </span>\n              </div>\n            </div>\n            <div ng-messages=\"userForm.password.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Password is required.</p>\n            </div>\n          </div>\n\n          <div class=\"row\">\n            <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-10\">\n              <div class=\"form-group\">\n                <div>\n                  <button type=\"submit\" class=\"btn btn-main grow\">Sign in</button>\n                  &nbsp; or&nbsp;\n                  <a a ui-sref=\"authentication.signup\">Sign up</a>\n                </div>\n                <div class=\"forgot-password\">\n                  <a ui-sref=\"password.forgot\">Forgot your password?</a>\n                </div>\n                <uib-alert type=\"danger\" data-ng-show=\"error\" class=\"text-center text-danger\">\n                  <span data-ng-bind=\"error\"></span>\n                </uib-alert>\n              </div>\n            </div>\n          </div>\n\n\n        </fieldset>\n      </form>\n    </div>\n  </div>\n</section>\n\n\n\n\n\n  <div class=\"row\" data-ng-show=\"signInBeforeProject && !closeWarning\">\n    <div class=\"col-md-12\">\n      <div class=\"sign-in-warning\">\n        <div class=\"pull-right\" data-ng-click=\"closeWarning = !closeWarning\">X</div>\n        <div>\n          <p>You need to sign in before you create a project.</p>\n          <p>If you have not registered yet, it\'s quick. <a href=\"/signup\">Register here</a>.</p>\n        </div>\n      </div>\n    </div>\n  </div>\n');
-		$templateCache.put('modules/users/views/authentication/signup.client.view.html', '<section ng-controller=\"AuthenticationController\" class=\"main-content-inner\">\n  <h3 class=\"col-md-12 text-center\">Or sign up using your email</h3>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4\">\n    <form name=\"userForm\" ng-submit=\"signup(userForm.$valid)\" class=\"signin\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <label for=\"firstName\">First Name</label>\n          <input type=\"text\" id=\"firstName\" name=\"firstName\" class=\"form-control\" ng-model=\"credentials.firstName\"\n                 placeholder=\"First Name\" required>\n\n          <div ng-messages=\"userForm.firstName.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">First name is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"lastName\">Last Name</label>\n          <input type=\"text\" id=\"lastName\" name=\"lastName\" class=\"form-control\" ng-model=\"credentials.lastName\"\n                 placeholder=\"Last Name\" required>\n\n          <div ng-messages=\"userForm.lastName.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Last name is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"email\">Email</label>\n          <input type=\"email\" id=\"email\" name=\"email\" class=\"form-control\" ng-model=\"credentials.email\" placeholder=\"Email\" required>\n          <div ng-messages=\"userForm.email.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Email address is required.</p>\n            <p class=\"help-block error-text\" ng-message=\"email\">Email address is invalid.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"username\">Username</label>\n          <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" ng-model=\"credentials.username\" required>\n          <div ng-messages=\"userForm.username.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Username is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"password\">Password</label>\n            <input type=\"password\" id=\"password\" name=\"password\" class=\"form-control\" ng-model=\"credentials.password\" placeholder=\"Password\" popover=\"{{popoverMsg}}\" popover-trigger=\"focus\" password-validator required>\n          <div ng-messages=\"userForm.password.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Password is required.</p>\n            <div ng-repeat=\"passwordError in passwordErrors\">\n              <p class=\"help-block error-text\" ng-show=\"userForm.password.$error.requirements\">{{passwordError}}</p>\n            </div>\n          </div>\n        </div>\n        <div class=\"form-group\" ng-show=\"!userForm.password.$error.required\">\n        <!--<label>Password Strength</label>-->\n        <!--<progressbar value=\"strengthProgress\" type=\"{{strengthColor}}\"><span-->\n        <!--style=\"color:white; white-space:nowrap;\">{{strengthProgress}}%</span></progressbar>-->\n        <!--</div>-->\n\n\n        <!--<div class=\"form-group\" ng-show=\"!userForm.password.$pristine\">-->\n        <div class=\"form-group\">\n\n          <div class=\"row\">\n\n            <div class=\"col-md-6\">\n          <label>Password Requirements</label>\n          <progressbar value=\"requirementsProgress\" type=\"{{requirementsColor}}\"><span style=\"color:white; white-space:nowrap;\">{{requirementsProgress}}%</span></progressbar>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Sign up</button>\n          &nbsp; or&nbsp;\n          <a ui-sref=\"authentication.signin\" class=\"show-signup\">Sign in</a>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n\n\n<div class=\"row\" data-ng-show=\"signInBeforeProject && !closeWarning\">\n  <div class=\"col-md-12\">\n    <div class=\"sign-in-warning\">\n      <div class=\"pull-right\" data-ng-click=\"closeWarning = !closeWarning\">X</div>\n      <div>\n        <p>You need to sign up before you create a project.</p>\n\n        <p>If you\'ve already registered, <a href=\"//signin\">sign in here</a>.</p>\n      </div>\n    </div>\n  </div>\n</div>\n\n<h1 class=\"page-header col-md-12 text-center\">Sign Up</h1>\n\n<div class=\"row\">\n\n  <div class=\"col-md-12\">\n\n    <h3>... with your social accounts</h3>\n\n    <div class=\"row\">\n      <div class=\"col-md-12\">\n        <a href=\"/auth/facebook\" class=\"undecorated-link\">\n          <i class=\"fa fa-facebook\"></i>\n          <img src=\"/modules/users/img/buttons/facebook.png\">\n        </a>\n        <a href=\"/auth/twitter\" class=\"undecorated-link\">\n          <img src=\"/modules/users/img/buttons/twitter.png\">\n          <i class=\"fa fa-twitter\"></i>\n        </a>\n\n      </div>\n    </div>\n\n    <span>\n        <div class=\"signup-email\" data-ng-click=\"toggleSignup = !toggleSignup\"\n             data-ng-class=\"{\'carot-down\': toggleSignup}\">\n          ... or click here to sign up with your email address <i class=\"fa fa-chevron-right\"\n                                                                  data-ng-show=\"!toggleSignup\"></i><i\n          class=\"fa fa-chevron-down\" data-ng-show=\"toggleSignup\"></i>\n        </div>\n    </span>\n\n\n    <form name=\"userForm\" data-ng-submit=\"signup()\" class=\"signin form-horizontal\" novalidate autocomplete=\"off\"\n          data-ng-show=\"toggleSignup\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n          <!--<div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">-->\n          <!--<form name=\"userForm\" data-ng-submit=\"signup()\" class=\"signin form-horizontal\" novalidate autocomplete=\"off\">-->\n          <fieldset>\n            <div class=\"form-group\"></div>\n\n            <div class=\"row\"> <!-- Row #1 -->\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.firstName}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\"\n                           id=\"firstName\"\n                           data-ng-model=\"credentials.firstName\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"firstName\">\n                      <span class=\"input_label-content input_label-content-secondary\">First Name</span>\n                    </label>\n                </span>\n              </div>\n\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.lastName}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\"\n                           id=\"lastName\" data-ng-model=\"credentials.lastName\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"lastName\">\n                      <span class=\"input_label-content input_label-content-secondary\">Last Name</span>\n                    </label>\n                </span>\n              </div>\n            </div>\n\n            <div class=\"row\"> <!-- Row #2 -->\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.email}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\" id=\"email\"\n                           data-ng-model=\"credentials.email\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"email\">\n                      <span\n                        class=\"input_label-content input_label-content-secondary\">E-mail</span>\n                    </label>\n                </span>\n              </div>\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.userZip}\">\n                    <input class=\"input_field input_field-secondary\" type=\"userZip\"\n                           id=\"userZip\"\n                           data-ng-model=\"credentials.userZip\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"userZip\">\n                      <span class=\"input_label-content input_label-content-secondary\">Zip Code</span>\n                    </label>\n                </span>\n              </div>\n            </div>\n\n            <div class=\"row\"> <!-- Row #3 -->\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.username.value}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\"\n                           id=\"username\" data-ng-model=\"credentials.username\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"username\">\n                      <span class=\"input_label-content input_label-content-secondary\">Username</span>\n                    </label>\n                </span>\n              </div>\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.password}\">\n                    <input class=\"input_field input_field-secondary\" type=\"password\"\n                           id=\"password\"\n                           data-ng-model=\"credentials.password\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"password\">\n                      <span class=\"input_label-content input_label-content-secondary\">Password</span>\n                    </label>\n                </span>\n              </div>\n            </div>\n\n            <div class=\"row\">  <!-- Row #4 -->\n              <div class=\"col-md-12\">\n                <div id=\"check-awesome\" class=\"form-group filter first-filter\">\n                  <input type=\"checkbox\" name=\"filters\" id=\"newsletter\" value=\"newsletter\"\n                         data-ng-model=\"credentials.newsletter\">\n                  <label for=\"newsletter\">\n                    <span class=\"check\"></span>\n                    <span class=\"box\"></span>\n                    Subscribe to our quarterly e-newsletter\n                  </label>\n                </div>\n              </div>\n            </div>\n\n            <div class=\"row\">\n              <div class=\"col-xs-4\">\n                <div class=\"form-group\">\n                  <div>\n                    <button type=\"submit\" class=\"btn btn-main grow\">Sign up</button>\n                    &nbsp; or&nbsp;\n                    <a href=\"//signin\" class=\"show-signup\">Sign in</a>\n                  </div>\n                  <div class=\"forgot-password\">\n                    <a href=\"//password/forgot\">Forgot your password?</a>\n                  </div>\n                  <div data-ng-show=\"error\" class=\"text-center text-danger\">\n                    <strong data-ng-bind=\"error\"></strong>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </fieldset>\n\n        </div>\n      </div>\n\n    </form>\n  </div>\n</div>\n');
 		$templateCache.put('modules/users/views/contributors/contributors.client.list.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n      <section data-ng-controller=\"ContributorController\" data-ng-init=\"init()\" class=\"contributors\">\n        <div class=\"contrib\">\n          <div class=\"row\">\n            <div class=\"col-md-12\">\n              <div class=\"main-content-inner\">\n\n                <div class=\"row\">\n                  <div><h1 class=\"col-md-6\">Contributors</h1></div>\n\n                  <div class=\"col-md-6 search-input-div\">\n                    <span class=\"input input-secondary pull-right\">\n                        <input class=\"input_field input_field-secondary\" type=\"text\" id=\"search\"\n                               data-ng-model=\"searchContributors\"/>\n                        <label class=\"input_label input_label-secondary\" for=\"search\">\n                          <span class=\"input_label-content input_label-content-secondary\">Search Contributors</span>\n                        </label>\n                    </span>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n\n                  <ul id=\"grid-view\">\n                    <a ng-click=\"openLightboxModal($index)\" data-ng-repeat=\"contributor in contributors | filter:searchContributors\" class=\"col-md-3\">\n                      <li>\n                        <div>\n                            <img ng-src=\"{{contributor.profileImageURL}}\" class=\"img-thumbnail\">\n                            <p>{{contributor.firstName}} {{contributor.lastName}}</p>\n                        </div>\n                      </li>\n                    </a>\n                  </ul>\n\n\n                </div>\n              </div>\n\n            </div>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/users/views/contributors/contributors.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n      <section data-ng-controller=\"ContributorController\" data-ng-init=\"findContributor()\" class=\"contributors\">\n        <div class=\"contrib-view\">\n          <div class=\"row\">\n            <div class=\"col-md-12\">\n              <div class=\"main-content-inner\">\n\n                <div class=\"row\">\n                  <div><h1 class=\"col-md-6\">{{contributor.firstName}} {{contributor.lastName}}</h1></div>\n                  <div><img class=\"col-md-6 pull-right\" data-ng-src=\"{{contributor.profileImageURL}}\"/></div>\n                </div>\n\n                <div class=\"row\">\n                  <div><p class=\"col-md-12\">{{contributor.bio}}</p></div>\n                </div>\n\n                <hr/>\n\n                <h4>Other Projects by {{contributor.firstName}}</h4>\n                <div class=\"row\">\n                  <div><p class=\"col-md-12\" data-ng-repeat=\"contributorProject in contributorProjects\"><a data-ng-href=\"/projects/{{contributorProject._id}}\">\n                    {{contributorProject.title}}\n                    </a>\n                  </p></div>\n                </div>\n\n\n                <!--<div class=\"row\">-->\n\n                  <!--<ul id=\"grid-view\">-->\n                    <!--<a ng-click=\"openLightboxModal($index)\" data-ng-repeat=\"contributor in contributors | filter:searchContributors\" class=\"col-md-3\">-->\n                      <!--<li>-->\n                        <!--<div>-->\n                            <!--<img ng-src=\"{{contributor.profileImageURL}}\" class=\"img-thumbnail\">-->\n                            <!--<p>{{contributor.firstName}} {{contributor.lastName}}</p>-->\n                        <!--</div>-->\n                      <!--</li>-->\n                    <!--</a>-->\n                  <!--</ul>-->\n\n\n                <!--</div>-->\n              </div>\n\n            </div>\n          </div>\n        </div>\n      </section>\n    </div>\n  </section>\n</section>\n');
 		$templateCache.put('modules/users/views/contributors/lightbox.html', '<section data-ng-controller=\"ContributorController\">\n  <div class=\"modal-body\" id=\"lightbox-modal\"\n       ng-swipe-left=\"Lightbox.nextImage()\"\n       ng-swipe-right=\"Lightbox.prevImage()\">\n\n    <div class=lightbox-nav>\n      <button class=close aria-hidden=true ng-click=$dismiss()>×</button>\n      <div class=btn-group>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.prevImage()><i class=\"fa fa-chevron-left\"></i></a>\n        <a ng-href={{Lightbox.imageUrl}} target=_blank class=\"btn btn-xs btn-default\" title=\"Open in new tab\">Open image\n          in new tab</a>\n        <a class=\"btn btn-xs btn-default\" ng-click=Lightbox.nextImage()><i class=\"fa fa-chevron-right\"></i></a>\n      </div>\n    </div>\n\n    <!-- image -->\n    <div class=\"lightbox-image-container\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n\n\n          <div class=lightbox-image-caption>\n            <div><img lightbox-src=\"{{Lightbox.imageUrl}}\"></div>\n\n            <div>{{Lightbox.imageCaption}}</div>\n          </div>\n\n        </div>\n      </div>\n\n    </div>\n  </div>\n</section>\n');
+		$templateCache.put('modules/users/views/authentication/authentication.client.view.html', '<secondary-menu-directive></secondary-menu-directive>\n\n<section class=\"content background\" data-ng-controller=\"RandomMapController\"\n         ng-style=\"{\'background-image\': \'url(\' + staticMap.mapUrl + \')\', \'background-size\' : \'cover\' }\"\n         data-ng-class=\"{\'page-view-menu-open\': toggleSecondMenu}\">\n\n  <section class=\"container\">\n    <a href=\"/\" class=\"small-main-logo logo-on-page logo-second-page img-responsive\"></a>\n\n    <div class=\"main-content-outer\">\n\n\n      <section ng-controller=\"AuthenticationController\" class=\"main-content-inner\">\n\n        <div class=\"row\">\n\n          <h3 class=\"col-md-12 text-center\">Sign in using your social accounts</h3>\n\n          <div class=\"col-md-12 text-center signin-icons\">\n\n            <a data-ng-click=\"callOauthProvider(\'/api/v1/auth/facebook\')\" class=\"undecorated-link\"><i class=\"fa fa-facebook\"></i></a>\n            <a ng-click=\"callOauthProvider(\'/api/v1/auth/twitter\')\" class=\"undecorated-link\"><i class=\"fa fa-twitter\"></i></a>\n          </div>\n          <div ui-view></div>\n        </div>\n      </section>\n\n    </div>\n\n  </section>\n</section>\n');
+		$templateCache.put('modules/users/views/authentication/signin.client.view.html', '<section data-ng-controller=\"AuthenticationController\">\n  <div class=\"auth-form\">\n    <h3 class=\"col-md-12 text-center\">Or with your account</h3>\n    <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-5\">\n      <form name=\"userForm\" ng-submit=\"signin(userForm.$valid)\" class=\"signin form-horizontal\" autocomplete=\"off\">\n        <fieldset>\n          <div class=\"form-group\" show-errors>\n\n            <div class=\"row\"> <!-- Row #1 -->\n              <div class=\"col-md-12\">\n                      <span class=\"input input-secondary\" data-ng-class=\"{\'input-filled\': credentials.username }\">\n                      <input class=\"input_field input_field-secondary\" placeholder=\"Username\" type=\"text\" id=\"username\" value=\"\" name=\"username\" data-ng-model=\"credentials.username\"/>\n                      <label class=\"input_label input_label-secondary\" for=\"username\">\n                        <span class=\"input_label-content input_label-content-secondary\">Username</span>\n                      </label>\n                  </span>\n              </div>\n            </div>\n\n            <div ng-messages=\"userForm.username.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Username is required.</p>\n            </div>\n          </div>\n          <div class=\"form-group\" show-errors>\n            <div class=\"row\">  <!-- Row #2 -->\n              <div class=\"col-md-12\">\n                  <span class=\"input input-secondary\" data-ng-class=\"{\'input-filled\': credentials.password }\">\n                      <input class=\"input_field input_field-secondary\" type=\"password\" id=\"password\" name=\"password\" value=\"\" data-ng-model=\"credentials.password\" placeholder=\"Password\" required/>\n                      <label class=\"input_label input_label-secondary\" for=\"password\">\n                        <span class=\"input_label-content input_label-content-secondary\">Password</span>\n                      </label>\n                  </span>\n              </div>\n            </div>\n            <div ng-messages=\"userForm.password.$error\" role=\"alert\">\n              <p class=\"help-block error-text\" ng-message=\"required\">Password is required.</p>\n            </div>\n          </div>\n\n          <div class=\"row\">\n            <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-10\">\n              <div class=\"form-group\">\n                <div>\n                  <button type=\"submit\" class=\"btn btn-main grow\">Sign in</button>\n                  &nbsp; or&nbsp;\n                  <a a ui-sref=\"authentication.signup\">Sign up</a>\n                </div>\n                <div class=\"forgot-password\">\n                  <a ui-sref=\"password.forgot\">Forgot your password?</a>\n                </div>\n                <uib-alert type=\"danger\" data-ng-show=\"error\" class=\"text-center text-danger\">\n                  <span data-ng-bind=\"error\"></span>\n                </uib-alert>\n              </div>\n            </div>\n          </div>\n\n\n        </fieldset>\n      </form>\n    </div>\n  </div>\n</section>\n\n\n\n\n\n  <div class=\"row\" data-ng-show=\"signInBeforeProject && !closeWarning\">\n    <div class=\"col-md-12\">\n      <div class=\"sign-in-warning\">\n        <div class=\"pull-right\" data-ng-click=\"closeWarning = !closeWarning\">X</div>\n        <div>\n          <p>You need to sign in before you create a project.</p>\n          <p>If you have not registered yet, it\'s quick. <a href=\"/signup\">Register here</a>.</p>\n        </div>\n      </div>\n    </div>\n  </div>\n');
+		$templateCache.put('modules/users/views/authentication/signup.client.view.html', '<section ng-controller=\"AuthenticationController\" class=\"main-content-inner\">\n  <h3 class=\"col-md-12 text-center\">Or sign up using your email</h3>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4\">\n    <form name=\"userForm\" ng-submit=\"signup(userForm.$valid)\" class=\"signin\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <label for=\"firstName\">First Name</label>\n          <input type=\"text\" id=\"firstName\" name=\"firstName\" class=\"form-control\" ng-model=\"credentials.firstName\"\n                 placeholder=\"First Name\" required>\n\n          <div ng-messages=\"userForm.firstName.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">First name is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"lastName\">Last Name</label>\n          <input type=\"text\" id=\"lastName\" name=\"lastName\" class=\"form-control\" ng-model=\"credentials.lastName\"\n                 placeholder=\"Last Name\" required>\n\n          <div ng-messages=\"userForm.lastName.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Last name is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"email\">Email</label>\n          <input type=\"email\" id=\"email\" name=\"email\" class=\"form-control\" ng-model=\"credentials.email\" placeholder=\"Email\" required>\n          <div ng-messages=\"userForm.email.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Email address is required.</p>\n            <p class=\"help-block error-text\" ng-message=\"email\">Email address is invalid.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"username\">Username</label>\n          <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" ng-model=\"credentials.username\" required>\n          <div ng-messages=\"userForm.username.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Username is required.</p>\n          </div>\n        </div>\n        <div class=\"form-group\" show-errors>\n          <label for=\"password\">Password</label>\n            <input type=\"password\" id=\"password\" name=\"password\" class=\"form-control\" ng-model=\"credentials.password\" placeholder=\"Password\" popover=\"{{popoverMsg}}\" popover-trigger=\"focus\" password-validator required>\n          <div ng-messages=\"userForm.password.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Password is required.</p>\n            <div ng-repeat=\"passwordError in passwordErrors\">\n              <p class=\"help-block error-text\" ng-show=\"userForm.password.$error.requirements\">{{passwordError}}</p>\n            </div>\n          </div>\n        </div>\n        <div class=\"form-group\" ng-show=\"!userForm.password.$error.required\">\n        <!--<label>Password Strength</label>-->\n        <!--<progressbar value=\"strengthProgress\" type=\"{{strengthColor}}\"><span-->\n        <!--style=\"color:white; white-space:nowrap;\">{{strengthProgress}}%</span></progressbar>-->\n        <!--</div>-->\n\n\n        <!--<div class=\"form-group\" ng-show=\"!userForm.password.$pristine\">-->\n        <div class=\"form-group\">\n\n          <div class=\"row\">\n\n            <div class=\"col-md-6\">\n          <label>Password Requirements</label>\n          <progressbar value=\"requirementsProgress\" type=\"{{requirementsColor}}\"><span style=\"color:white; white-space:nowrap;\">{{requirementsProgress}}%</span></progressbar>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Sign up</button>\n          &nbsp; or&nbsp;\n          <a ui-sref=\"authentication.signin\" class=\"show-signup\">Sign in</a>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n\n\n<div class=\"row\" data-ng-show=\"signInBeforeProject && !closeWarning\">\n  <div class=\"col-md-12\">\n    <div class=\"sign-in-warning\">\n      <div class=\"pull-right\" data-ng-click=\"closeWarning = !closeWarning\">X</div>\n      <div>\n        <p>You need to sign up before you create a project.</p>\n\n        <p>If you\'ve already registered, <a href=\"//signin\">sign in here</a>.</p>\n      </div>\n    </div>\n  </div>\n</div>\n\n<h1 class=\"page-header col-md-12 text-center\">Sign Up</h1>\n\n<div class=\"row\">\n\n  <div class=\"col-md-12\">\n\n    <h3>... with your social accounts</h3>\n\n    <div class=\"row\">\n      <div class=\"col-md-12\">\n        <a href=\"/auth/facebook\" class=\"undecorated-link\">\n          <i class=\"fa fa-facebook\"></i>\n          <img src=\"/modules/users/img/buttons/facebook.png\">\n        </a>\n        <a href=\"/auth/twitter\" class=\"undecorated-link\">\n          <img src=\"/modules/users/img/buttons/twitter.png\">\n          <i class=\"fa fa-twitter\"></i>\n        </a>\n\n      </div>\n    </div>\n\n    <span>\n        <div class=\"signup-email\" data-ng-click=\"toggleSignup = !toggleSignup\"\n             data-ng-class=\"{\'carot-down\': toggleSignup}\">\n          ... or click here to sign up with your email address <i class=\"fa fa-chevron-right\"\n                                                                  data-ng-show=\"!toggleSignup\"></i><i\n          class=\"fa fa-chevron-down\" data-ng-show=\"toggleSignup\"></i>\n        </div>\n    </span>\n\n\n    <form name=\"userForm\" data-ng-submit=\"signup()\" class=\"signin form-horizontal\" novalidate autocomplete=\"off\"\n          data-ng-show=\"toggleSignup\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n          <!--<div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">-->\n          <!--<form name=\"userForm\" data-ng-submit=\"signup()\" class=\"signin form-horizontal\" novalidate autocomplete=\"off\">-->\n          <fieldset>\n            <div class=\"form-group\"></div>\n\n            <div class=\"row\"> <!-- Row #1 -->\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.firstName}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\"\n                           id=\"firstName\"\n                           data-ng-model=\"credentials.firstName\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"firstName\">\n                      <span class=\"input_label-content input_label-content-secondary\">First Name</span>\n                    </label>\n                </span>\n              </div>\n\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.lastName}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\"\n                           id=\"lastName\" data-ng-model=\"credentials.lastName\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"lastName\">\n                      <span class=\"input_label-content input_label-content-secondary\">Last Name</span>\n                    </label>\n                </span>\n              </div>\n            </div>\n\n            <div class=\"row\"> <!-- Row #2 -->\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.email}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\" id=\"email\"\n                           data-ng-model=\"credentials.email\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"email\">\n                      <span\n                        class=\"input_label-content input_label-content-secondary\">E-mail</span>\n                    </label>\n                </span>\n              </div>\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.userZip}\">\n                    <input class=\"input_field input_field-secondary\" type=\"userZip\"\n                           id=\"userZip\"\n                           data-ng-model=\"credentials.userZip\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"userZip\">\n                      <span class=\"input_label-content input_label-content-secondary\">Zip Code</span>\n                    </label>\n                </span>\n              </div>\n            </div>\n\n            <div class=\"row\"> <!-- Row #3 -->\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.username.value}\">\n                    <input class=\"input_field input_field-secondary\" type=\"text\"\n                           id=\"username\" data-ng-model=\"credentials.username\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"username\">\n                      <span class=\"input_label-content input_label-content-secondary\">Username</span>\n                    </label>\n                </span>\n              </div>\n              <div class=\"col-md-6\">\n                <span class=\"input input-secondary\"\n                      data-ng-class=\"{\'input-filled\': credentials.password}\">\n                    <input class=\"input_field input_field-secondary\" type=\"password\"\n                           id=\"password\"\n                           data-ng-model=\"credentials.password\"/>\n                    <label class=\"input_label input_label-secondary\" for=\"password\">\n                      <span class=\"input_label-content input_label-content-secondary\">Password</span>\n                    </label>\n                </span>\n              </div>\n            </div>\n\n            <div class=\"row\">  <!-- Row #4 -->\n              <div class=\"col-md-12\">\n                <div id=\"check-awesome\" class=\"form-group filter first-filter\">\n                  <input type=\"checkbox\" name=\"filters\" id=\"newsletter\" value=\"newsletter\"\n                         data-ng-model=\"credentials.newsletter\">\n                  <label for=\"newsletter\">\n                    <span class=\"check\"></span>\n                    <span class=\"box\"></span>\n                    Subscribe to our quarterly e-newsletter\n                  </label>\n                </div>\n              </div>\n            </div>\n\n            <div class=\"row\">\n              <div class=\"col-xs-4\">\n                <div class=\"form-group\">\n                  <div>\n                    <button type=\"submit\" class=\"btn btn-main grow\">Sign up</button>\n                    &nbsp; or&nbsp;\n                    <a href=\"//signin\" class=\"show-signup\">Sign in</a>\n                  </div>\n                  <div class=\"forgot-password\">\n                    <a href=\"//password/forgot\">Forgot your password?</a>\n                  </div>\n                  <div data-ng-show=\"error\" class=\"text-center text-danger\">\n                    <strong data-ng-bind=\"error\"></strong>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </fieldset>\n\n        </div>\n      </div>\n\n    </form>\n  </div>\n</div>\n');
 		$templateCache.put('modules/users/views/password/forgot-password.client.view.html', '<section class=\"row\" ng-controller=\"PasswordController\">\n  <h3 class=\"col-md-12 text-center\">Restore your password</h3>\n  <p class=\"small text-center\">Enter your account username.</p>\n  <div class=\"col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2\">\n    <form name=\"forgotPasswordForm\" ng-submit=\"askForPasswordReset(forgotPasswordForm.$valid)\" class=\"form-horizontal\" novalidate autocomplete=\"off\">\n      <fieldset>\n        <div class=\"form-group\" show-errors>\n          <input type=\"text\" id=\"username\" name=\"username\" class=\"form-control\" ng-model=\"credentials.username\" placeholder=\"Username\" lowercase required>\n          <div ng-messages=\"forgotPasswordForm.username.$error\" role=\"alert\">\n            <p class=\"help-block error-text\" ng-message=\"required\">Enter a username.</p>\n          </div>\n        </div>\n        <div class=\"text-center form-group\">\n          <button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n        </div>\n        <div ng-show=\"error\" class=\"text-center text-danger\">\n          <strong ng-bind=\"error\"></strong>\n        </div>\n        <div ng-show=\"success\" class=\"text-center text-success\">\n          <strong ng-bind=\"success\"></strong>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</section>\n');
 		$templateCache.put('modules/users/views/password/reset-password-invalid.client.view.html', '<section class=\"row text-center\">\n  <h3 class=\"col-md-12\">Password reset is invalid</h3>\n  <a ui-sref=\"password.forgot\" class=\"col-md-12\">Ask for a new password reset</a>\n</section>\n');
 		$templateCache.put('modules/users/views/password/reset-password-success.client.view.html', '<section class=\"row text-center\">\n  <h3 class=\"col-md-12\">Password successfully reset</h3>\n  <a ui-sref=\"home\" class=\"col-md-12\">Continue to home page</a>\n</section>\n');
