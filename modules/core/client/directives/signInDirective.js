@@ -17,7 +17,6 @@ angular.module('core').directive('signInDirective', function() {
               $scope.user.profileImage = 'modules/users/client/img/profile/uploads/uploaded-profile-image.jpg';
             }
 
-
             /**
              *
              * turning the s3 get image function off for now ...
@@ -25,7 +24,6 @@ angular.module('core').directive('signInDirective', function() {
              * uncomment and load home page and look in console log to see a few options for how i'm
              *    trying to parse.
              */
-            /**
             else {
 
               $scope.getUploadedProfilePic = function() {
@@ -52,7 +50,7 @@ angular.module('core').directive('signInDirective', function() {
 
 
             }
-             **/
+
 
           }
         };
