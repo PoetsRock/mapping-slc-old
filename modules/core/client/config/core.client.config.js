@@ -9,3 +9,19 @@ angular.module('core').config(['$compileProvider',
     $compileProvider.debugInfoEnabled(false);
   }
 ]);
+
+  //.run(function($rootScope) {
+  //  angular.element(document).on('click', function(e) {
+  //    $rootScope.$broadcast('documentClicked', angular.element(e.target));
+  //  });
+  //
+  //  // Collapsing the menu after navigation
+  //  $scope.$on('$stateChangeSuccess', function () {
+  //    $scope.isCollapsed = false;
+  //  });
+  //
+  //});
+
+
+
+
