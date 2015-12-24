@@ -8,8 +8,6 @@ var passport = require('passport'),
   users = require('../../controllers/users.server.controller');
 
 module.exports = function (config) {
-  console.log('config', config);
-  console.log('clientID: config.FACEBOOK_ID', config.FACEBOOK_ID);
   // Use facebook strategy
   passport.use(new FacebookStrategy({
       clientID: config.FACEBOOK_ID,

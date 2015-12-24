@@ -68,6 +68,23 @@ gulp.task('uglify', function () {
 
   return gulp.src(assets)
     .pipe(plugins.ngAnnotate())
+    .pipe(plugins.uglify({
+      mangle: false
+    }))
+    .pipe(plugins.concat('application.min.js'))
+    .pipe(gulp.dest('public/dist'));
+});
+
+
+// JS minifying task
+gulp.task('uglify-no-mini', function () {
+  var assets = _.union(
+    defaultAssets.client.js,
+    defaultAssets.client.templates
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.ngAnnotate())
     .pipe(plugins.concat('application.js'))
     .pipe(gulp.dest('public/dist'));
 });
@@ -137,14 +154,24 @@ gulp.task('debug', function (done) {
 
 // Lint project files and minify them into two production files.
 gulp.task('build-no-mini', function (done) {
+  runSequence('env:dev', ['uglify-no-mini', 'cssmin'], done);
+});
+
+// Minify project files into two production files.
+gulp.task('build-no-lint', function (done) {
   runSequence('env:dev', ['uglify', 'cssmin'], done);
+});
+
+
+// Run the project in production mode
+gulp.task('prod-no-mini', function (done) {
+  runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
 });
 
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
+  runSequence('templatecache', 'build-no-lint', 'env:prod', ['nodemon', 'watch'], done);
 });
-
 
 /**
  *  Heroku Buildpack for Node.js and gulp.js
