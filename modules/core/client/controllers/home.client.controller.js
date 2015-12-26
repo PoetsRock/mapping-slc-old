@@ -166,10 +166,17 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         $scope.markerData = markerData;
         var index = 0;
 
+        //console.log('markerData:\n', markerData);
+        //console.log('$scope.markerData:\n', $scope.markerData);
 
         //loop through markers array and return values for each property
+        //todo refactor using forEach, which can iterate over objects in addition to arrays.
+        // see angular docs: https://docs.angularjs.org/api/ng/function/angular.forEach
+        //markerData.forEach();
         for (var prop in markerData) {
 
+          console.log('markerData:\n', markerData);
+          mapService.markerColorFn(markerData);
           $scope.projectMarker = L.mapbox.featureLayer({
               //var singleMarker = L.mapbox.featureLayer({
               // this feature is in the GeoJSON format: see geojson.org for full specs
@@ -178,24 +185,24 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 type: 'Point',
                 // coordinates here are in longitude, latitude order because
                 // x, y is the standard for GeoJSON and many formats
-                coordinates: [markerData[prop].lng, markerData[prop].lat]
+                coordinates: [markerData.lng, markerData.lat]
               },
               properties: {
                 // one can customize markers by adding simplestyle properties
                 // https://www.mapbox.com/guides/an-open-platform/#simplestyle
                 'marker-size': 'large',
-                'marker-color': mapService.markerColorFn(markerData, prop),
-                //'marker-color': '#00ff00',
-                'marker-symbol': 'heart',
-                projectId: markerData[prop]._id,
-                summary: markerData[prop].storySummary,
-                title: markerData[prop].title,
-                mainImage: markerData[prop].mainImage,
-                category: markerData[prop].category,
-                mapImage: markerData[prop].mapImage,
-                lat: markerData[prop].lat,
-                lng: markerData[prop].lng,
-                published: markerData[prop].created,
+                'marker-color': markerData.markerColor,
+                //'marker-symbol': markerData.markerSymbol,
+                'marker-symbol': '',
+                projectId: markerData._id,
+                summary: markerData.storySummary,
+                title: markerData.title,
+                mainImage: markerData.mainImage,
+                category: markerData.category,
+                mapImage: markerData.mapImage,
+                lat: markerData.lat,
+                lng: markerData.lng,
+                published: markerData.createdOn,
                 leafletId: null,
                 arrayIndexId: index
               }

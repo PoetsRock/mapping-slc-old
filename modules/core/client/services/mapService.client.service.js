@@ -22,11 +22,14 @@ angular.module('core').service('mapService', [
 
 		this.markerColorFn = function (markerData, prop) {
 			if (markerData[prop].category === 'video') {
-				return '#ff0011';
+				//$scope.markerColor = '#ff0011';
+				//return '#ff0011';
 			} else if (markerData[prop].category === 'multimedia') {
-				return '#ff0101';
+				//$scope.markerColor = '#ff0101';
+				//return '#ff0101';
 			} else if (markerData[prop].category === 'essay') {
-				return '#0015ff';
+				//$scope.markerColor = '#0015ff';
+				//return '#0015ff';
 			} else if (markerData[prop].category === 'literature') {
 				return '#15ff35';
 			} else if (markerData[prop].category === 'interview') {
@@ -36,7 +39,8 @@ angular.module('core').service('mapService', [
 			} else if (markerData[prop].category === 'audio') {
 				return '#111111';
 			} else {
-				return '#00ff44';
+				//$scope.markerColor = '#00ff44';
+				//return '#00ff44';
 			}
 		};
 	}

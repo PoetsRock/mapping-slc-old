@@ -190,6 +190,14 @@ var ProjectSchema = new Schema({
         return url;
       }
     }
+  },
+  markerColor: {
+    type: String,
+    default: ''
+  },
+  markerSymbol: {
+    type: String,
+    default: ''
   }
 });
 
