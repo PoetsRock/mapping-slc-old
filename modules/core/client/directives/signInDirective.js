@@ -24,6 +24,7 @@ angular.module('core').directive('signInDirective', function() {
              * uncomment and load home page and look in console log to see a few options for how i'm
              *    trying to parse.
              */
+            /**
             else {
 
               $scope.getUploadedProfilePic = function() {
@@ -45,12 +46,13 @@ angular.module('core').directive('signInDirective', function() {
                   });
 
               };
+
               $scope.getUploadedProfilePic();
               $scope.user.profileImage = userProfileImage;
 
 
             }
-
+             **/
 
           }
         };

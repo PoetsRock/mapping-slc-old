@@ -74,6 +74,29 @@ exports.create = function (req, res) {
   //console.log('!!!!project create req: \n', req);
   var project = new Project(req.body);
   project.user = req.user;
+  
+  //todo refactor into separate function and use in the update method as well
+  if (req.category === 'video') {
+    project.markerColor = '#ff0011';
+  } else if (req.category === 'multimedia') {
+    project.markerColor = '#ff0101';
+  } else if (req.category === 'essay') {
+    project.markerColor = '#0015ff';
+  } else if (req.category === 'literature') {
+    project.markerColor = '#15ff35';
+  } else if (req.category === 'interview') {
+    project.markerColor = '#ff0101';
+  } else if (req.category === 'map') {
+    project.markerColor = '#ff0101';
+  } else if (req.category === 'audio') {
+    project.markerColor = '#ff0101';
+  } else {
+    project.markerColor =  '#00ff44';
+  }
+
+  console.log('!!!!project create req: \n', project);
+  console.log('!!!!project.markerColor: \n', project.markerColor);
+
   project.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -297,7 +320,7 @@ exports.getFeaturedProjects = function (req, res) {
  * Alchemy API for NLP
  **/
 
-exports.nlpProjects = function (req, res) {
+exports.nlpProjects = function (req, res, next) {
   console.log(req);
   var dirtyText = req.body.text;
   var sentKeywords = [];
@@ -345,3 +368,43 @@ exports.nlpProjects = function (req, res) {
 //	});
 //
 //};
+
+
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+exports.markerData = function(req, res, next) {
+
+  var markerColor = '';
+  if (req.category === 'video') {
+    markerColor = '#ff0011';
+    res.send(markerColor);
+  } else if (req.category === 'multimedia') {
+    markerColor = '#ff0101';
+    res.send(markerColor);
+  } else if (req.category === 'essay') {
+    markerColor = '#0015ff';
+    res.send(markerColor);
+  } else if (req.category === 'literature') {
+    markerColor = '#15ff35';
+    res.send(markerColor);
+  } else if (req.category === 'interview') {
+    markerColor = '#ff0101';
+    res.send(markerColor);
+  } else if (req.category === 'map') {
+    markerColor = '#ff0101';
+    res.send(markerColor);
+  } else if (req.category === 'audio') {
+    markerColor = '#ff0101';
+   res.send(markerColor);
+  } else {
+    markerColor =  '#00ff44';
+    res.send(markerColor);
+  }
+  next();
+  
+};

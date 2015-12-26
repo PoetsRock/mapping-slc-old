@@ -29,6 +29,7 @@ module.exports = function (app) {
 
   //app.route('/api/v1/projects').all(projectsPolicy.isAllowed)
   app.route('/api/v1/projects')
+    //.post(projects.markerData, projects.create);
     .post(projects.create);
 
 
@@ -36,6 +37,7 @@ module.exports = function (app) {
   //app.route('/api/v1/projects/:projectId').all(projectsPolicy.isAllowed)
   app.route('/api/v1/projects/:projectId')
     .get(projects.read)
+    //.put(projects.markerData, projects.update)
     .put(projects.update)
     .delete(projects.delete);
 
