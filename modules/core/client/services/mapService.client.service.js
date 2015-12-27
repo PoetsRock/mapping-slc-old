@@ -19,29 +19,5 @@ angular.module('core').service('mapService', [
 				i++;
 			}
 		};
-
-		this.markerColorFn = function (markerData, prop) {
-			if (markerData[prop].category === 'video') {
-				//$scope.markerColor = '#ff0011';
-				//return '#ff0011';
-			} else if (markerData[prop].category === 'multimedia') {
-				//$scope.markerColor = '#ff0101';
-				//return '#ff0101';
-			} else if (markerData[prop].category === 'essay') {
-				//$scope.markerColor = '#0015ff';
-				//return '#0015ff';
-			} else if (markerData[prop].category === 'literature') {
-				return '#15ff35';
-			} else if (markerData[prop].category === 'interview') {
-				return 'brown';
-			} else if (markerData[prop].category === 'map') {
-				return 'yellow';
-			} else if (markerData[prop].category === 'audio') {
-				return '#111111';
-			} else {
-				//$scope.markerColor = '#00ff44';
-				//return '#00ff44';
-			}
-		};
 	}
 ]);

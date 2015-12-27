@@ -5,7 +5,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
-    console.log('current user:\n', $scope.authentication.user);
+    //console.log('current user:\n', $scope.authentication.user);
 
     //for overlay
     $scope.featuredProjects = {};
@@ -41,24 +41,18 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
      **/
 
 
-    //var getFeatured = function () {
-    //  $http.get('/api/v1/featured', {cache: true})
-    //    .then(function (resolved, rejected) {
-    //      console.log('resolved:::::::::\n', resolved);
-    //    });
-    //};
-    //getFeatured();
+      //var getFeatured = function () {
+      //  $http.get('/api/v1/featured', {cache: true})
+      //    .then(function (resolved, rejected) {
+      //      console.log('resolved:::::::::\n', resolved);
+      //    });
+      //};
+      //getFeatured();
 
     $scope.overlayActive = true;
     $scope.menuOpen = false;
     //var changeMapFrom = null;
     $scope.shadeMap = false;
-
-    $scope.toggleTest = function(){
-      $scope.shadeMap = !$scope.shadeMap;
-      console.log('$scope.shadeMap: ', $scope.shadeMap);
-    };
-
 
     $scope.toggleOverlayFunction = function (source) {
       if ($scope.overlayActive && source === 'overlay') {
@@ -102,14 +96,12 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         mapFunction(resolved.data.MAPBOX_KEY, resolved.data.MAPBOX_SECRET);
       });
 
-
-
-
     /**
-     *  call map and add functionality
-     */
+    **  call map and add functionality
+    **/
     var mapFunction = function (mapboxKey, mapboxAccessToken) {
-      //creates a Mapbox Map
+
+      //creates a Mapbox map
       L.mapbox.accessToken = mapboxAccessToken;
 
       //'info' id is part of creating tooltip with absolute position
@@ -117,11 +109,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
       var map = L.mapbox.map('map', null, {
           infoControl: false, attributionControl: false
-        })
-        .setView([40.7630772, -111.8689467], 12)
-        .addControl(L.mapbox.geocoderControl('mapbox.places', { position: 'topright' }))
-        .addControl( L.control.zoom({position: 'topright'}) );
-        //.addControl(L.mapbox.Zoom({ position: 'topright' }));
+      })
+      .setView([40.7630772, -111.8689467], 12)
+      .addControl(L.mapbox.geocoderControl('mapbox.places', {position: 'topright'}))
+      .addControl(L.control.zoom({position: 'topright'}));
+      //.addControl(L.mapbox.Zoom({ position: 'topright' }));
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
@@ -165,17 +157,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       $scope.addProjectMarkers = function (markerData) {
         $scope.markerData = markerData;
         var index = 0;
-
-        //console.log('markerData:\n', markerData);
-        //console.log('$scope.markerData:\n', $scope.markerData);
-
         //loop through markers array and return values for each property
         //todo refactor using forEach, which can iterate over objects in addition to arrays.
         // see angular docs: https://docs.angularjs.org/api/ng/function/angular.forEach
         //markerData.forEach();
         for (var prop in markerData) {
-
-          console.log('markerData[prop].markerColor:\n', markerData[prop].markerColor);
 
           $scope.projectMarker = L.mapbox.featureLayer({
               //var singleMarker = L.mapbox.featureLayer({
@@ -194,7 +180,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 'marker-color': markerData[prop].markerColor,
                 //'marker-color': markerData.markerColor,
                 //'marker-symbol': markerData.markerSymbol,
-                'marker-symbol': 'heart',
+                'marker-symbol': 'marker-stroked',
                 projectId: markerData[prop]._id,
                 summary: markerData[prop].storySummary,
                 title: markerData[prop].title,
