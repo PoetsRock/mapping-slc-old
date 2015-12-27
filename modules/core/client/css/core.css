@@ -213,8 +213,17 @@ div:nth-child(1) > div.row > div > div > p:nth-child(1)::first-letter {
 
 .core .navbar-brand, .core .navbar-nav, .core li a {
   color: #ffffff;
+  right: 10%;
   background: rgba(0, 0, 0, 0.0);
   text-align: right;
+}
+
+.navbar-nav > li > .dropdown-menu {
+  margin-top: 30px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-right: 20px;
+  min-width: 260px;
 }
 
 /*body > section > section > section > section.home-view.ng-scope > div > span > div > div:nth-child(1) > div.col-md-2 > sign-in-directive > section > */
