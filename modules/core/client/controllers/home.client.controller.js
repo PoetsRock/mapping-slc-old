@@ -30,9 +30,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.projectMarker = null;
     $scope.markerData = null;
 
-    /**
-     * test for getting and setting cookies
-     */
+
 
     /**
      *
@@ -40,32 +38,32 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
      *
      **/
 
-
-      //var getFeatured = function () {
-      //  $http.get('/api/v1/featured', {cache: true})
-      //    .then(function (resolved, rejected) {
-      //      console.log('resolved:::::::::\n', resolved);
-      //    });
-      //};
-      //getFeatured();
-
     $scope.overlayActive = true;
+    $scope.sourceTo = '';
+    $scope.sourceFrom = '';
+
     $scope.menuOpen = false;
     //var changeMapFrom = null;
     $scope.shadeMap = false;
 
-    $scope.toggleOverlayFunction = function (source) {
-      if ($scope.overlayActive && source === 'overlay') {
+    $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
+      $scope.sourceFrom = sourceFrom;
+      $scope.sourceTo = sourceTo;
+      if ($scope.overlayActive && sourceFrom === 'overlay') {
+        console.log('toggle the shade! v1\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = !$scope.overlayActive;
         $scope.shadeMap = true;
-      } else if ($scope.overlayActive && source === 'menu-closed') {
+      } else if ($scope.overlayActive && sourceFrom === 'menu-closed') {
+        console.log('toggle the shade! v2\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = false;
         $scope.menuOpen = true;
         $scope.shadeMap = true;
-      } else if (!$scope.overlayActive && source === 'menu-closed' && !$scope.menuOpen) {
+      } else if (!$scope.overlayActive && sourceFrom === 'menu-closed' && !$scope.menuOpen) {
+        console.log('toggle the shade! v3\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = !$scope.menuOpen;
         $scope.shadeMap = false;
-      } else if (!$scope.overlayActive && source === 'home') {
+      } else if (!$scope.overlayActive && sourceFrom === 'home') {
+        console.log('toggle the shade! v4\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = false;
         $scope.overlayActive = true;
         $scope.shadeMap = false;
@@ -74,7 +72,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
     //atrribution toggle
     $scope.attributionFull = false;
-    $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a> & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
+    $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>(the world\'s best maps) & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
+
+    //overlayActive: {{$scope.overlayActive}} | sourceTo: $scope.overlayActive | sourceFrom: $scope.sourceFrom
 
     /**
      *
@@ -107,13 +107,16 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       //'info' id is part of creating tooltip with absolute position
       var info = document.getElementById('info');
 
+      var legend = 'I am Legend!';
+
       var map = L.mapbox.map('map', null, {
           infoControl: false, attributionControl: false
       })
       .setView([40.7630772, -111.8689467], 12)
       .addControl(L.mapbox.geocoderControl('mapbox.places', {position: 'topright'}))
       .addControl(L.control.zoom({position: 'topright'}));
-      //.addControl(L.mapbox.Zoom({ position: 'topright' }));
+
+      map.legendControl.addLegend(document.getElementById('legend').innerHTML);
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),

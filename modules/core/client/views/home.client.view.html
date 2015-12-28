@@ -8,8 +8,6 @@
     <main-page-overlay></main-page-overlay>
 
     <!--call MapBox map-->
-  {{}}
-
     <div id="map" class="map" data-ng-class="{'leaflet-tile-gray': !shadeMap}">
        <i class="fa fa-info-circle" data-ng-click="attributionFull = !attributionFull" data-ng-class="{'atrrib-clicked': attributionFull}"></i>
         <div class="attrib" data-ng-show="attributionFull" data-ng-bind-html="attributionText"></div>
@@ -20,5 +18,24 @@
     </div>
 
     <div id="info" class="info" data-ng-class="{'info-project-details': toggleDetails}"></div>
+
+  <!-- Set the display of this container to none so it can
+     add it programmatically to `legendControl` -->
+  <div id="legend" style="display:none;">
+    <strong>Legend</strong>
+    <nav class="legend clearfix">
+      <span style="background:#F1EEF6;"></span>
+      <span style="background:#BDC9E1;"></span>
+      <span style="background:#74A9CF;"></span>
+      <span style="background:#2B8CBE;"></span>
+      <span style="background:#045A8D;"></span>
+      <label>0 - 20%</label>
+      <label>40%</label>
+      <label>60%</label>
+      <label>80%</label>
+      <label>100%</label>
+      <small>Source: <a href="#link to source">Name of source</a></small>
+    </nav>
+  </div>
 
 </section>
