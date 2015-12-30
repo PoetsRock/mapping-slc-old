@@ -706,3 +706,9 @@ button > .grow {
   border-color: #aaaaaa;
   border-radius: 5%;
 }
+
+.fa .fa-times {
+  left: 15px;
+  bottom: 15px;
+  position: relative;
+}

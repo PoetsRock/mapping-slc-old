@@ -96,6 +96,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         mapFunction(resolved.data.MAPBOX_KEY, resolved.data.MAPBOX_SECRET);
       });
 
+    $scope.showLegend = false;
+    $scope.toggleLegend = function() {
+      $scope.showLegend = !$scope.showLegend;
+    };
+
     /**
     **  call map and add functionality
     **/
@@ -107,16 +112,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       //'info' id is part of creating tooltip with absolute position
       var info = document.getElementById('info');
 
-      var legend = 'I am Legend!';
-
       var map = L.mapbox.map('map', null, {
-          infoControl: false, attributionControl: false
+          infoControl: false, attributionControl: false,
+          legendControl: { position: 'bottomleft' }
       })
       .setView([40.7630772, -111.8689467], 12)
       .addControl(L.mapbox.geocoderControl('mapbox.places', {position: 'topright'}))
       .addControl(L.control.zoom({position: 'topright'}));
-
-      map.legendControl.addLegend(document.getElementById('legend').innerHTML);
+      //map.legendControl.addLegend(document.getElementById('legend').innerHTML);
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
@@ -138,6 +141,54 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
       mainMap.addTo(map);
       L.control.layers(layers).addTo(map);
+
+
+
+
+
+
+
+      var legend = 'Data from Robert Kieffer.';
+
+      map.getContainer().querySelector('#legend').onclick = function() {
+        if (this.className === 'active') {
+          map.legendControl.removeLegend(legend);
+          this.className = '';
+        } else {
+          map.legendControl.addLegend(legend);
+          this.className = 'active';
+        }
+        return false;
+      };
+
+      var fullscreenControl = new L.Control.Fullscreen();
+
+
+
+
+      // Connect check boxes to ui functions
+      function toggle(control, element) {
+        if (element.className === 'active') {
+          control.removeFrom(map);
+          element.className = '';
+        } else {
+          control.addTo(map);
+          element.className = 'active';
+        }
+      }
+
+
+      map.getContainer().querySelector('#fullscreen').onclick = function() {
+        toggle(fullscreenControl, this);
+        return false;
+      };
+
+
+
+
+
+
+
 
       //var markers = new L.MarkerClusterGroup();
       //markers.addLayer(new L.Marker(getRandomLatLng(map)));
