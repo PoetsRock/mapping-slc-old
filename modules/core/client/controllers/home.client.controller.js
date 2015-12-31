@@ -96,11 +96,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         mapFunction(resolved.data.MAPBOX_KEY, resolved.data.MAPBOX_SECRET);
       });
 
-    $scope.showLegend = false;
-    $scope.toggleLegend = function() {
-      $scope.showLegend = !$scope.showLegend;
-    };
-
     /**
     **  call map and add functionality
     **/
@@ -117,9 +112,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           legendControl: { position: 'bottomleft' }
       })
       .setView([40.7630772, -111.8689467], 12)
-      .addControl(L.mapbox.geocoderControl('mapbox.places', {position: 'topright'}))
       .addControl(L.control.zoom({position: 'topright'}));
-      //map.legendControl.addLegend(document.getElementById('legend').innerHTML);
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
@@ -144,11 +137,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
 
 
-
-
-
-
-      var legend = 'Data from Robert Kieffer.';
+    //BEGIN toggle map legend
+      var legend = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>(the world\'s best maps) & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
 
       map.getContainer().querySelector('#legend').onclick = function() {
         if (this.className === 'active') {
@@ -161,11 +151,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         return false;
       };
 
-      var fullscreenControl = new L.Control.Fullscreen();
-
-
-
-
       // Connect check boxes to ui functions
       function toggle(control, element) {
         if (element.className === 'active') {
@@ -176,18 +161,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           element.className = 'active';
         }
       }
-
-
-      map.getContainer().querySelector('#fullscreen').onclick = function() {
-        toggle(fullscreenControl, this);
-        return false;
-      };
-
-
-
-
-
-
+    // END toggle map legend
 
 
       //var markers = new L.MarkerClusterGroup();
