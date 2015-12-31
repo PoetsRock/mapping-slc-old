@@ -707,7 +707,7 @@ button > .grow {
   border-radius: 5%;
 }
 
-.fa .fa-times {
+.fa.fa-times {
   left: 15px;
   bottom: 15px;
   position: relative;
