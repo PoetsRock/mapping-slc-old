@@ -59,6 +59,20 @@ gulp.task('watch', function () {
   }
 });
 
+
+// JS `prod-no-mini` task
+gulp.task('uglify-no-mini', function () {
+  var assets = _.union(
+    defaultAssets.client.js,
+    defaultAssets.client.templates
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.ngAnnotate())
+    .pipe(plugins.concat('application.js'))
+    .pipe(gulp.dest('public/dist'));
+});
+
 // JS minifying task
 gulp.task('uglify', function () {
   var assets = _.union(
@@ -75,27 +89,13 @@ gulp.task('uglify', function () {
     .pipe(gulp.dest('public/dist'));
 });
 
-
-// JS minifying task
-gulp.task('uglify-no-mini', function () {
-  var assets = _.union(
-    defaultAssets.client.js,
-    defaultAssets.client.templates
-  );
-
-  return gulp.src(assets)
-    .pipe(plugins.ngAnnotate())
-    .pipe(plugins.concat('application.js'))
-    .pipe(gulp.dest('public/dist'));
-});
-
 // CSS minifying task
 gulp.task('cssmin', function () {
   return gulp.src(defaultAssets.client.css)
-    .pipe(plugins.concat('application.css'))
+    .pipe(plugins.cssmin())
+    .pipe(plugins.concat('application.min.css'))
     .pipe(gulp.dest('public/dist'));
 });
-
 
 // Sass task
 gulp.task('sass', function () {
