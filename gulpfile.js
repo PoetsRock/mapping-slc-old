@@ -5,6 +5,8 @@
  */
 var _ = require('lodash'),
   defaultAssets = require('./config/assets/default'),
+  testAssets = require('./config/assets/test'),
+  glob = require('glob'),
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
@@ -147,6 +149,8 @@ gulp.task('build', function (done) {
   runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
 });
 
+// Watch all server files for changes & run server tests (test:server) task on changes
+// optional arguments: 
 // Run the project in debug mode
 gulp.task('debug', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done);
