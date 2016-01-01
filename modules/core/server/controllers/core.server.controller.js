@@ -44,3 +44,29 @@ exports.renderNotFound = function (req, res) {
     }
   });
 };
+
+/**
+ *
+ * Basic CRUD operations by a sourceId
+ *
+ */
+
+
+//myObject.findAndModify({
+//  query: {
+//    sourceId: data.sourceId
+//  },
+//  update: {
+//    $set: {
+//      name: data.name,
+//      active: data.active
+//    },
+//    $setOnInsert: {
+//      createdAt: now,
+//      sourceId: shortid.generate()
+//    }
+//  },
+//  fields: excludeFields,
+//  upsert: true,
+//  new: true
+//}, callback);
