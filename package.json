@@ -98,6 +98,7 @@
     "gulp-protractor": "^2.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.3",
+    "gulp-serve": "^1.2.0",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.6",
     "mock-fs": "~3.4.0",
