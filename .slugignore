@@ -1,8 +1,16 @@
-/app/tests
-/modules/.articles
+## heroku slug ignore paths
+
 /modules/admins/tests
-/modules/chat
 /modules/contacts/tests
 /modules/core/tests
 /modules/projects/tests
 /modules/users/tests
+/modules/**/tests
+/modules/**/*/tests
+
+docker-compose.yml
+gruntfile.js
+karma.conf.js
+manifest.yml
+protractor.conf.js
+Dockerfile
