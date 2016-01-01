@@ -8,6 +8,7 @@ var _ = require('lodash'),
   testAssets = require('./config/assets/test'),
   glob = require('glob'),
   gulp = require('gulp'),
+  serve = require('gulp-serve'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
   plugins = gulpLoadPlugins({
@@ -17,6 +18,11 @@ var _ = require('lodash'),
   }),
   path = require('path'),
   endOfLine = require('os').EOL;
+
+//serve local production files
+gulp.task('serve-local-prod', function() {
+  serve();
+});
 
 // Set NODE_ENV to 'development'
 gulp.task('env:dev', function () {
@@ -72,7 +78,8 @@ gulp.task('uglify-no-mini', function () {
   return gulp.src(assets)
     .pipe(plugins.ngAnnotate())
     .pipe(plugins.concat('application.js'))
-    .pipe(gulp.dest('public/dist'));
+    .pipe(gulp.dest('public/dist'))
+    .pipe(gulp.dest('build'));
 });
 
 // JS minifying task
@@ -88,7 +95,8 @@ gulp.task('uglify', function () {
       mangle: false
     }))
     .pipe(plugins.concat('application.min.js'))
-    .pipe(gulp.dest('public/dist'));
+    .pipe(gulp.dest('public/dist'))
+    .pipe(gulp.dest('build'));
 });
 
 // CSS minifying task
@@ -96,7 +104,8 @@ gulp.task('cssmin', function () {
   return gulp.src(defaultAssets.client.css)
     .pipe(plugins.cssmin())
     .pipe(plugins.concat('application.min.css'))
-    .pipe(gulp.dest('public/dist'));
+    .pipe(gulp.dest('public/dist'))
+    .pipe(gulp.dest('build'));
 });
 
 // Sass task
