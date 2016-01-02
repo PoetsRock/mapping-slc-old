@@ -163,12 +163,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       }
     // END toggle map legend
 
-
-      //var markers = new L.MarkerClusterGroup();
-      //markers.addLayer(new L.Marker(getRandomLatLng(map)));
-      //map.addLayer(markers);
-
-
       //service that returns project markers
       MarkerDataService.getMarkerData()
         .success(function (markerData) {
