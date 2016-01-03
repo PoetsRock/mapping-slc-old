@@ -27,6 +27,9 @@ exports.update = function (req, res) {
   if(req.model) {
     user = req.model;
     user = _.extend(user, req.body);
+
+    //console.log('user:\n', user);
+
     ////For security purposes only merge these parameters
     //user.firstName = req.body.firstName;
     //user.lastName = req.body.lastName;
@@ -35,14 +38,19 @@ exports.update = function (req, res) {
     if(req.body.associatedProjects) {
       user.associatedProjects.push(req.body.associatedProjects);
     }
+
     // if true, then user has just added project as a favorite
     // so, projectId needs to be pushed into favorites array.
     // if false, projectId should be popped from favorites array.
     if(req.body.isFavorite) {
+      console.log('TRUE\nreq.body.isFavorite:\n', req.body.isFavorite);
       user.favorites.push(req.body.favorite);
     } else if (req.body.isFavorite === false && req.body.favorite) {
+      console.log('FALSE\nreq.body.isFavorite:\n', req.body.isFavorite);
       user.favorites.pop(req.body.favorite);
     }
+    //console.log('user:\n', user);
+    console.log('user.favorites:\n', user.favorites);
 
   } else if (req.body._id) {
     user = req.body;
