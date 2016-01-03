@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -16,10 +16,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.userToEdit = {};
     $scope.images = [];
     $scope.override = false;
-
+    $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
 
-    console.log('$scope.user:\n', $scope.user);
 
     $scope.init = function () {
       $scope.publishedProjects();
@@ -89,14 +88,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     var saveProject = null;
     $scope.updateLatLng = function (project) {
       console.log('project ctrl', project);
-      $http.get('/api/v1/keys').success(function (data) {
-        var mapboxKey = data.mapboxKey;
-        var mapboxSecret = data.mapboxSecret;
-        var hereKey = data.hereKey;
-        var hereSecret = data.hereSecret;
+      $http.get('/api/v1/keys')
+        .then(function (keys, revoked) {
 
-        GeoCodeApi.callGeoCodeApi(project, hereKey, hereSecret, saveProject)
+        GeoCodeApi.callGeoCodeApi(project, keys, saveProject)
           .success(function (data) {
+            var mapboxKey = keys.data.MAPBOX_KEY;
+            var mapboxSecret = keys.data.MAPBOX_SECRET;
             project.lat = data.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
             project.lng = data.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
             project.mapImage = 'http://api.tiles.mapbox.com/v4/' + mapboxKey + '/' + markerUrl + '(' + project.lng + ',' + project.lat + ')/' + project.lng + ',' + project.lat + ',15/' + width + 'x' + height + '.png?access_token=' + mapboxSecret;
@@ -109,11 +107,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     // Find a list of all published projects
-    //PublishingService.getPublishedProjects().
     $scope.publishedProjects = function () {
       $http.get('/api/v1/projects/published').
       success(function (publishedProjects) {
         $scope.publishedProjects = publishedProjects;
+        console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
       }).
       error(function (data, status) {
 
@@ -184,7 +182,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.update = function () {
       var project = $scope.project;
       project.$update(function (response) {
-        if(response.$resolved) {
+        if (response.$resolved) {
           if ($location.path() === '/admin/edit-project/' + project._id) {
             $location.path('/admin/edit-project/' + project._id);
             $scope.toggleEditFn(0);
@@ -196,13 +194,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             message: 'Project updated successfully',
             classes: 'ng-notify-contact-success'
           })
-        }else{
+        } else {
           notify({
             message: 'Something went wrong, and we didn\'t receive your message. We apologize.',
             classes: 'ng-notify-contact-failure'
           })
         }
-      }, function(errorResponse) {
+      }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
@@ -239,8 +237,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             $scope.images.push(project.imageGallery[i]);
           }
         }
-        console.log('$scope.project:\n', $scope.project);
+        getUserFavoriteStories($scope.user.favorites, $scope.project.id);
       });
+
     };
 
     $scope.completed = function () {
@@ -253,8 +252,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       }
     };
-
-
 
 
     //CKEDITOR.replace('story');
@@ -304,6 +301,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     }();
 
+    /**
+     * Favorite project function
+     */
+
+    //getUserFavorites.getUserFavoriteStories(userFavoriteProjects, projectId);
+    //getUserFavorites.toggleFavProject();
+
+    var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
+      userFavoriteProjects.forEach(function (userFavoriteProject) {
+        if (userFavoriteProject === projectId) {
+          $scope.isFavorite = true;
+        }
+      });
+    };
+    $scope.toggleFavProject = function () {
+      $scope.isFavorite = !$scope.isFavorite;
+
+      var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
+      if (!$scope.isFavorite) {
+        updateFavoriteObj.isFavorite = false;
+      }
+      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+    };
+
 
     /**
      * modal for leaving projects, will give user warning if leaving form
@@ -326,7 +347,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           var template = '';
           $scope.items = [];
 
-          if (fromState.url === '/projects/create') {
+          if (fromState.url === '/projects/create' && toState.url !== "/signin?err") {
             event.preventDefault();
             $scope.items.toStateUrl = toState.url;
             template = '/modules/projects/client/directives/views/project-warning-modal.html';
@@ -381,21 +402,102 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     /**
      * nlp
      **/
-    //$scope.update()
+      //$scope.update()
     $scope.nlpData = null;
     var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
-    $scope.processNlpData = function() {
-    	$http.get('api/v1/nlp').
-    		success(function (nlpData) {
-    			console.log(nlpData);
-    			$scope.nlpData = nlpData;
-    		}).
-    		error(function () {
-    		});
+    $scope.processNlpData = function () {
+      $http.get('api/v1/nlp').
+      success(function (nlpData) {
+        console.log(nlpData);
+        $scope.nlpData = nlpData;
+      }).
+      error(function () {
+      });
     };
 
 
 
+
+    //
+    //var documentClicked = function(e) {
+    //  var target = angular.element(e.target),
+    //    parent = angular.element(target.parent()[0]);
+    //
+    //  if (!(target.hasClass('dropdown-display') && target.hasClass('clicked')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked'))) {
+    //    $scope.$applyAsync(function() {
+    //      $scope.listVisible = false;
+    //    });
+    //  }
+    //};
+    //
+    //$document.bind('click', documentClicked);
+    //
+    //
+    //
+    ////$scope.dropdownList = function($scope) {
+    //  $scope.listVisible = false;
+    //  $scope.isPlaceholder = true;
+    //
+    //  $scope.select = function(item) {
+    //    $scope.isPlaceholder = false;
+    //    $scope.selected = item;
+    //  };
+    //
+    //  $scope.isSelected = function(item) {
+    //    return item[$scope.property] === $scope.selected[$scope.property];
+    //  };
+    //
+    //  $scope.show = function() {
+    //    $scope.listVisible = true;
+    //  };
+    //
+    //  $rootScope.$on('documentClicked', function(inner, target) {
+    //
+    //    var parent = angular.element(target.parent()[0]);
+    //    if (!(target.hasClass('dropdown-display') && target.hasClass('clicked-add')) && !(parent.hasClass('dropdown-display') && parent.hasClass('clicked-add'))) {
+    //
+    //      $scope.$apply(function() {
+    //        $scope.listVisible = false;
+    //      });
+    //    }
+    //
+    //    //  var parent = angular.element(target.parent()[0]);
+    //    //  if (!parent.hasClass('clicked')) {
+    //    //    $scope.$apply(function () {
+    //    //      $scope.listVisible = false;
+    //    //    });
+    //    //  }
+    //
+    //
+    //  });
+    //
+    //  $scope.$watch('selected', function(value) {
+    //    //$scope.isPlaceholder = $scope.selected[$scope.property] === undefined;
+    //    //$scope.display = $scope.selected[$scope.property];
+    //  });
+    ////};
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //$scope.colours = [{
+    //  name: 'Red',
+    //  hex: '#F21B1B'
+    //}, {
+    //  name: 'Blue',
+    //  hex: '#1B66F2'
+    //}, {
+    //  name: 'Green',
+    //  hex: '#07BA16'
+    //}];
+    //$scope.colour = '';
+    //
+
+
   }
+
 ]);
 

@@ -5,7 +5,6 @@
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
-  _ = require('underscore'),
   mongoosastic = require('mongoosastic');
 
 /**
@@ -23,11 +22,11 @@ var ProjectSchema = new Schema({
   status: {
     type: [{
       type: String,
-      enum: ['received', 'pending', 'rejected', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published']
+      enum: ['received', 'pending', 'rejected', 'soft_rejection', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published']
     }],
     default: 'received'
   },
-  submittedOn: {
+  createdOn: {
     type: Date,
     default: Date.now
   },
@@ -161,13 +160,13 @@ var ProjectSchema = new Schema({
     type: Boolean,
     default: 'false'
   },
-  //mainImage: {
-  //  type: String,
-  //  trim: true
-  //},
   mainImage: {
-    type: Buffer
+    type: String,
+    trim: true
   },
+  //mainImage: {
+  //  type: Buffer
+  //},
   mainImgThumbnail: {
     type: Buffer
   },
@@ -191,6 +190,14 @@ var ProjectSchema = new Schema({
         return url;
       }
     }
+  },
+  markerColor: {
+    type: String,
+    default: ''
+  },
+  markerSymbol: {
+    type: String,
+    default: ''
   }
 });
 
@@ -200,10 +207,6 @@ ProjectSchema.virtual('address').get(function () {
   return this.street + ' ' + this.city + ' ' + this.state + ' ' + this.zip;
 });
 
-//create virtual attribute for full name
-ProjectSchema.virtual('fullName').get(function () {
-  return this.firstName + ' ' + this.lastName;
-});
 
 //create virtual attribute setter for to spilt coordinates into lat and lng
 ProjectSchema.virtual('geoCoordinates').get(function () {

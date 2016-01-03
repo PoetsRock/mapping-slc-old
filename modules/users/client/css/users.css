@@ -224,3 +224,28 @@
 /*.example1 {*/
 /*transition: [transition-property] [transition-duration] [transition-timing-function] [transition-delay];*/
 /*}*/
+
+.user-submissions a {
+  margin: 1px 0 2% 5%;
+  border: 2px solid rgb(2,58,49);
+  background-color: rgba(2,58,49,0.3);
+  -webkit-transition: all ease 0.3s;
+  -moz-transition: all ease 0.3s;
+  -o-transition: all ease 0.3s;
+  transition: all ease 0.3s;
+}
+
+.user-submissions a:hover {
+  background-color: rgba(2,58,49,0.5);
+  color: #000000;
+  border: 2px solid rgb(2,58,49);
+  -webkit-transform: scale(1.01);
+  -moz-transform: scale(1.01);
+  -ms-transform: scale(1.01);
+  -o-transform: scale(1.01);
+  transform: scale(1.01);
+  -webkit-transition: all ease 0.2s;
+  -moz-transition: all ease 0.2s;
+  -o-transition: all ease 0.2s;
+  transition: all ease 0.2s;
+}

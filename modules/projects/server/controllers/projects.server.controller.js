@@ -10,25 +10,16 @@ var mongoose = require('mongoose'),
   _ = require('lodash'),
   config = require(path.resolve('./config/config')),
   AlchemyAPI = require('alchemy-api'),
-  alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey),
   projects = require('./projects.server.controller'),
   sanitizeHtml = require('sanitize-html'),
   Promise = require('bluebird'),
   fs = Promise.promisifyAll(require('fs')),
-  exports = Promise.promisifyAll(exports),
-  Kraken = require('kraken');
-
-
-
-
-
-
-
+  exports = Promise.promisifyAll(exports);
 
 function nlpKeywords(sanitizedText) {
   return new Promise(
     function (resolve, reject) {
-
+      var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
       alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'},
         function (err, keywords) {
         if (keywords) {
@@ -43,7 +34,7 @@ function nlpKeywords(sanitizedText) {
 
 
 
-
+//
 // export default function getReplies(topicId) {
 //  return new Promise(function (resolve, reject) {
 //
@@ -72,7 +63,7 @@ function nlpKeywords(sanitizedText) {
 //    console.log(error)
 //    ;
 //  });
-//
+
 // **/
 
 
@@ -83,6 +74,29 @@ exports.create = function (req, res) {
   //console.log('!!!!project create req: \n', req);
   var project = new Project(req.body);
   project.user = req.user;
+  
+  //todo refactor into separate function and use in the update method as well
+  if (req.category === 'video') {
+    project.markerColor = '#ff0011';
+  } else if (req.category === 'multimedia') {
+    project.markerColor = '#ff0101';
+  } else if (req.category === 'essay') {
+    project.markerColor = '#0015ff';
+  } else if (req.category === 'literature') {
+    project.markerColor = '#15ff35';
+  } else if (req.category === 'interview') {
+    project.markerColor = '#ff0101';
+  } else if (req.category === 'map') {
+    project.markerColor = '#ff0101';
+  } else if (req.category === 'audio') {
+    project.markerColor = '#ff0101';
+  } else {
+    project.markerColor =  '#00ff44';
+  }
+
+  console.log('!!!!project create req: \n', project);
+  console.log('!!!!project.markerColor: \n', project.markerColor);
+
   project.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -185,10 +199,6 @@ exports.delete = function (req, res) {
  *
  */
 exports.list = function (req, res) {
-  //run a query in mongoose
-  //Project.find(
-  //{'projects._id': req.query.}
-  //)
   Project.find()
     .sort('-created')
     .populate('user')
@@ -198,8 +208,6 @@ exports.list = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //projects.user;
-        //console.log('projects.user', projects.user);
         res.jsonp(projects);
       }
     });
@@ -225,8 +233,6 @@ exports.listPublished = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //projects.user;
-        console.log('published projects:\n', projects);
         res.jsonp(projects);
       }
     });
@@ -234,9 +240,10 @@ exports.listPublished = function (req, res) {
 
 
 /**
- * List of GeoCoordinates for Projects
+ * List of Markers for Home Page Map
  */
 exports.markerList = function (req, res) {
+  //todo filter this response to contain just what's needed for markers
   Project.find({
       'status': 'published'
     })
@@ -247,7 +254,6 @@ exports.markerList = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        console.log('projects: ', projects);
         res.jsonp(projects);
       }
     });
@@ -263,7 +269,6 @@ exports.findOneVideoId = function (req, res) {
         return next(new Error('Failed to load project ' + id + 'associated with the requested video.')
         )
       }
-      console.log('res:\n', res);
       res.vimeoId = project.vimeoId;
     });
 };
@@ -293,13 +298,29 @@ exports.hasAuthorization = function (req, res, next) {
 };
 
 
+/**
+ * Returns an array of objects that contains the featured projects
+ */
+exports.getFeaturedProjects = function (req, res) {
+  Project.find({featured: true})
+    .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(projects);
+      }
+    });
+};
+
 //var dirtyText = 'All decent people feel sorrow and righteous fury about the latest slaughter of innocents, in California. Law enforcement and intelligence agencies are searching for motivations, including the vital question of how the murderers might have been connected to international terrorism. That is right and proper. But motives do not matter to the dead in California, nor did they in Colorado, Oregon, South Carolina, Virginia, Connecticut and far too many other places. The attention and anger of Americans should also be directed at the elected leaders whose job is to keep us safe but who place a higher premium on the money and political power of an industry dedicated to profiting from the unfettered spread of ever more powerful firearms. It is a moral outrage and a national disgrace that civilians can legally purchase weapons designed specifically to kill people with brutal speed and efficiency. These are weapons of war, barely modified and deliberately marketed as tools of macho vigilantism and even insurrection. America’s elected leaders offer prayers for gun victims and then, callously and without fear of consequence, reject the most basic restrictions on weapons of mass killing, as they did on Thursday. They distract us with arguments about the word terrorism. Let’s be clear: These spree killings are all, in their own ways, acts of terrorism. Every weekday, get thought-provoking commentary from Op-Ed columnists, The Times editorial board and contributing writers from around the world. Opponents of gun control are saying, as they do after every killing, that no law can unfailingly forestall a specific criminal. That is true. They are talking, many with sincerity, about the constitutional challenges to effective gun regulation. Those challenges exist. They point out that determined killers obtained weapons illegally in places like France, England and Norway that have strict gun laws. Yes, they did. But at least those countries are trying. The United States is not. Worse, politicians abet would-be killers by creating gun markets for them, and voters allow those politicians to keep their jobs. It is past time to stop talking about halting the spread of firearms, and instead to reduce their number drastically — eliminating some large categories of weapons and ammunition. It is not necessary to debate the peculiar wording of the Second Amendment. No right is unlimited and immune from reasonable regulation. Certain kinds of weapons, like the slightly modified combat rifles used in California, and certain kinds of ammunition, must be outlawed for civilian ownership. It is possible to define those guns in a clear and effective way and, yes, it would require Americans who own those kinds of weapons to give them up for the good of their fellow citizens. What better time than during a presidential election to show, at long last, that our nation has retained its sense of decency?';
 
 /**
  * Alchemy API for NLP
  **/
 
-exports.nlpProjects = function (req, res) {
+exports.nlpProjects = function (req, res, next) {
   console.log(req);
   var dirtyText = req.body.text;
   var sentKeywords = [];
@@ -307,11 +328,11 @@ exports.nlpProjects = function (req, res) {
     allowedTags: [],
     allowedAttributes: []
   });
+  var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
   alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'}, function (err, keywords) {
     if (err) {
       throw err;
     //} else if (req.body.useCase === 'server') {
-    //  console.log('keywords:\n', response);
     //  res.json(response);
     } else {
       console.log('keywords.keywords l. 317:\n', keywords.keywords);
@@ -347,3 +368,43 @@ exports.nlpProjects = function (req, res) {
 //	});
 //
 //};
+
+
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+exports.markerData = function(req, res, next) {
+
+  var markerColor = '';
+  if (req.category === 'video') {
+    markerColor = '#ff0011';
+    res.send(markerColor);
+  } else if (req.category === 'multimedia') {
+    markerColor = '#ff0101';
+    res.send(markerColor);
+  } else if (req.category === 'essay') {
+    markerColor = '#0015ff';
+    res.send(markerColor);
+  } else if (req.category === 'literature') {
+    markerColor = '#15ff35';
+    res.send(markerColor);
+  } else if (req.category === 'interview') {
+    markerColor = '#ff0101';
+    res.send(markerColor);
+  } else if (req.category === 'map') {
+    markerColor = '#ff0101';
+    res.send(markerColor);
+  } else if (req.category === 'audio') {
+    markerColor = '#ff0101';
+   res.send(markerColor);
+  } else {
+    markerColor =  '#00ff44';
+    res.send(markerColor);
+  }
+  next();
+  
+};

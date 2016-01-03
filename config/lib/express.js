@@ -4,20 +4,20 @@
  * Module dependencies.
  */
 var config = require('../config'),
-  express = require('express'),
-  morgan = require('morgan'),
-  bodyParser = require('body-parser'),
-  session = require('express-session'),
-  MongoStore = require('connect-mongo')(session),
-  multer = require('multer'),
-  favicon = require('serve-favicon'),
-  compress = require('compression'),
-  methodOverride = require('method-override'),
-  cookieParser = require('cookie-parser'),
-  helmet = require('helmet'),
-  flash = require('connect-flash'),
-  consolidate = require('consolidate'),
-  path = require('path');
+    express = require('express'),
+    morgan = require('morgan'),
+    logger = require('./logger'),
+    bodyParser = require('body-parser'),
+    session = require('express-session'),
+    MongoStore = require('connect-mongo')(session),
+    favicon = require('serve-favicon'),
+    compress = require('compression'),
+    methodOverride = require('method-override'),
+    cookieParser = require('cookie-parser'),
+    helmet = require('helmet'),
+    flash = require('connect-flash'),
+    consolidate = require('consolidate'),
+    path = require('path');
 
 /**
  * Initialize local variables
@@ -31,7 +31,7 @@ module.exports.initLocalVariables = function (app) {
   }
   app.locals.keywords = config.app.keywords;
   app.locals.googleAnalyticsTrackingID = config.app.googleAnalyticsTrackingID;
-  app.locals.facebookAppId = config.facebook.clientID;
+  app.locals.facebookAppId = config.FACEBOOK_ID;
   app.locals.jsFiles = config.files.client.js;
   app.locals.cssFiles = config.files.client.css;
   app.locals.livereload = config.livereload;
@@ -65,13 +65,13 @@ module.exports.initMiddleware = function (app) {
   }));
 
   // Initialize favicon middleware
-  app.use(favicon('./modules/core/client/img/brand/favicon.ico'));
+  app.use(favicon(app.locals.favicon));
+
+  // Enable logger (morgan)
+  app.use(morgan(logger.getFormat(), logger.getOptions()));
 
   // Environment dependent middleware
   if (process.env.NODE_ENV === 'development') {
-    // Enable logger (morgan)
-    app.use(morgan('dev'));
-
     // Disable views cache
     app.set('view cache', false);
   } else if (process.env.NODE_ENV === 'production') {
@@ -88,12 +88,6 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
-
-  // Add multipart handling middleware
-  app.use(multer({
-    dest: './uploads/',
-    inMemory: true
-  }));
 };
 
 /**
@@ -234,18 +228,18 @@ module.exports.init = function (db) {
 
   // Initialize Express view engine
   this.initViewEngine(app);
+  
+  // Initialize Helmet security headers
+  this.initHelmetHeaders(app);
+
+  // Initialize modules static client routes, before session!
+  this.initModulesClientRoutes(app);
 
   // Initialize Express session
   this.initSession(app, db);
 
   // Initialize Modules configuration
   this.initModulesConfiguration(app);
-
-  // Initialize Helmet security headers
-  this.initHelmetHeaders(app);
-
-  // Initialize modules static client routes
-  this.initModulesClientRoutes(app);
 
   // Initialize modules server authorization policies
   this.initModulesServerPolicies(app);

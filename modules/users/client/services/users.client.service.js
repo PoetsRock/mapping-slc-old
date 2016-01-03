@@ -58,3 +58,37 @@ angular.module('users').factory('AdminUpdateUser', ['$resource', 'AdminAuthServi
     }
   }
 ]);
+
+//TODO this should be Users service
+angular.module('users').factory('Newsletter', ['$resource',
+  function ($resource) {
+      return $resource('api/v1/newsletter', {email: '@email'}, {
+        update: {
+          method: 'PUT'
+        }
+      }, {
+        create: {
+          method: 'POST'
+        }
+      }, {
+        read: {
+          method: 'GET'
+        }
+      });
+  }
+]);
+
+/**
+angular.module('users.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/users/:userId', {
+      userId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+**/

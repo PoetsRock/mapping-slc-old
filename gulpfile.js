@@ -5,7 +5,6 @@
  */
 var _ = require('lodash'),
   defaultAssets = require('./config/assets/default'),
-  testAssets = require('./config/assets/test'),
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
@@ -17,14 +16,10 @@ var _ = require('lodash'),
   path = require('path'),
   endOfLine = require('os').EOL;
 
-// Set NODE_ENV to 'test'
-gulp.task('env:test', function () {
-  process.env.NODE_ENV = 'test';
-});
-
 // Set NODE_ENV to 'development'
 gulp.task('env:dev', function () {
-  process.env.NODE_ENV = 'development';
+  //process.env.NODE_ENV = 'development';
+  process.env.NODE_ENV = 'local-development';
 });
 
 // Set NODE_ENV to 'production'
@@ -49,45 +44,34 @@ gulp.task('watch', function () {
 
   // Add watch rules
   gulp.watch(defaultAssets.server.views).on('change', plugins.livereload.changed);
-  //gulp.watch(defaultAssets.client.sass, ['sass']).on('change', plugins.livereload.changed);
-  //gulp.watch(defaultAssets.client.less, ['less']).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.server.allJS).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.client.js).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.client.css).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.client.sass).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.client.less).on('change', plugins.livereload.changed);
 
   if (process.env.NODE_ENV === 'production') {
     gulp.watch(defaultAssets.server.gulpConfig, ['templatecache']);
     gulp.watch(defaultAssets.client.views, ['templatecache']).on('change', plugins.livereload.changed);
   } else {
+    gulp.watch(defaultAssets.server.gulpConfig);
     gulp.watch(defaultAssets.client.views).on('change', plugins.livereload.changed);
   }
 });
 
-//// CSS linting task
-//gulp.task('csslint', function (done) {
-//  return gulp.src(defaultAssets.client.css)
-//    .pipe(plugins.csslint('.csslintrc'))
-//    .pipe(plugins.csslint.reporter())
-//    .pipe(plugins.csslint.reporter(function (file) {
-//      if (!file.csslint.errorCount) {
-//        done();
-//      }
-//    }));
-//});
-//
-//// JS linting task
-//gulp.task('jshint', function () {
-//  var assets = _.union(
-//    defaultAssets.server.gulpConfig,
-//    defaultAssets.server.allJS,
-//    defaultAssets.client.js,
-//    testAssets.tests.server,
-//    testAssets.tests.client,
-//    testAssets.tests.e2e
-//  );
-//
-//  return gulp.src(assets)
-//    .pipe(plugins.jshint())
-//    .pipe(plugins.jshint.reporter('default'))
-//    .pipe(plugins.jshint.reporter('fail'));
-//});
+
+// JS `prod-no-mini` task
+gulp.task('uglify-no-mini', function () {
+  var assets = _.union(
+    defaultAssets.client.js,
+    defaultAssets.client.templates
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.ngAnnotate())
+    .pipe(plugins.concat('application.js'))
+    .pipe(gulp.dest('public/dist'));
+});
 
 // JS minifying task
 gulp.task('uglify', function () {
@@ -113,27 +97,27 @@ gulp.task('cssmin', function () {
     .pipe(gulp.dest('public/dist'));
 });
 
-//// Sass task
-//gulp.task('sass', function () {
-//  return gulp.src(defaultAssets.client.sass)
-//    .pipe(plugins.sass())
-//    .pipe(plugins.autoprefixer())
-//    .pipe(plugins.rename(function (file) {
-//      file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css');
-//    }))
-//    .pipe(gulp.dest('./modules/'));
-//});
-//
-//// Less task
-//gulp.task('less', function () {
-//  return gulp.src(defaultAssets.client.less)
-//    .pipe(plugins.less())
-//    .pipe(plugins.autoprefixer())
-//    .pipe(plugins.rename(function (file) {
-//      file.dirname = file.dirname.replace(path.sep + 'less', path.sep + 'css');
-//    }))
-//    .pipe(gulp.dest('./modules/'));
-//});
+// Sass task
+gulp.task('sass', function () {
+  return gulp.src(defaultAssets.client.sass)
+    .pipe(plugins.sass())
+    .pipe(plugins.autoprefixer())
+    .pipe(plugins.rename(function (file) {
+      file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css');
+    }))
+    .pipe(gulp.dest('./modules/'));
+});
+
+// Less task
+gulp.task('less', function () {
+  return gulp.src(defaultAssets.client.less)
+    .pipe(plugins.less())
+    .pipe(plugins.autoprefixer())
+    .pipe(plugins.rename(function (file) {
+      file.dirname = file.dirname.replace(path.sep + 'less', path.sep + 'css');
+    }))
+    .pipe(gulp.dest('./modules/'));
+});
 
 // Angular template cache task
 gulp.task('templatecache', function () {
@@ -151,81 +135,6 @@ gulp.task('templatecache', function () {
       }
     }))
     .pipe(gulp.dest('build'));
-    //.pipe(gulp.dest('public/dist'));
-});
-
-// Mocha tests task
-gulp.task('mocha', function (done) {
-  // Open mongoose connections
-  var mongoose = require('./config/lib/mongoose.js');
-  var error;
-
-  // Connect mongoose
-  mongoose.connect(function () {
-    // Run the tests
-    gulp.src(testAssets.tests.server)
-      .pipe(plugins.mocha({
-        reporter: 'spec'
-      }))
-      .on('error', function (err) {
-        // If an error occurs, save it
-        error = err;
-      })
-      .on('end', function () {
-        // When the tests are done, disconnect mongoose and pass the error state back to gulp
-        mongoose.disconnect(function () {
-          done(error);
-        });
-      });
-  });
-
-});
-
-// Karma test runner task
-gulp.task('karma', function (done) {
-  return gulp.src([])
-    .pipe(plugins.karma({
-      configFile: 'karma.conf.js',
-      action: 'run',
-      singleRun: true
-    }));
-});
-
-// Selenium standalone WebDriver update task
-gulp.task('webdriver-update', plugins.protractor.webdriver_update);
-
-// Protractor test runner task
-gulp.task('protractor', function () {
-  gulp.src([])
-    .pipe(plugins.protractor.protractor({
-      configFile: 'protractor.conf.js'
-    }))
-    .on('error', function (e) {
-      throw e;
-    });
-});
-
-//// Lint CSS and JavaScript filees.
-//gulp.task('lint', function (done) {
-//  runSequence('less', 'sass', ['csslint', 'jshint'], done);
-//});
-
-// Lint project files and minify them into two production files.
-gulp.task('build', function (done) {
-  runSequence('env:dev', ['uglify', 'cssmin'], done);
-});
-
-// Run the project tests
-gulp.task('test', function (done) {
-  runSequence('env:test', ['karma', 'mocha'], done);
-});
-
-gulp.task('test:server', function (done) {
-  runSequence('env:test', ['mocha'], done);
-});
-
-gulp.task('test:client', function (done) {
-  runSequence('env:test', ['karma'], done);
 });
 
 // Run the project in development mode
@@ -233,27 +142,36 @@ gulp.task('default', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
+// Lint project files and minify them into two production files.
+gulp.task('build', function (done) {
+  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+});
+
 // Run the project in debug mode
 gulp.task('debug', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
+// Lint project files and minify them into two production files.
+gulp.task('build-no-mini', function (done) {
+  runSequence('env:dev', ['uglify-no-mini', 'cssmin'], done);
+});
+
+// Minify project files into two production files.
+gulp.task('build-no-lint', function (done) {
+  runSequence('env:dev', ['uglify', 'cssmin'], done);
+});
+
+
+// Run the project in production mode
+gulp.task('prod-no-mini', function (done) {
+  runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
+});
+
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
+  runSequence('templatecache', 'build-no-lint', 'env:prod', ['nodemon', 'watch'], done);
 });
-
-// Run production mode in local/dev environment
-gulp.task('local-prod', function (done) {
-  runSequence('templatecache', 'env:dev', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
-});
-
-// Heroku Buildpack for Node.js and gulp.js
-//https://github.com/timdp/heroku-buildpack-nodejs-gulp
-gulp.task('heroku:production', function (done) {
-  runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done);
-});
-
 
 /**
  *  Heroku Buildpack for Node.js and gulp.js

@@ -11,25 +11,30 @@ module.exports = function (app) {
   require('./users.server.routes.js')(app);
 
   // Users collection routes
-  app.route('/api/v1/users')
-    .get(adminPolicy.isAllowed, admin.list);
+  app.route('/api/v1/users').get(admin.list);
 
+  //app.route('/api/v1/users/newsletter').put(admin.addNewsletter);
+  app.route('/api/v1/newsletter')
+      .get(admin.addNewsletter);
+  //
   // Single user routes
   app.route('/api/v1/users/:userId')
-    //.get(adminPolicy.isAllowed, admin.read)
-    .get(admin.read)
-    .put(adminPolicy.isAllowed, admin.update)
-    //.put(admin.update)
-    .delete(adminPolicy.isAllowed, admin.delete);
+      .get(admin.read)
+      .delete(adminPolicy.isAllowed, admin.delete)
+      .put(admin.update);
 
   // Contributors collection routes
   app.route('/api/v1/contributors')
-    //.get(adminPolicy.isAllowed, admin.getContributors);
     .get(admin.getContributors);
 
   // Single contributor routes
   app.route('/api/v1/contributors/:userId')
     .get(admin.getContributorByID);
+
+
+  //var myFunction = function myFunction () {
+  //  //this will show up in a stack trace
+  //};
 
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);

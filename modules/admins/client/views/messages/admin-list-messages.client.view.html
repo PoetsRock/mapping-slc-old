@@ -58,8 +58,9 @@
 
             </table>
 
-            <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength"
-                        ng-model="currentPage" ng-change="pageChanged()"></pagination>
+            <!--see `modules/core/client/services/utils.client.service.js` for pagination script`-->
+            <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength"
+                        ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
 
 
           </div>

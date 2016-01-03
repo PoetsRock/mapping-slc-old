@@ -26,6 +26,9 @@ angular.module('core').directive('mainMenu', function(AdminAuthService) {
         };
 
 
+        $scope.sidebar.on('click', function (e) {
+          console.log('sidebar click event', e);
+        });
 
 
           //if (child.firstChild.hash == '#' + id)

@@ -1,8 +1,13 @@
 'use strict';
 
+var defaultEnvConfig = require('./default'),
+    bodyParser = require('body-parser'),
+    path = require('path'),
+    config = require(path.resolve('./config/config'));
+
 module.exports = {
   secure: {
-    ssl: false,
+    ssl: true,
     privateKey: './config/sslcerts/key.pem',
     certificate: './config/sslcerts/cert.pem'
   },
@@ -17,29 +22,38 @@ module.exports = {
     debug: process.env.MONGODB_DEBUG || false
   },
   log: {
+    // logging with Morgan - https://github.com/expressjs/morgan
     // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
-    format: 'combined',
-    // Stream defaults to process.stdout
-    // Uncomment to enable logging to a log on the file system
+    format: process.env.LOG_FORMAT || 'combined',
     options: {
-      stream: 'access.log'
+      // Stream defaults to process.stdout
+      // Uncomment/comment to toggle the logging to a log on the file system
+      stream: {
+        directoryPath: process.env.LOG_DIR_PATH || process.cwd(),
+        fileName: process.env.LOG_FILE || 'access.log',
+        rotatingLogs: { // for more info on rotating logs - https://github.com/holidayextras/file-stream-rotator#usage
+          active: process.env.LOG_ROTATING_ACTIVE === 'true' ? true : false, // activate to use rotating logs 
+          fileName: process.env.LOG_ROTATING_FILE || 'access-%DATE%.log', // if rotating logs are active, this fileName setting will be used
+          frequency: process.env.LOG_ROTATING_FREQUENCY || 'daily',
+          verbose: process.env.LOG_ROTATING_VERBOSE === 'true' ? true : false
+        }
+      }
     }
   },
-  facebook: {
-    clientID: process.env.FACEBOOK_ID || 'APP_ID',
-    clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
-    callbackURL: '/api/v1/auth/facebook/callback'
-  },
-  twitter: {
-    clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-    clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
-    callbackURL: '/api/v1/auth/twitter/callback'
-  },
-  google: {
-    clientID: process.env.GOOGLE_ID || 'APP_ID',
-    clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
-    callbackURL: '/api/v1/auth/google/callback'
-  },
+
+  FACEBOOK_ID: process.env.FACEBOOK_ID || 'CONSUMER_KEY',
+  FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'CONSUMER_KEY',
+  FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
+
+  TWITTER_KEY: process.env.TWITTER_KEY || 'CONSUMER_KEY',
+  TWITTER_SECRET: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
+  TWITTER_CALLBACK_URL: '/api/v1/auth/twitter/callback',
+
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'GOOGLE_CLIENT_ID',
+  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'SERVER_KEY',
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE_SECRET',
+  GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
+
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
     clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
@@ -67,36 +81,59 @@ module.exports = {
     }
   },
 
-  alchemyApi: {
-    clientID: process.env.ALCHEMY_KEY,
-    callbackUrl: '/api/v1/auth/alchemy/callback'
-  },
-  aws: {
-    awsAccessKey: process.env.AWS_ACCESS_KEY,
-    awsSecretKey: process.env.AWS_SECRET_KEY,
-    s3Id: process.env.S3_ID,
-    s3Secret: process.env.S3_SECRET,
-    callbackUrl: '/api/v1/auth/s3/callback'
-  },
-  census: {
-    clientID: process.env.CENSUS_KEY,
-    callbackUrl: '/api/v1/auth/census/callback'
-  },
-  googleAnalytics: {
-    googleAnalyticsID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
-    callbackUrl: '/api/v1/auth/google-analytics/callback'
-  },
-  here: {
-    hereId: process.env.HERE_KEY,
-    hereSecret: process.env.HERE_SECRET,
-    callbackUrl: '/api/v1/auth/mapbox/callback'
-  },
-  mapbox: {
-    mapboxId: process.env.MAPBOX_KEY,
-    mapboxSecret: process.env.MAPBOX_SECRET,
-    callbackUrl: '/api/v1/auth/mapbox/callback'
+seedDB: {
+    seed: process.env.MONGO_SEED === 'true' ? true : false,
+
+    options: {
+      logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
+      seedUser: {
+        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
+        provider: 'local',
+        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
+        firstName: 'User',
+        lastName: 'Local',
+        displayName: 'User Local',
+        roles: ['user']
+      },
+      seedAdmin: {
+        username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',
+        provider: 'local',
+        email: process.env.MONGO_SEED_ADMIN_EMAIL || 'admin@localhost.com',
+        firstName: 'Admin',
+        lastName: 'Local',
+        displayName: 'Admin Local',
+        roles: ['user', 'admin']
+      }
+    }
   },
 
 
-  seedDB: process.env.MONGO_SEED || false
+  ALCHEMY_KEY: process.env.ALCHEMY_KEY,
+  ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
+
+  S3_ID: process.env.S3_ID,
+  S3_SECRET: process.env.S3_SECRET,
+  S3_BUCKET: process.env.S3_BUCKET || 'MAPPING-SLC-FILE-UPLOAD',
+  S3_CALLBACK_URL: '/api/v1/auth/s3/callback',
+
+
+  VIMEO_KEY: process.env.VIMEO_KEY,
+  VIMEO_SECRET: process.env.VIMEO_SECRET,
+  VIMEO_TOKEN: process.env.VIMEO_TOKEN,
+
+  FRONT_END: {
+    CENSUS_KEY: process.env.CENSUS_KEY,
+    CENSUS_CALLBACK_URL: '/api/v1/auth/census/callback',
+    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
+    GOOGLE_ANALYTICS_CALLBACK_URL: '/api/v1/auth/google-analytics/callback',
+    HERE_KEY: process.env.HERE_KEY,
+    HERE_SECRET: process.env.HERE_SECRET,
+    HERE_CALLBACK_URL: '/api/v1/auth/here/callback',
+    MAPBOX_KEY: process.env.MAPBOX_KEY,
+    MAPBOX_SECRET: process.env.MAPBOX_SECRET,
+    MAPBOX_CALLBACK_URL: '/api/v1/auth/mapbox/callback',
+    SOUND_CLOUD_KEY: process.env.SOUND_CLOUD_KEY,
+    SOUND_CLOUD_SECRET: process.env.SOUND_CLOUD_SECRET
+
+  }
 };

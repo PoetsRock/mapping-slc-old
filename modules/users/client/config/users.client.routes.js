@@ -11,7 +11,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
           authenticate: true,
-          roles: ['user', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
+          roles: ['user', 'registered', 'contributor', 'admin', 'superUser']
         }
       })
       .state('settings.profile', {
@@ -30,6 +30,17 @@ angular.module('users').config(['$stateProvider',
         url: '/favorites',
         templateUrl: 'modules/users/client/views/settings/favorites.client.view.html'
       })
+      .state('settings.submissions', {
+        url: '/submissions',
+        //abstract: true,
+        templateUrl: 'modules/users/client/views/settings/submissions-list.client.view.html'
+        //templateUrl: 'modules/users/client/directives/views/user-submissions-list.html'
+      })
+      .state('settings.submissionsView', {
+        url: '/:projectId/status/',
+        templateUrl: 'modules/users/client/views/settings/submissions-view.client.view.html'
+        //templateUrl: 'modules/users/client/directives/views/user-submissions-view.html'
+      })
       .state('settings.picture', {
         url: '/picture',
         templateUrl: 'modules/users/client/views/settings/change-profile-picture.client.view.html'
@@ -44,7 +55,7 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
       })
       .state('authentication.signin', {
-        url: '/signin',
+        url: '/signin?err',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html'
       })
       .state('password', {

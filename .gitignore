@@ -1,18 +1,6 @@
-/modules/chat
-/modules/.articles
-/modules/core/client/img/loaders/circle-close.png
-/modules/core/client/img/loaders/circle-close-final-50px.jpg
-/modules/core/client/img/loaders/circle-close.svg
-/modules/core/client/img/loaders/circle-close-final.jpg
-/.aws
-/modules/users/server/config/private/awsConfig.json
-/modules/users/server/config/private/keys.js
-# OS
-# ===========
-.DS_Store
-ehthumbs.db
-Icon?
-Thumbs.db
+# General
+*.csv
+
 
 # Node and related ecosystem
 # ==========================
@@ -25,36 +13,21 @@ app/tests/coverage/
 .idea/
 coverage/
 
-# General
-# =======
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.tmp
-*.bak
-*.swp
-logs/
 
-# IntelliJ
-# ========
-*.iml
+# MEAN.js app and assets
+# ======================
 
-# Cloud9 IDE
-# =========
-.c9/
-data/
-mongod
+modules/users/client/img/profile/uploads
+config/env/local.js
+config/env/local-*.js
+*.pem
+/modules/core/server/controllers/envVars.server.controller.js
 
-# Visual Studio
-# =========
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+# Ignoring MEAN.JS's gh-pages branch for documenation
+_site/
 
+/modules/core/server/config
+/config/env/localEnvVars.js
 
 
 # MEAN.js app and assets
@@ -62,12 +35,23 @@ mongod
 #public/dist/
 #/build
 /uploads
-modules/users/client/img/profile/uploads
-config/env/local.js
-*.pem
 /modules/projects/server/uploads
 /modules/projects/server/models/data/private
-/modules/users/server/config/private
+/modules/users/server/config/.private
 
-# Ignoring MEAN.JS's gh-pages branch for documenation
-_site/
+
+
+
+/modules/chat
+/modules/.articles
+/modules/core/client/img/loaders/circle-close.png
+/modules/core/client/img/loaders/circle-close-final-50px.jpg
+/modules/core/client/img/loaders/circle-close.svg
+/modules/core/client/img/loaders/circle-close-final.jpg
+/.aws
+
+
+# MEAN.js app and assets
+# ======================
+#public/dist/
+#build/

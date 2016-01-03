@@ -27,13 +27,13 @@
                         <div class="row">
                             <!--<a data-ng-repeat="project in projects" data-ng-href="/projects/{{project._id}}" class="col-md-12 admin-list">-->
                             <a data-ng-repeat="project in projects" data-ng-href="/admin/edit-project/{{project._id}}" class="col-md-12 admin-list">
-                                <small>
-                                    Posted on
-                                    <span data-ng-bind="project.created | date:'medium'"></span>
-                                    by
-                                    <span data-ng-bind="project.user.displayName"></span>
-                                </small>
-                                <h4 class="list-group-item-heading" data-ng-bind="project.name"></h4>
+                              <h3 class="list-group-item-heading" data-ng-bind="project.title"></h3>
+                              <div data-ng-bind="project.user.displayName"></div>
+                              <small>
+                                Submitted:
+                                <span data-ng-bind="project.createdOn | date:'medium'"></span>
+                              </small>
+
                             </a>
                         </div>
 

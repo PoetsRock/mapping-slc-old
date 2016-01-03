@@ -213,8 +213,17 @@ div:nth-child(1) > div.row > div > div > p:nth-child(1)::first-letter {
 
 .core .navbar-brand, .core .navbar-nav, .core li a {
   color: #ffffff;
+  right: 10%;
   background: rgba(0, 0, 0, 0.0);
   text-align: right;
+}
+
+.navbar-nav > li > .dropdown-menu {
+  margin-top: 30px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-right: 20px;
+  min-width: 260px;
 }
 
 /*body > section > section > section > section.home-view.ng-scope > div > span > div > div:nth-child(1) > div.col-md-2 > sign-in-directive > section > */
@@ -277,9 +286,9 @@ a:hover .header-profile-image {
   background: rgba(0, 0, 0, 1);
   border: solid 3px #2c2c2c;
   border-radius: 5px;
-  width: auto;
+  width: 100%;
+  top: 4rem;
   clear: both;
-  top: 6rem;
   position: absolute;
   transition: all 0.3s ease 0s;
 
@@ -576,7 +585,7 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
 }
 
 .btn-dark {
-  background-color: rgba(50, 50, 50, 0.8);
+  background-color: rgba(50, 50, 50, 0.9);
   font-size: 1.75rem;
   /*text-decoration: none;*/
   font-weight: 400;
@@ -585,6 +594,13 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
 }
 
 .btn-dark:hover {
+  background-color: rgba(75, 75, 75, 0.4);
+  border: solid 1px #8a887a;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  transition: all 0.2s ease-in-out 0.2s;
+}
+
+.btn-dark:active, .btn-dark:visited {
   background-color: rgba(75, 75, 75, 0.4);
   border: solid 1px #8a887a;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
@@ -689,4 +705,10 @@ button > .grow {
   background-color: rgba(0, 0, 0, 0.6);
   border-color: #aaaaaa;
   border-radius: 5%;
+}
+
+.fa.fa-times {
+  left: 15px;
+  bottom: 15px;
+  position: relative;
 }

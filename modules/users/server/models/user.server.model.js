@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   crypto = require('crypto'),
   validator = require('validator'),
+  generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
 
 /**
@@ -27,6 +28,16 @@ var validateLocalStrategyEmail = function (email) {
  * User Schema
  **/
 var UserSchema = new Schema({
+  createdOn: {
+    type: Date,
+    default: Date.now
+  },
+  ModifiedBy: {
+    type: String
+  },
+  ModifiedOn: {
+    type: Date
+  },
   namePrefix: {
     type: String,
     trim: true,
@@ -35,14 +46,14 @@ var UserSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    default: ''
+    //validate: [validateLocalStrategyProperty, 'Please fill in your first name']
   },
   lastName: {
     type: String,
     trim: true,
     default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+    //validate: [validateLocalStrategyProperty, 'Please fill in your last name']
   },
   displayName: {
     type: String,
@@ -56,10 +67,8 @@ var UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    lowercase: true,
     trim: true,
-    required: '',
-    default: '',
+    required: true,
     validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
   },
   userStreet: {
@@ -108,6 +117,9 @@ var UserSchema = new Schema({
     type: String,
     default: 'default.png'
   },
+  profileImageETag: {
+    type: String
+  },
   provider: {
     type: String,
     required: 'Provider is required'
@@ -144,7 +156,10 @@ var UserSchema = new Schema({
     }]
   },
   favorites: {
-    type: String
+    type: [{
+        type: String
+    }],
+    default: []
   },
   newsletter: {
     type: Boolean,
@@ -190,7 +205,7 @@ UserSchema.pre('validate', function (next) {
   owasp.config({
     minLength: 8  //this overrides default val -- original set to 10
   });
-  if (this.provider === 'local' && this.password) {
+  if (this.provider === 'local' && this.password && this.isModified('password')) {
     var result = owasp.test(this.password);
     if (result.errors.length) {
       var error = result.errors.join(' ');
@@ -242,10 +257,10 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 };
 
 /**
- * Generates a random passphrase that passes the owasp test.
- * Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
- * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
- */
+* Generates a random passphrase that passes the owasp test.
+* Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
+* NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
+*/
 UserSchema.statics.generateRandomPassphrase = function () {
   return new Promise(function (resolve, reject) {
     var password = '';

@@ -10,10 +10,11 @@ var passport = require('passport'),
 module.exports = function (config) {
   // Use facebook strategy
   passport.use(new FacebookStrategy({
-      clientID: config.facebook.clientID,
-      clientSecret: config.facebook.clientSecret,
-      callbackURL: config.facebook.callbackURL,
-      profileFields: ['id', 'name', 'displayName', 'emails', 'photos'],
+      clientID: config.FACEBOOK_ID,
+      clientSecret: config.FACEBOOK_SECRET,
+      callbackURL: config.FACEBOOK_CALLBACK_URL,
+      //profileFields: ['id', 'name', 'displayName', 'emails', 'photos', 'timezone', 'relationship_status', 'gender', 'about', 'bio'],
+    profileFields: ['id', 'name', 'displayName', 'emails', 'photos', 'timezone', 'relationship_status', 'location', 'hometown', 'gender', 'birthday', 'about', 'bio', 'cover'],
       passReqToCallback: true
     },
     function (req, accessToken, refreshToken, profile, done) {
@@ -27,6 +28,9 @@ module.exports = function (config) {
         firstName: profile.name.givenName,
         lastName: profile.name.familyName,
         displayName: profile.displayName,
+        gender: profile.gender,
+        about: profile.about,
+        hometown: profile.hometown,
         email: profile.emails ? profile.emails[0].value : undefined,
         username: profile.username || generateUsername(profile),
         profileImageURL: (profile.id) ? '//graph.facebook.com/' + profile.id + '/picture?type=large' : undefined,

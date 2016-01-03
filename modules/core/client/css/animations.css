@@ -273,10 +273,8 @@
 }
 
 .animate-small-logo {
-    background: rgba(0,0,0,0.8);
-    border: 3px solid #023a31;
-    border-radius: 0 0 0 15%;
-    color: #fff;
+    color: #F0F8FF;
+    font-size: 2rem;
     cursor: pointer;
     position: relative;
     text-align: center;
@@ -288,22 +286,23 @@
     left: 20px;
     margin-bottom: 25px;
     padding: 20px;
-    -webkit-transition: all 0.25s ease;
-    -moz-transition: all 0.25s ease;
-    -o-transition: all 0.25s ease;
-    transition: all 0.25s ease;
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    transition: all 0.15s ease;
 }
 
 .animate-small-logo:hover {
+    color: rgb(0, 0, 0);
     -webkit-transform: scale(1.1);
     -moz-transform: scale(1.1);
     -ms-transform: scale(1.1);
     -o-transform: scale(1.1);
     transform: scale(1.1);
-    -webkit-transition: all 0.25s ease;
-    -moz-transition: all 0.25s ease;
-    -o-transition: all 0.25s ease;
-    transition: all 0.25s ease;
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    transition: all 0.15s ease;
 }
 
 span.animate-small-logo div {
