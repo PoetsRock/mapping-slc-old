@@ -244,13 +244,11 @@ to {
 }
 
 .favorite-true {
-    /*color: rgba(3, 59, 50, 0.8);*/
-    color: green;
+    color: rgba(3, 59, 50, 1);
 }
 
 .favorite-false {
-    /*color: rgba(0, 0, 0, 0.3);*/
-    color: red;
+    color: #ffffff;
 }
 
 /*project status page*/
