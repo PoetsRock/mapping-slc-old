@@ -13,11 +13,11 @@
   },
   "engines": {
     "node": "^4.2",
-    "npm": "^2.14"
+    "npm": "^2.1"
   },
   "scripts": {
-    "start": "gulp prod",
-    "postinstall": "bower install --config.interactive=false"
+    "start": "gulp",
+    "postinstall": "bower install --config.interactive=false && gulp prod"
   },
   "dependencies": {
     "acl": "~0.4.4",
@@ -44,7 +44,6 @@
     "generate-password": "^1.1.1",
     "geojson-to-mongo": "0.0.4",
     "glob": "^5.0.13",
-    "gulp": "^3.9.0",
     "helmet": "~0.9.1",
     "jasmine-core": "^2.3.4",
     "lodash": "^3.10.0",
@@ -81,6 +80,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
+    "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-concat": "^2.6.0",
@@ -98,6 +98,7 @@
     "gulp-protractor": "^2.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.3",
+    "gulp-serve": "^1.2.0",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.6",
     "mock-fs": "~3.4.0",

@@ -11,17 +11,18 @@ module.exports = function (app) {
   require('./users.server.routes.js')(app);
 
   // Users collection routes
-  app.route('/api/v1/users').get(admin.list);
+  app.route('/api/v1/users')
+    .get(admin.list);
 
   //app.route('/api/v1/users/newsletter').put(admin.addNewsletter);
   app.route('/api/v1/newsletter')
-      .get(admin.addNewsletter);
+    .get(admin.addNewsletter);
   //
   // Single user routes
   app.route('/api/v1/users/:userId')
-      .get(admin.read)
-      .delete(adminPolicy.isAllowed, admin.delete)
-      .put(admin.update);
+    .get(admin.read)
+    .delete(adminPolicy.isAllowed, admin.delete)
+    .put(admin.update);
 
   // Contributors collection routes
   app.route('/api/v1/contributors')
