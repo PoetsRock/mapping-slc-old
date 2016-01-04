@@ -10,6 +10,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //for overlay
     $scope.featuredProjects = {};
 
+    //for main menu
+    new gnMenu( document.getElementById( 'gn-menu' ) );
+
     //provides logic for the css in the forms
     UtilsService.cssLayout();
 
