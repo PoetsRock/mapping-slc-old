@@ -239,6 +239,19 @@ to {
     float: right;
 }
 
+.view-project .fa.fa-heart {
+    /*color: rgba(0, 0, 0, 0.3);*/
+}
+
+.favorite-true {
+    /*color: rgba(3, 59, 50, 0.8);*/
+    color: green;
+}
+
+.favorite-false {
+    /*color: rgba(0, 0, 0, 0.3);*/
+    color: red;
+}
 
 /*project status page*/
 
@@ -260,3 +273,5 @@ project-status-user-info edit-profile .form-group {
 .tab-content .fa-pencil {
     margin: 6px 4px 6px 0;
 }
+
+

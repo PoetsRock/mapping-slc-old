@@ -14,10 +14,18 @@
         <!--<a data-ng-click="goBack()"><span><i class="fa fa-chevron-left"></i></span></a>-->
 
         <div class="view-project">
+
+          <div class="project-nav">
+            <a class="btn btn-main grow" ui-sref="listProjects">
+              All Projects
+            </a>
+          </div>
+
           <div class="page-header">
               <h1 data-ng-bind="project.title"></h1>
-              <i class="fa fa-heart-o" ng-show="!isFavorite" ng-click="toggleFavProject()"></i>
-              <i class="fa fa-heart" ng-show="isFavorite" ng-click="toggleFavProject()"></i>
+              <!--<i class="fa fa-heart-o" ng-show="!isFavorite" ng-click="toggleFavProject()"></i>-->
+              <!--<i class="fa fa-heart" ng-show="isFavorite" ng-click="toggleFavProject()"></i>-->
+              <i class="fa fa-heart" ng-click="toggleFavProject()" data-ng-class="{'favorite-true' : isFavorite, 'favorite-false' : !isFavorite}"></i>
             <em class="text-muted">
               <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
               by
