@@ -309,6 +309,7 @@ exports.getFeaturedProjects = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        console.log('projectsprojectsprojectsprojectsprojectsprojectsprojects  projects', projects);
         res.jsonp(projects);
       }
     });

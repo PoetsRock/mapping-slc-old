@@ -167,8 +167,11 @@ var ProjectSchema = new Schema({
   //mainImage: {
   //  type: Buffer
   //},
+  //mainImgThumbnail: {
+  //  type: Buffer
+  //},
   mainImgThumbnail: {
-    type: Buffer
+    type: String
   },
   mainImageUrl: {
     type: String,
