@@ -272,8 +272,8 @@ project-status-user-info edit-profile .form-group {
     margin: 6px 4px 6px 0;
 }
 
-/*.list-projects a span span img {*/
-    /*width: 150px;*/
-    /*height: auto;*/
-    /*margin: 15px 0;*/
-/*}*/
+.list-projects a span span img {
+    width: 150px;
+    height: auto;
+    margin: 15px 0;
+}
