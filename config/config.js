@@ -208,7 +208,11 @@ var initGlobalConfig = function () {
     validateSessionSecret: validateSessionSecret
   };
 
-  console.log('THE BIG DADDY CONFIG.JS FILE ... AND THIS IS THE OH MOMMA `config` object that gets returned:\n', config);
+  //console.log('THE BIG DADDY CONFIG.JS FILE ... AND THIS IS THE OH MOMMA `config` object that gets returned:\n', config);
+  console.log('big back end server!!  config.files.server:\n', config.files.server, '\n\n');
+  console.log('big front end client!!  config.files.client:\n', config.files.client, '\n\n');
+  console.log('big front end client!!  config..folders.server:\n', config.folders.server, '\n\n');
+  console.log('big front end client!!  config.folders.client:\n', config.folders.client, '\n\n');
 
   return config;
 };
