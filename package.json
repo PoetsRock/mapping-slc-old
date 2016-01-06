@@ -16,8 +16,7 @@
     "npm": "^2.1"
   },
   "scripts": {
-    "start": "gulp",
-    "postinstall": "bower install --config.interactive=false && gulp prod"
+    "start": "bower install --config.interactive=false && gulp prod"
   },
   "dependencies": {
     "acl": "~0.4.4",

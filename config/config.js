@@ -208,6 +208,8 @@ var initGlobalConfig = function () {
     validateSessionSecret: validateSessionSecret
   };
 
+  console.log('THE BIG DADDY CONFIG.JS FILE ... AND THIS IS THE OH MOMMA `config` object that gets returned:\n', config);
+
   return config;
 };
 
