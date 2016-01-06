@@ -43,14 +43,12 @@ exports.update = function (req, res) {
     // so, projectId needs to be pushed into favorites array.
     // if false, projectId should be popped from favorites array.
     if(req.body.isFavorite) {
-      console.log('TRUE\nreq.body.isFavorite:\n', req.body.isFavorite);
       user.favorites.push(req.body.favorite);
     } else if (req.body.isFavorite === false && req.body.favorite) {
-      console.log('FALSE\nreq.body.isFavorite:\n', req.body.isFavorite);
       user.favorites.pop(req.body.favorite);
     }
     //console.log('user:\n', user);
-    console.log('user.favorites:\n', user.favorites);
+
 
   } else if (req.body._id) {
     user = req.body;

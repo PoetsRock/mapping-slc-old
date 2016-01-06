@@ -7,8 +7,20 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.isAdmin = AdminAuthService;
     //console.log('current user:\n', $scope.authentication.user);
 
-    //for overlay
-    $scope.featuredProjects = {};
+
+    //for main menu
+
+    //get featured projects as array
+    $scope.featuredProjects = [];
+    var getFeatured = function () {
+      $http.get('/api/v1/featured', {cache: true})
+        .then(function (resolved, rejected) {
+          console.log('resolved:\n', resolved.data);
+          $scope.featuredProjects = resolved.data;
+          console.log('$scope.featuredProjects:\n', $scope.featuredProjects);
+        });
+    };
+    getFeatured();
 
     //provides logic for the css in the forms
     UtilsService.cssLayout();

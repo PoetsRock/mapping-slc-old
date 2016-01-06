@@ -95,8 +95,8 @@ gulp.task('uglify', function () {
       mangle: false
     }))
     .pipe(plugins.concat('application.min.js'))
-    .pipe(gulp.dest('public/dist'))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('public/dist'));
+    //.pipe(gulp.dest('build'));
 });
 
 // CSS minifying task
@@ -104,8 +104,8 @@ gulp.task('cssmin', function () {
   return gulp.src(defaultAssets.client.css)
     .pipe(plugins.cssmin())
     .pipe(plugins.concat('application.min.css'))
-    .pipe(gulp.dest('public/dist'))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('public/dist'));
+    //.pipe(gulp.dest('build'));
 });
 
 // Sass task
