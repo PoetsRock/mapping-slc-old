@@ -52,8 +52,8 @@
 .cs-style-4 figcaption {
     height: 100%;
     width: 91%;
-    margin-top: -22%;
-    opacity: 0;
+    /*margin-top: -22%;*/
+    /*opacity: 0;*/
 }
 
 .no-touch .cs-style-4 figure:hover figcaption,

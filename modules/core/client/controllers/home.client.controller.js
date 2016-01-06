@@ -15,7 +15,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     var getFeatured = function () {
       $http.get('/api/v1/featured', {cache: true})
         .then(function (resolved, rejected) {
-          console.log('resolved:\n', resolved.data);
           $scope.featuredProjects = resolved.data;
           console.log('$scope.featuredProjects:\n', $scope.featuredProjects);
         });

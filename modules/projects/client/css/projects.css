@@ -277,3 +277,12 @@ project-status-user-info edit-profile .form-group {
     height: auto;
     margin: 15px 0;
 }
+
+.grid .cs-style-4 img {
+    height: 150px;
+    width: 150px;
+}
+
+.grid .cs-style-4 ul, .grid .cs-style-4 ol {
+    margin-bottom: 0;
+}
