@@ -4,7 +4,7 @@
     color: #fff;
 }
 
-.grid figcaption a {
+.grid figcaption {
     text-align: center;
     padding: 5px 10px;
     border-radius: 5px;
@@ -53,7 +53,7 @@
     height: 100%;
     width: 91%;
     /*margin-top: -22%;*/
-    /*opacity: 0;*/
+    opacity: 1;
 }
 
 .no-touch .cs-style-4 figure:hover figcaption,
@@ -82,7 +82,7 @@ featured-projects figure > figcaption > a {
     transition: all 0.3s ease 0s;
 }
 
-featured-projects figure > figcaption > a:hover, .grid .cs-style-4 figure figcaption a:hover {
+featured-projects figure > figcaption:hover, .grid .cs-style-4 figure figcaption:hover {
     text-decoration: none;
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);

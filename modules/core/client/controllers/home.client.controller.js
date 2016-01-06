@@ -8,8 +8,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //console.log('current user:\n', $scope.authentication.user);
 
 
-    //for main menu
-
     //get featured projects as array
     $scope.featuredProjects = [];
     var getFeatured = function () {

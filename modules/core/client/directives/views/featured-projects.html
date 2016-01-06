@@ -1,22 +1,24 @@
 <section>
   <div>
     <div class="text-center page-header">
-      <h2>Featured Projects</h2>
+      <h2>Featured Projects {{showTitle}}</h2>
     </div>
 
     <div class="row">
 
-      <ul class="grid cs-style-4 col-md-4 col-sm-4" data-ng-repeat="featuredProject in featuredProjects">
+      <ul class="grid cs-style-4 col-md-4 col-sm-4" data-ng-repeat="featuredProject in featuredProjects" ng-mouseenter="showTitle=true" ng-mouseleave="showTitle=false">
+
         <figure>
           <a ui-sref="viewProject({projectId: featuredProject.id})">
             <div>
               <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}" class="desaturate"/>
+              <!--<figcaption data-ng-show="showTitle">-->
+              <figcaption>
+                <span>{{featuredProject.title}}</span>
+              </figcaption>
+
             </div>
           </a>
-
-          <figcaption>
-            <a ui-sref="viewProject({projectId: featuredProject.id})"><span>{{featuredProject.title}}</span></a>
-          </figcaption>
 
         </figure>
       </ul>
