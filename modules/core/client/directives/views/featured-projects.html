@@ -1,7 +1,7 @@
-<section>
+<section class="featured-projects">
   <div>
     <div class="text-center page-header">
-      <h2>Featured Projects {{showTitle}}</h2>
+      <h3>Featured Projects</h3>
     </div>
 
     <div class="row">
@@ -12,10 +12,10 @@
           <a ui-sref="viewProject({projectId: featuredProject.id})">
             <div>
               <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}" class="desaturate"/>
-              <!--<figcaption data-ng-show="showTitle">-->
-              <figcaption>
-                <span>{{featuredProject.title}}</span>
-              </figcaption>
+
+                <div class="btn btn-main btn-footer-overlay grow" data-ng-show="showTitle">
+                  <div>{{featuredProject.title}}</div>
+                </div>
 
             </div>
           </a>

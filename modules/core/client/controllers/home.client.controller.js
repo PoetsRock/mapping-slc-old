@@ -7,7 +7,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.isAdmin = AdminAuthService;
     //console.log('current user:\n', $scope.authentication.user);
 
-
     //get featured projects as array
     $scope.featuredProjects = [];
     var getFeatured = function () {
