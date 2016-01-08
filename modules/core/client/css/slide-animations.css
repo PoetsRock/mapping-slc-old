@@ -33,6 +33,7 @@
 
 .cs-style-4 figure > div, .cs-style-4 figure > a > div {
     overflow: hidden;
+    height: 155px;
 }
 
 .cs-style-4 figure img {
@@ -88,4 +89,20 @@ featured-projects figure > figcaption:hover, .grid .cs-style-4 figure figcaption
     -ms-transform: scale(1.1);
     transform: scale(1.1);
     background: rgba(0, 0, 0, 0.2);
+}
+
+
+.featured-projects figure div div {
+    position: relative;
+    /*bottom: 115px;*/
+    top: -115px;
+    width: 75%;
+    color: #FFFFFF;
+    white-space: normal;
+    min-height: 75px;
+    font-size: 12px;
+}
+
+.featured-projects figure div div div {
+    top: 0;
 }

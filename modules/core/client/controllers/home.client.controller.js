@@ -8,6 +8,33 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //console.log('current user:\n', $scope.authentication.user);
 
 
+    
+
+
+    var array1 = [11,17,23,24,31];
+    var array2 = ['NextArray',1];
+    var que = ['Cue'];
+
+
+    function updateTrack(trackToUpdate, maxNum, kue, nextTract){
+      if(trackToUpdate.length === maxNum){
+        for (var i = maxNum; i > 0; i--) {
+          if(i == maxNum) {
+            nextTract.push(trackToUpdate.pop());
+          } else {
+            kue.push(trackToUpdate.pop());
+          }
+        }
+      }
+    }
+    console.log('updateTrack:\n', updateTrack(array1, 5, que, array2));
+    console.log('array1:\n', array1);
+    console.log('array2:\n', array2);
+    console.log('que:\n', que);
+
+
+
+
     //get featured projects as array
     $scope.featuredProjects = [];
     var getFeatured = function () {
