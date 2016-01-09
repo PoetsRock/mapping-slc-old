@@ -7,6 +7,7 @@ angular.module('core').directive('featuredProjects', function () {
     controller: function ($scope, $http) {
       //provides logic for displaying featured project's title on mouseover
       $scope.showTitle = false;
+      //$scope.showTitle = true;
     }
   };
 });

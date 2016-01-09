@@ -11,10 +11,11 @@
         <figure>
           <a ui-sref="viewProject({projectId: featuredProject.id})">
             <div>
-              <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}" class="desaturate"/>
+              <!--desaturate-->
+              <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}"/>
 
-                <div class="btn btn-main btn-footer-overlay grow" data-ng-show="showTitle">
-                  <div>{{featuredProject.title}}</div>
+                <div data-ng-show="showTitle" class="featured-projects-title">
+                  {{featuredProject.title}}
                 </div>
 
             </div>

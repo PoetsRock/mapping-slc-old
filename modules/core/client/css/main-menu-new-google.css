@@ -34,12 +34,12 @@ button,input,optgroup,select,textarea {
 header {
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
-	min-width: 320px;
+	min-width: 0;
 	height: 60px;
-	background: white;
+	background: transparent;
 	position: fixed;
 	top: 0;
-	width: 100%;
+	width: 5%;
 	max-width: 100%;
 	border-bottom: 1px solid #e1e4e6;
 }
