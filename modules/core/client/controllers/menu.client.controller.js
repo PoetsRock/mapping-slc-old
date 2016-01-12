@@ -2,91 +2,59 @@
 
 angular.module('core')
 
+//children: [
+//  {
+//    name: 'child 1',
+//    stateRef: '#child_1',
+//    icon: 'fa-sort-amount-asc'
+//  },
+//  {
+//    name: 'child 2',
+//    stateRef: '#child_2',
+//    icon: 'fa-sort-amount-asc'
+//  }
+//]
 
-  .controller('contentBodyController', [ 'MenuService', '$scope', function (MenuService, $scope) {
-    $scope.isMenuClosed = !MenuService.open.all;
-
-    $scope.closeMenu = function () {
-      MenuService.setShowAll(false);
-    };
-
-    $scope.$on('MenuService.update', function (event, open) {
-      $scope.isMenuClosed = !open.all;
-    });
-    return $scope;
-  }])
-
-
-
-
-
-  .controller('chatController', [ 'MenuService', '$scope', function (MenuService, $scope) {
-    $scope.title = "Chat";
-    $scope.userImage = "./img/defaultPhoto.png";
-    $scope.chatSide = !MenuService.open.chatSide;
-
-    $scope.chatSideChangeState = function () {
-      MenuService.setChatSide(!$scope.chatSide);
-    };
-    $scope.$on('MenuService.chatChangedState', function (event, open) {
-      $scope.chatSide = open.chatSideClosed;
-    });
-    return $scope;
-  }])
-
-
+//children: [
+//  {
+//    name: 'child 3',
+//    stateRef: '#child_3',
+//    icon: 'fa-sort-amount-asc'
+//  },
+//  {
+//    name: 'child 4',
+//    stateRef: '#child_4',
+//    icon: 'fa-sort-amount-asc'
+//  }
+//]
 
 .service('MenuService', [ '$rootScope', function ($rootScope) {
   return {
     itemsMenu: [
       {
         name: 'Home',
-        href: '#home',
+        stateRef: '#home',
         icon: 'fa-home'
       },
       {
-        name: 'Setting',
-        href: '#setting',
-        icon: 'fa-cogs'
+        name: 'Projects',
+        stateRef: '#setting',
+        icon: 'fa-map-marker'
       },
       {
-        name: 'Portfolio',
-        href: '#portfolio',
-        icon: 'fa-desktop',
-        children: [
-          {
-            name: 'child 1',
-            href: '#child_1',
-            icon: 'fa-sort-amount-asc'
-          },
-          {
-            name: 'child 2',
-            href: '#child_2',
-            icon: 'fa-sort-amount-asc'
-          }
-        ]
+        name: 'Contributors',
+        stateRef: '#portfolio',
+        icon: 'fa-users'
       },
       {
-        name: 'Blog',
-        href: '#blog',
-        icon: 'fa-book'
+        name: 'Submit a Project',
+        stateRef: '#blog',
+        icon: 'fa-file'
       },
       {
-        name: 'Prices',
-        href: '#prices',
-        icon: 'fa-eur',
-        children: [
-          {
-            name: 'child 3',
-            href: '#child_3',
-            icon: 'fa-sort-amount-asc'
-          },
-          {
-            name: 'child 4',
-            href: '#child_4',
-            icon: 'fa-sort-amount-asc'
-          }
-        ]
+        name: 'About Mapping SLC',
+        stateRef: '#prices',
+        icon: 'fa-map-signs'
       }
     ],
 
@@ -137,7 +105,8 @@ angular.module('core')
         scope.menuHover = function (event) {
           MenuService.setShowAll(true);
         };
-        scope.menuTogle = function (event) {
+        scope.menuToggle = function (event) {
+          scope.toggleOverlayFunction('menu-open');
           if (event.target.id !== "triggerMenu") {
             return;
           }

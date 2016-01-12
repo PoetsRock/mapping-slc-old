@@ -4,8 +4,8 @@
     }
 
     .animate-small-logo {
-        top: -2%;
-        left: -3%
+        /*top: -2%;*/
+        /*left: -3%*/
     }
 
     .main-overlay {
@@ -128,4 +128,23 @@
         width: calc(100% - 350px);
         left: 350px;
     }
+}
+
+@media (max-width: 1080px) {
+
+    .core submit-project-directive h3 {
+        font-size: 2rem;
+        margin-bottom: 16px;
+    }
+
+    .core submit-project-directive a {
+        margin-top: 15px;
+    }
+
+}
+
+.core submit-project-directive a {
+    left: 12px;
+    position: relative;
+    top: 15px;
 }

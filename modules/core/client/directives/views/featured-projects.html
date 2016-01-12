@@ -8,19 +8,20 @@
 
       <ul class="grid cs-style-4 col-md-4 col-sm-4" data-ng-repeat="featuredProject in featuredProjects" ng-mouseenter="showTitle=true" ng-mouseleave="showTitle=false">
 
-        <figure>
+
           <a ui-sref="viewProject({projectId: featuredProject.id})">
             <div>
-              <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}" class="desaturate"/>
+              <!--desaturate-->
+              <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}"/>
 
-                <div class="btn btn-main btn-footer-overlay grow" data-ng-show="showTitle">
-                  <div>{{featuredProject.title}}</div>
+                <!--<div data-ng-show="showTitle" class="featured-projects-title">-->
+                <div class="featured-projects-title">
+                  <p>{{featuredProject.title}}</p>
                 </div>
 
             </div>
           </a>
 
-        </figure>
       </ul>
 
 

@@ -20,7 +20,7 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
+	width: 5%;
 	height: 60px;
 	font-size: 13px;
 	z-index: 1
@@ -29,7 +29,7 @@
 .my-menu-main a {
 	display: block;
 	height: 100%;
-	color: #5b6064;
+	color: #ffffff;
 	text-decoration: none;
 	cursor: pointer
 }
@@ -87,14 +87,14 @@
 
 .my-menu-wrapper {
 	position: fixed;
-	top: 60px;
+	top: 75px;
 	bottom: 0;
 	left: 0;
 	overflow: hidden;
 	width: 60px;
 	border-top: 1px solid #e1e4e6;
 	border-right: 1px solid #e1e4e6;
-	background: white;
+	background: rgba(0, 0, 0, 0.8);
 	-webkit-transform: translateX(-60px);
 	-moz-transform: translateX(-60px);
 	transform: translateX(-60px);
@@ -125,7 +125,7 @@
 }
 
 .my-submenu li a {
-	color: #555
+	color: #ffffff;
 }
 
 input.my-search {
@@ -219,6 +219,10 @@ input.my-search:focus {
 }
 .my-trigger .active{
 	color:#00b3e4
+}
+
+.my-menu-main a.fa-bars {
+	color: #000000;
 }
 
 @media screen and (max-width:422px) {

@@ -459,9 +459,11 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
   text-align: justify;
 }
 
+.core submit-project-directive {
+  padding-right: 40px;
+}
 .core submit-project-directive p {
   font-size: 1.5rem;
-  padding-right: 50px;
 }
 
 .core .main-text p:nth-child(1){
