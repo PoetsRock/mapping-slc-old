@@ -205,6 +205,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
+    $scope.updateFeatured = function() {
+      $scope.toggleEditFn(0);
+      console.log('$scope.project._id:\n', $scope.project._id);
+      let data = $scope.project._id;
+      $http.get('/api/v1/projects/featured/' + data);
+      //.then(function(){});
+    };
+
 
     // Find a list of Projects
     $scope.find = function () {

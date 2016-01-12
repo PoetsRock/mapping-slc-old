@@ -119,7 +119,7 @@ exports.read = function (req, res) {
  * Update a Project
  */
 exports.update = function (req, res) {
-  //console.log('\n\n\nreq.body:\n', req.body, '\n\n\n\nreq.project:\n', req.project);
+  console.log('\n\n\nreq.body:\n', req.body, '\n\n\n\nreq.project:\n', req.project);
   var projectKeywords = [];
   var project = req.project;
   project = _.extend(project, req.body);
@@ -151,17 +151,13 @@ exports.update = function (req, res) {
         useCase: 'server'
       }
     };
-    projects.nlpProjects(text, function(response) {
-      project.keywords.push(response.keywords);
-    });
-
-    //getKeywords.then(function(projectKeywords){
-    //  return project.keywords.push(projectKeywords);
+    //projects.nlpProjects(text, function(response) {
+    //  project.keywords.push(response.keywords);
     //});
-    //**/
+
   }
-  console.log('project.keywords v2:\n', project.keywords);
-  console.log('projectKeywords:\n', projectKeywords);
+  //console.log('project.keywords v2:\n', project.keywords);
+  //console.log('projectKeywords:\n', projectKeywords);
   project.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -287,6 +283,36 @@ exports.projectByID = function (req, res, next, id) {
     });
 };
 
+
+/**
+ * Project middleware
+ */
+exports.updateFeaturedProjects = function (req, res) {
+  //console.log('featuredProjects req::::::\n', req);
+  Project.find({featured: true})
+    .sort('-date')
+    .exec(function (err, projects) {
+      console.log('featuredProjects:\n', projects);
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (projects.length === 3) {
+        let removeFeatureTag = projects.pop();
+        console.log('removeFeatureTag:\n', removeFeatureTag);
+        //projects.update(removeFeatureTag);
+        console.log('featuredProjects afterwards:\n', projects);
+      } else if (projects.length > 3) {
+        //same as above but with a for loop
+      }
+      res.jsonp(projects);
+      //req.project = project;
+      //next();
+    });
+};
+
+
+
 /**
  * Project authorization middleware
  */
@@ -303,13 +329,16 @@ exports.hasAuthorization = function (req, res, next) {
  */
 exports.getFeaturedProjects = function (req, res) {
   Project.find({featured: true})
+    .sort('-date')
     .exec(function (err, projects) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        console.log('projectsprojectsprojectsprojectsprojectsprojectsprojects  projects', projects);
+        if(projects.length > 3) {
+
+        }
         res.jsonp(projects);
       }
     });

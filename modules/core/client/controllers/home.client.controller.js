@@ -6,6 +6,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
     //console.log('current user:\n', $scope.authentication.user);
+    $scope.featuredProjects = [];
 
     //get featured projects as array
     $scope.featuredProjects = [];
@@ -17,6 +18,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         });
     };
     getFeatured();
+
 
     //provides logic for the css in the forms
     UtilsService.cssLayout();
