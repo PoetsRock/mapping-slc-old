@@ -41,7 +41,6 @@ header {
 	top: 0;
 	width: 5%;
 	max-width: 100%;
-	border-bottom: 1px solid #e1e4e6;
 }
 
 .icon-menu {
@@ -295,7 +294,14 @@ input:focus {
 }
 
 
+.my-menu .fa {
+	font-size: 4rem;
+	padding: 8px 14px 8px 8px;
+}
 
+.my-menu .fa.fa-map-marker {
+margin-left: 8px;
+}
 
 
 

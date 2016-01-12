@@ -8,20 +8,20 @@
 
       <ul class="grid cs-style-4 col-md-4 col-sm-4" data-ng-repeat="featuredProject in featuredProjects" ng-mouseenter="showTitle=true" ng-mouseleave="showTitle=false">
 
-        <figure>
+
           <a ui-sref="viewProject({projectId: featuredProject.id})">
             <div>
               <!--desaturate-->
               <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}"/>
 
-                <div data-ng-show="showTitle" class="featured-projects-title">
-                  {{featuredProject.title}}
+                <!--<div data-ng-show="showTitle" class="featured-projects-title">-->
+                <div class="featured-projects-title">
+                  <p>{{featuredProject.title}}</p>
                 </div>
 
             </div>
           </a>
 
-        </figure>
       </ul>
 
 
