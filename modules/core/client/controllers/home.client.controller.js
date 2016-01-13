@@ -29,14 +29,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       $location.path('projects/' + id);
     };
 
-    //placeholder for featured projects images
-    //todo once admin module is built, create a function that makes photo1 and 2 dynamic rather than hard-coded
-    $scope.photo0 = 'chris--bw-2.jpg';
-    $scope.photo1 = 'as_thumb_150.jpg';
-    $scope.photo2 = 'wli_thumb_150.jpg';
-    $scope.photo3 = 'dw_thumb_150.jpg';
-    $scope.photo4 = 'as_thumb_bw.png';
-
     $scope.projectMarker = null;
     $scope.markerData = null;
 
@@ -289,13 +281,15 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       };
     };
 
+    $scope.toggleSidebar = false;
     var popupIndex = 0;
     var popupMenuToggle = function (e) {
       if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         $scope.toggleOverlayFunction('menu-closed');
         //$scope.populateStorySummary($scope.projectDetails);
-        $scope.sidebar.open('details');
+        //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
+        $scope.toggleSidebar = true;
       } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
         //$scope.populateStorySummary($scope.projectDetails);
       } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {

@@ -394,3 +394,9 @@ div.leaflet-control-mapbox-geocoder.leaflet-bar.leaflet-control.active > div.lea
 .menu-ui #legend {
     border-bottom: none;
 }
+
+.home-view.toggle-sidebar {
+    right: 15%;
+    position: relative;
+}
+

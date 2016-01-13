@@ -1,10 +1,10 @@
-body,html {
-	margin: 0;
-}
+/*body,html {*/
+	/*margin: 0;*/
+/*}*/
 
-body,html,.content-body {
-	height: 100%;
-}
+/*body,html,.content-body {*/
+	/*height: 100%;*/
+/*}*/
 
 input,button,select,textarea {
 	font-family: inherit;
@@ -31,17 +31,17 @@ button,input,optgroup,select,textarea {
 	margin: 0;
 }
 
-header {
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
-	min-width: 0;
-	height: 60px;
-	background: transparent;
-	position: fixed;
-	top: 0;
-	width: 5%;
-	max-width: 100%;
-}
+/*header {*/
+	/*-moz-box-sizing: content-box;*/
+	/*box-sizing: content-box;*/
+	/*min-width: 0;*/
+	/*height: 60px;*/
+	/*background: transparent;*/
+	/*position: fixed;*/
+	/*top: 0;*/
+	/*width: 5%;*/
+	/*max-width: 100%;*/
+/*}*/
 
 .icon-menu {
 	width: 20px;
