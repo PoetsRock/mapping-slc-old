@@ -327,23 +327,6 @@ exports.hasAuthorization = function (req, res, next) {
 /**
  * Returns an array of objects that contains the featured projects
  */
-//exports.getFeaturedProjects = function (req, res) {
-//  Project.find({featured: true})
-//    .sort('-date')
-//    .exec(function (err, projects) {
-//      if (err) {
-//        return res.status(400).send({
-//          message: errorHandler.getErrorMessage(err)
-//        });
-//      } else {
-//        if(projects.length > 3) {
-//
-//        }
-//        res.jsonp(projects);
-//      }
-//    });
-//};
-
 exports.getFeaturedProjects = function (req, res) {
     Project.find({featured: true})
         .sort('-featuredBeginDate')

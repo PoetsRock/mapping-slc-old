@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService',
-  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService', 'MenuService',
+  function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService, MenuService) {
 
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
@@ -64,11 +64,15 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         console.log('toggle the shade! v3\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = !$scope.menuOpen;
         $scope.shadeMap = false;
+        MenuService.setShowAll(false);
+        MenuService.setShowPart(false);
       } else if (!$scope.overlayActive && sourceFrom === 'home') {
         console.log('toggle the shade! v4\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = false;
         $scope.overlayActive = true;
         $scope.shadeMap = false;
+        MenuService.setShowAll(false);
+        MenuService.setShowPart(false);
       }
     };
 
@@ -112,6 +116,18 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       var map = L.mapbox.map('map', null, {
           infoControl: false, attributionControl: false,
           legendControl: { position: 'bottomleft' }
+      })
+      .on('click', function (e) {
+        //console.log('click event', e);
+        if ($scope.showAll || $scope.showPart) {
+          console.log('menu open, map click!');
+          MenuService.setShowAll(false);
+          $scope.shadeMap = false;
+        } else {
+          console.log('map click!');
+          //$scope.overlayActive = false;
+          MenuService.setShowAll(false);
+        }
       })
       .setView([40.7630772, -111.8689467], 12)
       .addControl(L.control.zoom({position: 'topright'}));
@@ -266,16 +282,19 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
       };
 
-      map.on('click', function (e) {
-        console.log('click event', e);
-        if ($scope.menuOpen) {
-          $scope.sidebar.close();
-          $scope.shadeMap = false;
-        } else {
-          console.log('map click!');
-          $scope.overlayActive = false;
-        }
-      });
+      //map.on('click', function (e) {
+      //  //console.log('click event', e);
+      //  if ($scope.menuOpen) {
+      //    MenuService.setShowAll(false);
+      //    MenuService.setShowPart(false);
+      //    $scope.shadeMap = false;
+      //  } else {
+      //    console.log('map click!');
+      //    //$scope.overlayActive = false;
+      //    MenuService.setShowAll(false);
+      //    MenuService.setShowPart(false);
+      //  }
+      //});
 
       $scope.getProjectMarkers = function (markerData) {
       };
