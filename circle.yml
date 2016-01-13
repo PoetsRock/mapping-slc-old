@@ -1,5 +1,10 @@
+machine:
+  timezone:
+    America/Denver
+  node:
+    version: 4
 deployment:
-  staging:
+  production:
     branch: master
     heroku:
       appname: mapping-slc

@@ -1,52 +1,30 @@
-<section>
-
-    <!--<div class="col-md-7">-->
-    <div>
-        <div class="text-center page-header">
-            <h2>Featured Projects</h2>
-        </div>
-        <div class="row">
-            <ul class="grid cs-style-4 col-md-4 col-sm-4">
-                <figure>
-                    <a href="/shaw">
-                        <div>
-                            <img ng-src="modules/core/client/img/{{photo1}}" class="desaturate">
-                        </div>
-                    </a>
-                    <figcaption>
-                        <a href="/shaw"><span>Andrew Shaw</span></a>
-                    </figcaption>
-                </figure>
-            </ul>
-
-
-            <ul class=" grid cs-style-4 col-md-4 col-sm-4">
-                <figure>
-                    <a href="/westside-leadership-institute">
-                        <div>
-                            <img ng-src="modules/core/client/img/{{photo2}}" class="sepia">
-                        </div>
-                    </a>
-                    <figcaption>
-                        <a href="/westside-leadership-institute"><span>Westside Leadership</span></a>
-                    </figcaption>
-                </figure>
-            </ul>
-
-            <ul class="grid cs-style-4 col-md-4 col-sm-4">
-                <figure>
-                    <a href="#">
-                        <div>
-                            <img id="photo-3" ng-src="modules/core/client/img/{{photo3}}" class="desaturate">
-                        </div>
-                    </a>
-                    <figcaption>
-                        <a href="/westside-leadership-institute"><span>David Williams</span></a>
-                    </figcaption>
-                </figure>
-            </ul>
-        </div>
-
+<section class="featured-projects">
+  <div>
+    <div class="text-center page-header">
+      <h3>Featured Projects</h3>
     </div>
 
+    <div class="row">
+
+      <ul class="grid cs-style-4 col-md-4 col-sm-4" data-ng-repeat="featuredProject in featuredProjects" ng-mouseenter="showTitle=true" ng-mouseleave="showTitle=false">
+
+
+          <a ui-sref="viewProject({projectId: featuredProject.id})">
+            <div>
+              <!--desaturate-->
+              <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}"/>
+
+                <!--<div data-ng-show="showTitle" class="featured-projects-title">-->
+                <div class="featured-projects-title">
+                  <p>{{featuredProject.title}}</p>
+                </div>
+
+            </div>
+          </a>
+
+      </ul>
+
+
+    </div>
+  </div>
 </section>

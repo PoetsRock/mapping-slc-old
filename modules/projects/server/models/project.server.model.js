@@ -160,6 +160,9 @@ var ProjectSchema = new Schema({
     type: Boolean,
     default: 'false'
   },
+  featuredBeginDate: {
+    type: Date
+  },
   mainImage: {
     type: String,
     trim: true
@@ -167,8 +170,11 @@ var ProjectSchema = new Schema({
   //mainImage: {
   //  type: Buffer
   //},
+  //mainImgThumbnail: {
+  //  type: Buffer
+  //},
   mainImgThumbnail: {
-    type: Buffer
+    type: String
   },
   mainImageUrl: {
     type: String,

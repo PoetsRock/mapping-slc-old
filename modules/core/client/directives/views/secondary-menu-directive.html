@@ -5,10 +5,11 @@
 -->
 
 <!--this icon will be displayed when the menu is closed-->
-<strong data-ng-show="!toggleSecondMenu" data-ng-click="toggleSecondMenu=!toggleSecondMenu">
+<!--<strong data-ng-show="!toggleSecondMenu" data-ng-click="toggleSecondMenu=!toggleSecondMenu">-->
+<strong data-ng-show="!toggleSecondMenu">
   <div class="menu-toggle-backdrop">
         <span>
-            <i class="menu-icon menu-closed-icon glyphicon glyphicon-align-justify"></i>
+            <i class="menu-icon menu-closed-icon fa fa-bars" data-ng-click="toggleSecondMenu=!toggleSecondMenu"></i>
         </span>
   </div>
 </strong>
@@ -18,10 +19,11 @@
 <section data-ng-show="toggleSecondMenu"
          data-ng-class="{'menu-top-level': toggleSecondMenu, 'menu-top-level-closed': !toggleSecondMenu}">
 
-  <div data-ng-click="toggleSecondMenu=!toggleSecondMenu"> <!--toggle icon for secondary menu, BEGIN-->
+  <!--<div data-ng-click="toggleSecondMenu=!toggleSecondMenu"> &lt;!&ndash;toggle icon for secondary menu, BEGIN&ndash;&gt;-->
+  <div > <!--toggle icon for secondary menu, BEGIN-->
     <strong>
             <span>
-                <i class="menu-icon menu-open-icon glyphicon glyphicon-align-justify"></i>
+                <i class="menu-icon menu-open-icon fa fa-bars" data-ng-click="toggleSecondMenu=!toggleSecondMenu"></i>
             </span>
     </strong>
   </div>
