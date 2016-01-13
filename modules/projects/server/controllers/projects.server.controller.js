@@ -346,7 +346,7 @@ exports.hasAuthorization = function (req, res, next) {
 
 exports.getFeaturedProjects = function (req, res) {
     Project.find({featured: true})
-        .sort('featuredBeginDate')
+        .sort('-featuredBeginDate')
         .limit(3)
         .exec(function (err, projects) {
             if (err) {
