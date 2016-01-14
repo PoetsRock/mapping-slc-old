@@ -238,6 +238,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             .on('click', function (e) {
               $scope.$apply(function () {
                 $scope.storyEvent = e.target._geojson.properties;
+                 $scope.$broadcast('CurrentStorty', $scope.storyEvent);
               });
               map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
               popupMenuToggle(e);
@@ -313,7 +314,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         //$scope.populateStorySummary($scope.projectDetails);
       } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         //$scope.populateStorySummary($scope.projectDetails);
-        $scope.sidebar.open('details');
+        //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
       } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
         $scope.sidebar.close();

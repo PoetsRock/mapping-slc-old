@@ -719,3 +719,19 @@ button > .grow {
   bottom: 15px;
   position: relative;
 }
+
+/* feature sidebar */
+.project-sidebar {
+    z-index: 1000;
+    height: 200px;
+    position: absolute;
+    top: 25%;
+    background: #cdcdcd;
+    opacity: .65;
+    color: #000000;
+    left: 65%;
+    border: 1px solid #3F51B5;
+    border-radius: 10px;
+    padding: 20px 20px;
+    width: 30%;
+}
