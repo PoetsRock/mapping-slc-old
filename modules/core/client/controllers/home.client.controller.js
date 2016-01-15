@@ -120,12 +120,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       .on('click', function (e) {
         //console.log('click event', e);
         if ($scope.showAll || $scope.showPart) {
-          console.log('menu open, map click!');
+          console.log('if menu open, map click! event', e);
+          //MenuService.setShowNone(true);
           MenuService.setShowAll(false);
           $scope.shadeMap = false;
         } else {
-          console.log('map click!');
+          console.log('else map click! event', e);
           //$scope.overlayActive = false;
+          //MenuService.setShowNone(true);
           MenuService.setShowAll(false);
         }
       })
@@ -237,7 +239,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             //create toogle for marker event that toggles sidebar on marker click
             .on('click', function (e) {
               $scope.$apply(function () {
+                console.log('on click, `e`:\n', e, '\n\n');
                 $scope.storyEvent = e.target._geojson.properties;
+                console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
               });
               map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
               popupMenuToggle(e);

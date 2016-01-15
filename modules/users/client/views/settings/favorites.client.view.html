@@ -9,11 +9,11 @@
            class="col-md-12 admin-list">
           <div class="row">
 
-            <div class="col-md-2">
+            <div class="col-md-3">
               <img data-ng-src="{{userFavorite.mainImgThumbnail}}"/>
             </div>
 
-            <div class="col-md-9">
+            <div class="col-md-8">
               <h4 class="list-group-item-heading" data-ng-bind="userFavorite.title"></h4>
               <small>
                 <span>{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</span>
@@ -21,7 +21,7 @@
 
             </div>
             <div class="col-md-1">
-              <i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)" style="color: rgba(2,58,49,0.4);"></i>
+              <i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)"></i>
             </div>
           </div>
         </a>

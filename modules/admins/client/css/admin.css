@@ -267,12 +267,18 @@ td i .selected {
     transition: all 0.25s ease;
 }
 
+.admin-user > .admin-nav a {
+    position: relative;
+}
+
 /*.chrisIsChris .header-profile-image {*/
 .admin-user .header-profile-image {
     height: 100px;
     width: 100px;
     margin-left: 5%;
+    top: -50px;
     z-index: 150;
+    position: relative;
 }
 
 .admin-user .page-header {
