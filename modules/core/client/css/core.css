@@ -714,10 +714,28 @@ button > .grow {
   border-radius: 5%;
 }
 
-.fa.fa-times {
-  left: 15px;
-  bottom: 15px;
+.user-submissions .fa.fa-times {
+  color: rgba(2,58,49,0.4);
+  left: 20px;
+  top: -5px;
   position: relative;
+  /*-webkit-transition: all 0.15s ease;*/
+  /*-moz-transition: all 0.15s ease;*/
+  /*-o-transition: all 0.15s ease;*/
+  /*transition: all 0.15s ease;*/
+}
+
+.user-submissions .fa.fa-times:hover {
+  color: rgba(2,58,49,1);
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  -o-transform: scale(1.3);
+  transform: scale(1.3);
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 /* feature sidebar */

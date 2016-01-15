@@ -9,15 +9,14 @@
            class="col-md-12 admin-list">
           <div class="row">
 
-            <div class="col-md-2">
+            <div class="col-md-3">
               <img data-ng-src="{{userProject.mainImgThumbnail}}"/>
             </div>
 
-            <div class="col-md-10">
+            <div class="col-md-8">
               <h4 class="list-group-item-heading" data-ng-bind="userProject.title"></h4>
               <small>
                 Submitted on <span data-ng-bind="userProject.createdOn | date:'medium'"></span>
-                <div data-ng-bind="userProject.id"></div>
               </small>
 
             </div>
@@ -31,41 +30,3 @@
   </div>
 
 </section>
-
-
-<!--<section data-ng-controller="UserController" class="row" style="height: 600px;" data-ng-init="findCurrentUserSubmissions()">-->
-
-  <!--<div class="user-submissions">-->
-
-    <!--<div class="list-group">-->
-      <!--<div class="row">-->
-
-        <!--<a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProjects.id})"-->
-           <!--class="col-md-12 admin-list">-->
-          <!--<div class="row">-->
-
-            <!--<div class="col-md-2">-->
-              <!--<img data-ng-src="{{userProject.mainImgThumbnail}}"/>-->
-            <!--</div>-->
-
-            <!--<div class="col-md-10">-->
-              <!--<h4 class="list-group-item-heading" data-ng-bind="userProject.title"></h4>-->
-              <!--<small>-->
-                <!--Submitted on <span data-ng-bind="userProject.createdOn | date:'medium'"></span>-->
-                <!--<div data-ng-bind="userProject.id"></div>-->
-              <!--</small>-->
-
-            <!--</div>-->
-
-          <!--</div>-->
-        <!--</a>-->
-
-      <!--</div>-->
-    <!--</div>-->
-
-  <!--</div>-->
-
-<!--</section>-->
-
-
-<!--<user-submissions-list></user-submissions-list>-->

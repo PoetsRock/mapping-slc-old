@@ -9,7 +9,13 @@ angular.module('core').directive('leftMenu', function (MenuService) {
         scope.itemsMenu = MenuService.itemsMenu;
         scope.showAll = MenuService.open.all;
         scope.showPart = MenuService.open.part;
-        //scope.showNone = MenuService.open.none;
+        scope.showNone = MenuService.open.none;
+
+        //console.log('scope.showNone:\n', MenuService.open.none);
+        //console.log('scope.showNone:\n', scope.showNone);
+
+        //console.log('scope.showNone:\n', MenuService.open.none);
+        //console.log('scope.showNone:\n', scope.showNone);
 
         scope.mouseenter = function () {
           MenuService.setShowPart(true);
@@ -25,16 +31,25 @@ angular.module('core').directive('leftMenu', function (MenuService) {
         };
         scope.menuToggle = function (event) {
           if (event.target.id !== "triggerMenu") {
+            console.log('menuToggle inside `if`');
             return;
           }
+          //console.log('menuToggle... event:\n', event);
           event.stopPropagation();
           MenuService.setShowAll(!scope.showAll);
         };
 
         scope.$on('MenuService.update', function (event, open) {
+          //console.log('MenuService.update... open:\n', open);
+          //console.log('MenuService.open.all:\n', MenuService.open.all);
+          //console.log('scope.showAll:\n', scope.showAll);
+
+          //console.log('MenuService.open.none:\n', MenuService.open.none);
+          //console.log('scope.showNone:\n', scope.showNone);
+
           scope.showAll = open.all;
           scope.showPart = open.part;
-          //scope.showNone = open.none;
+          scope.showNone = open.none;
         });
       }
     };

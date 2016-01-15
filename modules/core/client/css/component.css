@@ -185,7 +185,7 @@ input.my-search:focus {
 	box-shadow: 0 3px #2f2f2f, 0 -6px white, 0 -9px #2f2f2f, 0 -12px #fff
 }
 
-.my-menu-wrapper.my-open-all,.my-menu-wrapper.my-open-part {
+.my-menu-wrapper.my-open-all,.my-menu-wrapper.my-open-part,.my-menu-wrapper.my-open-none {
 	-webkit-transform: translateX(0px);
 	-moz-transform: translateX(0px);
 	transform: translateX(0px)
@@ -193,6 +193,10 @@ input.my-search:focus {
 
 .my-menu-wrapper.my-open-all {
 	width: 340px
+}
+
+.my-menu-wrapper.my-open-none {
+	width: 0;
 }
 
 .my-submenu-open li {

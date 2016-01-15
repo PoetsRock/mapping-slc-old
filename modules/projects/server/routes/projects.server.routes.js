@@ -147,13 +147,12 @@ module.exports = function (app) {
     });
 
 
-  ////route for getting the Featured Projects Array
+  //route for getting the Featured Projects Array
   app.route('/api/v1/featured')
     .get(projects.getFeaturedProjects);
   app.route('/api/v1/projects/featured/:projectId')
-    //.put(projects.updateFeaturedProjects, projects.update);
-    .get(projects.updateFeaturedProjects)
-    .put(projects.updateFeaturedProjects);
+    .put(projects.update, projects.updateFeaturedProjects, projects.update)
+    .get(projects.updateFeaturedProjects);
 
   ////route for updating the Featured Projects Array
   //app.route('api/v1/featured/:projectId')

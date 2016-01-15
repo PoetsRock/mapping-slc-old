@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "gulp",
-    "postinstall": "bower install --config.interactive=false && gulp prod"
+    "postinstall": "bower install --config.interactive=false && gulp prod",
+    "test": "mocha modules/projects/tests/server/project.server.controller.tests.js test"
   },
   "dependencies": {
     "acl": "~0.4.4",
@@ -46,6 +47,7 @@
     "glob": "^5.0.13",
     "gulp": "^3.9.0",
     "helmet": "~0.9.1",
+    "imagemin-pngquant": "^4.2.0",
     "jasmine-core": "^2.3.4",
     "lodash": "^3.10.0",
     "memjs": "^0.8.7",
@@ -77,9 +79,11 @@
     "underscore": "^1.8.3",
     "validator": "^3.41.2",
     "vimeo": "^1.1.4",
-    "xmltojson": "^1.1.0"
+    "xmltojson": "^1.1.0",
+    "yargs": "^3.31.0"
   },
   "devDependencies": {
+    "chai": "^3.4.1",
     "coveralls": "^2.11.4",
     "gulp-angular-templatecache": "^1.8.0",
     "gulp-autoprefixer": "^2.3.1",
@@ -102,6 +106,7 @@
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.6",
     "mock-fs": "~3.4.0",
+    "ng-html2js": "^2.0.0",
     "run-sequence": "^1.1.5",
     "should": "^7.0.1",
     "supertest": "^1.0.1",
