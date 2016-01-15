@@ -8,6 +8,7 @@ angular.module('core').service('MenuService', [ '$rootScope',
       open: {
         "part": false,
         "all": false,
+        "none": false,
         "chatSideClosed": false
       },
 
@@ -22,15 +23,19 @@ angular.module('core').service('MenuService', [ '$rootScope',
         this.open.all = val;
         if (val) {
           this.open.part = false;
+          this.open.none = false;
         }
         $rootScope.$broadcast('MenuService.update', this.open);
 
       },
 
-      setShowNone: function() {
-
-        this.open.all = false;
-        this.open.part = false;
+      setShowNone: function(val) {
+        console.log('setShowNone\nval\n', val, '\n\n');
+        this.open.none = val;
+        if (val) {
+          this.open.part = false;
+          this.open.all = false;
+        }
         $rootScope.$broadcast('MenuService.update', this.open);
       },
 

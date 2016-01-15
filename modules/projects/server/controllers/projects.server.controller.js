@@ -287,27 +287,34 @@ exports.projectByID = function (req, res, next, id) {
 /**
  * Project middleware
  */
-exports.updateFeaturedProjects = function (req, res) {
-  //console.log('featuredProjects req::::::\n', req);
+exports.updateFeaturedProjects = function (req, res, next) {
+  console.log('featuredProjects req.body::::::\n', req.body);
+  let removeProjectFeaturedValue = {};
+  //removeProjectFeaturedValue = req.body;
+  console.log('1111 featuredProjects `removeProjectFeaturedValue` begin::::::\n', removeProjectFeaturedValue);
   Project.find({featured: true})
-    .sort('-date')
+    .sort('featuredBeginDate')
     .exec(function (err, projects) {
-      console.log('featuredProjects:\n', projects);
+      //console.log('featuredProjects `projects`::::::\n', projects);
       if (err) {
+        console.log('featuredProjects `err`::::::\n', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else if (projects.length === 3) {
-        let removeFeatureTag = projects.pop();
-        console.log('removeFeatureTag:\n', removeFeatureTag);
-        //projects.update(removeFeatureTag);
-        console.log('featuredProjects afterwards:\n', projects);
-      } else if (projects.length > 3) {
-        //same as above but with a for loop
+      } else if (projects.length >= 3) {
+        removeProjectFeaturedValue = projects.pop();
+        console.log('2222 featuredProjects `removeProjectFeaturedValue`::::::\n', removeProjectFeaturedValue);
+        //console.log('featuredProjects `projects` after pop(),in conditional::::::\n', projects);
+      } else {
+        return res.status(200).send({
+          message: 'all good'
+        });
       }
-      res.jsonp(projects);
-      //req.project = project;
-      //next();
+      removeProjectFeaturedValue.featured = false;
+      removeProjectFeaturedValue.featuredBeginDate = Date.now();
+      console.log('3333 featuredProjects `removeProjectFeaturedValue` final::::::\n', removeProjectFeaturedValue);
+      req.project = removeProjectFeaturedValue;
+      next();
     });
 };
 
