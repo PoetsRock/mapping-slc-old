@@ -206,17 +206,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
-    console.log('$scope.project:\n', $scope.project);
     $scope.updateFeatured = function() {
       $scope.toggleEditFn(0);
-      console.log('$scope.project._id:\n', $scope.project._id);
-      console.log('Projects:\n', Projects);
-      Projects.put({
-
-      });
-      //let data = $scope.project._id;
-      //$http.put('/api/v1/projects/featured/' + data);
-      //.then(function(){});
+        console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
+        $http.put('api/v1/projects/' + $scope.project._id + '/featured/true')
+          .then(function(resolved, rejected){
+            console.log('resolved:\n', resolved, '\n\nrejected\n', rejected);
+          });
     };
 
 

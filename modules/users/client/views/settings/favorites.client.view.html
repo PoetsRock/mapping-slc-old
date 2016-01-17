@@ -5,10 +5,8 @@
     <div class="list-group">
       <div class="row">
 
-        <a data-ng-repeat="userFavorite in userFavorites" ui-sref="viewProject({projectId: userFavorite.id})"
-           class="col-md-12 admin-list">
+        <a data-ng-repeat="userFavorite in userFavorites" ui-sref="viewProject({projectId: userFavorite.id})" class="col-md-12 admin-list" data-ng-show="isFavorite">
           <div class="row">
-
             <div class="col-md-3">
               <img data-ng-src="{{userFavorite.mainImgThumbnail}}"/>
             </div>

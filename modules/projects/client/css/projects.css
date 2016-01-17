@@ -240,15 +240,16 @@ to {
 }
 
 .view-project .fa.fa-heart {
-    /*color: rgba(0, 0, 0, 0.3);*/
+    margin-top: 2%;
+    font-size: 3rem;
 }
 
 .favorite-true {
     color: rgba(3, 59, 50, 1);
 }
 
-.favorite-false {
-    color: #ffffff;
+.fa.fa-heart.favorite-false {
+    color: rgba(0, 0, 0, 0.3);
 }
 
 /*project status page*/

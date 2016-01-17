@@ -110,15 +110,12 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
       $scope.$on('$stateChangeStart',
         function (event) {
             event.preventDefault();
-
-          console.log('kill that fav!', projectId);
-          console.log('kill that fav!', $scope.user);
-
+          //console.log('kill that fav!', projectId);
+          //console.log('kill that fav!', $scope.user);
           $scope.isFavorite = false;
           var updateFavoriteObj = {favorite: projectId, isFavorite: false};
           $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
 
-          return;
 
           });
 

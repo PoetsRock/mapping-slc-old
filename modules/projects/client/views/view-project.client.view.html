@@ -22,10 +22,17 @@
           </div>
 
           <div class="page-header">
-              <h1 data-ng-bind="project.title"></h1>
-              <!--<i class="fa fa-heart-o" ng-show="!isFavorite" ng-click="toggleFavProject()"></i>-->
-              <!--<i class="fa fa-heart" ng-show="isFavorite" ng-click="toggleFavProject()"></i>-->
-              <i class="fa fa-heart" ng-click="toggleFavProject()" data-ng-class="{'favorite-true' : isFavorite, 'favorite-false' : !isFavorite}"></i>
+            <div class="row">
+              <div class="col-lg-10">
+                <h1 data-ng-bind="project.title"></h1>
+              </div>
+              <div class="col-lg-2 pull-left">
+                <i class="fa fa-heart" ng-click="toggleFavProject()" data-ng-class="{'favorite-true' : isFavorite, 'favorite-false' : !isFavorite}"></i>
+              </div>
+
+            </div>
+
+            <!--<br /><p>{{isFavorite}}</p>-->
             <em class="text-muted">
               <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
               by
