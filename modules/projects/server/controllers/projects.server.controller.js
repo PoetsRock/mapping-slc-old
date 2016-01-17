@@ -115,58 +115,74 @@ exports.read = function (req, res) {
   res.jsonp(req.project);
 };
 
+
+
 /**
  * Update a Project
  */
 exports.update = function (req, res) {
-  console.log('\n\n\nreq.body:\n', req.body, '\n\n\n\nreq.project:\n', req.project);
-  var projectKeywords = [];
-  var project = req.project;
-  project = _.extend(project, req.body);
 
-  if (req.body.story) {
-    var sanitizedText = sanitizeHtml(req.body.story, {
-      allowedTags: [],
-      allowedAttributes: []
-    });
+  console.log('\n\n\nreq.body:\n', req.body);
+  console.log('\n\n\n\nreq.project:\n', req.project);
 
-    /**
-    //do nlp and return a promise
-    nlpKeywords(sanitizedText)
-      .then(function (keywords) {
-        projectKeywords = keywords.keywords;
-        project.keywords.push(projectKeywords);
-        console.log('project.keywords v1:\n', project.keywords);
-        //return projectKeywords;
-      })
-      .catch(function (error) {
-        console.log('Error:\n', error)
-      });
-     **/
+  var project = _.extend(req.project, req.body);
+  console.log('\n\n\n:::::::1111 update `project`:::::::\n', project);
+  //var project = {};
+  //if (req.project) {
+  //  console.log('\n\n\nreq.body:\n', req.body);
+  //  console.log('\n\n\n\nreq.project:\n', req.project);
+  //  project = _.extend(req.project, req.body);
+  //} else {
+  //  project = req.body;
+  //  console.log('\n\n\n:::::::1111  project:::::::\n', project);
+  //}
 
-    //  /**
-    var text = {
-      body: {
-        text: sanitizedText,
-        useCase: 'server'
-      }
-    };
-    //projects.nlpProjects(text, function(response) {
-    //  project.keywords.push(response.keywords);
-    //});
-
-  }
-  //console.log('project.keywords v2:\n', project.keywords);
-  //console.log('projectKeywords:\n', projectKeywords);
   project.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      console.log('\n\n\n:::::::2222 update `project`:::::::\n', project);
       res.jsonp(project);
     }
   });
+
+};
+
+
+/**
+ * Update Multiple Projects
+ */
+exports.updateAll = function (req, res) {
+  console.log('\n\n\nUpdate ALL ::::::: `req`:::::::::::\n', req);
+  let projects = req.project;
+  console.log('\n\n\n11111  IF  :::::Update ALL ::::::: begining of script ::::::: `projects`:::::::::::\n', projects);
+  var updatedProjects = [];
+  let project = {};
+
+  for(let i = 0; i > projects.length; i++) {
+    if (req.body) {
+      project = _.extend(projects[i], req.body);
+      //console.log('\n\n\n11111  IF  :::::Update ALL ::::::: `project[i]`:::::::::::\n', project[i]);
+    } else {
+      project = req.projects[i];
+      //console.log('\n\n\n11111  ELSE  :::::Update ALL ::::::: `project[i]`:::::::::::\n', project[i]);
+    }
+
+    project.save(function (err) {
+      //console.log('\n\n\n:::::::SAVEEEEEE  Update ALL  `project`:::::::\n', project);
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        updatedProjects.push(project);
+      }
+    });
+  }
+  //console.log('\n\n\n:::::::2222  Update ALL `updatedProjects`:::::::\n', updatedProjects);
+  res.jsonp(updatedProjects);
 
 };
 
@@ -271,7 +287,7 @@ exports.findOneVideoId = function (req, res) {
 
 /**
  * Project middleware
- */
+**/
 exports.projectByID = function (req, res, next, id) {
   Project.findById(id)
     .populate('user')
@@ -285,37 +301,59 @@ exports.projectByID = function (req, res, next, id) {
 
 
 /**
+ * Project middleware test
+ */
+exports.middleWareTest = function (req, res, next) {
+
+
+  let project = _.extend(req.project, req.body);
+  project.testField = 'working';
+
+  req.project = project;
+  console.log('::::::::::::::::::::::::::test middleware `project`::::::\n', project);
+  next();
+};
+
+
+/**
  * Project middleware
  */
 exports.updateFeaturedProjects = function (req, res, next) {
-  console.log('featuredProjects req.body::::::\n', req.body);
-  let removeProjectFeaturedValue = {};
-  //removeProjectFeaturedValue = req.body;
-  console.log('1111 featuredProjects `removeProjectFeaturedValue` begin::::::\n', removeProjectFeaturedValue);
+  var oldFeaturedProject = {};
+  var newFeaturedProject = _.extend(req.project, req.body);
+  let project = [];
+
   Project.find({featured: true})
     .sort('featuredBeginDate')
     .exec(function (err, projects) {
-      //console.log('featuredProjects `projects`::::::\n', projects);
+
       if (err) {
         console.log('featuredProjects `err`::::::\n', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else if (projects.length >= 3) {
-        removeProjectFeaturedValue = projects.pop();
-        console.log('2222 featuredProjects `removeProjectFeaturedValue`::::::\n', removeProjectFeaturedValue);
-        //console.log('featuredProjects `projects` after pop(),in conditional::::::\n', projects);
+      } else if (projects.length >= 3) {  //`projects.length` should equal 3, bc the new featured project has not been added yet 
+        oldFeaturedProject = projects.pop();
+        oldFeaturedProject.featured = false;
+        project.push(oldFeaturedProject);
       } else {
         return res.status(200).send({
-          message: 'all good'
+          message: 'no featured projects were removed'
         });
       }
-      removeProjectFeaturedValue.featured = false;
-      removeProjectFeaturedValue.featuredBeginDate = Date.now();
-      console.log('3333 featuredProjects `removeProjectFeaturedValue` final::::::\n', removeProjectFeaturedValue);
-      req.project = removeProjectFeaturedValue;
-      next();
+
+      newFeaturedProject.featured = true;
+      newFeaturedProject.featuredBeginDate = Date.now();
+
+      project.push(newFeaturedProject);
+      req.project = project;
+      console.log('req.project:::\n', req.project);
+
+      //next();
     });
+
+  next();
+
 };
 
 
@@ -337,7 +375,7 @@ exports.hasAuthorization = function (req, res, next) {
 exports.getFeaturedProjects = function (req, res) {
     Project.find({featured: true})
         .sort('-featuredBeginDate')
-        .limit(3)
+        //.limit(3)
         .exec(function (err, projects) {
             if (err) {
                 return res.status(400).send({
@@ -377,33 +415,11 @@ exports.nlpProjects = function (req, res, next) {
     }
   });
   console.log('sentKeywords l. 322:\n', sentKeywords);
-  res.send(sentKeywords);
+
+  req.project.nlp = sentKeywords;
+  next();
+
 };
-
-/**
- * Kraken.io Img Optimization
- */
-
-//exports.krakenImageUpload = function(req, res) {
-//	var kraken = new Kraken({
-//		api_key: keys.krakenKey,
-//		api_secret: keys.krakenSecret
-//	});
-//
-//	var opts = {
-//		file: '/path/to/image/file.jpg',
-//		wait: true
-//	};
-//
-//	kraken.upload(opts, function(data) {
-//		if (data.success) {
-//			console.log('Success. Optimized image URL: %s', data.kraked_url);
-//		} else {
-//			console.log('Fail. Error message: %s', data.error);
-//		}
-//	});
-//
-//};
 
 
 /**
@@ -411,7 +427,48 @@ exports.nlpProjects = function (req, res, next) {
  * @param req
  * @param res
  * @param next
- */
+ *
+ *
+
+ if (req.body.story) {
+    var sanitizedText = sanitizeHtml(req.body.story, {
+      allowedTags: [],
+      allowedAttributes: []
+    });
+
+
+    //do nlp and return a promise
+    nlpKeywords(sanitizedText)
+      .then(function (keywords) {
+        projectKeywords = keywords.keywords;
+        project.keywords.push(projectKeywords);
+        console.log('project.keywords v1:\n', project.keywords);
+        //return projectKeywords;
+      })
+      .catch(function (error) {
+        console.log('Error:\n', error)
+      });
+
+
+
+var text = {
+  body: {
+    text: sanitizedText,
+    useCase: 'server'
+  }
+};
+//projects.nlpProjects(text, function(response) {
+//  project.keywords.push(response.keywords);
+//});
+
+}
+  //console.log('project.keywords v2:\n', project.keywords);
+//console.log('projectKeywords:\n', projectKeywords);
+
+ *
+ *
+**/
+
 
 exports.markerData = function(req, res, next) {
 

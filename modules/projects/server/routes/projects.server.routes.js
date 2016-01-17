@@ -68,10 +68,10 @@ module.exports = function (app) {
 
 
   /**
-   * routes for Natural Language Processing Engine
+   * Update Project Keyowrds Using Natural Language Processing Engine
    */
   app.route('/api/v1/nlp')
-    .get(projects.nlpProjects);
+    .put(projects.nlpProjects, projects.update);
 
 
   // This is the search route, make a GET request on this endpoitn to return search results
@@ -147,16 +147,10 @@ module.exports = function (app) {
     });
 
 
-  //route for getting the Featured Projects Array
-  app.route('/api/v1/featured')
-    .get(projects.getFeaturedProjects);
-  app.route('/api/v1/projects/featured/:projectId')
-    .put(projects.update, projects.updateFeaturedProjects, projects.update)
-    .get(projects.updateFeaturedProjects);
 
-  ////route for updating the Featured Projects Array
-  //app.route('api/v1/featured/:projectId')
-  //  .patch(projects.updateFeaturedProject);
+  //test for middleware
+  app.route('/api/v1/projects/:projectId/test')
+    .put(projects.middleWareTest, projects.update);
 
 
 // Cloudinary File Storage and Opt
@@ -171,6 +165,24 @@ module.exports = function (app) {
     .get(s3.read)
     .put(s3.update)
     .delete(s3.delete);
+
+
+
+
+
+  //route for getting the Featured Projects Array
+  app.route('/api/v1/featured')
+    .get(projects.getFeaturedProjects);
+
+  app.route('/api/v1/projects/:projectId/featured/true')
+    .put(projects.updateFeaturedProjects, projects.updateAll);
+
+  app.route('/api/v1/projects/:projectId/featured/false')
+    .put(projects.update);
+
+
+
+
 
 
 
