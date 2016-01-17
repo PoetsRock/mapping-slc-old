@@ -9,7 +9,7 @@ angular.module('core').directive('signInDirective', function() {
             $scope.user = Authentication.user;
 
             if ($scope.user === '') {
-              console.log('directive profilePic Service - calling nothing, just `return`');
+              //console.log('directive profilePic Service - calling nothing, just `return`');
               return
             } else if(Authentication.user.profileImageFileName === 'default.png' || Authentication.user.profileImageFileName === '') {
               $scope.user.profileImage = 'modules/users/client/img/profile/default.png';

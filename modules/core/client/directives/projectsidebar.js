@@ -9,15 +9,27 @@ angular.module('core').directive('featureSideBar',function($document){
         scope: true,
         link: function (scope, element, attr) {
             scope.show = false;
-            scope.$on('CurrentStorty', function (event, data) {
+            var tempProjectIdActive = false;
+            scope.hide = function () {
+                console.log('hide me!!!');
+                scope.show = !scope.show;
+                scope.$emit('closeMap')
+            };
+
+            scope.$on('CurrentStory', function (event, data) {
                 scope.project = data;
                 scope.show = true;
-                console.log('Project DATA: ' ,data);
-                //var tempName = event.name;
-                scope.hide = function () {
-                    scope.show = !scope.show;
-                    scope.$emit('closeMap')
-                };
+                var tempProjectId = scope.project.projectId;
+                if(tempProjectId === scope.project.projectId && tempProjectIdActive){
+                    console.log('inside if!');
+                    scope.hide();
+                    tempProjectIdActive = !tempProjectIdActive;
+                }
+                tempProjectIdActive = !tempProjectIdActive;
+
+                console.log('scope show',scope.show);
+                //console.log('tempProjectId:\n', tempProjectId);
+                //console.log('scope.project.projectId:\n', scope.project.projectId);
 
 
 

@@ -14,7 +14,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       $http.get('/api/v1/featured', {cache: true})
         .then(function (resolved, rejected) {
           $scope.featuredProjects = resolved.data;
-          console.log('$scope.featuredProjects:\n', $scope.featuredProjects);
+          //console.log('$scope.featuredProjects:\n', $scope.featuredProjects);
         });
     };
     getFeatured();
@@ -52,22 +52,22 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
-        console.log('toggle the shade! v1\n', $scope.overlayActive, '\n', sourceFrom);
+        //console.log('toggle the shade! v1\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = !$scope.overlayActive;
         $scope.shadeMap = true;
       } else if ($scope.overlayActive && sourceFrom === 'menu-closed') {
-        console.log('toggle the shade! v2\n', $scope.overlayActive, '\n', sourceFrom);
+        //console.log('toggle the shade! v2\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = false;
         $scope.menuOpen = true;
         $scope.shadeMap = true;
       } else if (!$scope.overlayActive && sourceFrom === 'menu-closed' && !$scope.menuOpen) {
-        console.log('toggle the shade! v3\n', $scope.overlayActive, '\n', sourceFrom);
+        //console.log('toggle the shade! v3\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = !$scope.menuOpen;
         $scope.shadeMap = false;
         MenuService.setShowAll(false);
         MenuService.setShowPart(false);
       } else if (!$scope.overlayActive && sourceFrom === 'home') {
-        console.log('toggle the shade! v4\n', $scope.overlayActive, '\n', sourceFrom);
+        //console.log('toggle the shade! v4\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = false;
         $scope.overlayActive = true;
         $scope.shadeMap = false;
@@ -240,10 +240,10 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             //create toogle for marker event that toggles sidebar on marker click
             .on('click', function (e) {
               $scope.$apply(function () {
-                console.log('on click, `e`:\n', e, '\n\n');
+                //console.log('on click, `e`:\n', e, '\n\n');
                 $scope.storyEvent = e.target._geojson.properties;
-                 $scope.$broadcast('CurrentStorty', $scope.storyEvent);
-                console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
+                 $scope.$broadcast('CurrentStory', $scope.storyEvent);
+                //console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
               });
               map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
               popupMenuToggle(e);
@@ -322,7 +322,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
       } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        $scope.sidebar.close();
+
         popupIndex = 0;
       }
     };

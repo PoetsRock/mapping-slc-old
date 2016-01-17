@@ -9,7 +9,7 @@ angular.module('users').factory('AdminAuthService', ['$window', 'Authentication'
 			var isAdmin = {
 				user: $window.user.roles[0]
 			};
-			console.log('isAdmin.user', isAdmin.user);
+			//console.log('isAdmin.user', isAdmin.user);
 			return isAdmin;
 
 		} else {
@@ -17,7 +17,7 @@ angular.module('users').factory('AdminAuthService', ['$window', 'Authentication'
 			isAdmin = {
 				user: 'notAdmin'
 			};
-			console.log('!isAdmin.user', isAdmin.user);
+			//console.log('!isAdmin.user', isAdmin.user);
 			return isAdmin;
 		}
 	}
