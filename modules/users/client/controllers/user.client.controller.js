@@ -55,19 +55,28 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
       console.log('$scope.users: ', $scope.users);
     };
 
-    //Find existing project submissions by UserId
-    $scope.findUserFavorites = function () {
-      $scope.getFavorites = function (favoriteProjects) {
-        favoriteProjects.forEach(function (favoriteProject) {
-          userFavorites.push(Projects.get({
-              projectId: favoriteProject
-            })
-          );
+    /**
+     * Find a user's favorite projects
+     */
+    $scope.getFavorites = function () {
+      $http.get('/api/v1/users/' + $scope.user._id + '/favorites', {cache: true})
+        .then(function (resolved, rejected) {
+          console.log('resolved.data::::::\n', resolved.data);
+          $scope.userFavorites = resolved.data;
         });
-        $scope.userFavorites = userFavorites;
-        return userFavorites;
-      };
-      $scope.getFavorites(favoriteProjects);
+    };
+
+    /**
+     * Remove a User's Favorite projects
+     */
+    $scope.removeFavProject = function (projectId) {
+      $scope.$on('$stateChangeStart',
+        function (event) {
+          event.preventDefault();
+          $scope.isFavorite = false;
+          var updateFavoriteObj = {favorite: projectId, isFavorite: false};
+          $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
+        });
     };
 
     //Find existing project submissions by UserId
@@ -97,27 +106,6 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
       }
       // Send email enter from input field to back end
       $scope.users = Newsletter.query({email: $scope.subscribe.newsletter});
-
-    };
-
-
-
-    /**
-     * Remove User Favorites function
-     */
-
-    $scope.removeFavProject = function (projectId) {
-      $scope.$on('$stateChangeStart',
-        function (event) {
-            event.preventDefault();
-          //console.log('kill that fav!', projectId);
-          //console.log('kill that fav!', $scope.user);
-          $scope.isFavorite = false;
-          var updateFavoriteObj = {favorite: projectId, isFavorite: false};
-          $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
-
-
-          });
 
     };
 
