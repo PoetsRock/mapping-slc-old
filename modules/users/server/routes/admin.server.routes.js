@@ -32,7 +32,6 @@ module.exports = function (app) {
   app.route('/api/v1/contributors/:userId')
     .get(admin.getContributorByID);
 
-
   //var myFunction = function myFunction () {
   //  //this will show up in a stack trace
   //};
