@@ -337,7 +337,6 @@ gulp.task('build-no-lint', function (done) {
   runSequence('env:dev', ['uglify', 'cssmin'], done);
 });
 
-
 // Run the project in production mode
 gulp.task('prod-no-mini', function (done) {
   runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
@@ -356,3 +355,20 @@ gulp.task('prod', function (done) {
     Add a Gulp task called `heroku:production` that builds your app
     Serve your app using Express or whatever
 **/
+
+
+
+/**
+
+
+ HEROKU SSH
+
+ source: https://devcenter.heroku.com/articles/git#ssh-git-transport
+
+ TO SETUP SSH BY DEFAULT:
+ git config --global url.ssh://git@heroku.com/.insteadOf https://git.heroku.com/
+
+ TO REVERSE:
+ git config --global --remove-section url.ssh://git@heroku.com/
+
+ **/
