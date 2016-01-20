@@ -316,8 +316,13 @@ gulp.task('default', function (done) {
 });
 
 // Lint project files and minify them into two production files.
-gulp.task('build', function (done) {
+gulp.task('build-with-lint', function (done) {
   runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+});
+
+// Minify project files into two production files.
+gulp.task('build', function (done) {
+  runSequence('env:dev', ['uglify', 'cssmin'], done);
 });
 
 // Watch all server files for changes & run server tests (test:server) task on changes
