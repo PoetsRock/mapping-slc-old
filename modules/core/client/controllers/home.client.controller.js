@@ -49,6 +49,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.shadeMap = false;
 
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
+    console.log('toggleOverlayFunction::::  sourceFrom, sourceTo\n', sourceFrom, '\n\n', sourceTo);
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
@@ -118,17 +119,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           legendControl: { position: 'bottomleft' }
       })
       .on('click', function (e) {
-        //console.log('click event', e);
+        MenuService.setShowAll(false);
         if ($scope.showAll || $scope.showPart) {
           console.log('if menu open, map click! event', e);
-          //MenuService.setShowNone(true);
-          MenuService.setShowAll(false);
           $scope.shadeMap = false;
         } else {
           console.log('else map click! event', e);
           //$scope.overlayActive = false;
-          //MenuService.setShowNone(true);
-          MenuService.setShowAll(false);
         }
       })
       .setView([40.7630772, -111.8689467], 12)
