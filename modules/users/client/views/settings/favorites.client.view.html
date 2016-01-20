@@ -1,6 +1,6 @@
 <section data-ng-controller="UserController" class="row" style="height: 600px;" data-ng-init="getFavorites()">
 
-  <div class="user-submissions">
+  <div class="user-favorites">
 
     <div class="list-group">
       <div class="row">
@@ -8,7 +8,6 @@
         <a data-ng-repeat="userFavorite in userFavorites" ui-sref="viewProject({projectId: userFavorite.id})" class="col-md-12 admin-list" data-ng-show="!isFavorite">
           <div class="row">
             <div class="col-md-3">
-              isFavorite: {{isFavorite}}
               <img data-ng-src="{{userFavorite.mainImgThumbnail}}"/>
             </div>
 

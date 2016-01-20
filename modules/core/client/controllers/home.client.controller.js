@@ -49,6 +49,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.shadeMap = false;
 
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
+    console.log('toggleOverlayFunction::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo);
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
@@ -92,8 +93,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.filters = true;
     $scope.censusDataTractLayer = true;
     $scope.googlePlacesLayer = false;
-    //$scope.toggleProjectDetails = false;
-    $scope.sidebarToggle = false;
 
 
     //service that returns public front end keys
@@ -118,17 +117,16 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           legendControl: { position: 'bottomleft' }
       })
       .on('click', function (e) {
-        //console.log('click event', e);
-        if ($scope.showAll || $scope.showPart) {
-          console.log('if menu open, map click! event', e);
-          //MenuService.setShowNone(true);
+
+        if ($scope.showAll) {
+          console.log('map click!::::: if ($scope.showAll)  :::: `e`\n', e);
           MenuService.setShowAll(false);
+          //$rootScope.$broadcast('MenuService.update', open.all = false);
+          $scope.showAll = false;
           $scope.shadeMap = false;
         } else {
-          console.log('else map click! event', e);
+          console.log('`$scope.showAll = false` map click!  `e`\n', e);
           //$scope.overlayActive = false;
-          //MenuService.setShowNone(true);
-          MenuService.setShowAll(false);
         }
       })
       .setView([40.7630772, -111.8689467], 12)
@@ -243,7 +241,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 //console.log('on click, `e`:\n', e, '\n\n');
                 $scope.storyEvent = e.target._geojson.properties;
                  $scope.$broadcast('CurrentStory', $scope.storyEvent);
+
                 //console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
+
+                console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
+                console.log('on click `$scope.projectMarker`:\n', $scope.projectMarker, '\n\n');
+                console.log('on click `$scope.markerData`:\n', $scope.markerData, '\n\n');
+
               });
               map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
               popupMenuToggle(e);
@@ -288,38 +292,17 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
       };
 
-      //map.on('click', function (e) {
-      //  //console.log('click event', e);
-      //  if ($scope.menuOpen) {
-      //    MenuService.setShowAll(false);
-      //    MenuService.setShowPart(false);
-      //    $scope.shadeMap = false;
-      //  } else {
-      //    console.log('map click!');
-      //    //$scope.overlayActive = false;
-      //    MenuService.setShowAll(false);
-      //    MenuService.setShowPart(false);
-      //  }
-      //});
-
       $scope.getProjectMarkers = function (markerData) {
       };
     };
 
-    $scope.toggleSidebar = false;
     var popupIndex = 0;
     var popupMenuToggle = function (e) {
       if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         $scope.toggleOverlayFunction('menu-closed');
-        //$scope.populateStorySummary($scope.projectDetails);
-        //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
-        $scope.toggleSidebar = true;
       } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
       } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
-        //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
       } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
 
