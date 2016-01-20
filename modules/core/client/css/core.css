@@ -118,6 +118,7 @@ a:hover .header-profile-image {
   margin: 5% 2%;
   padding: 5%;
   border-radius: 10px;
+  overflow-y: auto;
 }
 
 .sidebar-content-below {
@@ -755,4 +756,13 @@ button > .grow {
 .project-sidebar > a{
    color: #cdcdcd;
 
+}
+
+.user-favorites img, .user-submissions img {
+  height: 100px;
+  width: auto;
+}
+
+.nav-pills .nav-stacked {
+  color: #366003;;
 }

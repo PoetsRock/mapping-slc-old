@@ -242,8 +242,10 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
               $scope.$apply(function () {
                 console.log('on click, `e`:\n', e, '\n\n');
                 $scope.storyEvent = e.target._geojson.properties;
-                 $scope.$broadcast('CurrentStorty', $scope.storyEvent);
+                 $scope.$broadcast('CurrentStory', $scope.storyEvent);
                 console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
+                console.log('on click `$scope.projectMarker`:\n', $scope.projectMarker, '\n\n');
+                console.log('on click `$scope.markerData`:\n', $scope.markerData, '\n\n');
               });
               map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
               popupMenuToggle(e);
