@@ -9,29 +9,41 @@ angular.module('core').directive('featureSideBar',function($document){
         scope: true,
         link: function (scope, element, attr) {
             scope.show = false;
-            var tempProjectIdActive = false;
+
             scope.hide = function () {
-                console.log('hide me!!!');
                 scope.show = !scope.show;
                 scope.$emit('closeMap')
             };
 
-            scope.$on('CurrentStory', function (event, data) {
-                scope.project = data;
-                scope.show = true;
-                var tempProjectId = scope.project.projectId;
-                if(tempProjectId === scope.project.projectId && tempProjectIdActive){
-                    console.log('inside if!');
-                    scope.hide();
-                    tempProjectIdActive = !tempProjectIdActive;
+            function identical(array) {
+                for(var i = 0; i < array.length - 1; i++) {
+                    if(array[i] != array[i+1]) {
+                        return false;
+                    }
                 }
-                tempProjectIdActive = !tempProjectIdActive;
+                return true;
+            }
+            scope.eyedees = [];
+            scope.$on('CurrentStory', function (event, data) {
 
-                console.log('scope show',scope.show);
-                //console.log('tempProjectId:\n', tempProjectId);
-                //console.log('scope.project.projectId:\n', scope.project.projectId);
+                scope.project = data;
+                scope.eyedees.push(scope.project.projectId);
 
 
+                if (scope.eyedees.length == 1) {
+                    scope.show = true;
+                }
+                if (scope.eyedees.length > 1) {
+                    if (identical(scope.eyedees)){
+                        scope.hide();
+                        scope.eyedees = [];
+                    }
+                    else {
+                        scope.show = true;
+                        scope.eyedees = [];
+                    }
+
+                }
 
             });
 
