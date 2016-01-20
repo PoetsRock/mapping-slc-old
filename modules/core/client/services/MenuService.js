@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').service('MenuService', [ '$rootScope',
+angular.module('core').service('MenuService', ['$rootScope',
   function ($rootScope) {
 
     this.open = {
@@ -21,9 +21,8 @@ angular.module('core').service('MenuService', [ '$rootScope',
       if (val) {
         this.open.part = false;
         this.open.none = false;
-      //} else {
-      //  this.open.all = false;
-        //this.toggleOverlayFunction('overlay');
+      //} else if(!val && !this.open.part) {
+      //  $rootScope.toggleOverlayFunction('overlay');
       }
       $rootScope.$broadcast('MenuService.update', this.open);
     };

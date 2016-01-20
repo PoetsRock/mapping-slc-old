@@ -11,7 +11,7 @@
     "url": "https://github.com/poetsrock/mappingslc.git"
   },
   "dependencies": {
-    "angular": "^1.5.x",
+    "angular": "1.5",
     "angular-animate": "^1.5.x",
     "angular-bootstrap": "^0.14.3",
     "angular-cookies": "^1.5.x",
@@ -36,10 +36,9 @@
     "sidebar-v2": "^0.2.1",
     "classie": "^1.0.1",
     "xmlToJSON.js": "^1.3.2"
-
   },
   "resolutions": {
-    "angular": "^1.5.x",
+    "angular": "1.5.0-rc.0",
     "angular-bootstrap": "^0.14.3"
   }
 }

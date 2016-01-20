@@ -27,7 +27,9 @@ angular.module('core').directive('leftMenu', function (MenuService) {
 
         scope.menuHover = function (event) {
           MenuService.setShowAll(true);
-          scope.toggleOverlayFunction('overlay');
+          //if(!scope.showAll) {
+            scope.toggleOverlayFunction('overlay');
+          //}
         };
         scope.menuToggle = function (event) {
           if (event.target.id !== "triggerMenu") {
