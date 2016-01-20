@@ -93,8 +93,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.filters = true;
     $scope.censusDataTractLayer = true;
     $scope.googlePlacesLayer = false;
-    //$scope.toggleProjectDetails = false;
-    $scope.sidebarToggle = false;
 
 
     //service that returns public front end keys
@@ -287,41 +285,19 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
       };
 
-      //map.on('click', function (e) {
-      //  //console.log('click event', e);
-      //  if ($scope.menuOpen) {
-      //    MenuService.setShowAll(false);
-      //    MenuService.setShowPart(false);
-      //    $scope.shadeMap = false;
-      //  } else {
-      //    console.log('map click!');
-      //    //$scope.overlayActive = false;
-      //    MenuService.setShowAll(false);
-      //    MenuService.setShowPart(false);
-      //  }
-      //});
-
       $scope.getProjectMarkers = function (markerData) {
       };
     };
 
-    $scope.toggleSidebar = false;
     var popupIndex = 0;
     var popupMenuToggle = function (e) {
       if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
         $scope.toggleOverlayFunction('menu-closed');
-        //$scope.populateStorySummary($scope.projectDetails);
-        //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
-        $scope.toggleSidebar = true;
       } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
       } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        //$scope.populateStorySummary($scope.projectDetails);
-        //$scope.sidebar.open('details');
         popupIndex = e.target._leaflet_id;
       } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-        $scope.sidebar.close();
         popupIndex = 0;
       }
     };
