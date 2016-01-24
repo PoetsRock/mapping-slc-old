@@ -157,14 +157,12 @@
 
 .main-overlay {
     width: 90%;
-    /*height: 60rem;*/
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
-    /*border-radius: 20px;*/
-    /*border: 3px solid #fff;*/
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    margin: 5% auto;
-    overflow: visible;
+    margin: 25% 5% 5% 5%;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 20px;
     position: relative;
     z-index: 2;
@@ -323,3 +321,101 @@ span.animate-small-logo div:hover {
 }
 
 
+
+@-webkit-keyframes slideLeft {
+    0% {
+        -webkit-transform: translate(0);
+        -moz-transform: translate(0);
+        -ms-transform: translate(0);
+        -o-transform: translate(0);
+        transform: translate(0);
+    }
+    100% {
+        -webkit-transform: translate(100%);
+        -moz-transform: translate(100%);
+        -ms-transform: translate(100%);
+        -o-transform: translate(100%);
+        transform: translate(100%);
+
+    }
+}
+
+@-webkit-keyframes slideRight {
+    0% {
+        -webkit-transform: translate(0);
+        -moz-transform: translate(0);
+        -ms-transform: translate(0);
+        -o-transform: translate(0);
+        transform: translate(0);
+    }
+    100% {
+        -webkit-transform: translate(100%);
+        -moz-transform: translate(100%);
+        -ms-transform: translate(100%);
+        -o-transform: translate(100%);
+        transform: translate(100%);
+    }
+}
+
+
+feature-side-bar .ng-enter, .project-sidebar .ng-enter, .project-sidebar > .ng-enter, .menu-top-level .ng-enter {
+    animation: slideLeft 1.5s both ease-in;
+}
+
+.project-sidebar .ng-hide, .menu-top-level .ng-enter {
+    animation: slideRight 1.5s both ease-in;
+}
+
+
+.project-sidebar.row.ng-enter, .project-sidebar.row.ng-leave {
+    position: absolute;
+    left: 0;
+    right: 0;
+    -webkit-transition:all 2s ease-in-out;
+    transition:all .75s ease-in-out;
+}
+
+.project-sidebar.row.ng-enter {
+    opacity: 0;
+}
+
+.project-sidebar.row.ng-enter-active {
+    opacity: 1;
+}
+
+.project-sidebar.row.ng-leave {
+    opacity: 1;
+}
+
+.project-sidebar.row.ng-leave-active {
+    opacity: 0;
+}
+
+
+
+
+
+
+[ui-view].ng-enter, [ui-view].ng-leave {
+    position: absolute;
+    left: 0;
+    right: 0;
+    -webkit-transition:all 2s ease-in-out;
+    transition:all .75s ease-in-out;
+}
+
+[ui-view].ng-enter {
+    opacity: 0;
+}
+
+[ui-view].ng-enter-active {
+    opacity: 1;
+}
+
+[ui-view].ng-leave {
+    opacity: 1;
+}
+
+[ui-view].ng-leave-active {
+    opacity: 0;
+}

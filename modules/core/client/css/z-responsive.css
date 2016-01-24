@@ -9,7 +9,8 @@
     }
 
     .main-overlay {
-        overflow: visible;
+        overflow-x: scroll;
+        overflow-y: auto;
     }
 
     .footer-overlay form {
@@ -141,6 +142,12 @@
         margin-top: 15px;
     }
 
+}
+
+@media (mAX-width: 691px) {
+    .footer-overlay {
+
+    }
 }
 
 .core submit-project-directive a {

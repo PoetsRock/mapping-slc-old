@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -22,7 +22,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 
     $scope.init = function () {
-      $scope.publishedProjects();
+      $scope.publishedProjectsFn();
     };
 
     $scope.initSubmissionStatus = function () {
@@ -78,6 +78,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         });
     };
 
+
     $scope.publishProject = function () {
       //todo need to call on a confirm modal first
       $scope.confirmPublishModal();
@@ -108,16 +109,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     // Find a list of all published projects
-    $scope.publishedProjects = function () {
-      $http.get('/api/v1/projects/published').
-      success(function (publishedProjects) {
-        $scope.publishedProjects = publishedProjects;
-        console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
-      }).
-      error(function (data, status) {
-
+    $scope.publishedProjectsFn = function () {
+      publishedProjectsService.query(
+        function(publishedProjects) {
+          $scope.publishedProjects = publishedProjects;
+          console.log('$scope.publishedProjects:::::::::INSIDE\n', $scope.publishedProjects);
+          return $scope.publishedProjects;
       });
     };
+    console.log('$scope.publishedProjects:::::::::OUTSIDE\n', $scope.publishedProjects);
 
     // Create new Project
     $scope.create = function (isValid) {
@@ -180,7 +180,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     // Update existing Project
-    $scope.update = function () {
+    $scope.update = function (isValid) {
+      $scope.error = null;
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'projectForm');
+        return false;
+      }
+
       var project = $scope.project;
       project.$update(function (response) {
         if (response.$resolved) {
@@ -412,9 +418,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     /**
      * nlp
      **/
-      //$scope.update()
     $scope.nlpData = null;
-    var nlpSampleText = 'My father worked for the Union Pacific railroad for nearly thirty-five years. For most of my life, he was a yardmaster , a job that entailed maintaining perpetual radio contact with trains approaching and departing the railyard, ensuring that there were no accidents and that the endless train traffic was routed for unloading, repair, or continuation as efficiently as possible. Much like an air traffic controller, he worked in a tower. It was perhaps six or seven stories tall, straddled by tracks on either side, and it gave him a birds-eye view of the yard and nearly every human, animal, or mechanical movement within it. Every day for most of his working life, he climbed the zig-zagging stories of steel grate stairs to the small box overlooking an enormous hub of simultaneous movement and stagnation, the flux of capitalism and the slow rot of industry. Since the day he retired over eight years ago, I have never heard him utter a word about his career or workplace unless asked about it. When told that Top End, the yard in which he worked most of his career, was shutting down and that his tower would be demolished to make way for an enormous Utah Transit Authority hub, he merely shrugged and moved on to the Roper Yard in South Salt Lake, where he spent a couple more years guiding trains.';
+
     $scope.processNlpData = function () {
       $http.get('api/v1/nlp').
       success(function (nlpData) {

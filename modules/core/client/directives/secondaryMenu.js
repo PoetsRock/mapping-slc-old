@@ -9,7 +9,6 @@ angular.module('core').directive('secondaryMenuDirective', function () {
 
     controller: function (Authentication, $scope) {
       $scope.user = Authentication.user;
-      //$scope.secondMenuOpened = false;
       $scope.toggleSecondMenu = false;
     }
 
