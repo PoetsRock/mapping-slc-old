@@ -194,6 +194,31 @@ div.list-group > a > div {
     animation:slideOutLeft 0.5s both ease;
 }
 
+.ck-editor {
+    max-width: 890px;
+    left: 10px;
+    position: relative;
+}
+
+.ck-editor label {
+    color: #6a7989;
+}
+
+.ck-editor .controls {
+    margin: 10px 0;
+}
+
+
+.cke_wysiwyg, .cke_chrome, #story.cke_1 .cke_chrome, #cke_story {
+    border: solid 4px rgb(2,58,49);
+}
+
+
+
+
+
+
+
 /* ANIMATIONS
 ============================================================================= */
 /* slide out to the left */

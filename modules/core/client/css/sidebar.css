@@ -1,0 +1,30 @@
+
+/* feature sidebar */
+.project-sidebar {
+    z-index: 100;
+    height: 100%;
+    position: absolute;
+    background: #1F1D1D;
+    padding: 20px 20px;
+    width: 20%;
+    right: 0;
+    opacity: 1;
+    color: #cdcdcd;
+}
+
+.fa-chevron-right.project-close {
+    font-size: 3rem;
+    margin: 3% 0;
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}
+
+.fa-chevron-right.project-close:hover {
+    color: rgba(2, 58, 49, 1);
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}

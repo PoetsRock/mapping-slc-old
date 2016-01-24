@@ -33,7 +33,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.markerData = null;
 
 
-
     /**
      *
      * Animation Functionality
@@ -49,7 +48,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.shadeMap = false;
 
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
-    console.log('toggleOverlayFunction::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo);
+      console.log('toggleOverlayFunction::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo);
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
@@ -102,8 +101,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       });
 
     /**
-    **  call map and add functionality
-    **/
+     **  call map and add functionality
+     **/
     var mapFunction = function (mapboxKey, mapboxAccessToken) {
 
       //creates a Mapbox map
@@ -114,23 +113,23 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
       var map = L.mapbox.map('map', null, {
           infoControl: false, attributionControl: false,
-          legendControl: { position: 'bottomleft' }
-      })
-      .on('click', function (e) {
+          legendControl: {position: 'bottomleft'}
+        })
+        .on('click', function (e) {
 
-        if ($scope.showAll) {
-          console.log('map click!::::: if ($scope.showAll)  :::: `e`\n', e);
-          MenuService.setShowAll(false);
-          //$rootScope.$broadcast('MenuService.update', open.all = false);
-          $scope.showAll = false;
-          $scope.shadeMap = false;
-        } else {
-          console.log('`$scope.showAll = false` map click!  `e`\n', e);
-          //$scope.overlayActive = false;
-        }
-      })
-      .setView([40.7630772, -111.8689467], 12)
-      .addControl(L.control.zoom({position: 'topright'}));
+          if ($scope.showAll) {
+            console.log('map click!::::: if ($scope.showAll)  :::: `e`\n', e);
+            MenuService.setShowAll(false);
+            //$rootScope.$broadcast('MenuService.update', open.all = false);
+            $scope.showAll = false;
+            $scope.shadeMap = false;
+          } else {
+            console.log('`$scope.showAll = false` map click!  `e`\n', e);
+            //$scope.overlayActive = false;
+          }
+        })
+        .setView([40.7630772, -111.8689467], 12)
+        .addControl(L.control.zoom({position: 'topright'}));
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
@@ -154,20 +153,22 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       L.control.layers(layers).addTo(map);
 
 
-
-    //BEGIN toggle map legend
+      //BEGIN toggle map legend
       var legend = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>(the world\'s best maps) & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
 
-      map.getContainer().querySelector('#legend').onclick = function() {
-        if (this.className === 'active') {
-          map.legendControl.removeLegend(legend);
-          this.className = '';
-        } else {
-          map.legendControl.addLegend(legend);
-          this.className = 'active';
-        }
-        return false;
-      };
+
+      //map.getContainer().querySelector('#legend').onclick = function () {
+      //  if (this.className === 'active') {
+      //    map.legendControl.removeLegend(legend);
+      //    this.className = '';
+      //  } else {
+      //    map.legendControl.addLegend(legend);
+      //    this.className = 'active';
+      //  }
+      //  return false;
+      //};
+
+
 
       // Connect check boxes to ui functions
       function toggle(control, element) {
@@ -179,7 +180,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           element.className = 'active';
         }
       }
-    // END toggle map legend
+
+      // END toggle map legend
 
       //service that returns project markers
       MarkerDataService.getMarkerData()
@@ -238,15 +240,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             //create toogle for marker event that toggles sidebar on marker click
             .on('click', function (e) {
               $scope.$apply(function () {
-                //console.log('on click, `e`:\n', e, '\n\n');
-                $scope.storyEvent = e.target._geojson.properties;
-                 $scope.$broadcast('CurrentStory', $scope.storyEvent);
+                $scope.projectProperties = e.target._geojson.properties;
+                $scope.markerId = e.target._leaflet_id;
+                $scope.showSidebar($scope.markerId, $scope.projectProperties);
 
-                //console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
 
-                console.log('on click `$scope.storyEvent`:\n', $scope.storyEvent, '\n\n');
-                console.log('on click `$scope.projectMarker`:\n', $scope.projectMarker, '\n\n');
-                console.log('on click `$scope.markerData`:\n', $scope.markerData, '\n\n');
+                $scope.$broadcast('CurrentStory', $scope.projectProperties);
+
 
               });
               map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked

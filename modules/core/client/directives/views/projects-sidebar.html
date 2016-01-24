@@ -1,6 +1,6 @@
-<div class=" project-sidebar row" ng-show="show">
-    <a  class="project-close" href="#" ng-click="hide()">&#10005;</a>
+<div class="project-sidebar row" data-ng-show="toggleSidebar">
+    <i class="fa fa-chevron-right project-close" ng-click="hideSidebar()"></i>
     <h3>{{project.title}}</h3>
-    <img ng-src="{{project.mainImgThumbnail}}" />
+    <img data-ng-src="{{project.mainImgThumbnail}}"/>
     <p>{{project.summary}}</p>
 </div>

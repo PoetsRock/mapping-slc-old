@@ -1,20 +1,21 @@
 'use strict';
 
-angular.module('projects').service('PublishingService', ['$http',
-  function ($http) {
-
-    this.getPublishedProjects = function () {
-      console.log('publishing service');
-      $http.get('/api/v1/projects/published');
-      //.success(function (data) {
-      //  console.log('published list data:\n', data);
-      //  return data;
-      //}).
-      //error(function (data, error) {
-      //  console.log('publishing error:\n', data, '\n', error);
-      //});
-
-    };
-
+//Projects service used to communicate Projects REST endpoints
+angular.module('projects').factory('publishedProjectsService', ['$resource',
+  function($resource) {
+    return $resource('api/v1/projects/published', {
+        update: {
+          method: 'PUT'
+        }
+      }, {
+        create: {
+          method: 'POST'
+        }
+      }, {
+        read: {
+          method: 'GET'
+        }
+      }
+    );
   }
 ]);
