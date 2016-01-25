@@ -48,7 +48,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.shadeMap = false;
 
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
-      console.log('toggleOverlayFunction::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo);
+      console.log('::::::toggleOverlayFunction::::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo);
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
@@ -122,7 +122,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             MenuService.setShowAll(false);
             //$rootScope.$broadcast('MenuService.update', open.all = false);
             $scope.showAll = false;
-            $scope.shadeMap = false;
+            //$scope.shadeMap = false;
           } else {
             console.log('`$scope.showAll = false` map click!  `e`\n', e);
             //$scope.overlayActive = false;
