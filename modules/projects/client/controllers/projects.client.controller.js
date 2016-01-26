@@ -18,6 +18,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.override = false;
     $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
+    //$scope.publishedProjects;
     //$scope.project = {};
 
 
@@ -108,15 +109,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
+    $scope.publishedProjects = [];
+
+    //// Find a list of all published projects
+    //$scope.publishedProjectsFn = function () {
+    //  publishedProjectsService.query(
+    //    function(publishedProjects) {
+    //      $scope.publishedProjects = publishedProjects;
+    //      console.log('$scope.publishedProjects:::::::::INSIDE\n', $scope.publishedProjects);
+    //      //return $scope.publishedProjects;
+    //  });
+    //};
+
     // Find a list of all published projects
     $scope.publishedProjectsFn = function () {
-      publishedProjectsService.query(
-        function(publishedProjects) {
-          $scope.publishedProjects = publishedProjects;
-          console.log('$scope.publishedProjects:::::::::INSIDE\n', $scope.publishedProjects);
+      $http.get('/api/v1/projects/published', {cache:true})
+        .then(function (publishedProjects) {
+          $scope.publishedProjects = publishedProjects.data;
+          console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
           return $scope.publishedProjects;
       });
     };
+
     console.log('$scope.publishedProjects:::::::::OUTSIDE\n', $scope.publishedProjects);
 
     // Create new Project
