@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('projects').service('getUserFavorites', ['$scope', '$http',
-  function ($scope, $http) {
+angular.module('projects').service('getUserFavorites', ['$http',
+  function ($http) {
       this.getUserFavoriteStories = function (userFavoriteProjects, projectId) {
         userFavoriteProjects.forEach(function (userFavoriteProject) {
           if (userFavoriteProject === projectId) {

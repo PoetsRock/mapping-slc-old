@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'getUserFavorites',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, getUserFavorites) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -109,29 +109,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
-    $scope.publishedProjects = [];
-
-    //// Find a list of all published projects
-    //$scope.publishedProjectsFn = function () {
-    //  publishedProjectsService.query(
-    //    function(publishedProjects) {
-    //      $scope.publishedProjects = publishedProjects;
-    //      console.log('$scope.publishedProjects:::::::::INSIDE\n', $scope.publishedProjects);
-    //      //return $scope.publishedProjects;
-    //  });
-    //};
 
     // Find a list of all published projects
+    $scope.publishedProjects = [];
     $scope.publishedProjectsFn = function () {
       $http.get('/api/v1/projects/published', {cache:true})
         .then(function (publishedProjects) {
           $scope.publishedProjects = publishedProjects.data;
-          console.log('$scope.publishedProjects:::::::::\n', $scope.publishedProjects);
-          return $scope.publishedProjects;
       });
     };
 
-    console.log('$scope.publishedProjects:::::::::OUTSIDE\n', $scope.publishedProjects);
 
     // Create new Project
     $scope.create = function (isValid) {
@@ -267,7 +254,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             $scope.images.push(project.imageGallery[i]);
           }
         }
-        getUserFavoriteStories($scope.user.favorites, $scope.project.id);
+        getUserFavoriteStories($scope.project.user.favorites, $scope.project.id);
       });
 
     };
