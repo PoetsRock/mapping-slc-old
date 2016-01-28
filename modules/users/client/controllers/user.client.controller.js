@@ -66,6 +66,13 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
         });
     };
 
+    var removeItemFromArray = item => {
+      var updatedFavProjects = $scope.user.favorites.indexOf(item);
+      if (updatedFavProjects !== -1) {
+        $scope.user.favorites.splice(updatedFavProjects, 1);
+      }
+    };
+
     /**
      * Remove a User's Favorite projects
      */
@@ -74,10 +81,12 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
         function (event) {
           event.preventDefault();
           $scope.isFavorite = false;
+          removeItemFromArray(projectId);
           var updateFavoriteObj = {favorite: projectId, isFavorite: false};
           $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
         });
     };
+
 
     //Find existing project submissions by UserId
     $scope.findCurrentUserSubmissions = function () {

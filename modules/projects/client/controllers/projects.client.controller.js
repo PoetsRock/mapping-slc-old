@@ -332,14 +332,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       });
     };
+
     $scope.toggleFavProject = function () {
       $scope.isFavorite = !$scope.isFavorite;
-
+      console.log('$scope.user.favorites:\n', $scope.user.favorites);
       var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
       if (!$scope.isFavorite) {
         updateFavoriteObj.isFavorite = false;
+        removeItemFromArray($scope.project.id);
+      } else {
+        addItemToArray($scope.project.id);
       }
       $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+    };
+
+
+    var removeItemFromArray = item => {
+      var updatedFavProjects = $scope.user.favorites.indexOf(item);
+      if (updatedFavProjects !== -1) {
+        $scope.user.favorites.splice(updatedFavProjects, 1);
+      }
+    };
+
+    var addItemToArray = addedItem => {
+      $scope.user.favorites.push(addedItem);
     };
 
 
