@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 var _ = require('lodash'),
   fs = require('fs'),
@@ -17,9 +17,7 @@ var _ = require('lodash'),
  */
 exports.update = function (req, res) {
   // Init Variables
-
   var user = req.user;
-
 
   // For security measurement we remove the roles from the req.body object
   if (req.body && req.body.roles !== undefined) {
@@ -38,9 +36,7 @@ exports.update = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-
         req.login(user, function (err) {
-
           if (err) {
             res.status(400).send(err);
           } else {

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 //import { admin } from './admin.server.controller.js';
 var path = require('path'),
