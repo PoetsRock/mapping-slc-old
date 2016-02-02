@@ -79,7 +79,6 @@ exports.uploadUserProfileImage = function (req, res) {
   res.jsonp(credentials);
 
 
-
   ////now save url to mongoDb
 
   //user.profileImageURL = 'https://s3-' + s3.region + '.amazonaws.com/' + s3.bucket + '/' + s3.directory.user + '/' + user._id + '/' + fileName;
@@ -91,9 +90,6 @@ exports.uploadUserProfileImage = function (req, res) {
   //Users.update(updateUser);
 
 };
-
-
-
 
 
 /**
@@ -129,49 +125,49 @@ exports.getS3File = function (req, res) {
   console.log('userProfileImage:\n', userProfileImage);
 
 
-  s3File.getObject(params, function(err, callback) {
+  s3File.getObject(params, function (err, callback) {
     require('string_decoder');
     if (err) {
-        console.log('err:\n', err);
-        res.send({
-          message: 'ERROR, yo: ' + err
-        })
-      } else {
-        console.log('callback:\n', callback, '\n\n\n');
-        console.log('callback.Body:\n', callback.Body);
+      console.log('err:\n', err);
+      res.send({
+        message: 'ERROR, yo: ' + err
+      })
+    } else {
+      console.log('callback:\n', callback, '\n\n\n');
+      console.log('callback.Body:\n', callback.Body);
 
-        var imageAsBase64Array = callback.Body.toString('base64');
-        var imageAsUtf8 = callback.Body.toString('Utf8');
-        var imageToString = callback.Body.toString();
+      var imageAsBase64Array = callback.Body.toString('base64');
+      var imageAsUtf8 = callback.Body.toString('Utf8');
+      var imageToString = callback.Body.toString();
 
-        //var StringDecoder = require('string_decoder').StringDecoder;
-        //var decoder = new StringDecoder('utf8');
+      //var StringDecoder = require('string_decoder').StringDecoder;
+      //var decoder = new StringDecoder('utf8');
 
-        //var image = new Buffer(callback.Body);
-        //console.log(decoder.write(image));
-
-
-        ////var buf = new Buffer('test');
-        //var json = JSON.stringify(callback.Body);
-        //
-        ////console.log('json', json);
-        //// '{"type":"Buffer","data":[116,101,115,116]}'
-        //
-        //var image = JSON.parse(json, function(key, value) {
-        //  return value;
-        //  //return value && value.type === 'Buffer'
-        //  //  ? new Buffer(value.data)
-        //  //  : value;
-        //});
+      //var image = new Buffer(callback.Body);
+      //console.log(decoder.write(image));
 
 
-        res.status(200).send({
-          message: 'Success: Profile Image Delivered:\n',
-          fullResponse: callback,
-          imageAsBase64Array: imageAsBase64Array,
-          imageAsUtf8: imageAsUtf8,
-          imageObjectAsString: imageToString
-        });
+      ////var buf = new Buffer('test');
+      //var json = JSON.stringify(callback.Body);
+      //
+      ////console.log('json', json);
+      //// '{"type":"Buffer","data":[116,101,115,116]}'
+      //
+      //var image = JSON.parse(json, function(key, value) {
+      //  return value;
+      //  //return value && value.type === 'Buffer'
+      //  //  ? new Buffer(value.data)
+      //  //  : value;
+      //});
+
+
+      res.status(200).send({
+        message: 'Success: Profile Image Delivered:\n',
+        fullResponse: callback,
+        imageAsBase64Array: imageAsBase64Array,
+        imageAsUtf8: imageAsUtf8,
+        imageObjectAsString: imageToString
+      });
     }
   });
   //s3File.getObject(params).createReadStream().pipe(returnedFile);
@@ -184,8 +180,7 @@ exports.getS3File = function (req, res) {
  * upload user profile image to Amazon S3
  */
 
-exports.uploadUserProfileImageWithOptimization = function(req, res) {
-
+exports.uploadUserProfileImageWithOptimization = function (req, res) {
 
 
   var user = req.body.user;
@@ -194,7 +189,7 @@ exports.uploadUserProfileImageWithOptimization = function(req, res) {
   console.log('req  v2:\n', req);
   //console.log('req.body  v2:\n', req.body);
   //console.log('req.origFileName:\n', req.bufferImage);
-  var bufferImage = new Buffer(req.body.toString('base64'),'base64');
+  var bufferImage = new Buffer(req.body.toString('base64'), 'base64');
   //console.log('bufferImage  v2:\n', bufferImage);
 
   //var fileName = req.body.fileName;
@@ -211,7 +206,7 @@ exports.uploadUserProfileImageWithOptimization = function(req, res) {
     aws_secret_access_key: config.aws.s3Secret,
     region: s3.region,
     path: s3.bucket + '/' + path
-};
+  };
 
   //console.log('req.origFileName:\n', req.body.fileName);
 
@@ -230,9 +225,7 @@ exports.uploadUserProfileImageWithOptimization = function(req, res) {
     profileImageFileName: fileName,
     updated: Date.now()
   };
-  var options = {
-
-  };
+  var options = {};
   //call on mongoose Model.update function to update db
   User.update(query, propertiesToUpdate).exec();
 
@@ -240,7 +233,6 @@ exports.uploadUserProfileImageWithOptimization = function(req, res) {
   res.jsonp(source);
 
 };
-
 
 
 /**

@@ -10,11 +10,11 @@ var passport = require('passport'),
 module.exports = function (config) {
   // Use github strategy
   passport.use(new GithubStrategy({
-      clientID: config.github.clientID,
-      clientSecret: config.github.clientSecret,
-      callbackURL: config.github.callbackURL,
-      passReqToCallback: true
-    },
+    clientID: config.github.clientID,
+    clientSecret: config.github.clientSecret,
+    callbackURL: config.github.callbackURL,
+    passReqToCallback: true
+  },
     function (req, accessToken, refreshToken, profile, done) {
       // Set the provider data and include tokens
       var providerData = profile._json;
@@ -43,5 +43,5 @@ module.exports = function (config) {
 
       // Save the user OAuth profile
       users.saveOAuthUserProfile(req, providerUserProfile, done);
-  }));
+    }));
 };

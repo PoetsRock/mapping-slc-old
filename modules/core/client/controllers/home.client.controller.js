@@ -11,7 +11,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //get featured projects as array
     $scope.featuredProjects = [];
     var getFeatured = function () {
-      $http.get('/api/v1/featured', {cache: true})
+      $http.get('/api/v1/featured', { cache: true })
         .then(function (resolved, rejected) {
           $scope.featuredProjects = resolved.data;
           //console.log('$scope.featuredProjects:\n', $scope.featuredProjects);
@@ -93,7 +93,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.censusDataTractLayer = true;
     $scope.googlePlacesLayer = false;
 
-
     //service that returns public front end keys
     ApiKeys.getApiKeys()
       .then(function (resolved, rejected) {
@@ -112,24 +111,24 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       var info = document.getElementById('info');
 
       var map = L.mapbox.map('map', null, {
-          infoControl: false, attributionControl: false,
-          legendControl: {position: 'bottomleft'}
-        })
-        .on('click', function (e) {
+        infoControl: false, attributionControl: false,
+        legendControl: { position: 'bottomleft' }
+      })
+      .on('click', function (e) {
 
-          if ($scope.showAll) {
-            console.log('map click!::::: if ($scope.showAll)  :::: `e`\n', e);
-            MenuService.setShowAll(false);
-            //$rootScope.$broadcast('MenuService.update', open.all = false);
-            $scope.showAll = false;
-            //$scope.shadeMap = false;
-          } else {
-            console.log('`$scope.showAll = false` map click!  `e`\n', e);
-            //$scope.overlayActive = false;
-          }
-        })
-        .setView([40.7630772, -111.8689467], 12)
-        .addControl(L.control.zoom({position: 'topright'}));
+        if ($scope.showAll) {
+          console.log('map click!::::: if ($scope.showAll)  :::: `e`\n', e);
+          MenuService.setShowAll(false);
+          //$rootScope.$broadcast('MenuService.update', open.all = false);
+          $scope.showAll = false;
+          //$scope.shadeMap = false;
+        } else {
+          console.log('`$scope.showAll = false` map click!  `e`\n', e);
+          //$scope.overlayActive = false;
+        }
+      })
+      .setView([40.7630772, -111.8689467], 12)
+      .addControl(L.control.zoom({ position: 'topright' }));
 
       var grayMap = L.mapbox.tileLayer('poetsrock.b06189bb'),
         mainMap = L.mapbox.tileLayer('poetsrock.la999il2'),
@@ -169,7 +168,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       //};
 
 
-
       // Connect check boxes to ui functions
       function toggle(control, element) {
         if (element.className === 'active') {
@@ -206,53 +204,67 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         for (var prop in markerData) {
 
           $scope.projectMarker = L.mapbox.featureLayer({
-              //var singleMarker = L.mapbox.featureLayer({
-              // this feature is in the GeoJSON format: see geojson.org for full specs
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                // coordinates here are in longitude, latitude order because
-                // x, y is the standard for GeoJSON and many formats
-                coordinates: [markerData[prop].lng, markerData[prop].lat]
-              },
-              properties: {
-                // one can customize markers by adding simplestyle properties
-                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-                'marker-size': 'large',
-                'marker-color': markerData[prop].markerColor,
-                //'marker-color': markerData.markerColor,
-                //'marker-symbol': markerData.markerSymbol,
-                'marker-symbol': 'marker-stroked',
-                projectId: markerData[prop]._id,
-                summary: markerData[prop].storySummary,
-                title: markerData[prop].title,
-                mainImage: markerData[prop].mainImage,
-                category: markerData[prop].category,
-                mapImage: markerData[prop].mapImage,
-                mainImgThumbnail: markerData[prop].mainImgThumbnail,
-                lat: markerData[prop].lat,
-                lng: markerData[prop].lng,
-                published: markerData[prop].createdOn,
-                leafletId: null,
-                arrayIndexId: index
-              }
-            })
-            //create toogle for marker event that toggles sidebar on marker click
-            .on('click', function (e) {
-              $scope.$apply(function () {
-                $scope.projectProperties = e.target._geojson.properties;
-                //$scope.markerId = e.target._leaflet_id;
-                //$scope.showSidebar($scope.markerId, $scope.projectProperties);
+            //var singleMarker = L.mapbox.featureLayer({
+            // this feature is in the GeoJSON format: see geojson.org for full specs
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              // coordinates here are in longitude, latitude order because
+              // x, y is the standard for GeoJSON and many formats
+              coordinates: [markerData[prop].lng, markerData[prop].lat]
+            },
+            properties: {
+              // one can customize markers by adding simplestyle properties
+              // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+              'marker-size': 'large',
+              'marker-color': markerData[prop].markerColor,
+              //'marker-color': markerData.markerColor,
+              //'marker-symbol': markerData.markerSymbol,
+              'marker-symbol': 'marker-stroked',
+              projectId: markerData[prop]._id,
+              summary: markerData[prop].storySummary,
+              title: markerData[prop].title,
+              mainImage: markerData[prop].mainImage,
+              category: markerData[prop].category,
+              mapImage: markerData[prop].mapImage,
+              mainImgThumbnail: markerData[prop].mainImgThumbnail,
+              lat: markerData[prop].lat,
+              lng: markerData[prop].lng,
+              published: markerData[prop].createdOn,
+              leafletId: null,
+              arrayIndexId: index
+            }
+          })
+          //create toogle for marker event that toggles sidebar on marker click
+          .on('click', function (e) {
+            $scope.$apply(function () {
+              $scope.projectProperties = e.target._geojson.properties;
+              //$scope.markerId = e.target._leaflet_id;
+              //$scope.showSidebar($scope.markerId, $scope.projectProperties);
 
 
-                $scope.$broadcast('CurrentStory', $scope.projectProperties);
+              $scope.$broadcast('CurrentStory', $scope.projectProperties);
 
-
-              });
-              map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
-              popupMenuToggle(e);
-              return $scope.projectMarker[prop];
             });
+
+            var popupIndex = 0;
+            var popupMenuToggle = function (e) {
+              if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
+                $scope.toggleOverlayFunction('menu-closed');
+                popupIndex = e.target._leaflet_id;
+              } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
+              } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
+                popupIndex = e.target._leaflet_id;
+              } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
+
+                popupIndex = 0;
+              }
+            };
+
+            map.panTo(e.layer.getLatLng()); //	center the map when a project marker is clicked
+            popupMenuToggle(e);
+            return $scope.projectMarker[prop];
+          });
 
           $scope.projectMarker.addTo(map);
           $scope.markerArray.push($scope.projectMarker);
@@ -265,16 +277,16 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       var style = {
         'stroke': true,
         'clickable': true,
-        'color': "#00D",
-        'fillColor': "#00D",
+        'color': '#00D',
+        'fillColor': '#00D',
         'weight': 1.0,
         'opacity': 0.2,
         'fillOpacity': 0.0,
         'className': ''  //String that sets custom class name on an element
       };
       var hoverStyle = {
-        'color': "#00D",
-        "fillOpacity": 0.5,
+        'color': '#00D',
+        'fillOpacity': 0.5,
         'weight': 1.0,
         'opacity': 0.2,
         'className': ''  //String that sets custom class name on an element
@@ -294,20 +306,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
       $scope.getProjectMarkers = function (markerData) {
       };
-    };
-
-    var popupIndex = 0;
-    var popupMenuToggle = function (e) {
-      if (!$scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        $scope.toggleOverlayFunction('menu-closed');
-        popupIndex = e.target._leaflet_id;
-      } else if (!$scope.menuOpen && popupIndex === e.target._leaflet_id) {
-      } else if ($scope.menuOpen && popupIndex !== e.target._leaflet_id) {
-        popupIndex = e.target._leaflet_id;
-      } else if ($scope.menuOpen && popupIndex === e.target._leaflet_id) {
-
-        popupIndex = 0;
-      }
     };
   }
 ]);

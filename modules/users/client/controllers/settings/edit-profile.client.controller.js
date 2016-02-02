@@ -55,7 +55,7 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     $scope.toggleEdit = false;
     $scope.toggleId = 0;
 
-    $scope.toggleEditFn = function(editNum) {
+    $scope.toggleEditFn = function (editNum) {
       $scope.toggleEdit = !$scope.toggle;
       $scope.toggleId = editNum;
     };
@@ -66,12 +66,12 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     };
 
     // Find a list of Users
-    $scope.find = function() {
+    $scope.find = function () {
       $scope.users = Users.query($scope.query);
     };
 
     // Find existing User
-    $scope.findOne = function() {
+    $scope.findOne = function () {
       $scope.userToEdit = UserData.get({
         userId: $stateParams.userId
       });

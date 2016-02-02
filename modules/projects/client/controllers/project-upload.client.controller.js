@@ -6,7 +6,7 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
     $scope.imageURL = $scope.user.profileImageURL;
     $scope.uploading = false;
 
-    $scope.onFileSelect = function(files) {
+    $scope.onFileSelect = function (files) {
 
       if (files.length > 0) {
         $scope.uploading = true;
@@ -18,13 +18,13 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
           user: $scope.user,
           project: $scope.project
         };
-        var configObj = {cache: true};
+        var configObj = { cache: true };
         $http.post('api/v1/s3/upload/project', query, configObj)
-          .success(function(result) {
+          .success(function (result) {
             console.log('result v1\n', result);
             Upload.upload({
               url: result.url, //s3Url
-              transformRequest: function(data, headersGetter) {
+              transformRequest: function (data, headersGetter) {
                 var headers = headersGetter();
                 delete headers.Authorization;
                 console.log('data v1\n', data);
@@ -33,11 +33,11 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
               fields: result.fields, //credentials
               method: 'POST',
               file: files[0]
-            }).progress(function(evt) {
+            }).progress(function (evt) {
 
               console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
 
-            }).success(function(data, status, headers, config) {
+            }).success(function (data, status, headers, config) {
 
               // file is uploaded successfully
               $scope.uploading = false;
@@ -45,7 +45,7 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
               console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
 
               // need to set image on front end
-              if(data && data.s3Url) {
+              if (data && data.s3Url) {
                 console.log('data v2\n', data);
                 $scope.user.profileImageURL = data.s3Url;
                 $scope.imageURL = data.s3Url;
@@ -65,17 +65,17 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
               // and need to update mongodb
 
 
-            }).error(function() {
+            }).error(function () {
 
             });
 
-            if(result && result.s3Url) {
+            if (result && result.s3Url) {
               console.log('result v2\n', result);
               $scope.user.profileImageURL = result.s3Url;
               $scope.imageURL = result.s3Url;
             }
           })
-          .error(function(data, status, headers, config) {
+          .error(function (data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
             $scope.uploading = false;

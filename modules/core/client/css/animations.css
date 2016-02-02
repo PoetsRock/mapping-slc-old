@@ -32,7 +32,6 @@
     }
 }
 
-
 @-o-keyframes animate-footer-overlay {
     0% {
         transform: scale(1, 1);
@@ -62,31 +61,31 @@
 }
 
 @keyframes animate-footer-overlay {
-0% {
-    transform: scale(1, 1);
-}
-49% {
-    transform: scale(0.98, 0.05) translate(0, -2000%);
-    opacity: 1;
-}
-50% {
-    opacity: 0;
-}
-75% {
-    transform: scale(0.75, 0.03) translate(0, -4000%);
-}
+    0% {
+        transform: scale(1, 1);
+    }
+    49% {
+        transform: scale(0.98, 0.05) translate(0, -2000%);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    75% {
+        transform: scale(0.75, 0.03) translate(0, -4000%);
+    }
 
-97% {
-    transform: scale(0.5, 0.02) translate(0, -6000%);
+    97% {
+        transform: scale(0.5, 0.02) translate(0, -6000%);
 
-}
-98% {
-    transform: scale(0.45, 0.01);
-}
-100% {
-    opacity: 0;
-    transform: scale(0.45, 0);
-}
+    }
+    98% {
+        transform: scale(0.45, 0.01);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.45, 0);
+    }
 }
 
 .footer-overlay {
@@ -98,7 +97,7 @@
     padding: 10px 5px;
     overflow: visible !important; /* Has to be !important only if you're using an on/off switch */
     position: relative;
-    width:90%;
+    width: 90%;
     /*height: 8rem;*/
     height: 100%;
     z-index: 2;
@@ -113,7 +112,6 @@
     animation: animate-footer-overlay 0.5s ease forwards;
 }
 
-
 /***
 **
 **  MAIN OVERLAY ANIMATION BEGIN
@@ -121,26 +119,26 @@
 ***/
 
 /*@-webkit-keyframes animate-main-overlay {*/
-    /*0% {*/
-        /*transform: scale(1, 1);*/
-    /*}*/
-    /*99% {*/
-        /*transform: scale(0.035, 0.055) translate(-1420%, -900%);*/
-    /*}*/
-    /*100% {*/
-        /*transform: scale(0, 0);*/
-    /*}*/
+/*0% {*/
+/*transform: scale(1, 1);*/
+/*}*/
+/*99% {*/
+/*transform: scale(0.035, 0.055) translate(-1420%, -900%);*/
+/*}*/
+/*100% {*/
+/*transform: scale(0, 0);*/
+/*}*/
 /*}*/
 /*@-o-keyframes animate-main-overlay {*/
-    /*0% {*/
-        /*transform: scale(1, 1);*/
-    /*}*/
-    /*99% {*/
-        /*transform: scale(0.035, 0.055) translate(-1420%, -900%);*/
-    /*}*/
-    /*100% {*/
-        /*transform: scale(0, 0);*/
-    /*}*/
+/*0% {*/
+/*transform: scale(1, 1);*/
+/*}*/
+/*99% {*/
+/*transform: scale(0.035, 0.055) translate(-1420%, -900%);*/
+/*}*/
+/*100% {*/
+/*transform: scale(0, 0);*/
+/*}*/
 /*}*/
 @keyframes animate-main-overlay {
     0% {
@@ -185,7 +183,6 @@
     animation-delay: 0.15s;
 }
 
-
 /***
 **
 **  ANIMATION THAT TRANSITIONS FROM MAIN AND FOOTER OVERLAYS INTO SMALL LOGO BEGIN
@@ -211,7 +208,6 @@
         background-image: url(../img/brand/mapping_150w.png);
     }
 }
-
 
 @-o-keyframes animate-logo {
     0% {
@@ -320,128 +316,12 @@ span.animate-small-logo div:hover {
     animation-delay: 1.16s;
 }
 
-
-
-/*@-webkit-keyframes slideLeft {*/
-    /*0% {*/
-        /*-webkit-transform: translate(0);*/
-        /*-moz-transform: translate(0);*/
-        /*-ms-transform: translate(0);*/
-        /*-o-transform: translate(0);*/
-        /*transform: translate(0);*/
-    /*}*/
-    /*100% {*/
-        /*-webkit-transform: translate(100%);*/
-        /*-moz-transform: translate(100%);*/
-        /*-ms-transform: translate(100%);*/
-        /*-o-transform: translate(100%);*/
-        /*transform: translate(100%);*/
-
-    /*}*/
-/*}*/
-
-/*@-webkit-keyframes slideRight {*/
-    /*0% {*/
-        /*-webkit-transform: translate(0);*/
-        /*-moz-transform: translate(0);*/
-        /*-ms-transform: translate(0);*/
-        /*-o-transform: translate(0);*/
-        /*transform: translate(0);*/
-    /*}*/
-    /*100% {*/
-        /*-webkit-transform: translate(100%);*/
-        /*-moz-transform: translate(100%);*/
-        /*-ms-transform: translate(100%);*/
-        /*-o-transform: translate(100%);*/
-        /*transform: translate(100%);*/
-    /*}*/
-/*}*/
-
-.project-sidebar.ng-animate {
-    transition:2.5s linear all;
-}
-
-.project-sidebar.ng-enter.ng-enter {
-    -webkit-transform: translate(0);
-    -moz-transform: translate(0);
-    -ms-transform: translate(0);
-    -o-transform: translate(0);
-    transform: translate(0);
-}
-
-.project-sidebar.ng-enter.ng-enter-active {
-    -webkit-transform: translate(100%);
-    -moz-transform: translate(100%);
-    -ms-transform: translate(100%);
-    -o-transform: translate(100%);
-    transform: translate(100%);
-}
-
-
-.project-sidebar.ng-leave {
-    -webkit-transform: translate(100%);
-    -moz-transform: translate(100%);
-    -ms-transform: translate(100%);
-    -o-transform: translate(100%);
-    transform: translate(100%);
-}
-
-.project-sidebar.ng-leave.ng-leave-active {
-    -webkit-transform: translate(0);
-    -moz-transform: translate(0);
-    -ms-transform: translate(0);
-    -o-transform: translate(0);
-    transform: translate(0);
-
-}
-
-
-
-
-/*feature-side-bar .ng-enter, .project-sidebar .ng-enter, .project-sidebar > .ng-enter, .menu-top-level .ng-enter,  {*/
-    /*animation: slideLeft 1.5s both ease-in;*/
-/*}*/
-
-/*.project-sidebar .ng-hide, .menu-top-level .ng-enter {*/
-    /*animation: slideRight 1.5s both ease-in;*/
-/*}*/
-
-
-/*.project-sidebar.row.ng-enter, .project-sidebar.row.ng-leave {*/
-    /*position: absolute;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*-webkit-transition:all 2s ease-in-out;*/
-    /*transition:all .75s ease-in-out;*/
-/*}*/
-
-/*.project-sidebar.row.ng-enter {*/
-    /*opacity: 0;*/
-/*}*/
-
-/*.project-sidebar.row.ng-enter-active {*/
-    /*opacity: 1;*/
-/*}*/
-
-/*.project-sidebar.row.ng-leave {*/
-    /*opacity: 1;*/
-/*}*/
-
-/*.project-sidebar.row.ng-leave-active {*/
-    /*opacity: 0;*/
-/*}*/
-
-
-
-
-
-
 [ui-view].ng-enter, [ui-view].ng-leave {
     position: absolute;
     left: 0;
     right: 0;
-    -webkit-transition:all 2s ease-in-out;
-    transition:all .75s ease-in-out;
+    -webkit-transition: all 2s ease-in-out;
+    transition: all .75s ease-in-out;
 }
 
 [ui-view].ng-enter {

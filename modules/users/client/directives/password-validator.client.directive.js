@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('users')
-  .directive('passwordValidator', ['PasswordValidator', function(PasswordValidator) {
+  .directive('passwordValidator', ['PasswordValidator', function (PasswordValidator) {
     return {
       require: 'ngModel',
-      link: function(scope, element, attrs, ngModel) {
+      link: function (scope, element, attrs, ngModel) {
         ngModel.$validators.requirements = function (password) {
           var status = true;
           if (password) {

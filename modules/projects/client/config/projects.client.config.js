@@ -2,11 +2,11 @@
 
 //Setting up route
 angular.module('projects').config(['$compileProvider',
-      function ($compileProvider) {
+  function ($compileProvider) {
 
-        //turn off debugging for  prod
-        // https://docs.angularjs.org/guide/production
-        $compileProvider.debugInfoEnabled(false);
+    //turn off debugging for  prod
+    // https://docs.angularjs.org/guide/production
+    $compileProvider.debugInfoEnabled(false);
   }
 ]);
 

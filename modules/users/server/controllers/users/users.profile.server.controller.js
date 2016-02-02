@@ -57,7 +57,7 @@ exports.update = function (req, res) {
  */
 
 exports.getFavorites = function (req, res) {
-  User.find({'_id': req.profile._id})
+  User.find({ '_id': req.profile._id })
     .select('favorites')
     .exec(function (err, favoriteProjectsIdsTemp) {
       if (err) {
@@ -67,8 +67,8 @@ exports.getFavorites = function (req, res) {
       }
       let favoriteProjectsIds = favoriteProjectsIdsTemp[0].favorites;
       Project.find({
-        '_id': { $in: favoriteProjectsIds }
-      })
+          '_id': { $in: favoriteProjectsIds }
+        })
         .exec(function (err, favoriteProjects) {
           if (err) {
             return res.status(400).send({

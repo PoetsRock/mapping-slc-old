@@ -3,7 +3,7 @@
 module.exports = function (app) {
   // User Routes
   var users = require('../controllers/users.server.controller'),
-      profile = require('../controllers/users/users.profile.server.controller.js');
+    profile = require('../controllers/users/users.profile.server.controller.js');
 
 
   // User's Favorite Projects Route

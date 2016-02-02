@@ -59,14 +59,14 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
      * Find a user's favorite projects
      */
     $scope.getFavorites = function () {
-      $http.get('/api/v1/users/' + $scope.user._id + '/favorites', {cache: true})
+      $http.get('/api/v1/users/' + $scope.user._id + '/favorites', { cache: true })
         .then(function (resolved, rejected) {
           console.log('resolved.data::::::\n', resolved.data);
           $scope.userFavorites = resolved.data;
         });
     };
 
-    var removeItemFromArray = item => {
+    var removeItemFromArray = function(item) {
       var updatedFavProjects = $scope.user.favorites.indexOf(item);
       if (updatedFavProjects !== -1) {
         $scope.user.favorites.splice(updatedFavProjects, 1);
@@ -82,7 +82,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
           event.preventDefault();
           $scope.isFavorite = false;
           removeItemFromArray(projectId);
-          var updateFavoriteObj = {favorite: projectId, isFavorite: false};
+          var updateFavoriteObj = { favorite: projectId, isFavorite: false };
           $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
         });
     };
@@ -114,7 +114,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
         return;
       }
       // Send email enter from input field to back end
-      $scope.users = Newsletter.query({email: $scope.subscribe.newsletter});
+      $scope.users = Newsletter.query({ email: $scope.subscribe.newsletter });
 
     };
 

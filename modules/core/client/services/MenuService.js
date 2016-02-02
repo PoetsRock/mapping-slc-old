@@ -4,10 +4,10 @@ angular.module('core').service('MenuService', ['$rootScope',
   function ($rootScope) {
 
     this.open = {
-      "part": false,
-      "all": false,
-      "none": false,
-      "chatSideClosed": false
+      'part': false,
+      'all': false,
+      'none': false,
+      'chatSideClosed': false
     };
 
     this.setShowPart = function (val) {
@@ -21,13 +21,13 @@ angular.module('core').service('MenuService', ['$rootScope',
       if (val) {
         this.open.part = false;
         this.open.none = false;
-      //} else if(!val && !this.open.part) {
-      //  $rootScope.toggleOverlayFunction('overlay');
+        //} else if(!val && !this.open.part) {
+        //  $rootScope.toggleOverlayFunction('overlay');
       }
       $rootScope.$broadcast('MenuService.update', this.open);
     };
 
-    this.setShowNone = function(val) {
+    this.setShowNone = function (val) {
       console.log('setShowNone\nval\n', val, '\n\n');
       this.open.none = val;
       if (val) {

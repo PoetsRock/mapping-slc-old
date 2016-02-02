@@ -12,7 +12,7 @@
     font-size: 1.3em;
 }
 
-.main-content-inner h1{
+.main-content-inner h1 {
     margin-bottom: 25px;
 }
 
@@ -37,6 +37,7 @@
 .contrib #grid-view div {
     margin: 7px;
 }
+
 .contrib #grid-view img {
     width: 6em;
     height: 6em;
@@ -57,7 +58,6 @@
     font-size: 1.6rem;
 }
 
-
 /**
 MODAL
 **/
@@ -68,10 +68,10 @@ MODAL
     -o-transform: translateY(20%);
     transform: translateY(20%);
 }
+
 .contributors .modal-body, body > div.modal.fade.ng-isolate-scope.lightbox-modal.in > div > div > section > div {
     background-color: rgba(0, 0, 0, 0.8);
 }
-
 
 .lightbox-image-caption {
     text-shadow: none;

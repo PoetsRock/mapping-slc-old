@@ -7,10 +7,10 @@ module.exports = function (app) {
     projects = require('../controllers/projects.server.controller'),
     mongoose = require('mongoose'),
     Project = mongoose.model('Project'),
-    //tractData = require('../models/data/utahTract.json'),
+  //tractData = require('../models/data/utahTract.json'),
     markerData = require('../models/project.server.model.js'),
     request = require('request'),
-    s3 = require('../controllers/s3.server.controller'),
+    //s3 = require('../controllers/s3.server.controller'),
     vimeo = require('../controllers/vimeo.server.controller');
 
 
@@ -77,7 +77,7 @@ module.exports = function (app) {
   // This is the search route, make a GET request on this endpoitn to return search results
   app.route('/api/v1/search').all(projectsPolicy.isAllowed)
     .post(function (req, res) {
-      Project.search({query: req.body.q}, function (err, results) {
+      Project.search({ query: req.body.q }, function (err, results) {
         res.send(results);
       });
     });
@@ -122,7 +122,7 @@ module.exports = function (app) {
       console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
 
       var environment = null;
-      if(process.env.NODE_ENV === 'production') {
+      if (process.env.NODE_ENV === 'production') {
         environment = process.env;
       } else {
         environment = require('../../../../config/env/local-development.js').FRONT_END;
@@ -147,27 +147,23 @@ module.exports = function (app) {
     });
 
 
-
   //test for middleware
   app.route('/api/v1/projects/:projectId/test')
     .put(projects.middleWareTest, projects.update);
 
 
-// Cloudinary File Storage and Opt
-  app.route('/api/v1/projects/upload')
-    .post(s3.uploadStream)
-    .get(s3.read)
-    .put(s3.update)
-    .delete(s3.delete);
-
-  app.route('/api/v1/users/upload')
-    .post(s3.uploadStream)
-    .get(s3.read)
-    .put(s3.update)
-    .delete(s3.delete);
-
-
-
+//// Cloudinary File Storage and Opt
+//  app.route('/api/v1/projects/upload')
+//    .post(s3.uploadStream)
+//    .get(s3.read)
+//    .put(s3.update)
+//    .delete(s3.delete);
+//
+//  app.route('/api/v1/users/upload')
+//    .post(s3.uploadStream)
+//    .get(s3.read)
+//    .put(s3.update)
+//    .delete(s3.delete);
 
 
   //route for getting the Featured Projects Array
@@ -179,12 +175,6 @@ module.exports = function (app) {
 
   app.route('/api/v1/projects/:projectId/featured/false')
     .put(projects.update);
-
-
-
-
-
-
 
 
   // Finish by binding the Project middleware

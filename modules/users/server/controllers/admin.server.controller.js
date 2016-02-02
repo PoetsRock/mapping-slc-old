@@ -24,7 +24,7 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var user = null;
-  if(req.model) {
+  if (req.model) {
     user = req.model;
     user = _.extend(user, req.body);
 
@@ -35,14 +35,14 @@ exports.update = function (req, res) {
     //user.lastName = req.body.lastName;
     //user.displayName = user.firstName + ' ' + user.lastName;
     //user.roles = req.body.roles;
-    if(req.body.associatedProjects) {
+    if (req.body.associatedProjects) {
       user.associatedProjects.push(req.body.associatedProjects);
     }
 
     // if true, then user has just added project as a favorite
     // so, projectId needs to be pushed into favorites array.
     // if false, projectId should be popped from favorites array.
-    if(req.body.isFavorite) {
+    if (req.body.isFavorite) {
       user.favorites.push(req.body.favorite);
     } else if (req.body.isFavorite === false && req.body.favorite) {
       user.favorites.pop(req.body.favorite);
@@ -72,7 +72,7 @@ exports.update = function (req, res) {
  */
 exports.addNewsletter = function (req, res, next) {
 
-  User.findOne({email: req.query.email})
+  User.findOne({ email: req.query.email })
     //.select('newsletter firstName lastName email ModifiedOn')
     .exec(function (err, userData) {
 
@@ -118,7 +118,7 @@ exports.addNewsletter = function (req, res, next) {
       } else {
         //email address is already receiving the newsletter
         //send back message to front end
-        res.jsonp([{subscribed: true, message: 'email is already subscribed to newsletter'}]);
+        res.jsonp([{ subscribed: true, message: 'email is already subscribed to newsletter' }]);
       }
     });
 };
@@ -161,17 +161,17 @@ exports.list = function (req, res) {
  * Get list of Contributors
  */
 
-exports.getContributors = function(req, res) {
+exports.getContributors = function (req, res) {
   var query = User.find(req.query);
   query.or([{ roles: 'contributor' }, { roles: 'admin' }])
     .sort('-lastName')
-    .exec( function (err,users) {
+    .exec(function (err, users) {
       if (err) {
         return res.send(400, {
           message: errorHandler.getErrorMessage(err)
         });
       }
-        res.jsonp(users);
+      res.jsonp(users);
     });
 };
 
@@ -198,7 +198,6 @@ exports.userByID = function (req, res, next, id) {
 };
 
 
-
 /**
  * Find User(s) By Source (where source can be any property in Users model)
  *
@@ -216,23 +215,23 @@ exports.findUsersBySource = function (req, res) {
   };
 
   User.find(queryObject)
-      .exec();
+    .exec();
 
 };
 
-  /**
-   *
-   */
+/**
+ *
+ */
 
-  exports.getContributorByID = function(req, res) {
+exports.getContributorByID = function (req, res) {
 
-  };
+};
 
 
-  /**
-   *
-   */
+/**
+ *
+ */
 
-  exports.deleteContributor = function(req, res) {
+exports.deleteContributor = function (req, res) {
 
-  };
+};
