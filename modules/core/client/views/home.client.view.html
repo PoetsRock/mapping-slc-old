@@ -1,27 +1,28 @@
 <section class="container map" data-ng-controller="HomeController" data-ng-init="mapFunction()">
 
-    <!--logo-->
-    <div data-ng-show="!overlayActive && !menuOpen">
-        <div class="small-main-logo logo-on-page img-responsive" data-ng-click="toggleOverlayFunction('home')"></div>
-    </div>
+  <!--logo-->
+  <div data-ng-show="!overlayActive && !menuOpen">
+    <div class="small-main-logo logo-on-page img-responsive" data-ng-click="toggleOverlayFunction('home')"></div>
+  </div>
 
-    <main-page-overlay></main-page-overlay>
-    <feature-side-bar></feature-side-bar>
+  <main-page-overlay></main-page-overlay>
+  <feature-side-bar></feature-side-bar>
 
-    <!--call MapBox map-->
+  <!--call MapBox map-->
   <div id="map" move-map class="map" data-ng-class="{'leaflet-tile-gray': !shadeMap}">
-      <i class="fa fa-info-circle" data-ng-click="attributionFull = !attributionFull" data-ng-class="{'atrrib-clicked': attributionFull}"></i>
-      <div class="attrib" data-ng-show="attributionFull" data-ng-bind-html="attributionText"></div>
+    <i class="fa fa-info-circle" data-ng-click="attributionFull = !attributionFull"
+       data-ng-class="{'atrrib-clicked': attributionFull}"></i>
+    <div class="attrib" data-ng-show="attributionFull" data-ng-bind-html="attributionText"></div>
 
-      <nav class="menu-ui">
-        <a href="#" id="legend">L</a>
-      </nav>
+    <nav class="menu-ui">
+      <a href="#" id="legend">L</a>
+    </nav>
 
-    </div>
+  </div>
 
-    <div id="main-menu" class="main-menu">
-      <google-menu></google-menu>
-    </div>
-    <div id="info" class="info" data-ng-class="{'info-project-details': toggleDetails}"></div>
+  <div id="main-menu" class="main-menu">
+    <google-menu></google-menu>
+  </div>
+  <div id="info" class="info" data-ng-class="{'info-project-details': toggleDetails}"></div>
 
 </section>

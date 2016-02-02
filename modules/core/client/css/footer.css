@@ -50,9 +50,7 @@
     font-size: 1.7rem;
 }
 
-
-
-@media (max-width: 992px){
+@media (max-width: 992px) {
     .footer-overlay .form-inline {
         padding-top: 10px;
         margin: 0;
@@ -63,7 +61,7 @@
     }
 }
 
-@media (max-width: 1079px){
+@media (max-width: 1079px) {
     .footer-overlay fieldset > div > div:first-child {
         transform: translateY(-25%);
     }

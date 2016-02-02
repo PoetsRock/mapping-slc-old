@@ -8,6 +8,8 @@ var _ = require('lodash'),
   testAssets = require('./config/assets/test'),
   glob = require('glob'),
   gulp = require('gulp'),
+  gulpIf = require('gulp-if'),
+  eslint = require('gulp-eslint'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
   plugins = gulpLoadPlugins({
@@ -23,6 +25,11 @@ var _ = require('lodash'),
   webdriver_update = require('gulp-protractor').webdriver_update,
   webdriver_standalone = require('gulp-protractor').webdriver_standalone,
   KarmaServer = require('karma').Server;
+
+function isFixed(file) {
+  // Has ESLint fixed the file contents?
+  return file.eslint != null && file.eslint.fixed;
+}
 
 //serve local production files
 gulp.task('serve-local-prod', function() {
@@ -106,20 +113,72 @@ gulp.task('watch', function () {
   }
 });
 
+// CSS linting task
+gulp.task('csslint', function (done) {
+  return gulp.src(defaultAssets.client.css)
+    .pipe(plugins.csslint('.csslintrc'))
+    .pipe(plugins.csslint.reporter())
+    .pipe(plugins.csslint.reporter(function (file) {
+      if (!file.csslint.errorCount) {
+        done();
+      }
+    }));
+});
 
-// JS `prod-no-mini` task
-gulp.task('uglify-no-mini', function () {
+// JS linting task
+gulp.task('jshint', function () {
   var assets = _.union(
+    defaultAssets.server.gulpConfig,
+    defaultAssets.server.allJS,
     defaultAssets.client.js,
-    defaultAssets.client.templates
+    testAssets.tests.server,
+    testAssets.tests.client,
+    testAssets.tests.e2e
   );
 
   return gulp.src(assets)
-    .pipe(plugins.ngAnnotate())
-    .pipe(plugins.concat('application.js'))
-    .pipe(gulp.dest('public/dist'))
-    .pipe(gulp.dest('build'));
+    .pipe(plugins.jshint())
+    .pipe(plugins.jshint.reporter('default'))
+    .pipe(plugins.jshint.reporter('fail'));
 });
+
+// ESLint JS linting task
+gulp.task('eslint', function () {
+  var assets = _.union(
+    defaultAssets.server.gulpConfig,
+    defaultAssets.server.allJS,
+    defaultAssets.client.js
+    //testAssets.tests.server,
+    //testAssets.tests.client,
+    //testAssets.tests.e2e
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.eslint())
+    .pipe(plugins.eslint.format())
+    .pipe(eslint({
+      fix: true
+    }))
+    .pipe(eslint.format())
+    // if fixed, write the file to dest
+    .pipe(gulpIf(isFixed, gulp.dest('../test/fixtures')));
+});
+
+
+//// ESLint JS linting & fix task
+//gulp.task('eslint-fix', function () {
+//  var assets = _.union(
+//    defaultAssets.server.gulpConfig,
+//    defaultAssets.server.allJS,
+//    defaultAssets.client.js
+//  );
+//
+//
+//  return gulp.src(assets)
+//    .pipe(plugins.eslint())
+//    .pipe(plugins.eslint.format());
+//});
+
 
 // JS minifying task
 gulp.task('uglify', function () {
@@ -135,7 +194,6 @@ gulp.task('uglify', function () {
     }))
     .pipe(plugins.concat('application.min.js'))
     .pipe(gulp.dest('public/dist'));
-    //.pipe(gulp.dest('build'));
 });
 
 // CSS minifying task
@@ -144,7 +202,6 @@ gulp.task('cssmin', function () {
     .pipe(plugins.cssmin())
     .pipe(plugins.concat('application.min.css'))
     .pipe(gulp.dest('public/dist'));
-    //.pipe(gulp.dest('build'));
 });
 
 // Sass task
@@ -174,12 +231,11 @@ gulp.task('imagemin', function () {
   return gulp.src(defaultAssets.client.img)
     .pipe(plugins.imagemin({
       progressive: true,
-      svgoPlugins: [{removeViewBox: false}],
+      svgoPlugins: [{ removeViewBox: false }],
       use: [pngquant()]
     }))
     .pipe(gulp.dest('public/dist/img'));
 });
-
 
 // Angular template cache task
 gulp.task('templatecache', function () {
@@ -189,16 +245,15 @@ gulp.task('templatecache', function () {
     .pipe(plugins.templateCache('templates.js', {
       root: 'modules/',
       module: 'core',
-      templateHeader: '(function () {' + endOfLine + '	\'use strict\';' + endOfLine + endOfLine + '	angular' + endOfLine + '		.module(\'<%= module %>\'<%= standalone %>)' + endOfLine + '		.run(templates);' + endOfLine + endOfLine + '	templates.$inject = [\'$templateCache\'];' + endOfLine + endOfLine + '	function templates($templateCache) {' + endOfLine,
-      templateBody: '		$templateCache.put(\'<%= url %>\', \'<%= contents %>\');',
-      templateFooter: '	}' + endOfLine + '})();' + endOfLine,
+      templateHeader: '(function () {' + endOfLine + '  \'use strict\';' + endOfLine + endOfLine + '  angular' + endOfLine + '    .module(\'<%= module %>\'<%= standalone %>)' + endOfLine + '    .run(templates);' + endOfLine + endOfLine + ' templates.$inject = [\'$templateCache\'];' + endOfLine + endOfLine + '  function templates($templateCache) {' + endOfLine,
+      templateBody: '   $templateCache.put(\'<%= url %>\', \'<%= contents %>\');',
+      templateFooter: ' }' + endOfLine + '})();' + endOfLine,
       transformUrl: function (url) {
         return url.replace(re, path.sep);
       }
     }))
     .pipe(gulp.dest('build'));
 });
-
 
 // Mocha tests task
 gulp.task('mocha', function (done) {
@@ -280,16 +335,28 @@ gulp.task('protractor', ['webdriver_update'], function () {
     });
 });
 
+// Lint CSS and JavaScript files.
+gulp.task('lint', function (done) {
+  runSequence('less', 'sass', ['csslint', 'eslint', 'jshint'], done);
+});
 
+// EsLint - Lint & Fix JavaScript files.
+gulp.task('eslint-fix', function (done) {
+  runSequence('less', 'sass', ['eslint'], done);
+});
+
+// Lint project files and minify them into two production files.
+gulp.task('build', function (done) {
+  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+});
 
 // Run the project tests
 gulp.task('test', function (done) {
-  runSequence('env:test', 'mocha', 'karma', 'nodemon', 'protractor', done);
+  runSequence('env:test', 'lint', 'mocha', 'karma', 'nodemon', 'protractor', done);
 });
 
 gulp.task('test:server', function (done) {
-  //runSequence('env:test', 'lint', 'mocha', done);
-  runSequence('env:test', 'mocha', done);
+  runSequence('env:test', 'lint', 'mocha', done);
 });
 
 // Watch all server files for changes & run server tests (test:server) task on changes
@@ -307,8 +374,6 @@ gulp.task('test:client', function (done) {
 gulp.task('test:e2e', function (done) {
   runSequence('env:test', 'dropdb', 'nodemon', 'protractor', done);
 });
-
-
 
 // Run the project in development mode
 gulp.task('default', function (done) {

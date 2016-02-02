@@ -1,11 +1,13 @@
-<section data-ng-controller="UserController" class="row" style="height: 600px;" data-ng-init="findCurrentUserSubmissions()">
+<section data-ng-controller="UserController" class="row" style="height: 600px;"
+         data-ng-init="findCurrentUserSubmissions()">
 
   <div class="user-submissions">
 
     <div class="list-group">
       <div class="row">
 
-        <a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProject.id})" class="col-md-12 admin-list">
+        <a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProject.id})"
+           class="col-md-12 admin-list">
           <div class="row">
 
             <div class="col-md-3">

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var adminsPolicy = require('../policies/admins.server.policy'),
-    admins = require('../controllers/admins.server.controller');
+  admins = require('../controllers/admins.server.controller');
 
 module.exports = function (app) {
 

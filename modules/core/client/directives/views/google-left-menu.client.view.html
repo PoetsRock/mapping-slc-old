@@ -1,7 +1,8 @@
 <li class="my-trigger" ng-click="menuToggle($event)" ng-mouseenter="showAll || mouseenter()"
     ng-mouseleave="showAll || mouseleave()">
 
-  <a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}" data-ng-click="toggleOverlayFunction('overlay')"></a>
+  <a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}"
+     data-ng-click="toggleOverlayFunction('overlay')"></a>
 
   <nav ng-mouseenter="showAll|| menuHover($event)" class="my-menu-wrapper"
        ng-class="{'my-open-part' : showPart,'my-open-all' : showAll, 'my-open-none': showNone}">

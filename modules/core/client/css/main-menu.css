@@ -64,7 +64,7 @@ ul.sidebar-tabs.collapsed {
     width: 95%;
 }
 
-#settings > h3, div.sidebar-view-text-content{
+#settings > h3, div.sidebar-view-text-content {
     padding: 20px 20px 20px 0;
     text-align: justify;
 }
@@ -193,13 +193,11 @@ div.morph-content > div > ul > div > li {
     padding-left: 0;
 }
 
-.sidebar-tabs>li.active:nth-last-child(1) {
+.sidebar-tabs > li.active:nth-last-child(1) {
     background-color: transparent;
     border-color: transparent;
-    cursor: auto!important;
+    cursor: auto !important;
 }
-
-
 
 /***
 **

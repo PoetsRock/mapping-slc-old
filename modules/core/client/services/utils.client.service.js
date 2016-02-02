@@ -30,7 +30,7 @@ angular.module('core').service('UtilsService', ['$http', '$window', '$filter', '
     };
 
 
-    this.pagination = function() {
+    this.pagination = function () {
       AdminUpdateUser.query(function (data) {
         $scope.users = data;
         $scope.buildPager();

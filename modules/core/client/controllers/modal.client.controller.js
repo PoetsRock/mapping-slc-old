@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('core').controller('ModalController', ['$scope', '$uibModalInstance', 'items',
-  function($scope, $uibModalInstance, items) {
+  function ($scope, $uibModalInstance, items) {
     $scope.items = items;
     $scope.selected = {
       item: $scope.items[0],

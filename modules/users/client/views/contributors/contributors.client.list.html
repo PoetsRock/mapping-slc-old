@@ -30,11 +30,12 @@
                 <div class="row">
 
                   <ul id="grid-view">
-                    <a ng-click="openLightboxModal($index)" data-ng-repeat="contributor in contributors | filter:searchContributors" class="col-md-3">
+                    <a ng-click="openLightboxModal($index)"
+                       data-ng-repeat="contributor in contributors | filter:searchContributors" class="col-md-3">
                       <li>
                         <div>
-                            <img ng-src="{{contributor.profileImageURL}}" class="img-thumbnail">
-                            <p>{{contributor.firstName}} {{contributor.lastName}}</p>
+                          <img ng-src="{{contributor.profileImageURL}}" class="img-thumbnail">
+                          <p>{{contributor.firstName}} {{contributor.lastName}}</p>
                         </div>
                       </li>
                     </a>

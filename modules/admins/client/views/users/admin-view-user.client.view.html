@@ -1,65 +1,69 @@
 <secondary-menu-directive></secondary-menu-directive>
 
 <section class="content background" data-ng-controller="RandomMapController"
-         ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }" data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
+         ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
+         data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
-    <section class="container">
-        <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
+  <section class="container">
+    <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
 
-        <div class="main-content-outer">
+    <div class="main-content-outer">
 
-            <section data-ng-controller="EditProfileController" data-ng-init="findOne()" class="main-content-inner">
+      <section data-ng-controller="EditProfileController" data-ng-init="findOne()" class="main-content-inner">
 
-                <div class="admin">
+        <div class="admin">
 
-                    <div class="admin-user">
+          <div class="admin-user">
 
-                      <div class="admin-nav">
-                        <a class="btn btn-main grow" ui-sref="admin.dashboard">
-                          Admin Home Page
-                        </a>
-                        <a class="btn btn-main grow" ui-sref="admin.adminListUsers">
-                          Admin User Page
-                        </a>
-                      </div>
+            <div class="admin-nav">
+              <a class="btn btn-main grow" ui-sref="admin.dashboard">
+                Admin Home Page
+              </a>
+              <a class="btn btn-main grow" ui-sref="admin.adminListUsers">
+                Admin User Page
+              </a>
+            </div>
 
-                        <div class="page-header">
-                            <h1>{{userToEdit.firstName}} {{userToEdit.lastName}}'s Profile
-                                <a href="#" data-ng-show="userToEdit.profileImageURL"><span><img data-ng-src="{{userToEdit.profileImageURL}}" class="header-profile-image pull-right"/></span>
-                                </a>
+            <div class="page-header">
+              <h1>{{userToEdit.firstName}} {{userToEdit.lastName}}'s Profile
+                <a href="#" data-ng-show="userToEdit.profileImageURL"><span><img
+                  data-ng-src="{{userToEdit.profileImageURL}}" class="header-profile-image pull-right"/></span>
+                </a>
 
-                                <a href="#" data-ng-show="!userToEdit.profileImageURL"><span><img data-ng-src="" class="header-profile-image pull-right"/></span>Upload a Pic
-                                </a>
-                            </h1>
-                        </div>
+                <a href="#" data-ng-show="!userToEdit.profileImageURL"><span><img data-ng-src=""
+                                                                                  class="header-profile-image pull-right"/></span>Upload
+                  a Pic
+                </a>
+              </h1>
+            </div>
 
-                        <div class="row user-profile">
-                            <div class="col-xs-12">
-                              <form name="userAdminForm" class="form-horizontal" data-ng-submit="update(userToEdit.$valid)" novalidate>
-                                <fieldset>
-                                  <user-view-form></user-view-form>
-                                </fieldset>
-                              </form>
-                            </div>
-                        </div>
+            <div class="row user-profile">
+              <div class="col-xs-12">
+                <form name="userAdminForm" class="form-horizontal" data-ng-submit="update(userToEdit.$valid)"
+                      novalidate>
+                  <fieldset>
+                    <user-view-form></user-view-form>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
 
 
+            <hr>
 
-                      <hr>
+            <div class="pull-right">
+              <!--data-ng-show="((authentication.user) && (authentication.user._id == project.user._id))">-->
+              <!--<a class="btn btn-primary" href="/users/{{user._id}}/edit">-->
+              <!--<i class="glyphicon glyphicon-edit"></i>-->
+              <!--</a>-->
+              <a class="btn btn-main grow btn-warning" data-ng-click="remove();">
+                <i class="glyphicon glyphicon-trash"></i>
+              </a>
+            </div>
 
-                        <div class="pull-right">
-                            <!--data-ng-show="((authentication.user) && (authentication.user._id == project.user._id))">-->
-                            <!--<a class="btn btn-primary" href="/users/{{user._id}}/edit">-->
-                            <!--<i class="glyphicon glyphicon-edit"></i>-->
-                            <!--</a>-->
-                            <a class="btn btn-main grow btn-warning" data-ng-click="remove();">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
+          </div>
         </div>
-    </section>
+      </section>
+    </div>
+  </section>
 </section>

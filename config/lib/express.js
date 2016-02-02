@@ -4,20 +4,20 @@
  * Module dependencies.
  */
 var config = require('../config'),
-    express = require('express'),
-    morgan = require('morgan'),
-    logger = require('./logger'),
-    bodyParser = require('body-parser'),
-    session = require('express-session'),
-    MongoStore = require('connect-mongo')(session),
-    favicon = require('serve-favicon'),
-    compress = require('compression'),
-    methodOverride = require('method-override'),
-    cookieParser = require('cookie-parser'),
-    helmet = require('helmet'),
-    flash = require('connect-flash'),
-    consolidate = require('consolidate'),
-    path = require('path');
+  express = require('express'),
+  morgan = require('morgan'),
+  logger = require('./logger'),
+  bodyParser = require('body-parser'),
+  session = require('express-session'),
+  MongoStore = require('connect-mongo')(session),
+  favicon = require('serve-favicon'),
+  compress = require('compression'),
+  methodOverride = require('method-override'),
+  cookieParser = require('cookie-parser'),
+  helmet = require('helmet'),
+  flash = require('connect-flash'),
+  consolidate = require('consolidate'),
+  path = require('path');
 
 /**
  * Initialize local variables
@@ -228,7 +228,7 @@ module.exports.init = function (db) {
 
   // Initialize Express view engine
   this.initViewEngine(app);
-  
+
   // Initialize Helmet security headers
   this.initHelmetHeaders(app);
 

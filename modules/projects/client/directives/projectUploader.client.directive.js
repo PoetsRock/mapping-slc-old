@@ -3,8 +3,8 @@
 angular.module('projects').directive('projectUploaderDirective', function () {
   return {
     restrict: 'AE',
-    templateUrl:'/modules/projects/client/directives/views/projectUploader.html',
-    controller: function($scope,$http) {
+    templateUrl: '/modules/projects/client/directives/views/projectUploader.html',
+    controller: function ($scope, $http) {
 
 
       // Project Uploader Service logic
@@ -23,7 +23,7 @@ angular.module('projects').directive('projectUploaderDirective', function () {
             user: $scope.user,
             project: $scope.project
           };
-          var configObj = {cache: true};
+          var configObj = { cache: true };
           $http.post('api/v1/s3/upload/project', query, configObj)
             .success(function (result) {
               console.log('result v1\n', result);

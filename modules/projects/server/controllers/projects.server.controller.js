@@ -11,13 +11,14 @@ var mongoose = require('mongoose'),
   config = require(path.resolve('./config/config')),
   AlchemyAPI = require('alchemy-api'),
   projects = require('./projects.server.controller'),
-  sanitizeHtml = require('sanitize-html'),
-  Promise = require('bluebird'),
-  fs = Promise.promisifyAll(require('fs')),
-  exports = Promise.promisifyAll(exports);
+  sanitizeHtml = require('sanitize-html');
+//Promise = require('bluebird'),
+//fs = Promise.promisifyAll(require('fs')),
+//exports = Promise.promisifyAll(exports);
 
-function nlpKeywords(sanitizedText) {
-  return new Promise(
+/**
+ function nlpKeywords(sanitizedText) {
+  //return new Promise( //deleted bluebird, use native es6 promises if needed
     function (resolve, reject) {
       var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
       alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'},
@@ -31,7 +32,7 @@ function nlpKeywords(sanitizedText) {
       });
   });
 }
-
+ **/
 
 
 //
@@ -74,7 +75,7 @@ exports.create = function (req, res) {
   //console.log('!!!!project create req: \n', req);
   var project = new Project(req.body);
   project.user = req.user;
-  
+
   //todo refactor into separate function and use in the update method as well
   if (req.category === 'video') {
     project.markerColor = '#ff0011';
@@ -91,7 +92,7 @@ exports.create = function (req, res) {
   } else if (req.category === 'audio') {
     project.markerColor = '#ff0101';
   } else {
-    project.markerColor =  '#00ff44';
+    project.markerColor = '#00ff44';
   }
 
   console.log('!!!!project create req: \n', project);
@@ -114,7 +115,6 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   res.jsonp(req.project);
 };
-
 
 
 /**
@@ -161,7 +161,7 @@ exports.updateAll = function (req, res) {
   var updatedProjects = [];
   let project = {};
 
-  for(let i = 0; i > projects.length; i++) {
+  for (let i = 0; i > projects.length; i++) {
     if (req.body) {
       project = _.extend(projects[i], req.body);
       //console.log('\n\n\n11111  IF  :::::Update ALL ::::::: `project[i]`:::::::::::\n', project[i]);
@@ -287,7 +287,7 @@ exports.findOneVideoId = function (req, res) {
 
 /**
  * Project middleware
-**/
+ **/
 exports.projectByID = function (req, res, next, id) {
   Project.findById(id)
     .populate('user')
@@ -323,7 +323,7 @@ exports.updateFeaturedProjects = function (req, res, next) {
   var newFeaturedProject = _.extend(req.project, req.body);
   let project = [];
 
-  Project.find({featured: true})
+  Project.find({ featured: true })
     .sort('featuredBeginDate')
     .exec(function (err, projects) {
 
@@ -332,7 +332,7 @@ exports.updateFeaturedProjects = function (req, res, next) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else if (projects.length >= 3) {  //`projects.length` should equal 3, bc the new featured project has not been added yet 
+      } else if (projects.length >= 3) {  //`projects.length` should equal 3, bc the new featured project has not been added yet
         oldFeaturedProject = projects.pop();
         oldFeaturedProject.featured = false;
         project.push(oldFeaturedProject);
@@ -357,7 +357,6 @@ exports.updateFeaturedProjects = function (req, res, next) {
 };
 
 
-
 /**
  * Project authorization middleware
  */
@@ -373,21 +372,20 @@ exports.hasAuthorization = function (req, res, next) {
  * Returns an array of objects that contains the featured projects
  */
 exports.getFeaturedProjects = function (req, res) {
-    Project.find({featured: true})
-        .sort('-featuredBeginDate')
-        //.limit(3)
-        .exec(function (err, projects) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-
-                res.jsonp(projects);
-            }
+  Project.find({ featured: true })
+    .sort('-featuredBeginDate')
+    //.limit(3)
+    .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
         });
-};
+      } else {
 
+        res.jsonp(projects);
+      }
+    });
+};
 
 
 /**
@@ -403,11 +401,11 @@ exports.nlpProjects = function (req, res, next) {
     allowedAttributes: []
   });
   var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
-  alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'}, function (err, keywords) {
+  alchemyApi.keywords(sanitizedText, { 'sentiment': 0, 'outputMode': 'json' }, function (err, keywords) {
     if (err) {
       throw err;
-    //} else if (req.body.useCase === 'server') {
-    //  res.json(response);
+      //} else if (req.body.useCase === 'server') {
+      //  res.json(response);
     } else {
       console.log('keywords.keywords l. 317:\n', keywords.keywords);
       sentKeywords.push(keywords.keywords);
@@ -462,15 +460,15 @@ var text = {
 //});
 
 }
-  //console.log('project.keywords v2:\n', project.keywords);
-//console.log('projectKeywords:\n', projectKeywords);
+ //console.log('project.keywords v2:\n', project.keywords);
+ //console.log('projectKeywords:\n', projectKeywords);
 
  *
  *
-**/
+ **/
 
 
-exports.markerData = function(req, res, next) {
+exports.markerData = function (req, res, next) {
 
   var markerColor = '';
   if (req.category === 'video') {
@@ -493,11 +491,11 @@ exports.markerData = function(req, res, next) {
     res.send(markerColor);
   } else if (req.category === 'audio') {
     markerColor = '#ff0101';
-   res.send(markerColor);
+    res.send(markerColor);
   } else {
-    markerColor =  '#00ff44';
+    markerColor = '#00ff44';
     res.send(markerColor);
   }
   next();
-  
+
 };

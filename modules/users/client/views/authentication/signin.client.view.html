@@ -9,7 +9,8 @@
             <div class="row"> <!-- Row #1 -->
               <div class="col-md-12">
                       <span class="input input-secondary" data-ng-class="{'input-filled': credentials.username }">
-                      <input class="input_field input_field-secondary" placeholder="Username" type="text" id="username" value="" name="username" data-ng-model="credentials.username"/>
+                      <input class="input_field input_field-secondary" placeholder="Username" type="text" id="username"
+                             value="" name="username" data-ng-model="credentials.username"/>
                       <label class="input_label input_label-secondary" for="username">
                         <span class="input_label-content input_label-content-secondary">Username</span>
                       </label>
@@ -25,7 +26,8 @@
             <div class="row">  <!-- Row #2 -->
               <div class="col-md-12">
                   <span class="input input-secondary" data-ng-class="{'input-filled': credentials.password }">
-                      <input class="input_field input_field-secondary" type="password" id="password" name="password" value="" data-ng-model="credentials.password" placeholder="Password" required/>
+                      <input class="input_field input_field-secondary" type="password" id="password" name="password"
+                             value="" data-ng-model="credentials.password" placeholder="Password" required/>
                       <label class="input_label input_label-secondary" for="password">
                         <span class="input_label-content input_label-content-secondary">Password</span>
                       </label>
@@ -63,17 +65,14 @@
 </section>
 
 
-
-
-
-  <div class="row" data-ng-show="signInBeforeProject && !closeWarning">
-    <div class="col-md-12">
-      <div class="sign-in-warning">
-        <div class="pull-right" data-ng-click="closeWarning = !closeWarning">X</div>
-        <div>
-          <p>You need to sign in before you create a project.</p>
-          <p>If you have not registered yet, it's quick. <a href="/signup">Register here</a>.</p>
-        </div>
+<div class="row" data-ng-show="signInBeforeProject && !closeWarning">
+  <div class="col-md-12">
+    <div class="sign-in-warning">
+      <div class="pull-right" data-ng-click="closeWarning = !closeWarning">X</div>
+      <div>
+        <p>You need to sign in before you create a project.</p>
+        <p>If you have not registered yet, it's quick. <a href="/signup">Register here</a>.</p>
       </div>
     </div>
   </div>
+</div>

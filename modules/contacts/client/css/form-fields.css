@@ -102,7 +102,7 @@ fieldset.contact {
     font-size: 1.5em;
 }
 
-textarea.input_field-secondary  {
+textarea.input_field-secondary {
     left: 2%;
     height: 50px;
     background: transparent;
@@ -161,7 +161,6 @@ textarea.input_field-secondary:active {
     transition: transform 0.3s, all 1s;
 }
 
-
 .input_label-secondary {
     width: 100%;
     position: absolute;
@@ -218,8 +217,6 @@ span.input.input-secondary .title {
 .input_label.input_label-secondary .title {
     /*left: 10%;*/
 }
-
-
 
 .grow.btn-contact {
     position: relative;

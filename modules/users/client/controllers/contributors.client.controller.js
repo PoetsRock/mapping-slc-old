@@ -24,20 +24,19 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
       getContribData();
     };
 
-    var getContribData = function() {
+    var getContribData = function () {
       GetContributors.contributors()
         .success(function (contributorsData) {
           getImages(contributorsData);
           $scope.contributors = contributorsData;
           return $scope.images;
-        }).
-      error(function (errorData) {
+        }).error(function (errorData) {
         console.log('errorData: ', errorData);
       });
     };
 
     var getImages = function (contribData) {
-      for(var i = 0; i < contribData.length; i++ ) {
+      for (var i = 0; i < contribData.length; i++) {
         var tempData = {};
         tempData.url = contribData[i].profileImageURL;
         tempData.thumbUrl = contribData[i].profileImageThumbURL;
@@ -47,20 +46,20 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
 
     };
 
-    $scope.findContributor = function() {
-      User.get({userId: $stateParams.userId},
-        function(userData) {
+    $scope.findContributor = function () {
+      User.get({ userId: $stateParams.userId },
+        function (userData) {
           getAssociatedProjects(userData);
           $scope.contributor = userData;
-      });
+        });
     };
 
-    var getAssociatedProjects = function(userObj) {
+    var getAssociatedProjects = function (userObj) {
       for (var i = 0; i < userObj.associatedProjects.length; i++) {
-        Projects.get({projectId: userObj.associatedProjects[i]},
-        function(projectObj){
-          $scope.contributorProjects.push(projectObj);
-        })
+        Projects.get({ projectId: userObj.associatedProjects[i] },
+          function (projectObj) {
+            $scope.contributorProjects.push(projectObj);
+          })
       }
     };
 

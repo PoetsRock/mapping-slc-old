@@ -12,8 +12,8 @@ var path = require('path'),
 
 var _checkForExistingUser = function (currentUniqueId) {
   User.find({
-      'users._id': req.query
-    })
+    'users._id': req.query
+  })
     .exec(function (err, users) {
       if (err) {
         return res.status(400).send({
@@ -35,18 +35,18 @@ exports.create = function (req, res) {
   var contact = new Contact(req.body);
   contact.user = req.user;
 
-  if(req.user._doc._id){  //determine whether user is logged in
-    if(req.body.email === req.user._doc.email){    //if true, then put message to current user's document
+  if (req.user._doc._id) {  //determine whether user is logged in
+    if (req.body.email === req.user._doc.email) {    //if true, then put message to current user's document
 
-    }else{    //
+    } else {    //
 
     }
   }
-  else if(_checkForExistingUser(req.body.email)){
+  else if (_checkForExistingUser(req.body.email)) {
     console.log('update!');
     // if checkForExistingUser() is true, then user already exists
     // and we'll make a put on that document
-  }else{
+  } else {
     console.log('create!');
     // if user does not exist, we'll create a new User document
     // and, in either case, we will save the message,

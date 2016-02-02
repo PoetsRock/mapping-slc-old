@@ -1,6 +1,6 @@
 .btn-main {
-    cursor:pointer;
-    border:2px solid #fff;
+    cursor: pointer;
+    border: 2px solid #fff;
     background-color: #023a31;
 }
 
@@ -23,8 +23,8 @@ button a .btn .btn-primary {
     width: 200px;
 }
 
-.btn .btn-primary .btn-raised {}
-
+.btn .btn-primary .btn-raised {
+}
 
 /*button animation*/
 /* Grow */
@@ -59,21 +59,21 @@ button > .grow {
 }
 
 /*.grow {*/
-    /*display: inline-block;*/
-    /*-webkit-transition-duration: 0.6s;*/
-    /*transition-duration: 0.6s;*/
-    /*-webkit-transition-property: -webkit-transform;*/
-    /*transition-property: transform;*/
-    /*-webkit-tap-highlight-color: rgba(0, 0, 0, 0);*/
-    /*-webkit-transform: translateZ(0);*/
-    /*-ms-transform: translateZ(0);*/
-    /*transform: translateZ(0);*/
-    /*box-shadow: 0 0 1px rgba(0, 0, 0, 0);*/
-    /*transition: all 0.3s ease 0s;*/
+/*display: inline-block;*/
+/*-webkit-transition-duration: 0.6s;*/
+/*transition-duration: 0.6s;*/
+/*-webkit-transition-property: -webkit-transform;*/
+/*transition-property: transform;*/
+/*-webkit-tap-highlight-color: rgba(0, 0, 0, 0);*/
+/*-webkit-transform: translateZ(0);*/
+/*-ms-transform: translateZ(0);*/
+/*transform: translateZ(0);*/
+/*box-shadow: 0 0 1px rgba(0, 0, 0, 0);*/
+/*transition: all 0.3s ease 0s;*/
 /*}*/
 
 /*.grow:hover {*/
-    /*-webkit-transform: scale(1.01);*/
-    /*-ms-transform: scale(1.01);*/
-    /*transform: scale(1.01);*/
-    /*background: rgba(0, 0, 0, 0.5);*/
+/*-webkit-transform: scale(1.01);*/
+/*-ms-transform: scale(1.01);*/
+/*transform: scale(1.01);*/
+/*background: rgba(0, 0, 0, 0.5);*/

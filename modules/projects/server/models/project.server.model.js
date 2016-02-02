@@ -41,7 +41,7 @@ var ProjectSchema = new Schema({
   ModifiedBy: {
     type: [{
       type: String
-      }],
+    }],
     default: []
   },
   firstName: {
@@ -226,15 +226,15 @@ ProjectSchema.virtual('geoCoordinates').get(function () {
 //see mongoose-function library in node modules
 //source: https://github.com/aheckmann/mongoose-function
 var defaultKeywords = [];
-ProjectSchema.methods.setDefaultKeywords = function(){
-    defaultKeywords.push(project.fullName, project.title);
+ProjectSchema.methods.setDefaultKeywords = function () {
+  defaultKeywords.push(project.fullName, project.title);
 };
 console.log('defaultKeywords: ', defaultKeywords);
 
 
 ProjectSchema.set('toJSON', {
-    getters: true,
-    virtuals: true
+  getters: true,
+  virtuals: true
 });
 
 mongoose.model('Project', ProjectSchema);

@@ -3,7 +3,7 @@
 module.exports = function (app) {
   // User Routes
   var users = require('../controllers/users.server.controller'),
-      assets = require('../controllers/users/users.uploader.server.controller');
+    assets = require('../controllers/users/users.uploader.server.controller');
 
   // Setting up the users profile api
   app.route('/api/v1/users/me').get(users.me);

@@ -2,7 +2,7 @@
 
 // Underscore service
 angular.module('core').factory('_', [
-	function() {
-		return window._;
-	}
+  function () {
+    return window._;
+  }
 ]);

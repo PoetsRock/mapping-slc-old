@@ -1,9 +1,9 @@
 'use strict';
 
 var defaultEnvConfig = require('./default'),
-    bodyParser = require('body-parser'),
-    path = require('path'),
-    config = require(path.resolve('./config/config'));
+  bodyParser = require('body-parser'),
+  path = require('path'),
+  config = require(path.resolve('./config/config'));
 
 module.exports = {
   secure: {
@@ -83,7 +83,7 @@ module.exports = {
     }
   },
 
-seedDB: {
+  seedDB: {
     seed: process.env.MONGO_SEED === 'true' ? true : false,
 
     options: {

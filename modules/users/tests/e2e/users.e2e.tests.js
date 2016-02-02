@@ -311,7 +311,7 @@ describe('Users E2E Tests:', function () {
       expect(element.all(by.css('.error-text')).get(1).getText()).toBe('Password is required.');
     });
 
-    it('Verify that the user is logged in', function() {
+    it('Verify that the user is logged in', function () {
       //Make sure user is signed out first
       signout();
       //Sign in
@@ -327,7 +327,7 @@ describe('Users E2E Tests:', function () {
 
   });
 
-  describe ('Change Password Settings Validation', function () {
+  describe('Change Password Settings Validation', function () {
 
     it('Should report missing passwords', function () {
       browser.get('http://localhost:3001/settings/password');

@@ -5,7 +5,8 @@
         <h1>Users</h1>
       </div>
       <div class="col-md-4" style="margin-top: 2em">
-        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search"
+               ng-change="figureOutItemsToDisplay()"/>
       </div>
     </div>
   </div>
@@ -18,5 +19,6 @@
   </div>
 
   <!--see `modules/core/client/services/utils.client.service.js` for pagination script`-->
-  <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+  <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength"
+                  ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
 </section>

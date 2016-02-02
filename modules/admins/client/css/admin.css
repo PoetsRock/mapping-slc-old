@@ -133,9 +133,9 @@ div.admin > div.row > div > a > div:hover {
     background-color: rgba(3, 59, 50, 0.6);
     border-radius: 3px;
     color: #ffffff;
-    -moz-transition:0.5s all ease;
-    -webkit-transition:0.5s all ease;
-    transition:0.5s all ease;
+    -moz-transition: 0.5s all ease;
+    -webkit-transition: 0.5s all ease;
+    transition: 0.5s all ease;
 }
 
 .table-bordered {

@@ -24,6 +24,7 @@
 .contact a:link {
     /*-webkit-tap-highlight-color: rgba(75, 15, 215, 0.4);*/
 }
+
 .inline div {
     font-size: 2rem;
 }
@@ -32,14 +33,14 @@
     padding-top: 0.5rem;
 }
 
-#feedback-page{
-    text-align:center;
+#feedback-page {
+    text-align: center;
 }
 
-#form-main{
-    width:100%;
-    float:left;
-    padding-top:0;
+#form-main {
+    width: 100%;
+    float: left;
+    padding-top: 0;
 }
 
 .contact-form #check-awesome {

@@ -32,8 +32,8 @@ a .about {
 
 .about .tiles:hover {
     color: #ffffff;
-    cursor:pointer;
-    border:2px solid #fff;
+    cursor: pointer;
+    border: 2px solid #fff;
     background: #023a31;
     -webkit-transition: all ease 1s;
     -moz-transition: all ease 1s;
@@ -41,12 +41,10 @@ a .about {
     transition: all ease 1s;
 }
 
-
 .about .tiles div {
     margin: 15px;
     padding: 20px;
 }
-
 
 .about .tiles a {
     text-decoration: none;
@@ -58,11 +56,11 @@ a .about {
 }
 
 /*body {*/
-    /*overflow-x: hidden;*/
+/*overflow-x: hidden;*/
 /*}*/
 
 /*.content, .content.img {*/
-    /*width: 1920px;*/
-    /*background-repeat: no-repeat;*/
-    /*overflow-x: hidden;*/
+/*width: 1920px;*/
+/*background-repeat: no-repeat;*/
+/*overflow-x: hidden;*/
 /*}*/

@@ -27,7 +27,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
           filename: filename,
           type: type
         };
-        var configObj = {cache: true};
+        var configObj = { cache: true };
         $http.post('api/v1/s3/upload', query, configObj)
           .success(function (result) {
             console.log('result v1\n', result);
@@ -89,9 +89,6 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
 
 
     };
-
-
-
 
 
     /**
@@ -229,8 +226,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
     };
 
 
-
-    $scope.getProfilePic = function() {
+    $scope.getProfilePic = function () {
 
     };
 

@@ -16,7 +16,8 @@
     .footer-overlay form {
         margin: 0.5% 0;
     }
-    .small-main-logo{
+
+    .small-main-logo {
         left: 8%;
     }
 
@@ -39,6 +40,7 @@
         border-radius: 10px;
         border: solid 2px #090909;
     }
+
     /*applies to all pages that have a static map as background image, so most views other than home page*/
     .main-content-inner {
         /*height: auto;*/
@@ -67,11 +69,11 @@
 
 }
 
-
 @media (max-height: 810px) {
     .sidebar {
         height: 85%;
     }
+
     .menu-text {
         display: none;
     }
@@ -103,7 +105,7 @@
     }
 
     featured-projects img {
-        height:15vh;
+        height: 15vh;
     }
 
     featured-projects ul, featured-projects .grid figure {
@@ -122,7 +124,6 @@
         padding: 40px;
     }
 }
-
 
 @media (min-width: 1750px) {
     .page-view-menu-open {

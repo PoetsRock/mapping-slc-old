@@ -48,9 +48,9 @@ exports.signup = function (req, res) {
             res.json(user);
           }
         });
-      //} else {
+        //} else {
         console.log('success::::::::::::::::::::\n', success);
-      //  res.json(user);
+        //  res.json(user);
       }
     }
   });

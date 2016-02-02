@@ -16,13 +16,13 @@ exports.getOneVideo = function (req, res) {
   //  var defaultEnvConfig = require('../../../../config/env/default');
   //  res.jsonp(defaultEnvConfig);
   //} else if (process.env.NODE_ENV === 'local-development') {
-    var keys = require('../../../../config/env/local-development.js');
-    var vimeoKeys = {
-      CLIENT_ID: keys.VIMEO_KEY,
-      CLIENT_SECRET: keys.VIMEO_SECRET,
-      ACCESS_TOKEN: keys.VIMEO_TOKEN
-    };
-    res.jsonp(vimeoKeys);
+  var keys = require('../../../../config/env/local-development.js');
+  var vimeoKeys = {
+    CLIENT_ID: keys.VIMEO_KEY,
+    CLIENT_SECRET: keys.VIMEO_SECRET,
+    ACCESS_TOKEN: keys.VIMEO_TOKEN
+  };
+  res.jsonp(vimeoKeys);
   //}
 
   /**

@@ -36,24 +36,24 @@ module.exports = {
       }
     }
   },
-    FACEBOOK_ID: process.env.FACEBOOK_ID || '319019724936363',
-    FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || '3ebfd75fff26823c6ab3f462c7060af0',
-    FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
+  FACEBOOK_ID: process.env.FACEBOOK_ID || '319019724936363',
+  FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || '3ebfd75fff26823c6ab3f462c7060af0',
+  FACEBOOK_CALLBACK_URL: '/api/v1/auth/facebook/callback',
 
-    TWITTER_KEY: process.env.TWITTER_KEY || '8CcbaDkZ6P5U4AsCyDFpqI2sI',
-    TWITTER_SECRET: process.env.TWITTER_SECRET || 'pNt4bKHblud2TmbqGElP8LkLC9PvyjSa9hdLhk35NmTD9BKzfc',
-    TWITTER_CALLBACK_URL: '/api/v1/auth/twitter/callback',
+  TWITTER_KEY: process.env.TWITTER_KEY || '8CcbaDkZ6P5U4AsCyDFpqI2sI',
+  TWITTER_SECRET: process.env.TWITTER_SECRET || 'pNt4bKHblud2TmbqGElP8LkLC9PvyjSa9hdLhk35NmTD9BKzfc',
+  TWITTER_CALLBACK_URL: '/api/v1/auth/twitter/callback',
 
-    github: {
-      clientID: process.env.GITHUB_ID || 'APP_ID',
-      clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
-      CALLBACK_URL: '/api/v1/auth/github/callback'
-    },
+  github: {
+    clientID: process.env.GITHUB_ID || 'APP_ID',
+    clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
+    CALLBACK_URL: '/api/v1/auth/github/callback'
+  },
 
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'DyCpAJnbwQ0p0jbAZSpSg0dzPpvE',
-    GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0',
-    GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'PY2QWsCLXHVr5bTAEd_w92sI',
-    GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'DyCpAJnbwQ0p0jbAZSpSg0dzPpvE',
+  GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0',
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'PY2QWsCLXHVr5bTAEd_w92sI',
+  GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
 
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
@@ -110,18 +110,18 @@ module.exports = {
     }
   },
 
-    ALCHEMY_KEY: process.env.ALCHEMY_KEY || '9eb2296b11f66a08cb20ef6771bbe32b523a0840',
-    ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
+  ALCHEMY_KEY: process.env.ALCHEMY_KEY || '9eb2296b11f66a08cb20ef6771bbe32b523a0840',
+  ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
 
-    S3_ID: process.env.S3_ID || 'AKIAJMZSYDXTHOHLVKVQ',
-    S3_SECRET: process.env.S3_SECRET || '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',
-    S3_BUCKET: process.env.S3_BUCKET || 'MAPPING-SLC-FILE-UPLOAD',
-    S3_CALLBACK_URL: '/api/v1/auth/s3/callback',
+  S3_ID: process.env.S3_ID || 'AKIAJMZSYDXTHOHLVKVQ',
+  S3_SECRET: process.env.S3_SECRET || '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',
+  S3_BUCKET: process.env.S3_BUCKET || 'MAPPING-SLC-FILE-UPLOAD',
+  S3_CALLBACK_URL: '/api/v1/auth/s3/callback',
 
 
-    VIMEO_KEY: process.env.VIMEO_KEY || '6565bb005d7bffac18d89cbc4ef57af1bccde906',
-    VIMEO_SECRET: process.env.VIMEO_SECRET || 'V7h0cZTU0VqBDjYdnAoBmuJb1/XoQzPQJ09NB9uSit6M8LJnt10bDwO7EQFbs9RbMM2Yruo/UZEeVSuG7dMNZW+W+950+Iny/31V5AJ9pokT6Gezzto3R8qnp0mO6NTs',
-    VIMEO_TOKEN: process.env.VIMEO_TOKEN || 'a72958bf1f855bd7c58f3a354953c183',
+  VIMEO_KEY: process.env.VIMEO_KEY || '6565bb005d7bffac18d89cbc4ef57af1bccde906',
+  VIMEO_SECRET: process.env.VIMEO_SECRET || 'V7h0cZTU0VqBDjYdnAoBmuJb1/XoQzPQJ09NB9uSit6M8LJnt10bDwO7EQFbs9RbMM2Yruo/UZEeVSuG7dMNZW+W+950+Iny/31V5AJ9pokT6Gezzto3R8qnp0mO6NTs',
+  VIMEO_TOKEN: process.env.VIMEO_TOKEN || 'a72958bf1f855bd7c58f3a354953c183',
 
   FRONT_END: {
     CENSUS_KEY: process.env.CENSUS_KEY || '4d396163ae90829a66916a08b3af462608c87316',

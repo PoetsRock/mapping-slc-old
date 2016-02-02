@@ -1,51 +1,50 @@
 /*.featured-projects div div:hover {*/
-  /*top: 0;*/
-  /*position: absolute;*/
-  /*-webkit-transition: all 0.5s ease;*/
-  /*-moz-transition: all 0.5s ease;*/
-  /*-o-transition: all 0.5s ease;*/
-  /*transition: all 0.5s ease;*/
-  /*width: 100%;*/
-  /*display: inline;*/
+/*top: 0;*/
+/*position: absolute;*/
+/*-webkit-transition: all 0.5s ease;*/
+/*-moz-transition: all 0.5s ease;*/
+/*-o-transition: all 0.5s ease;*/
+/*transition: all 0.5s ease;*/
+/*width: 100%;*/
+/*display: inline;*/
 /*}*/
 
 .featured-projects div div div {
-  position: absolute;
-  top: 0;
-  /*left: 10%;*/
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+    position: absolute;
+    top: 0;
+    /*left: 10%;*/
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 /*.featured-projects-title, .featured-projects img {*/
 .featured-projects-title {
-  position: relative;
-  height: 150px;
-  width: 150px;
-  -webkit-transition: all 0.15s ease;
-  -moz-transition: all 0.15s ease;
-  -o-transition: all 0.15s ease;
-  transition: all 0.15s ease;
+    position: relative;
+    height: 150px;
+    width: 150px;
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    transition: all 0.15s ease;
 }
 
 .featured-projects-title:hover, .featured-projects img:hover {
-  background: rgba(0,0,0,0.4);
-  -webkit-transition: all 0.15s ease;
-  -moz-transition: all 0.15s ease;
-  -o-transition: all 0.15s ease;
-  transition: all 0.15s ease;
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    transition: all 0.15s ease;
 }
 
-
 .core featured-projects .featured-projects-title > p {
-  position: absolute;
-  bottom: 0;
-  text-align: left;
-  display: none;
+    position: absolute;
+    bottom: 0;
+    text-align: left;
+    display: none;
 }
 
 .core featured-projects .featured-projects-title > p:hover {
-  display: inline;
+    display: inline;
 }

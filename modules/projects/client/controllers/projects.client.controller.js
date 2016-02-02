@@ -68,7 +68,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     var publishUser = function (project) {
-      AdminUpdateUser.get({userId: project.user._id},
+      AdminUpdateUser.get({ userId: project.user._id },
         function (userData, getResponseHeader) {
           userData.associatedProjects.push(project._id);
           if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser') {
@@ -94,29 +94,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $http.get('/api/v1/keys')
         .then(function (keys, revoked) {
 
-        GeoCodeApi.callGeoCodeApi(project, keys, saveProject)
-          .success(function (data) {
-            var mapboxKey = keys.data.MAPBOX_KEY;
-            var mapboxSecret = keys.data.MAPBOX_SECRET;
-            project.lat = data.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
-            project.lng = data.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
-            project.mapImage = 'http://api.tiles.mapbox.com/v4/' + mapboxKey + '/' + markerUrl + '(' + project.lng + ',' + project.lat + ')/' + project.lng + ',' + project.lat + ',15/' + width + 'x' + height + '.png?access_token=' + mapboxSecret;
-            saveProject();
-          })
-          .error(function (data, status) {
+          GeoCodeApi.callGeoCodeApi(project, keys, saveProject)
+            .success(function (data) {
+              var mapboxKey = keys.data.MAPBOX_KEY;
+              var mapboxSecret = keys.data.MAPBOX_SECRET;
+              project.lat = data.Response.View[0].Result[0].Location.DisplayPosition.Latitude;
+              project.lng = data.Response.View[0].Result[0].Location.DisplayPosition.Longitude;
+              project.mapImage = 'http://api.tiles.mapbox.com/v4/' + mapboxKey + '/' + markerUrl + '(' + project.lng + ',' + project.lat + ')/' + project.lng + ',' + project.lat + ',15/' + width + 'x' + height + '.png?access_token=' + mapboxSecret;
+              saveProject();
+            })
+            .error(function (data, status) {
 
-          })
-      });
+            })
+        });
     };
 
 
     // Find a list of all published projects
     $scope.publishedProjects = [];
     $scope.publishedProjectsFn = function () {
-      $http.get('/api/v1/projects/published', {cache:true})
+      $http.get('/api/v1/projects/published', { cache: true })
         .then(function (publishedProjects) {
           $scope.publishedProjects = publishedProjects.data;
-      });
+        });
     };
 
 
@@ -213,13 +213,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
-    $scope.updateFeatured = function() {
+    $scope.updateFeatured = function () {
       $scope.toggleEditFn(0);
-        console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
-        $http.put('api/v1/projects/' + $scope.project._id + '/featured/true')
-          .then(function(resolved, rejected){
-            console.log('resolved:\n', resolved, '\n\nrejected\n', rejected);
-          });
+      console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
+      $http.put('api/v1/projects/' + $scope.project._id + '/featured/true')
+        .then(function (resolved, rejected) {
+          console.log('resolved:\n', resolved, '\n\nrejected\n', rejected);
+        });
     };
 
 
@@ -336,7 +336,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.toggleFavProject = function () {
       $scope.isFavorite = !$scope.isFavorite;
       console.log('$scope.user.favorites:\n', $scope.user.favorites);
-      var updateFavoriteObj = {favorite: $scope.project.id, isFavorite: true};
+      var updateFavoriteObj = { favorite: $scope.project.id, isFavorite: true };
       if (!$scope.isFavorite) {
         updateFavoriteObj.isFavorite = false;
         removeItemFromArray($scope.project.id);
@@ -347,14 +347,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-    var removeItemFromArray = item => {
+    var removeItemFromArray = function(item) {
       var updatedFavProjects = $scope.user.favorites.indexOf(item);
       if (updatedFavProjects !== -1) {
         $scope.user.favorites.splice(updatedFavProjects, 1);
       }
     };
 
-    var addItemToArray = addedItem => {
+    var addItemToArray = function(addedItem) {
       $scope.user.favorites.push(addedItem);
     };
 
@@ -438,12 +438,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.nlpData = null;
 
     $scope.processNlpData = function () {
-      $http.get('api/v1/nlp').
-      success(function (nlpData) {
+      $http.get('api/v1/nlp').success(function (nlpData) {
         console.log(nlpData);
         $scope.nlpData = nlpData;
-      }).
-      error(function () {
+      }).error(function () {
       });
     };
 

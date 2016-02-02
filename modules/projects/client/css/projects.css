@@ -2,7 +2,7 @@
 ============================================================================= */
 
 pre {
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
 .create-project .page-header {
@@ -20,20 +20,20 @@ h1 #form-container, h2 #form-container, h3 #form-container, h4 #form-container, 
 
 /* form styling */
 #form-container {
-    background:#2f2f2f;
-    margin-bottom:20px;
-    border-radius:5px;
+    background: #2f2f2f;
+    margin-bottom: 20px;
+    border-radius: 5px;
 }
 
 #form-container .page-header {
-    background:#151515;
-    margin:0;
-    padding:30px;
-    border-top-left-radius:5px;
-    border-top-right-radius:5px;
+    background: #151515;
+    margin: 0;
+    padding: 30px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
-.form-group .form-inline .form-group{
+.form-group .form-inline .form-group {
     margin-left: 0;
     margin-right: 0;
     padding: 5px;
@@ -49,31 +49,31 @@ h1 #form-container, h2 #form-container, h3 #form-container, h4 #form-container, 
 }
 
 #status-buttons a {
-    color:#FFF;
-    display:inline-block;
-    font-size:12px;
-    margin-right:10px;
-    text-align:center;
-    text-transform:uppercase;
+    color: #FFF;
+    display: inline-block;
+    font-size: 12px;
+    margin-right: 10px;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 #status-buttons a:hover {
-    text-decoration:none;
+    text-decoration: none;
 }
 
 #status-buttons span {
-    background:#080808;
-    display:block;
-    height:30px;
-    margin:0 auto 10px;
-    padding-top:5px;
-    width:30px;
-    border-radius:50%;
+    background: #080808;
+    display: block;
+    height: 30px;
+    margin: 0 auto 10px;
+    padding-top: 5px;
+    width: 30px;
+    border-radius: 50%;
 }
 
 /* active buttons */
 #status-buttons a.active span {
-    background:#00BC8C;
+    background: #00BC8C;
 }
 
 fieldset > div > div {
@@ -90,7 +90,7 @@ fieldset > div > div {
 /*ckEditor Styling*/
 .cke_wysiwyg, .cke_chrome, #story.cke_1 .cke_chrome, #cke_story {
     /*border-color: #023A31;*/
-    border-color: rgb(2,58,49);
+    border-color: rgb(2, 58, 49);
 
 }
 
@@ -136,7 +136,6 @@ fieldset > div > div {
 
 }
 
-
 /* Thumbnail STYLINGS
 ============================================================================= */
 
@@ -147,7 +146,7 @@ fieldset > div > div {
     /*margin: 1%;*/
 }
 
-.list-group-item:hover{
+.list-group-item:hover {
 
 }
 
@@ -159,39 +158,38 @@ div.list-group > a > div {
 
 }
 
-
 /* ANIMATION STYLINGS
 ============================================================================= */
 #signup-form {
-    position:relative;
-    min-height:300px;
+    position: relative;
+    min-height: 300px;
     /*overflow:hidden;*/
-    padding:30px;
+    padding: 30px;
 }
 
 /* basic styling for entering and leaving */
 /* left and right added to ensure full width */
 #form-views.ng-enter, #form-views.ng-leave {
-    position:absolute;
-    left:30px;
-    right:30px;
-    -moz-transition:0.5s all ease;
-    -webkit-transition:0.5s all ease;
-    transition:0.5s all ease;
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    -moz-transition: 0.5s all ease;
+    -webkit-transition: 0.5s all ease;
+    transition: 0.5s all ease;
 }
 
 /* enter animation */
 #form-views.ng-enter {
-    -webkit-animation:slideInRight 0.5s both ease;
-    -moz-animation:slideInRight 0.5s both ease;
-    animation:slideInRight 0.5s both ease;
+    -webkit-animation: slideInRight 0.5s both ease;
+    -moz-animation: slideInRight 0.5s both ease;
+    animation: slideInRight 0.5s both ease;
 }
 
 /* leave animation */
 #form-views.ng-leave {
-    -webkit-animation:slideOutLeft 0.5s both ease;
-    -moz-animation:slideOutLeft 0.5s both ease;
-    animation:slideOutLeft 0.5s both ease;
+    -webkit-animation: slideOutLeft 0.5s both ease;
+    -moz-animation: slideOutLeft 0.5s both ease;
+    animation: slideOutLeft 0.5s both ease;
 }
 
 .ck-editor {
@@ -208,16 +206,9 @@ div.list-group > a > div {
     margin: 10px 0;
 }
 
-
 .cke_wysiwyg, .cke_chrome, #story.cke_1 .cke_chrome, #cke_story {
-    border: solid 4px rgb(2,58,49);
+    border: solid 4px rgb(2, 58, 49);
 }
-
-
-
-
-
-
 
 /* ANIMATIONS
 ============================================================================= */
@@ -227,40 +218,49 @@ div.list-group > a > div {
         transform: translateX(-200%);
     }
 }
+
 @-moz-keyframes slideOutLeft {
-    to { -moz-transform: translateX(-200%);
+    to {
+        -moz-transform: translateX(-200%);
     }
 }
+
 @-webkit-keyframes slideOutLeft {
-    to { -webkit-transform: translateX(-200%);
+    to {
+        -webkit-transform: translateX(-200%);
     }
 }
 
 /* slide in from the right */
 @keyframes slideInRight {
     from {
-transform:translateX(200%);
-}
-to {
-    transform: translateX(0);
-}
-}
-@-moz-keyframes slideInRight {
-    from { -moz-transform:translateX(200%);
+        transform: translateX(200%);
     }
-    to { -moz-transform: translateX(0);
-    }
-}
-@-webkit-keyframes slideInRight {
-    from { -webkit-transform:translateX(200%);
-    }
-    to { -webkit-transform: translateX(0);
+    to {
+        transform: translateX(0);
     }
 }
 
+@-moz-keyframes slideInRight {
+    from {
+        -moz-transform: translateX(200%);
+    }
+    to {
+        -moz-transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes slideInRight {
+    from {
+        -webkit-transform: translateX(200%);
+    }
+    to {
+        -webkit-transform: translateX(0);
+    }
+}
 
 /* User Favorites Icon for View Single Project view*/
-.view-project .fa-heart-o, .view-project .fa-heart{
+.view-project .fa-heart-o, .view-project .fa-heart {
     float: right;
 }
 
@@ -282,7 +282,6 @@ to {
 project-status-user-info edit-profile {
     margin-bottom: 5%;
 }
-
 
 project-status-user-info edit-profile .col-md-offset-4 {
     left: -25%;

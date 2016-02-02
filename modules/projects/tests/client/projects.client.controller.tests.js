@@ -1,6 +1,6 @@
 'use strict';
 /**
-(function () {
+ (function () {
   // Articles Controller Spec
   describe('ProjectsController', function () {
     // Initialize global variables

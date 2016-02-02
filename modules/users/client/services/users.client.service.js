@@ -14,7 +14,7 @@ angular.module('users').factory('Users', ['$resource',
 angular.module('users').factory('User', ['$resource', 'AdminAuthService',
   function ($resource, AdminAuthService) {
     if (AdminAuthService.user === 'admin') {
-      return $resource('api/v1/user/:userId', {userId: '@_id'}, {
+      return $resource('api/v1/user/:userId', { userId: '@_id' }, {
         update: {
           method: 'PUT'
         }
@@ -28,7 +28,7 @@ angular.module('users').factory('User', ['$resource', 'AdminAuthService',
         }
       });
     } else {
-      return $resource('api/v1/users/:userId', {userId: '@_id'}, {
+      return $resource('api/v1/users/:userId', { userId: '@_id' }, {
         update: {
           method: 'GET'
         }
@@ -40,7 +40,7 @@ angular.module('users').factory('User', ['$resource', 'AdminAuthService',
 angular.module('users').factory('AdminUpdateUser', ['$resource', 'AdminAuthService',
   function ($resource, AdminAuthService) {
     if (AdminAuthService.user === 'admin') {
-      return $resource('api/v1/users/:userId', {userId: '@_id'}, {
+      return $resource('api/v1/users/:userId', { userId: '@_id' }, {
         update: {
           method: 'PUT'
         }
@@ -62,25 +62,25 @@ angular.module('users').factory('AdminUpdateUser', ['$resource', 'AdminAuthServi
 //TODO this should be Users service
 angular.module('users').factory('Newsletter', ['$resource',
   function ($resource) {
-      return $resource('api/v1/newsletter', {email: '@email'}, {
-        update: {
-          method: 'PUT'
-        }
-      }, {
-        create: {
-          method: 'POST'
-        }
-      }, {
-        read: {
-          method: 'GET'
-        }
-      });
+    return $resource('api/v1/newsletter', { email: '@email' }, {
+      update: {
+        method: 'PUT'
+      }
+    }, {
+      create: {
+        method: 'POST'
+      }
+    }, {
+      read: {
+        method: 'GET'
+      }
+    });
   }
 ]);
 
 /**
-angular.module('users.admin').factory('Admin', ['$resource',
-  function ($resource) {
+ angular.module('users.admin').factory('Admin', ['$resource',
+ function ($resource) {
     return $resource('api/users/:userId', {
       userId: '@_id'
     }, {
@@ -89,6 +89,6 @@ angular.module('users.admin').factory('Admin', ['$resource',
       }
     });
   }
-]);
+ ]);
 
-**/
+ **/
