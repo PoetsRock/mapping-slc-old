@@ -180,14 +180,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     };
 
-    // Update existing Project
+
+    /**
+     *
+     *  Update an existing Project
+     *
+     */
     $scope.update = function (isValid) {
       $scope.error = null;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
         return false;
       }
-
       var project = $scope.project;
       project.$update(function (response) {
         if (response.$resolved) {
@@ -213,12 +217,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
     };
 
+
+    /**
+     *
+     * @param value {Boolen} - `true` if featured flag is being updated to true
+     */
     $scope.updateFeatured = function () {
       $scope.toggleEditFn(0);
       console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
-      $http.put('api/v1/projects/' + $scope.project._id + '/featured/true')
-        .then(function (resolved, rejected) {
-          console.log('resolved:\n', resolved, '\n\nrejected\n', rejected);
+      //console.log('$scope.project:\n', $scope.project);
+      $http.put('api/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured)
+        .then(function (resolved) {
+          console.log('resolved:\n', resolved);
         });
     };
 
