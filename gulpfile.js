@@ -113,6 +113,21 @@ gulp.task('watch', function () {
   }
 });
 
+// JS `prod-no-mini` task
+gulp.task('uglify-no-mini', function () {
+  var assets = _.union(
+    defaultAssets.client.js,
+    defaultAssets.client.templates
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.ngAnnotate())
+    .pipe(plugins.concat('application.js'))
+    .pipe(gulp.dest('public/dist'))
+    .pipe(gulp.dest('build'));
+});
+
+
 // CSS linting task
 gulp.task('csslint', function (done) {
   return gulp.src(defaultAssets.client.css)
@@ -335,6 +350,15 @@ gulp.task('protractor', ['webdriver_update'], function () {
     });
 });
 
+
+
+
+// Run the project in development mode
+gulp.task('default', function (done) {
+  runSequence('env:dev', ['nodemon', 'watch'], done);
+});
+
+
 // Lint CSS and JavaScript files.
 gulp.task('lint', function (done) {
   runSequence('less', 'sass', ['csslint', 'eslint', 'jshint'], done);
@@ -373,11 +397,6 @@ gulp.task('test:client', function (done) {
 
 gulp.task('test:e2e', function (done) {
   runSequence('env:test', 'dropdb', 'nodemon', 'protractor', done);
-});
-
-// Run the project in development mode
-gulp.task('default', function (done) {
-  runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
 // Lint project files and minify them into two production files.
