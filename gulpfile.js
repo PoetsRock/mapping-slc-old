@@ -402,11 +402,6 @@ gulp.task('build-no-mini', function (done) {
   runSequence('env:dev', ['uglify-no-mini', 'cssmin'], done);
 });
 
-// Minify project files into two production files.
-gulp.task('build-no-lint', function (done) {
-  runSequence('env:dev', ['uglify', 'cssmin'], done);
-});
-
 // Run the project in production mode
 gulp.task('prod-no-mini', function (done) {
   runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
@@ -416,6 +411,21 @@ gulp.task('prod-no-mini', function (done) {
 gulp.task('prod', function (done) {
   runSequence('templatecache', 'build-no-lint', 'env:prod', ['nodemon', 'watch'], done);
 });
+
+
+// Run the project in production mode
+gulp.task('heroku', function (done) {
+  runSequence('env:dev', 'templatecache', ['uglify', 'cssmin'], done);
+});
+
+
+
+
+// Minify project files into two production files.
+gulp.task('build-no-lint', function (done) {
+  runSequence('env:dev', ['uglify', 'cssmin'], done);
+});
+
 
 /**
  *  Heroku Buildpack for Node.js and gulp.js
