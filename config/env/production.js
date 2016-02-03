@@ -113,6 +113,8 @@ module.exports = {
   },
 
 
+  NEW_RELIC_KEY: process.env.NEW_RELIC_KEY,
+
   ALCHEMY_KEY: process.env.ALCHEMY_KEY,
   ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
 
