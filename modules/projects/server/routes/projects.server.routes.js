@@ -1,16 +1,16 @@
 'use strict';
 
 module.exports = function (app) {
+  var express = require('express');
+  var router = express.Router();
   var fs = require('fs'),
     users = require('../../../users/server/controllers/users.server.controller.js'),
     projectsPolicy = require('../policies/projects.server.policy'),
     projects = require('../controllers/projects.server.controller'),
     mongoose = require('mongoose'),
     Project = mongoose.model('Project'),
-  //tractData = require('../models/data/utahTract.json'),
     markerData = require('../models/project.server.model.js'),
     request = require('request'),
-    //s3 = require('../controllers/s3.server.controller'),
     vimeo = require('../controllers/vimeo.server.controller');
 
 
@@ -34,7 +34,6 @@ module.exports = function (app) {
 
 
 // Single project routes
-  //app.route('/api/v1/projects/:projectId').all(projectsPolicy.isAllowed)
   app.route('/api/v1/projects/:projectId')
     .get(projects.read)
     //.put(projects.markerData, projects.update)
@@ -52,19 +51,6 @@ module.exports = function (app) {
 // Project Markers Routes
   app.route('/api/v1/markerData')
     .get(projects.markerList);
-
-
-///**
-//** Admin Routes
-//**/
-//    app.route('/admins')
-//        .get(admins.hasAuthorization, admins.list)
-//        .post(users.requiresLogin, admins.hasAuthorization, admins.create);
-//
-//    app.route('/admins/:adminId')
-//        .get(admins.hasAuthorization, admins.read)
-//        .put(users.requiresLogin, admins.hasAuthorization, admins.update)
-//        .delete(users.requiresLogin, admins.hasAuthorization, admins.delete);
 
 
   /**
@@ -152,26 +138,17 @@ module.exports = function (app) {
     .put(projects.middleWareTest, projects.update);
 
 
-//// Cloudinary File Storage and Opt
-//  app.route('/api/v1/projects/upload')
-//    .post(s3.uploadStream)
-//    .get(s3.read)
-//    .put(s3.update)
-//    .delete(s3.delete);
-//
-//  app.route('/api/v1/users/upload')
-//    .post(s3.uploadStream)
-//    .get(s3.read)
-//    .put(s3.update)
-//    .delete(s3.delete);
-
-
   //route for getting the Featured Projects Array
   app.route('/api/v1/featured')
     .get(projects.getFeaturedProjects);
 
+  //app.route('/api/v1/projects/:projectId/featured/true')
+  //  .put(projects.updateFeaturedProjects);
+  //  .put(projects.updateAll);
+
   app.route('/api/v1/projects/:projectId/featured/true')
-    .put(projects.updateFeaturedProjects, projects.updateAll);
+    .put(projects.updateFeaturedProjects);
+  app.use('/api/v1/projects/:projectId/featured/true', projects.updateAll);
 
   app.route('/api/v1/projects/:projectId/featured/false')
     .put(projects.update);

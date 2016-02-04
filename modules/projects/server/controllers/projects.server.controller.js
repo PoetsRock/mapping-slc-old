@@ -69,6 +69,50 @@ var mongoose = require('mongoose'),
 
 
 /**
+ * Project middleware
+ */
+exports.updateFeaturedProjects = function (req, res, next) {
+  var oldFeaturedProject = {};
+  var newFeaturedProject = _.extend(req.project, req.body);
+  let project = [];
+
+  Project.find({ featured: true })
+    .sort('featuredBeginDate')
+    .exec(function (err, projects) {
+
+      if (err) {
+        console.log('featuredProjects `err`::::::\n', err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+
+      } else if (projects.length >= 3) {  //`projects.length` should equal 3, bc the new featured project has not been added yet
+        oldFeaturedProject = projects.pop();
+        oldFeaturedProject.featured = false;
+        project.push(oldFeaturedProject);
+        console.log('project with just oldFeaturedProject:::\n', project);
+      } else {
+        return res.status(200).send({
+          message: 'no featured projects were removed'
+        });
+      }
+
+      newFeaturedProject.featured = true;
+      newFeaturedProject.featuredBeginDate = Date.now();
+
+      project.push(newFeaturedProject);
+      req.project = project;
+      console.log('req.project at the end, should have two projects in it:::\n', req.project);
+
+      next();
+    });
+
+  next();
+
+};
+
+
+/**
  * Create a Project
  */
 exports.create = function (req, res) {
@@ -155,33 +199,38 @@ exports.update = function (req, res) {
  * Update Multiple Projects
  */
 exports.updateAll = function (req, res) {
-  console.log('\n\n\nUpdate ALL ::::::: `req`:::::::::::\n', req);
+  //console.log('\n\n\nUpdate ALL ::::::: `req`:::::::::::\n', req);
   let projects = req.project;
-  console.log('\n\n\n11111  IF  :::::Update ALL ::::::: begining of script ::::::: `projects`:::::::::::\n', projects);
+  console.log('\n\n\n:::::Update ALL ::::::: beginning of script ::::::: `projects`:::::::::::\n', projects, '\n\nprojects.length:\n', projects.length);
   var updatedProjects = [];
   let project = {};
 
   for (let i = 0; i > projects.length; i++) {
-    if (req.body) {
+    if(req.body) {
+      console.log('\n\n\nin for loop, first IF conditional  `req.body`:::::::::::\n', req.body);
       project = _.extend(projects[i], req.body);
-      //console.log('\n\n\n11111  IF  :::::Update ALL ::::::: `project[i]`:::::::::::\n', project[i]);
+      //console.log('\n\n\nin for loop, first IF conditional  `project[i]`:::::::::::\n', project[i]);
+      console.log('\n\n\nin for loop, first IF conditional  `project[i]`:::::::::::\n');
     } else {
       project = req.projects[i];
-      //console.log('\n\n\n11111  ELSE  :::::Update ALL ::::::: `project[i]`:::::::::::\n', project[i]);
+      //console.log('\n\n\nin for loop,  ELSE :: `project[i]`:::::::::::\n', project[i]);
+      console.log('\n\n\nin for loop,  ELSE :: `project[i]`:::::::::::\n');
     }
 
+    console.log('\n\n\n:::::::SAVEEEEEE  Update ALL  `project`:::::::\n', project);
+
     project.save(function (err) {
-      //console.log('\n\n\n:::::::SAVEEEEEE  Update ALL  `project`:::::::\n', project);
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
         updatedProjects.push(project);
+        console.log('\n\n\nin SAVEEEEE, in ELSE conditional:: `updatedProjects`:::::::::::\n', updatedProjects);
       }
     });
   }
-  //console.log('\n\n\n:::::::2222  Update ALL `updatedProjects`:::::::\n', updatedProjects);
+  console.log('\n\n\n:::::::end of Update ALL `updatedProjects`:::::::\n', updatedProjects);
   res.jsonp(updatedProjects);
 
 };
@@ -312,48 +361,6 @@ exports.middleWareTest = function (req, res, next) {
   req.project = project;
   console.log('::::::::::::::::::::::::::test middleware `project`::::::\n', project);
   next();
-};
-
-
-/**
- * Project middleware
- */
-exports.updateFeaturedProjects = function (req, res, next) {
-  var oldFeaturedProject = {};
-  var newFeaturedProject = _.extend(req.project, req.body);
-  let project = [];
-
-  Project.find({ featured: true })
-    .sort('featuredBeginDate')
-    .exec(function (err, projects) {
-
-      if (err) {
-        console.log('featuredProjects `err`::::::\n', err);
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else if (projects.length >= 3) {  //`projects.length` should equal 3, bc the new featured project has not been added yet
-        oldFeaturedProject = projects.pop();
-        oldFeaturedProject.featured = false;
-        project.push(oldFeaturedProject);
-      } else {
-        return res.status(200).send({
-          message: 'no featured projects were removed'
-        });
-      }
-
-      newFeaturedProject.featured = true;
-      newFeaturedProject.featuredBeginDate = Date.now();
-
-      project.push(newFeaturedProject);
-      req.project = project;
-      console.log('req.project:::\n', req.project);
-
-      //next();
-    });
-
-  next();
-
 };
 
 

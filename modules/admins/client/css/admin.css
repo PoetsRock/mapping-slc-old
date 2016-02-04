@@ -51,11 +51,11 @@ a.widget-box span {
 .admin-list {
     background-color: rgba(0, 0, 0, 0.1);
     border: solid 1px #000000;
-    margin: 1% 0;
+    margin: 1% 2%;
     padding: 2% 5%;
+    width: 46%;
     color: #000;
     font-size: 1.75rem;
-    left: 8%;
     -webkit-transition: all ease 0.2s;
     -moz-transition: all ease 0.2s;
     -o-transition: all ease 0.2s;

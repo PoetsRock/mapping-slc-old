@@ -226,7 +226,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.toggleEditFn(0);
       console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
       //console.log('$scope.project:\n', $scope.project);
-      $http.put('api/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured)
+      $http.put('api/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured, $scope.project)
         .then(function (resolved) {
           console.log('resolved:\n', resolved);
         });
