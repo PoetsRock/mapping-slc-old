@@ -4,7 +4,9 @@ angular.module('core').directive('featureSideBar', function () {
   return {
     restrict: 'EA',
     templateUrl: '/modules/core/client/directives/views/projects-sidebar.html',
-    scope: true,
+    scope: {
+
+    },
     link: function (scope) {
       scope.show = false;
         scope.hideSidebar = function () {
