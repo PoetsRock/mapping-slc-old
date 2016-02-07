@@ -1,17 +1,7 @@
-/*.featured-projects div div:hover {*/
-/*top: 0;*/
-/*position: absolute;*/
-/*-webkit-transition: all 0.5s ease;*/
-/*-moz-transition: all 0.5s ease;*/
-/*-o-transition: all 0.5s ease;*/
-/*transition: all 0.5s ease;*/
-/*width: 100%;*/
-/*display: inline;*/
-/*}*/
-
 .featured-projects div div div {
     position: absolute;
     top: 0;
+    color: #ffffff;
     /*left: 10%;*/
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -38,13 +28,13 @@
     transition: all 0.15s ease;
 }
 
-.core featured-projects .featured-projects-title > p {
+.featured-projects-title > p {
     position: absolute;
     bottom: 0;
     text-align: left;
     display: none;
 }
 
-.core featured-projects .featured-projects-title > p:hover {
-    display: inline;
+.featured-projects-title:hover p {
+    display: block;
 }
