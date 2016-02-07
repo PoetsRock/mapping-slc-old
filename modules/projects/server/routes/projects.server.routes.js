@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = function (app) {
-  var express = require('express');
-  var router = express.Router();
-  var fs = require('fs'),
+  var express = require('express'),
+    router = express.Router(),
+    fs = require('fs'),
     users = require('../../../users/server/controllers/users.server.controller.js'),
     projectsPolicy = require('../policies/projects.server.policy'),
     projects = require('../controllers/projects.server.controller'),
@@ -146,12 +146,35 @@ module.exports = function (app) {
   //  .put(projects.updateFeaturedProjects);
   //  .put(projects.updateAll);
 
-  app.route('/api/v1/projects/:projectId/featured/true')
-    .put(projects.updateFeaturedProjects);
-  app.use('/api/v1/projects/:projectId/featured/true', projects.updateAll);
-
   app.route('/api/v1/projects/:projectId/featured/false')
     .put(projects.update);
+
+
+  router.put('/api/v1/projects/:projectId/featured/true', projects.updateFeaturedProjects);
+  //router.put('/api/v1/projects/:projectId/featured/true', projects.updateAll);
+
+
+//
+//// a middleware sub-stack that handles GET requests to the /user/:id path
+//router.get('/user/:id', function (req, res, next) {
+//  // if the user ID is 0, skip to the next router
+//  if (req.params.id == 0) next('route');
+//  // otherwise pass control to the next middleware function in this stack
+//  else next(); //
+//}, function (req, res, next) {
+//  // render a regular page
+//  res.render('regular');
+//});
+//
+//// handler for the /user/:id path, which renders a special page
+//router.get('/user/:id', function (req, res, next) {
+//  console.log(req.params.id);
+//  res.render('special');
+//});
+
+// mount the router on the app
+app.use('/', router);
+
 
 
   // Finish by binding the Project middleware

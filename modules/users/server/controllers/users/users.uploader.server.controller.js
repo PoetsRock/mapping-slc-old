@@ -287,3 +287,41 @@ exports.changeProfilePicture = function (req, res) {
     });
   }
 };
+
+
+
+/**
+
+ from ll's air b n b
+
+ 'use strict';
+
+ var request = require('request');
+
+ var $ = {};
+
+ $.urlToBase64 = function(url, callback){
+
+    //There is a problem calling to vacation rental agent and the workaround is to use this IP Address instead
+    url = url.replace("www.vacationrentalagent.com", "104.239.185.69");
+    url = url.replace("vacationrentalagent.com", "104.239.185.69");
+
+    request({url: url, encoding: 'binary'}, function(err, response, body){
+        if (err) {
+            return callback(err);
+        }
+        if (response.statusCode === 200){
+            var image = new Buffer(body, 'binary').toString('base64');
+            var contentType = response.headers['content-type'];
+            return callback(null, image, contentType);
+        }
+        else{
+            return callback(new Error('Fetching photo failed because it returned a status = ' + response.statusCode + ' for url = ' + url));
+        }
+    });
+};
+
+ module.exports = $;
+
+
+ **/

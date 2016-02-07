@@ -71,46 +71,73 @@ var mongoose = require('mongoose'),
 /**
  * Project middleware
  */
-exports.updateFeaturedProjects = function (req, res, next) {
-  var oldFeaturedProject = {};
-  var newFeaturedProject = _.extend(req.project, req.body);
-  let project = [];
+exports.updateFeaturedProjects = function (req, res) {
+  console.log('\n\n\n\n::::: beginning of method ::::  `req.body:`\n', req.body, '\n\n');
 
-  Project.find({ featured: true })
-    .sort('featuredBeginDate')
-    .exec(function (err, projects) {
+  let responseBody = [];
 
+  //update old featured project
+
+  /**
+   *
+   *  the question for tomorrow is:
+   *  what is the query for the old Proj returning / updating ...
+   *  is it just updating one object or all three?
+   *
+   */
+
+  let queryOldProject = {
+    featured: true
+  };
+  let oldFeaturedProjectUpdate = {
+    featuredEndDate: Date.now(),
+    featured: false
+  };
+  let oldFeaturedProjectOptions = {
+    new: true,
+    sort: 'featuredBeginDate'
+  };
+
+  //setup new featured project variables
+  let queryNewProjectId = req.body._id;
+  let newFeaturedProjectUpdate = {
+    featuredBeginDate: Date.now(),
+    featured: true
+  };
+  let newFeaturedProjectOptions = {
+    new: true
+  };
+
+
+  Project.findOneAndUpdate(queryOldProject, oldFeaturedProjectUpdate, oldFeaturedProjectOptions,
+    function(err, oldProject) {
       if (err) {
-        console.log('featuredProjects `err`::::::\n', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-
-      } else if (projects.length >= 3) {  //`projects.length` should equal 3, bc the new featured project has not been added yet
-        oldFeaturedProject = projects.pop();
-        oldFeaturedProject.featured = false;
-        project.push(oldFeaturedProject);
-        console.log('project with just oldFeaturedProject:::\n', project);
       } else {
-        return res.status(200).send({
-          message: 'no featured projects were removed'
-        });
+        console.log('\n\n\n\n::::: inside of `callBack()` for OLD::::  `OLDproject:`\n', oldProject, '\n\n');
+        responseBody.push(oldProject);
       }
-
-      newFeaturedProject.featured = true;
-      newFeaturedProject.featuredBeginDate = Date.now();
-
-      project.push(newFeaturedProject);
-      req.project = project;
-      console.log('req.project at the end, should have two projects in it:::\n', req.project);
-
-      next();
     });
 
-  next();
+  Project.findOneAndUpdate(queryNewProjectId, newFeaturedProjectUpdate, newFeaturedProjectOptions,
+    function(err, newProject) {
+      console.log('\n\n\n\n::::: inside of `callBack() for NEW` ::::  `queryNewProjectId`:`\n', queryNewProjectId, '\n\n');
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log('\n\n\n\n::::: inside of `callBack() for NEW` ::::  `newProject`:`\n', newProject, '\n\n');
+        responseBody.push(newProject);
+        //return newProj;
+        //console.log('\n\n\n\n::::: inside of `callBack()` ::::  `responseBody:`\n', responseBody, '\n\n');
+      }
+    });
 
+  res.jsonp(responseBody);
 };
-
 
 /**
  * Create a Project
@@ -166,20 +193,12 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
 
-  console.log('\n\n\nreq.body:\n', req.body);
+  console.log('\n\n\n\nreq:\n', req);
+  console.log('\n\n\n\nreq.body:\n', req.body);
   console.log('\n\n\n\nreq.project:\n', req.project);
 
   var project = _.extend(req.project, req.body);
   console.log('\n\n\n:::::::1111 update `project`:::::::\n', project);
-  //var project = {};
-  //if (req.project) {
-  //  console.log('\n\n\nreq.body:\n', req.body);
-  //  console.log('\n\n\n\nreq.project:\n', req.project);
-  //  project = _.extend(req.project, req.body);
-  //} else {
-  //  project = req.body;
-  //  console.log('\n\n\n:::::::1111  project:::::::\n', project);
-  //}
 
   project.save(function (err) {
     if (err) {
@@ -199,41 +218,69 @@ exports.update = function (req, res) {
  * Update Multiple Projects
  */
 exports.updateAll = function (req, res) {
-  //console.log('\n\n\nUpdate ALL ::::::: `req`:::::::::::\n', req);
   let projects = req.project;
-  console.log('\n\n\n:::::Update ALL ::::::: beginning of script ::::::: `projects`:::::::::::\n', projects, '\n\nprojects.length:\n', projects.length);
+  //console.log('\n\n\n:::::Update ALL ::::::: beginning, `projects`::::\n', projects, '\n\nprojects.length:\n', projects.length);
   var updatedProjects = [];
   let project = {};
 
-  for (let i = 0; i > projects.length; i++) {
-    if(req.body) {
-      console.log('\n\n\nin for loop, first IF conditional  `req.body`:::::::::::\n', req.body);
-      project = _.extend(projects[i], req.body);
-      //console.log('\n\n\nin for loop, first IF conditional  `project[i]`:::::::::::\n', project[i]);
-      console.log('\n\n\nin for loop, first IF conditional  `project[i]`:::::::::::\n');
-    } else {
-      project = req.projects[i];
-      //console.log('\n\n\nin for loop,  ELSE :: `project[i]`:::::::::::\n', project[i]);
-      console.log('\n\n\nin for loop,  ELSE :: `project[i]`:::::::::::\n');
-    }
+  for (let i = 0; i < projects.length; i++) {
+    project = _.extend(projects[i], req.body);
 
-    console.log('\n\n\n:::::::SAVEEEEEE  Update ALL  `project`:::::::\n', project);
+    //console.log('\n\n\n3333333   in for loop, `project`, to be saved:::::::::::\n', project, '\n\n\n');
 
     project.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        updatedProjects.push(project);
-        console.log('\n\n\nin SAVEEEEE, in ELSE conditional:: `updatedProjects`:::::::::::\n', updatedProjects);
-      }
+      updatedProjects.push(project);
     });
   }
+
   console.log('\n\n\n:::::::end of Update ALL `updatedProjects`:::::::\n', updatedProjects);
   res.jsonp(updatedProjects);
 
 };
+
+
+/**
+ *
+
+
+ exports.updateAll = function (req, res) {
+  let projects = req.project;
+  //console.log('\n\n\n:::::Update ALL ::::::: beginning of script ::::::: `projects`:::::::::::\n', projects, '\n\nprojects.length:\n', projects.length);
+  var updatedProjects = [];
+  let project = {};
+
+  for (let i = 0; i < projects.length; i++) {
+    //if(req.body) {
+
+    project = _.extend(projects[i], req.body);
+    console.log('\n\n\n3333333   in for loop, `project`, to be saved:::::::::::\n', project, '\n\n\n');
+
+    //} else {
+    //  project = req.projects[i];
+    //  console.log('\n\n\nin for loop,  ELSE :: `project[i]`:::::::::::\n');
+    //}
+
+    project.save(function (err) {
+      //if (err) {
+      //  return res.status(400).send({
+      //    message: errorHandler.getErrorMessage(err)
+      //  });
+      //} else {
+
+      updatedProjects.push(project);
+
+      //}
+    });
+  }
+  console.log('\n\n\n:::::::end of Update ALL `updatedProjects`:::::::\n', updatedProjects);
+
+  res.jsonp(updatedProjects);
+
+};
+
+
+ */
+
 
 /**
  * Delete an Project
