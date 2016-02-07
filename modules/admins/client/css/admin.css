@@ -284,12 +284,8 @@ td i .selected {
 
 /*.chrisIsChris .header-profile-image {*/
 .admin-user .header-profile-image {
-    height: 100px;
-    width: 100px;
-    margin-left: 5%;
-    top: -50px;
-    z-index: 150;
-    position: relative;
+    height: 50px;
+    width: 50px;
 }
 
 .admin-user .page-header {
@@ -301,11 +297,11 @@ td i .selected {
     margin-left: 5%;
 }
 
-.tile {
-    width: 95%;
-    height: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-}
+/*.tile {*/
+    /*width: 95%;*/
+    /*height: auto;*/
+    /*background-color: rgba(0, 0, 0, 0.5);*/
+/*}*/
 
 .tile img {
     width: 64px;
@@ -314,4 +310,8 @@ td i .selected {
 
 .admin-list small {
     font-size: 1rem;
+}
+
+.clear-both {
+    float: right;
 }

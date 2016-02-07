@@ -8,6 +8,7 @@
     <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
 
     <div class="main-content-outer">
+
       <section data-ng-controller="UserController" data-ng-init="find()" class="main-content-inner">
 
         <div class="admin">
@@ -28,15 +29,14 @@
             </div>
 
             <div class="row">
-              <div class="col-md-12">
-                {{user._id}}
-                <a data-ng-repeat="user in users" ui-sref="admin.adminViewUser({userId: user._id})" class="col-md-6">
-                  <div class="tile">
-                    <div class="user-summary" data-ng-bind="user.displayName">{{user._id}}</div>
-                    <div><img data-ng-src="{{user.profileImage}}"></div>
-                  </div>
+
+                <a data-ng-repeat="user in users" ui-sref="admin.adminViewUser({userId: user._id})" class="col-md-6 col-sm-12 admin-list">
+                  <div><img data-ng-src="{{user.profileImage}}" class="header-profile-image"></div>
+                  <div class="clear-both"><h3 class="list-group-item-heading" data-ng-bind="user.displayName">{{user._id}}></h3></div>
+
+
                 </a>
-              </div>
+
             </div>
 
           </div>

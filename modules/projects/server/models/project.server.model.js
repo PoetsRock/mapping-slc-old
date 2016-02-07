@@ -166,6 +166,9 @@ var ProjectSchema = new Schema({
   featuredBeginDate: {
     type: Date
   },
+  featuredEndDate: {
+    type: Date
+  },
   mainImage: {
     type: String,
     trim: true
