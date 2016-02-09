@@ -11,8 +11,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //get featured projects as array
     $scope.featuredProjects = [];
     var getFeatured = function () {
-      $http.get('/api/v1/projects/featured', { cache: true })
+      console.log('`getFeatured()`:\n');
+      $http.get('/api/v1/featured', { cache: true })
         .then(function (resolved, rejected) {
+          console.log('rejected:\n', rejected);
+          console.log('resolved.data:\n', resolved.data);
           $scope.featuredProjects = resolved.data;
         });
     };

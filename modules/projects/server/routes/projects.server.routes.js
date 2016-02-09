@@ -134,17 +134,21 @@ module.exports = function (app) {
     });
 
   //route for getting the Featured Projects Array
-  app.route('/api/v1/projects/featured')
+  app.route('/api/v1/featured')
     .get(projects.getFeaturedProjects);
 
   app.route('/api/v1/projects/:projectId/featured/false')
     .put(projects.update);
 
-  router.put('/api/v1/projects/:projectId/featured/true', projects.updateFeaturedProjects);
-  //router.put('/api/v1/projects/:projectId/featured/true', projects.updateAll);
+  app.route('api/v1/featured')
+    .get(projects.removeOldest);
+
+  app.route('/api/v1/projects/:projectId/featured/true')
+    .put(projects.updateFeaturedProjects);
 
 
-  // mount the router on the app
+
+   //mount the router on the app
   app.use('/', router);
 
   // Finish by binding the Project middleware

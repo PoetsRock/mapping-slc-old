@@ -329,13 +329,9 @@ exports.projectByID = function (req, res, next, id) {
  * Project middleware test
  */
 exports.middleWareTest = function (req, res, next) {
-
-
   let project = _.extend(req.project, req.body);
   project.testField = 'working';
-
   req.project = project;
-  console.log('::::::::::::::::::::::::::test middleware `project`::::::\n', project);
   next();
 };
 
@@ -355,20 +351,17 @@ exports.hasAuthorization = function (req, res, next) {
  * Returns an array of objects that contains the featured projects
  */
 exports.getFeaturedProjects = function (req, res) {
-  console.log('\n\n\n\n::::: `exports.getFeaturedProjects()`:  var `req`\n', req, '\n\n\n\n');
   Project.find({ featured: true })
     .sort('-featuredBeginDate')
     .exec(function (err, projects) {
-      console.log('\n\n\n\n::::: `exports.getFeaturedProjects()`:  var `projects`\n', projects, '\n\n\n\n');
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        return projects;
+        res.jsonp(projects);
       }
     });
-  res.jsonp(projects);
 };
 
 
@@ -496,7 +489,7 @@ let featuredProjectOptions = {
  * @param project
  * @param res
  */
-let updateNewFeaturedProject = function (project, res) {
+let updateNewFeaturedProject = function (project) {
   let newProjectUpdated = null;
   project.featured = true;
   project.featuredBeginDate = Date.now();
@@ -512,7 +505,8 @@ let updateNewFeaturedProject = function (project, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.jsonp(newProject);
+        console.log('\n\n\n\n::::: inside `newFeaturedProject() UPDATE::` ::::  param: `newProject`:`\n', newProject, '\n\n');
+        return newProject;
       }
     });
 };
@@ -532,6 +526,7 @@ let updateOldFeaturedProject = (req, res) => {
 
   Project.find({ featured: true })
     .sort('-featuredBeginDate')
+    //.sort({'featuredBeginDate': -1})
     .exec(function (err, projects) {
       if (err) {
         return res.status(400).send({
@@ -559,10 +554,10 @@ let updateOldFeaturedProject = (req, res) => {
             });
           } else {
             console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  var  `updatedOldProject:`\n', updatedOldProject, '\n\n');
-            res.jsonp(updatedOldProject);
-            res.status(200).send({
-              message: 'Success: Removed ' + updatedOldProject.title + 'from the Featuerd Projects list'
-            });
+            res.jsonp(updatedOldProject)
+              .status(200).send({
+                message: 'Success: Removed ' + updatedOldProject.title + 'from the Featuerd Projects list'
+              });
             return updatedOldProject;
           }
         });
@@ -586,13 +581,23 @@ let updateOldFeaturedProject = (req, res) => {
 };
 
 
-/**
- * Project middleware
- */
-exports.updateFeaturedProjects = (req, res) => {
 
-  updateOldFeaturedProject(req.body);
+exports.updateFeaturedProjects = function(req, res) {
+
+  updateOldFeaturedProject();
 
   updateNewFeaturedProject(req.body);
+
+  //res.jsonp(projectRemoved);
+
+};
+
+
+exports.removeOldest = function(req, res) {
+
+  updateOldFeaturedProject();
+
+  res.jsonp(projectRemoved);
+
 
 };
