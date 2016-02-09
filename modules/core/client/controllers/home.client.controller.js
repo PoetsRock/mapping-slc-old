@@ -11,8 +11,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     //get featured projects as array
     $scope.featuredProjects = [];
     var getFeatured = function () {
+      console.log('`getFeatured()`:\n');
       $http.get('/api/v1/featured', { cache: true })
         .then(function (resolved, rejected) {
+          console.log('rejected:\n', rejected);
+          console.log('resolved.data:\n', resolved.data);
           $scope.featuredProjects = resolved.data;
         });
     };
@@ -238,11 +241,10 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           .on('click', function (e) {
             $scope.$apply(function () {
               $scope.projectProperties = e.target._geojson.properties;
-              //$scope.markerId = e.target._leaflet_id;
-              //$scope.showSidebar($scope.markerId, $scope.projectProperties);
+              $scope.markerId = e.target._leaflet_id;
+              $scope.showSidebar($scope.markerId, $scope.projectProperties);
 
-
-              $scope.$broadcast('CurrentStory', $scope.projectProperties);
+              //$scope.$broadcast('CurrentStory', $scope.projectProperties);
 
             });
 

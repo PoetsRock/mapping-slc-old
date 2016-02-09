@@ -220,12 +220,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     /**
      *
-     * @param value {Boolen} - `true` if featured flag is being updated to true
+     *
      */
     $scope.updateFeatured = function () {
       $scope.toggleEditFn(0);
       console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
-      //console.log('$scope.project:\n', $scope.project);
+      console.log('$scope.project:\n', $scope.project);
       $http.put('api/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured, $scope.project)
         .then(function (resolved) {
           console.log('resolved:\n', resolved);
