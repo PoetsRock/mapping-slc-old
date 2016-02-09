@@ -133,26 +133,19 @@ module.exports = function (app) {
 
     });
 
-  //
-  ////test for middleware
-  //app.route('/api/v1/projects/:projectId/test')
-  //  .put(projects.middleWareTest, projects.update);
-  //
-  //
-  ////route for getting the Featured Projects Array
-  //app.route('/api/v1/projects/featured')
-  //  .get(projects.getFeaturedProjects);
-  //
-  //app.route('/api/v1/projects/:projectId/featured/false')
-  //  .put(projects.update);
-  //
-  //router.get('/api/v1/projects/featured/oldest/test', projects.updateOldFeaturedProject);
-  ////router.put('/api/v1/projects/:projectId/featured/true', featuredProjects.updateFeaturedProjects);
+  //route for getting the Featured Projects Array
+  app.route('/api/v1/projects/featured')
+    .get(projects.getFeaturedProjects);
+
+  app.route('/api/v1/projects/:projectId/featured/false')
+    .put(projects.update);
+
+  router.put('/api/v1/projects/:projectId/featured/true', projects.updateFeaturedProjects);
   //router.put('/api/v1/projects/:projectId/featured/true', projects.updateAll);
-  //
-  //
-  //// mount the router on the app
-  //app.use('/', router);
+
+
+  // mount the router on the app
+  app.use('/', router);
 
   // Finish by binding the Project middleware
   app.param('projectId', projects.projectByID);

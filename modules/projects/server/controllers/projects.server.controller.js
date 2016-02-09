@@ -526,7 +526,7 @@ let updateNewFeaturedProject = function (project, res) {
  * @param res
  */
 //let updateOldFeaturedProject = (req, res) => {
-exports.updateOldFeaturedProject = (req, res) => {
+let updateOldFeaturedProject = (req, res) => {
 
   let featuredProjects = [];
 
@@ -544,7 +544,7 @@ exports.updateOldFeaturedProject = (req, res) => {
     //.then(function () {
       console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  ::::  var: `featuredProjects`:`\n', featuredProjects, '\n\n\n\n');
 
-      if (featuredProjects === 3) {
+      if (featuredProjects.length === 3) {
         let oldProject = featuredProjects.pop();
         oldProject.featuredEndDate = Date.now();
         oldProject.featured = false;
