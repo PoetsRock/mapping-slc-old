@@ -16,57 +16,6 @@ var mongoose = require('mongoose'),
 //fs = Promise.promisifyAll(require('fs')),
 //exports = Promise.promisifyAll(exports);
 
-/**
- function nlpKeywords(sanitizedText) {
-  //return new Promise( //deleted bluebird, use native es6 promises if needed
-    function (resolve, reject) {
-      var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
-      alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'},
-        function (err, keywords) {
-        if (keywords) {
-          resolve(keywords);
-        } else {
-          let error = new Error('Error, error.');
-          reject(error);
-        }
-      });
-  });
-}
- **/
-
-
-//
-// export default function getReplies(topicId) {
-//  return new Promise(function (resolve, reject) {
-//
-//    _getRepliesForTopic(topicId,
-//
-//      function (data) {
-//        if (data.replies) {
-//          resolve(replies);
-//        } else {
-//          let error = new Error("An error occurred");
-//          reject(error);
-//
-//        }
-//      });
-//  });
-//}
-//
-// getReplies(1)
-// .then(function (replies) {
-//    return replies.filter(reply => !reply.isAbuse);
-//  })
-// .then(function (filteredReplies) {
-//    console.log(filteredReplies);
-//  })
-// .catch(function (error) {
-//    console.log(error)
-//    ;
-//  });
-
-// **/
-
 
 /**
  * Create a Project
@@ -121,14 +70,7 @@ exports.read = function (req, res) {
  * Update a Project
  */
 exports.update = function (req, res) {
-
-  console.log('\n\n\n\nreq:\n', req);
-  console.log('\n\n\n\nreq.body:\n', req.body);
-  console.log('\n\n\n\nreq.project:\n', req.project);
-
   var project = _.extend(req.project, req.body);
-  console.log('\n\n\n:::::::1111 update `project`:::::::\n', project);
-
   project.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -148,67 +90,20 @@ exports.update = function (req, res) {
  */
 exports.updateAll = function (req, res) {
   let projects = req.project;
-  //console.log('\n\n\n:::::Update ALL ::::::: beginning, `projects`::::\n', projects, '\n\nprojects.length:\n', projects.length);
   var updatedProjects = [];
   let project = {};
 
   for (let i = 0; i < projects.length; i++) {
     project = _.extend(projects[i], req.body);
-
-    //console.log('\n\n\n3333333   in for loop, `project`, to be saved:::::::::::\n', project, '\n\n\n');
-
     project.save(function (err) {
-      updatedProjects.push(project);
+      if(!err) {
+        updatedProjects.push(project);
+      }
     });
   }
-
-  console.log('\n\n\n:::::::end of Update ALL `updatedProjects`:::::::\n', updatedProjects);
   res.jsonp(updatedProjects);
 
 };
-
-
-/**
- *
-
-
- exports.updateAll = function (req, res) {
-  let projects = req.project;
-  //console.log('\n\n\n:::::Update ALL ::::::: beginning of script ::::::: `projects`:::::::::::\n', projects, '\n\nprojects.length:\n', projects.length);
-  var updatedProjects = [];
-  let project = {};
-
-  for (let i = 0; i < projects.length; i++) {
-    //if(req.body) {
-
-    project = _.extend(projects[i], req.body);
-    console.log('\n\n\n3333333   in for loop, `project`, to be saved:::::::::::\n', project, '\n\n\n');
-
-    //} else {
-    //  project = req.projects[i];
-    //  console.log('\n\n\nin for loop,  ELSE :: `project[i]`:::::::::::\n');
-    //}
-
-    project.save(function (err) {
-      //if (err) {
-      //  return res.status(400).send({
-      //    message: errorHandler.getErrorMessage(err)
-      //  });
-      //} else {
-
-      updatedProjects.push(project);
-
-      //}
-    });
-  }
-  console.log('\n\n\n:::::::end of Update ALL `updatedProjects`:::::::\n', updatedProjects);
-
-  res.jsonp(updatedProjects);
-
-};
-
-
- */
 
 
 /**
@@ -397,14 +292,26 @@ exports.nlpProjects = function (req, res, next) {
 };
 
 
-/**
- *
- * @param req
- * @param res
- * @param next
- *
- *
 
+/**
+ function nlpKeywords(sanitizedText) {
+  //return new Promise( //deleted bluebird, use native es6 promises if needed
+    function (resolve, reject) {
+      var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
+      alchemyApi.keywords(sanitizedText, {'sentiment': 0, 'outputMode': 'json'},
+        function (err, keywords) {
+        if (keywords) {
+          resolve(keywords);
+        } else {
+          let error = new Error('Error, error.');
+          reject(error);
+        }
+      });
+  });
+}
+ **/
+
+/**
  if (req.body.story) {
     var sanitizedText = sanitizeHtml(req.body.story, {
       allowedTags: [],
@@ -437,11 +344,6 @@ var text = {
 //});
 
 }
- //console.log('project.keywords v2:\n', project.keywords);
- //console.log('projectKeywords:\n', projectKeywords);
-
- *
- *
  **/
 
 
@@ -487,25 +389,18 @@ let featuredProjectOptions = {
  * update project to a featured project
  *
  * @param project
- * @param res
  */
 let updateNewFeaturedProject = function (project) {
-  let newProjectUpdated = null;
   project.featured = true;
   project.featuredBeginDate = Date.now();
   project.featuredEndDate = null;
 
   //setup new featured project variables
-
   Project.findOneAndUpdate({ _id: project._id }, project, featuredProjectOptions,
     function (err, newProject) {
       if (err) {
-        console.log('\n\n\n\n::::: inside `newFeaturedProject() UPDATE::` ::::  param: `err`:`\n', err, '\n\n');
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        return { message: errorHandler.getErrorMessage(err) };
       } else {
-        console.log('\n\n\n\n::::: inside `newFeaturedProject() UPDATE::` ::::  param: `newProject`:`\n', newProject, '\n\n');
         return newProject;
       }
     });
@@ -513,91 +408,46 @@ let updateNewFeaturedProject = function (project) {
 
 
 /**
- *
  * update project to no longer be a featured project
  *
- * @param req
- * @param res
  */
-//let updateOldFeaturedProject = (req, res) => {
-let updateOldFeaturedProject = (req, res) => {
+let updateOldFeaturedProject = () => {
 
   let featuredProjects = [];
 
   Project.find({ featured: true })
     .sort('-featuredBeginDate')
-    //.sort({'featuredBeginDate': -1})
     .exec(function (err, projects) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        return { message: errorHandler.getErrorMessage(err) };
       } else {
         featuredProjects = projects;
       }
-    //})
-    //.then(function () {
-      console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  ::::  var: `featuredProjects`:`\n', featuredProjects, '\n\n\n\n');
-
       if (featuredProjects.length === 3) {
         let oldProject = featuredProjects.pop();
         oldProject.featuredEndDate = Date.now();
         oldProject.featured = false;
 
-        console.log('\n\n\n\n::::: `updateOldFeaturedProject()`:::: inside if ::::  var: `oldProject`:`\n', oldProject, '\n\n');
-
         oldProject.save(function (err, updatedOldProject) {
           if (err) {
             console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  ::::  param: `err`:`\n', err, '\n\n');
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
+            return { message: errorHandler.getErrorMessage(err) };
           } else {
-            console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  var  `updatedOldProject:`\n', updatedOldProject, '\n\n');
-            res.jsonp(updatedOldProject)
-              .status(200).send({
-                message: 'Success: Removed ' + updatedOldProject.title + 'from the Featuerd Projects list'
-              });
             return updatedOldProject;
           }
         });
 
       } else if (featuredProjects < 3) {
-        console.log('\n\n\n\n::::: `updateOldFeaturedProject()`:::: inside else if  #1:::: ');
-        res.status(200).send({
-          message: 'Less than 3 Featured Projects. No projects were removed from the featured projects'
-        });
+        return { message: 'Less than 3 Featured Projects. No projects were removed from the featured projects' };
 
       } else if (featuredProjects > 3) {
-        console.log('\n\n\n\n::::: `updateOldFeaturedProject()`:::: inside else if  #2:::: ');
-        res.status(200).send({
-          message: 'ALERT: More than 3 Featured Projects before adding current project. NO PROJECTS WERE UPDATED'
-        });
+        return { message: 'ALERT: More than 3 Featured Projects before adding current project. NO PROJECTS WERE UPDATED' };
       }
-
-
     });
-
 };
 
 
-
-exports.updateFeaturedProjects = function(req, res) {
-
+exports.updateFeaturedProjects = function (req, res) {
   updateOldFeaturedProject();
-
   updateNewFeaturedProject(req.body);
-
-  //res.jsonp(projectRemoved);
-
-};
-
-
-exports.removeOldest = function(req, res) {
-
-  updateOldFeaturedProject();
-
-  res.jsonp(projectRemoved);
-
-
 };
