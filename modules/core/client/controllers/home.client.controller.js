@@ -241,11 +241,10 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           .on('click', function (e) {
             $scope.$apply(function () {
               $scope.projectProperties = e.target._geojson.properties;
-              //$scope.markerId = e.target._leaflet_id;
-              //$scope.showSidebar($scope.markerId, $scope.projectProperties);
+              $scope.markerId = e.target._leaflet_id;
+              $scope.showSidebar($scope.markerId, $scope.projectProperties);
 
-
-              $scope.$broadcast('CurrentStory', $scope.projectProperties);
+              //$scope.$broadcast('CurrentStory', $scope.projectProperties);
 
             });
 
