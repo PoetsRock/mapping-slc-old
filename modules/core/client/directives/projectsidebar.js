@@ -10,7 +10,8 @@ angular.module('core').directive('featureSideBar', function () {
     link: function (scope) {
       scope.show = false;
         scope.hideSidebar = function () {
-            console.log('hidefunction')
+            jQuery('.leaflet-top.leaflet-right').css('right','0');
+            jQuery('.menu-ui').css('right','1.5%');
             scope.show = !scope.show;
             scope.$emit('closeMap')
         };
@@ -25,9 +26,10 @@ angular.module('core').directive('featureSideBar', function () {
       }
 
       scope.eyedees = [];
+
       scope.$on('CurrentStory', function (event, data) {
-
-
+          jQuery('.leaflet-top.leaflet-right').css('right','20%');
+          jQuery('.menu-ui').css('right','22%');
         scope.project = data;
         scope.eyedees.push(scope.project.projectId);
 
@@ -38,6 +40,8 @@ angular.module('core').directive('featureSideBar', function () {
         if (scope.eyedees.length > 1) {
           if (identical(scope.eyedees)) {
             scope.hideSidebar();
+              jQuery('.leaflet-top.leaflet-right').css('right','0');
+              jQuery('.menu-ui').css('right','1.5%');
             scope.eyedees = [];
           }
           else {
