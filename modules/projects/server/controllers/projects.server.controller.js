@@ -69,77 +69,6 @@ var mongoose = require('mongoose'),
 
 
 /**
- * Project middleware
- */
-exports.updateFeaturedProjects = function (req, res) {
-  console.log('\n\n\n\n::::: beginning of method ::::  `req.body:`\n', req.body, '\n\n');
-
-  let responseBody = [];
-
-  //update old featured project
-
-  /**
-   *
-   *  the question for tomorrow is:
-   *  what is the query for the old Proj returning / updating ...
-   *  is it just updating one object or all three?
-   *
-   */
-
-  let queryOldProject = {
-    featured: true
-  };
-  let oldFeaturedProjectUpdate = {
-    featuredEndDate: Date.now(),
-    featured: false
-  };
-  let oldFeaturedProjectOptions = {
-    new: true,
-    sort: 'featuredBeginDate'
-  };
-
-  //setup new featured project variables
-  let queryNewProjectId = req.body._id;
-  let newFeaturedProjectUpdate = {
-    featuredBeginDate: Date.now(),
-    featured: true
-  };
-  let newFeaturedProjectOptions = {
-    new: true
-  };
-
-
-  Project.findOneAndUpdate(queryOldProject, oldFeaturedProjectUpdate, oldFeaturedProjectOptions,
-    function(err, oldProject) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        console.log('\n\n\n\n::::: inside of `callBack()` for OLD::::  `OLDproject:`\n', oldProject, '\n\n');
-        responseBody.push(oldProject);
-      }
-    });
-
-  Project.findOneAndUpdate(queryNewProjectId, newFeaturedProjectUpdate, newFeaturedProjectOptions,
-    function(err, newProject) {
-      console.log('\n\n\n\n::::: inside of `callBack() for NEW` ::::  `queryNewProjectId`:`\n', queryNewProjectId, '\n\n');
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        console.log('\n\n\n\n::::: inside of `callBack() for NEW` ::::  `newProject`:`\n', newProject, '\n\n');
-        responseBody.push(newProject);
-        //return newProj;
-        //console.log('\n\n\n\n::::: inside of `callBack()` ::::  `responseBody:`\n', responseBody, '\n\n');
-      }
-    });
-
-  res.jsonp(responseBody);
-};
-
-/**
  * Create a Project
  */
 exports.create = function (req, res) {
@@ -426,19 +355,20 @@ exports.hasAuthorization = function (req, res, next) {
  * Returns an array of objects that contains the featured projects
  */
 exports.getFeaturedProjects = function (req, res) {
+  console.log('\n\n\n\n::::: `exports.getFeaturedProjects()`:  var `req`\n', req, '\n\n\n\n');
   Project.find({ featured: true })
     .sort('-featuredBeginDate')
-    //.limit(3)
     .exec(function (err, projects) {
+      console.log('\n\n\n\n::::: `exports.getFeaturedProjects()`:  var `projects`\n', projects, '\n\n\n\n');
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-
-        res.jsonp(projects);
+        return projects;
       }
     });
+  res.jsonp(projects);
 };
 
 
@@ -551,5 +481,118 @@ exports.markerData = function (req, res, next) {
     res.send(markerColor);
   }
   next();
+
+};
+
+
+let featuredProjectOptions = {
+  new: true
+};
+
+/**
+ *
+ * update project to a featured project
+ *
+ * @param project
+ * @param res
+ */
+let updateNewFeaturedProject = function (project, res) {
+  let newProjectUpdated = null;
+  project.featured = true;
+  project.featuredBeginDate = Date.now();
+  project.featuredEndDate = null;
+
+  //setup new featured project variables
+
+  Project.findOneAndUpdate({ _id: project._id }, project, featuredProjectOptions,
+    function (err, newProject) {
+      if (err) {
+        console.log('\n\n\n\n::::: inside `newFeaturedProject() UPDATE::` ::::  param: `err`:`\n', err, '\n\n');
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(newProject);
+      }
+    });
+};
+
+
+/**
+ *
+ * update project to no longer be a featured project
+ *
+ * @param req
+ * @param res
+ */
+//let updateOldFeaturedProject = (req, res) => {
+exports.updateOldFeaturedProject = (req, res) => {
+
+  let featuredProjects = [];
+
+  Project.find({ featured: true })
+    .sort('-featuredBeginDate')
+    .exec(function (err, projects) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        featuredProjects = projects;
+      }
+    //})
+    //.then(function () {
+      console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  ::::  var: `featuredProjects`:`\n', featuredProjects, '\n\n\n\n');
+
+      if (featuredProjects === 3) {
+        let oldProject = featuredProjects.pop();
+        oldProject.featuredEndDate = Date.now();
+        oldProject.featured = false;
+
+        console.log('\n\n\n\n::::: `updateOldFeaturedProject()`:::: inside if ::::  var: `oldProject`:`\n', oldProject, '\n\n');
+
+        oldProject.save(function (err, updatedOldProject) {
+          if (err) {
+            console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  ::::  param: `err`:`\n', err, '\n\n');
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  var  `updatedOldProject:`\n', updatedOldProject, '\n\n');
+            res.jsonp(updatedOldProject);
+            res.status(200).send({
+              message: 'Success: Removed ' + updatedOldProject.title + 'from the Featuerd Projects list'
+            });
+            return updatedOldProject;
+          }
+        });
+
+      } else if (featuredProjects < 3) {
+        console.log('\n\n\n\n::::: `updateOldFeaturedProject()`:::: inside else if  #1:::: ');
+        res.status(200).send({
+          message: 'Less than 3 Featured Projects. No projects were removed from the featured projects'
+        });
+
+      } else if (featuredProjects > 3) {
+        console.log('\n\n\n\n::::: `updateOldFeaturedProject()`:::: inside else if  #2:::: ');
+        res.status(200).send({
+          message: 'ALERT: More than 3 Featured Projects before adding current project. NO PROJECTS WERE UPDATED'
+        });
+      }
+
+
+    });
+
+};
+
+
+/**
+ * Project middleware
+ */
+exports.updateFeaturedProjects = (req, res) => {
+
+  updateOldFeaturedProject(req.body);
+
+  updateNewFeaturedProject(req.body);
 
 };
