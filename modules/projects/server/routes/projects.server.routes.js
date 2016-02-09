@@ -140,12 +140,8 @@ module.exports = function (app) {
   app.route('/api/v1/projects/:projectId/featured/false')
     .put(projects.update);
 
-  app.route('api/v1/featured')
-    .get(projects.removeOldest);
-
   app.route('/api/v1/projects/:projectId/featured/true')
     .put(projects.updateFeaturedProjects);
-
 
 
    //mount the router on the app
