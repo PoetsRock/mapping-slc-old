@@ -6,10 +6,10 @@
   </div>
 
   <main-page-overlay></main-page-overlay>
-  <feature-side-bar mapPin=""></feature-side-bar>
+  <feature-side-bar></feature-side-bar>
 
   <!--call MapBox map-->
-  <div id="map" move-map class="map" data-ng-class="{'leaflet-tile-gray': !shadeMap}">
+  <div id="map" class="map" data-ng-class="{'leaflet-tile-gray': !shadeMap}">
     <i class="fa fa-info-circle" data-ng-click="attributionFull = !attributionFull"
        data-ng-class="{'atrrib-clicked': attributionFull}"></i>
     <div class="attrib" data-ng-show="attributionFull" data-ng-bind-html="attributionText"></div>

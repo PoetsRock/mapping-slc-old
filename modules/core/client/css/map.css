@@ -383,12 +383,12 @@ div.leaflet-control-mapbox-geocoder.leaflet-bar.leaflet-control.active > div.lea
 }
 
 .menu-ui a.active {
-    background: #3887BE;
-    color: #FFF;
+    background: transparent;
+    color: #000;
 }
 
 .menu-ui a.active:hover {
-    background: #3074a4;
+    background: transparent;
 }
 
 .menu-ui #legend {

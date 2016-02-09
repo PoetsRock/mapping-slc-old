@@ -50,13 +50,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.shadeMap = false;
 
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
-      console.log('::::::toggleOverlayFunction::::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo);
+      console.log('::::::toggleOverlayFunction::::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo, '$scope.overlayActive:\n', $scope.overlayActive);
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
         //console.log('toggle the shade! v1\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = !$scope.overlayActive;
         $scope.shadeMap = true;
+
       } else if ($scope.overlayActive && sourceFrom === 'menu-closed') {
         //console.log('toggle the shade! v2\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = false;
@@ -117,16 +118,15 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         legendControl: { position: 'bottomleft' }
       })
       .on('click', function (e) {
-
+        //if(!$scope.overlayActive) {
+        //  $scope.shadeMap = true;
+        //}
         if ($scope.showAll) {
           console.log('map click!::::: if ($scope.showAll)  :::: `e`\n', e);
           MenuService.setShowAll(false);
-          //$rootScope.$broadcast('MenuService.update', open.all = false);
           $scope.showAll = false;
-          //$scope.shadeMap = false;
         } else {
           console.log('`$scope.showAll = false` map click!  `e`\n', e);
-          //$scope.overlayActive = false;
         }
       })
       .setView([40.7630772, -111.8689467], 12)
@@ -158,16 +158,16 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       var legend = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>(the world\'s best maps) & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
 
 
-      //map.getContainer().querySelector('#legend').onclick = function () {
-      //  if (this.className === 'active') {
-      //    map.legendControl.removeLegend(legend);
-      //    this.className = '';
-      //  } else {
-      //    map.legendControl.addLegend(legend);
-      //    this.className = 'active';
-      //  }
-      //  return false;
-      //};
+      map.getContainer().querySelector('#legend').onclick = function () {
+        if (this.className === 'active') {
+          map.legendControl.removeLegend(legend);
+          this.className = '';
+        } else {
+          map.legendControl.addLegend(legend);
+          this.className = 'active';
+        }
+        return false;
+      };
 
 
       // Connect check boxes to ui functions
@@ -240,12 +240,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           //create toogle for marker event that toggles sidebar on marker click
           .on('click', function (e) {
             $scope.$apply(function () {
+
+              if(!$scope.overlayActive) {
+                $scope.shadeMap = true;
+              }
               $scope.projectProperties = e.target._geojson.properties;
               $scope.markerId = e.target._leaflet_id;
               $scope.showSidebar($scope.markerId, $scope.projectProperties);
-
-              //$scope.$broadcast('CurrentStory', $scope.projectProperties);
-
             });
 
             var popupIndex = 0;
