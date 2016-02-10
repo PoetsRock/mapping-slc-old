@@ -29,6 +29,12 @@
         </button>
       </div>
 
+      <div>
+        <button type="button" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" data-ng-click="getImage()">Get Image
+        </button>
+      </div>
+
+
       <!--<button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>-->
 
       <button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow">Cancel

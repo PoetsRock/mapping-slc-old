@@ -91,12 +91,20 @@ exports.uploadUserProfileImage = function (req, res) {
 
 };
 
+//https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/user-directory/5611ca9493e8d4af5022bc17/braclet.JPG
+
+
 
 /**
  * get file from AWS S3
+ *
+ * req.params.id {string} - user._id
+ * req.params.imageId {string} - file name with extension
  */
 
 exports.getS3File = function (req, res) {
+  console.log('req.params:\n', req.params, '\n\n\n');
+  console.log('req.params.imageId:\n', req.params.imageId, '\n\n\n');
 
   var awsS3Config = {
     accessKeyId: config.S3_ID,
@@ -105,17 +113,19 @@ exports.getS3File = function (req, res) {
   };
 
   var s3File = new AWS.S3(awsS3Config);
-  var fileToGet = req.params.mediaId;
+  var fileToGet = req.params.imageId;
   var userIdBucket = req.params.userId;
   var params = {
     Bucket: s3.bucket + '/' + s3.directory.user + '/' + userIdBucket,
     Key: fileToGet
   };
+  console.log('params:\n', params, '\n\n\n');
   var imageData = {
     fileToGet: fileToGet,
     userIdBucket: userIdBucket,
     params: params
   };
+  console.log('imageData:\n', imageData, '\n\n\n');
 
   var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
   var userProfileImage = pathToLocalDisk + fileToGet;
@@ -133,7 +143,6 @@ exports.getS3File = function (req, res) {
         message: 'ERROR, yo: ' + err
       })
     } else {
-      console.log('callback:\n', callback, '\n\n\n');
       console.log('callback.Body:\n', callback.Body);
 
       var imageAsBase64Array = callback.Body.toString('base64');
@@ -184,15 +193,7 @@ exports.uploadUserProfileImageWithOptimization = function (req, res) {
 
 
   var user = req.body.user;
-  //console.log('req.ServerResponse.req.locals:\n', req.ServerResponse.req.locals);
-  //console.log('req  v2:\n', req.ServerResponse.req);
-  console.log('req  v2:\n', req);
-  //console.log('req.body  v2:\n', req.body);
-  //console.log('req.origFileName:\n', req.bufferImage);
   var bufferImage = new Buffer(req.body.toString('base64'), 'base64');
-  //console.log('bufferImage  v2:\n', bufferImage);
-
-  //var fileName = req.body.fileName;
   var fileName = req.body.fileName;
   var path = s3.directory.user + '/' + user._id + '/' + fileName;
   var readType = 'private';
@@ -207,15 +208,11 @@ exports.uploadUserProfileImageWithOptimization = function (req, res) {
     region: s3.region,
     path: s3.bucket + '/' + path
   };
-
-  //console.log('req.origFileName:\n', req.body.fileName);
-
-  //console.log('tinyParams  v2:\n', tinyParams);
-
   var source = tinify.fromFile(req.body.fileName);
 
   source.store(tinyParams);
-//now save url to mongoDb
+
+  //now save url to mongoDb
   var query = {
     _id: user._id
   };
@@ -226,9 +223,9 @@ exports.uploadUserProfileImageWithOptimization = function (req, res) {
     updated: Date.now()
   };
   var options = {};
+
   //call on mongoose Model.update function to update db
   User.update(query, propertiesToUpdate).exec();
-
 
   res.jsonp(source);
 
@@ -287,41 +284,3 @@ exports.changeProfilePicture = function (req, res) {
     });
   }
 };
-
-
-
-/**
-
- from ll's air b n b
-
- 'use strict';
-
- var request = require('request');
-
- var $ = {};
-
- $.urlToBase64 = function(url, callback){
-
-    //There is a problem calling to vacation rental agent and the workaround is to use this IP Address instead
-    url = url.replace("www.vacationrentalagent.com", "104.239.185.69");
-    url = url.replace("vacationrentalagent.com", "104.239.185.69");
-
-    request({url: url, encoding: 'binary'}, function(err, response, body){
-        if (err) {
-            return callback(err);
-        }
-        if (response.statusCode === 200){
-            var image = new Buffer(body, 'binary').toString('base64');
-            var contentType = response.headers['content-type'];
-            return callback(null, image, contentType);
-        }
-        else{
-            return callback(new Error('Fetching photo failed because it returned a status = ' + response.statusCode + ' for url = ' + url));
-        }
-    });
-};
-
- module.exports = $;
-
-
- **/

@@ -10,7 +10,6 @@ module.exports = function (app) {
   app.route('/api/v1/users/:userId/favorites')
     .get(profile.getFavorites);
 
-
   // Finish by binding the user middleware
   app.param('userId', users.userByID);
 };

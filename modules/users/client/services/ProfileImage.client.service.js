@@ -2,8 +2,8 @@
 
 // retrieve user's profile image
 
-angular.module('users').service('ProfileImageService', ['$http', 'Authentication',
-  function ($http, Authentication) {
+angular.module('users').service('ProfileImageService', ['$http',
+  function ($http) {
     //console.log('uploader working for profilePic Service');
 
 
@@ -26,17 +26,19 @@ angular.module('users').service('ProfileImageService', ['$http', 'Authentication
     //			return userProfileImage = 'modules/users/client/img/profile/default.png';
     //		});
 
-    var user = Authentication.user;
 
-    this.getUploadedProfilePic = function () {
+
+    this.getUploadedProfilePic = function (Authentication) {
+      var user = Authentication.user;
       var configObj = { cache: true };
+      console.log('ProfileImageService\nuser.profileImageFileName: ', user.profileImageFileName, '\n\n');
 
-      $http.get('api/v1/users/' + user._id + '/media/uploadedProfileImage/' + user.profileImageFileName, configObj)
+      $http.get('api/v1/users/' + user._id + '/images/' + user.profileImageFileName, configObj)
         .then(function successCallback(successCallback) {
-          console.log('profilePic', successCallback);
+          console.log('ProfileImageService\nprofilePic', successCallback);
           user.profileImage = 'modules/users/client/img/profile/uploads/uploaded-profile-image.jpg';
         }, function errorCallback(errorCallback) {
-          console.log('profile photo error', errorCallback);
+          console.log('ProfileImageService\nprofile photo error', errorCallback, '\n\n');
           user.profileImage = 'modules/users/client/img/profile/default.png';
         });
 

@@ -380,10 +380,6 @@ exports.markerData = function (req, res, next) {
 };
 
 
-let featuredProjectOptions = {
-  new: true
-};
-
 /**
  *
  * update project to a featured project
@@ -392,6 +388,7 @@ let featuredProjectOptions = {
  */
 let updateNewFeaturedProject = function (project) {
   project.featured = true;
+  let featuredProjectOptions = { new: true };
   project.featuredBeginDate = Date.now();
   project.featuredEndDate = null;
 
@@ -430,7 +427,6 @@ let updateOldFeaturedProject = () => {
 
         oldProject.save(function (err, updatedOldProject) {
           if (err) {
-            console.log('\n\n\n\n::::: `updateOldFeaturedProject()`::::  ::::  param: `err`:`\n', err, '\n\n');
             return { message: errorHandler.getErrorMessage(err) };
           } else {
             return updatedOldProject;
