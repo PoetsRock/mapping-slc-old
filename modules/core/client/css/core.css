@@ -601,6 +601,10 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
     top: 0.75%;
 }
 
+#button {
+    margin: -0.5rem 2rem 1.5rem 0;
+}
+
 .btn-main {
     color: #ffffff;
     cursor: pointer;

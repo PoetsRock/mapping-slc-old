@@ -4,7 +4,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
   function ($scope, $timeout, $window, Authentication, Upload, $http, ProfileImageService) {
 
     $scope.init = function () {
-      ProfileImageService.getUploadedProfilePic();
+      ProfileImageService.getUploadedProfilePic(Authentication);
     };
 
     //// Create a new cache with a capacity of 10
@@ -84,11 +84,26 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
         //    $scope.uploading = false;
         //  };
         //});
-
       }
-
-
     };
+
+
+//https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/user-directory/5611ca9493e8d4af5022bc17/chrisImg.jpg
+    $scope.image;
+    $scope.getImage = function() {
+      console.log('$scope.user\n:', $scope.user, '\n\n');
+      console.log('$scope.user.profileImageFileName  :', $scope.user.profileImageFileName);
+      $http.get('/api/v1/users/' + $scope.user._id + '/images/' + $scope.user.profileImageFileName, {cache: true})
+        .then(function(err, image) {
+          if(err) {
+            console.log('ERROR IN CHANGE-PROFILE CONTROLLER\nerr in getting image:\n', err, '\n\n');
+            return;
+          }
+          $scope.image = image;
+          console.log('image, yo!:\n', image);
+        });
+    };
+
 
 
     /**
