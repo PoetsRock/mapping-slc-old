@@ -578,6 +578,15 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
     display: block;
 }
 
+.fb-like.fb_iframe_widget {
+    /*left: 83%;*/
+    /*bottom: 450px;*/
+}
+
+._51m-.pls._51mw {
+    display: none;
+}
+
 .medium-main-logo {
     content: url(../img/brand/logo-75.png);
     width: 225px;
