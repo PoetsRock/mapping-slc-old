@@ -43,25 +43,15 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
               method: 'POST',
               file: files[0]
             }).progress(function (evt) {
-
               console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
-
             }).success(function (data, status, headers, config) {
-
               var s3Result = xmlToJSON.parseString(data);   // parse
-
               // file is uploaded successfully
               $scope.uploading = false;
               console.log('status: ', status);
               console.log('The file ' + config.file.name + ' is uploaded successfully.\nResponse:\n', s3Result);
-
               $scope.imageURL = 'https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/' + s3Result.PostResponse[0].Key[0]._text;
-
               console.log('$scope.imageURL 111:\n', $scope.imageURL);
-
-
-            }).error(function () {
-
             });
 
 
@@ -77,22 +67,22 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
             $scope.uploading = false;
           });
 
-        ////abort request
-        //  .xhr(function(xhr) {
-        //    $scope.abort = function() {
-        //    xhr.abort();
-        //    $scope.uploading = false;
-        //  };
-        //});
       }
     };
 
+    //var profileImgage = 'img src="data:image/jpeg;base64,';
 
-//https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/user-directory/5611ca9493e8d4af5022bc17/chrisImg.jpg
     $scope.image;
+    /**
+     * hits back end route that calls `getS3File()`
+     *
+     * `getS3File()` requires userId and user image file name, both passed in the route params
+     *
+     **/
     $scope.getImage = function() {
       console.log('$scope.user\n:', $scope.user, '\n\n');
       console.log('$scope.user.profileImageFileName  :', $scope.user.profileImageFileName);
+
       $http.get('/api/v1/users/' + $scope.user._id + '/images/' + $scope.user.profileImageFileName, {cache: true})
         .then(function(err, image) {
           if(err) {
@@ -100,7 +90,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
             return;
           }
           $scope.image = image;
-          console.log('image, yo!:\n', image);
+          console.log('image from `change-profile-picture.controller.client.controller.js`:\n', image, '\n\n');
         });
     };
 
