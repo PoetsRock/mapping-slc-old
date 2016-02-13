@@ -14,6 +14,10 @@ angular.module('projects').config(['$stateProvider',
     }).state('viewProject', {
       url: '/projects/:projectId',
       templateUrl: 'modules/projects/client/views/view-project.client.view.html'
+    }).state('viewProjectPreview', {
+      url: '/projects/:projectId/preview',
+      templateUrl: 'modules/projects/client/views/view-project.client.view.html'
+      //templateUrl: 'modules/projects/client/views/view-project-preview.client.view.html'
     }).state('editProject', {
       url: '/projects/:projectId/edit',
       templateUrl: 'modules/projects/client/views/edit-project.client.view.html',

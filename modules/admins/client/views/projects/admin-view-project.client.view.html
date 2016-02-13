@@ -21,6 +21,12 @@
               <a class="btn btn-main grow" ui-sref="admin.adminProjectsQueue">
                 Admin Project Page
               </a>
+              <a class="btn btn-main grow" ui-sref="viewProjectPreview({projectId: project.id})">
+                Go to Preview
+              </a>
+              <a class="btn btn-main grow" ui-sref="viewProject({projectId: project.id})">
+                Go to Project
+              </a>
             </div>
 
             <div class="page-header">
@@ -44,7 +50,7 @@
                   <!--<i class="fa fa-check"></i>-->
                 <!--</a>-->
 
-                <form class="form-horizontal" data-ng-submit="update(toggleId)" novalidate>
+                <form class="form-horizontal" data-ng-submit="update(project.$valid, toggleId)" novalidate>
                   <fieldset>
                     <project-view-form></project-view-form>
                   </fieldset>

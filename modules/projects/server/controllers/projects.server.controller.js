@@ -70,6 +70,7 @@ exports.read = function (req, res) {
  * Update a Project
  */
 exports.update = function (req, res) {
+  //console.log('\n\n\n:::::::1111 update `project`:::::::\n', req.body);
   var project = _.extend(req.project, req.body);
   project.save(function (err) {
     if (err) {

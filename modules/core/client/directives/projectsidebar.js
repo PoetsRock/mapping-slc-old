@@ -7,11 +7,14 @@ angular.module('core').directive('featureSideBar', function () {
     controller: function ($scope) {
       let currentMarkerId = '';
       $scope.toggleSidebar = false;
+
       $scope.hideSidebar = function () {
         $scope.toggleSidebar = false;
+        $scope.shadeMap = true;
         jQuery('.leaflet-top.leaflet-right').css('right','0');
         jQuery('.menu-ui').css('right','1.5%');
       };
+
       $scope.showSidebar = function (markerId, projectData) {
         if (currentMarkerId !== markerId || currentMarkerId === markerId && !$scope.toggleSidebar) {
           $scope.project = projectData;
