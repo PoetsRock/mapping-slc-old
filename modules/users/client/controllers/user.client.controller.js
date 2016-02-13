@@ -66,6 +66,17 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
         });
     };
 
+    $scope.watchUpdate = function(nameToWatch) {
+      $scope.$watch('userFavorites',
+      //$scope.$watch('nameToWatch',
+        function(newVal, oldVal) {
+          console.log('watchUpdateFavorites newVal::::::\n', newVal, '\n\n');
+          console.log('watchUpdateFavorites::::::\n', oldVal);
+          $scope.userFavorites = newVal;
+          //$scope.nameToWatch = newVal;
+        });
+    };
+
     var removeItemFromArray = function(item) {
       var updatedFavProjects = $scope.user.favorites.indexOf(item);
       if (updatedFavProjects !== -1) {
@@ -83,7 +94,11 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
           $scope.isFavorite = false;
           removeItemFromArray(projectId);
           var updateFavoriteObj = { favorite: projectId, isFavorite: false };
-          $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
+          $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+            .then(function(resolved, rejected) {
+              if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
+              $scope.watchUpdate(userFavorites);
+            });
         });
     };
 

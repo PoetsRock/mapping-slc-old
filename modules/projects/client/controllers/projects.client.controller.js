@@ -186,13 +186,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      *  Update an existing Project
      *
      */
-    $scope.update = function (isValid) {
-      $scope.error = null;
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'projectForm');
-        return false;
-      }
+    $scope.update = function (isValid, toggleId) {
+      console.log('update :::: $scope.project', $scope.project);
+      //console.log('update :::: isValid', isValid);
+      //console.log('update :::: toggleId', toggleId);
+      //$scope.error = null;
+      //if (!isValid) {
+      //  console.log('update :::: ground control to major tom', isValid);
+      //  $scope.$broadcast('show-errors-check-validity', 'projectForm');
+      //  return false;
+      //}
       var project = $scope.project;
+      //console.log('update 22222:::: project', project);
       project.$update(function (response) {
         if (response.$resolved) {
           if ($location.path() === '/admin/edit-project/' + project._id) {
@@ -350,10 +355,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       if (!$scope.isFavorite) {
         updateFavoriteObj.isFavorite = false;
         removeItemFromArray($scope.project.id);
+          //.then(function(resolved, rejected) {
+          //  if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
+          //  $scope.watchUpdate(userFavorites);
+          //})
       } else {
         addItemToArray($scope.project.id);
+          //.then(function(resolved, rejected) {
+          //  if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
+          //  $scope.watchUpdate(userFavorites);
+          //})
       }
-      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
+      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
+        //.then(function(resolved, rejected) {
+        //  if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
+        //  $scope.watchUpdate(userFavorites);
+        //})
     };
 
 
@@ -438,6 +455,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.toggleId = 0;
 
     $scope.toggleEditFn = function (editNum) {
+      console.log('$scope.toggleEditFn  var `editNum`:', editNum);
       $scope.toggleEdit = !$scope.toggle;
       $scope.toggleId = editNum;
     };
