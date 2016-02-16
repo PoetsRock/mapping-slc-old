@@ -396,7 +396,6 @@ div.leaflet-control-mapbox-geocoder.leaflet-bar.leaflet-control.active > div.lea
 }
 
 .home-view.toggle-sidebar {
-    right: 15%;
+    right: 25%;
     position: relative;
 }
-
