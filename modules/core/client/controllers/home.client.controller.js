@@ -192,7 +192,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         .error(function (data, status) {
           alert('Failed to load project markers. Status: ' + status);
         });
-
       $scope.markerArray = [];
 
       //add markers from marker data
