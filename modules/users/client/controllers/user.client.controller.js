@@ -61,19 +61,31 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     $scope.getFavorites = function () {
       $http.get('/api/v1/users/' + $scope.user._id + '/favorites', { cache: true })
         .then(function (resolved, rejected) {
-          console.log('resolved.data::::::\n', resolved.data);
           $scope.userFavorites = resolved.data;
         });
     };
 
-    $scope.watchUpdate = function(nameToWatch) {
-      $scope.$watch('userFavorites',
-      //$scope.$watch('nameToWatch',
+    //$scope.watchUpdate = function(nameToWatch) {
+    //  $scope.$watch('userFavorites',
+    //  //$scope.$watch('nameToWatch',
+    //    function(newVal, oldVal) {
+    //      console.log('watchUpdateFavorites newVal::::::\n', newVal, '\n\n');
+    //      console.log('watchUpdateFavorites::::::\n', oldVal);
+    //      $scope.userFavorites = newVal;
+    //      //$scope.nameToWatch = newVal;
+    //    });
+    //};
+
+    http://fees-api.leisurelink.ka/fees/v2/en-US/fees/Vyghufg0cx
+
+    $scope.watchUpdate = function() {
+      console.log('watchUpdateFavorites:::::  1111  :::::$scope.userFavorites\n', $scope.userFavorites);
+      $scope.$watchCollection('userFavorites',
         function(newVal, oldVal) {
           console.log('watchUpdateFavorites newVal::::::\n', newVal, '\n\n');
-          console.log('watchUpdateFavorites::::::\n', oldVal);
-          $scope.userFavorites = newVal;
-          //$scope.nameToWatch = newVal;
+          console.log('watchUpdateFavorites::::::oldVal\n', oldVal);
+          //$scope.userFavorites = newVal;
+          console.log('watchUpdateFavorites:::::  2222  :::::$scope.userFavorites\n', $scope.userFavorites);
         });
     };
 
@@ -88,6 +100,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
      * Remove a User's Favorite projects
      */
     $scope.removeFavProject = function (projectId) {
+      console.log('removeFavProject var `projectId`::::::\n', projectId, '\n\n');
       $scope.$on('$stateChangeStart',
         function (event) {
           event.preventDefault();
@@ -96,8 +109,14 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
           var updateFavoriteObj = { favorite: projectId, isFavorite: false };
           $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj)
             .then(function(resolved, rejected) {
-              if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
-              $scope.watchUpdate(userFavorites);
+              if(rejected) {
+                console.log('error removing project: var `rejected`\n:', rejected);
+                return;
+              }
+              console.log('removeFavProject var `resolved.data`::::::\n', resolved.data, '\n\n');
+              //$scope.userFavorites = resolved.data;
+              $scope.watchUpdate();
+
             });
         });
     };

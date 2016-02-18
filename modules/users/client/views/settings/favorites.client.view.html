@@ -6,27 +6,39 @@
       <div class="row">
 
         <a data-ng-repeat="userFavorite in userFavorites" ui-sref="viewProject({projectId: userFavorite.id})"
-           class="col-md-12 admin-list" data-ng-show="!isFavorite">
+           class="admin-list col-md-12" data-ng-show="!isFavorite">
+
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <img data-ng-src="{{userFavorite.mainImgThumbnail}}"/>
             </div>
 
             <div class="col-md-8">
-              <h4 class="list-group-item-heading" data-ng-bind="userFavorite.title"></h4>
+              <div>
+              <!--<p class="list-group-item-heading" data-ng-bind="userFavorite.title"></p>-->
+              <p data-ng-bind="userFavorite.title"></p>
               <small>
                 <span>{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</span>
               </small>
+              <span><i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)"></i></span>
+              </div>
+            </div>
 
-            </div>
-            <div class="col-md-1">
-              <i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)"></i>
-            </div>
           </div>
+
         </a>
 
       </div>
     </div>
+
+
+    <!--<div>-->
+      <!--<div ng-if="!userFavorites">-->
+        <!--<p>You haven't favorited any projects yet. Want to check out some favorites from the Mapping SLC team and from other folks?</p>-->
+        <!--<featured-projects></featured-projects>-->
+      <!--</div>-->
+    <!--</div>-->
+
 
   </div>
 
