@@ -23,6 +23,7 @@ exports.read = function (req, res) {
  * Update a User
  */
 exports.update = function (req, res) {
+  console.log('UPDATE USER var `req.body`:\n', req.body, '\n\n');
   var user = null;
   if (req.model) {
     user = req.model;

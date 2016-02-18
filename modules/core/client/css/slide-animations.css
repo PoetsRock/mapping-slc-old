@@ -9,7 +9,6 @@
     transition: all 0.5s ease;
 }
 
-/*.featured-projects-title, .featured-projects img {*/
 .featured-projects-title {
     position: relative;
     height: 150px;
@@ -38,3 +37,28 @@
 .featured-projects-title:hover p {
     display: block;
 }
+
+.featured-projects img {
+    width: 125%;
+    height: auto;
+}
+
+featured-projects ul a p {
+    padding: 1%;
+    font-size: 100%;
+}
+
+featured-projects ul {
+    transform: translate(10%);
+}
+
+.user-favorites featured-projects h3 {
+    font-size: 1.5rem;
+    transform: translateX(-30%);
+    position: relative;
+}
+.user-favorites featured-projects ul.grid.col-md-4 {
+    margin: 0 -3%;
+    left: 10%;
+}
+

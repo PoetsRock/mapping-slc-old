@@ -80,6 +80,44 @@ exports.getFavorites = function (req, res) {
     });
 };
 
+exports.updateFavorites = (req, res) => {
+  User.find({ '_id': req.profile._id })
+    .select('favorites')
+    .exec(function (err, favoriteProjectsIdsTemp) {
+      if (err) {
+        return res.send(400, {
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+
+
+      //// if true, then user has just added project as a favorite
+      //// so, projectId needs to be pushed into favorites array.
+      //// if false, projectId should be popped from favorites array.
+      //if (req.body.isFavorite) {
+      //  user.favorites.push(req.body.favorite);
+      //} else if (req.body.isFavorite === false && req.body.favorite) {
+      //  user.favorites.pop(req.body.favorite);
+      //}
+
+      //UPDATE USER var `req.body`:
+      //{ favorite: '561367a589a0bb717cac7220', isFavorite: false }
+
+      //req.body.isFavorite
+      let favoriteProjectsIds = favoriteProjectsIdsTemp[0].favorites;
+      Project.find({
+          '_id': { $in: favoriteProjectsIds }
+        })
+        .exec(function (err, favoriteProjects) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+          res.jsonp(favoriteProjects);
+        });
+    });
+};
 
 /**
  * Send User

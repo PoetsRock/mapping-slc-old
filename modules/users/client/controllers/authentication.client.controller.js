@@ -21,9 +21,14 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
-
         return false;
       }
+      if ($scope.credentials.password !== $scope.credentials.passwordVerify) {
+        $scope.$broadcast('show-errors-check-validity', 'userForm');
+        return false;
+      }
+
+      $scope.credentials.username = $scope.credentials.email;
 
       $http.post('/api/v1/auth/signup', $scope.credentials)
         .success(function (response) {
