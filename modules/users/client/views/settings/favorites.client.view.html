@@ -3,11 +3,11 @@
   <div class="user-favorites">
 
     <div class="list-group">
-      <div class="row">
 
-        <a data-ng-repeat="userFavorite in userFavorites" ui-sref="viewProject({projectId: userFavorite.id})"
-           class="admin-list col-md-12" data-ng-show="!isFavorite">
 
+      <div data-ng-repeat="userFavorite in userFavorites" class="admin-list row" data-ng-show="!isFavorite">
+
+        <a ui-sref="viewProject({projectId: userFavorite.id})" class="admin-list col-md-11">
           <div class="row">
             <div class="col-md-4">
               <img data-ng-src="{{userFavorite.mainImgThumbnail}}"/>
@@ -15,29 +15,35 @@
 
             <div class="col-md-8">
               <div>
-              <!--<p class="list-group-item-heading" data-ng-bind="userFavorite.title"></p>-->
-              <p data-ng-bind="userFavorite.title"></p>
-              <small>
-                <span>{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</span>
-              </small>
-              <span><i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)"></i></span>
+                <p data-ng-bind="userFavorite.title"></p>
+                <small>
+                  <span>{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</span>
+                </small>
+                <!--<span><i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)"></i></span>-->
               </div>
             </div>
-
           </div>
-
         </a>
 
+        <div class="col-md-1">
+          <i class="fa fa-times pull-right" data-ng-click="removeFavProject(userFavorite.id)"
+             uib-tooltip="Remove from favorites"></i>
+        </div>
+
       </div>
+
+
     </div>
+  </div>
 
 
-    <!--<div>-->
-      <!--<div ng-if="!userFavorites">-->
-        <!--<p>You haven't favorited any projects yet. Want to check out some favorites from the Mapping SLC team and from other folks?</p>-->
-        <!--<featured-projects></featured-projects>-->
-      <!--</div>-->
-    <!--</div>-->
+  <div>
+    <div ng-show="!userFavorites">
+      <p>You haven't favorited any projects yet. Want to check out some favorites from the Mapping SLC team and from
+        other folks?</p>
+      <featured-projects></featured-projects>
+    </div>
+  </div>
 
 
   </div>

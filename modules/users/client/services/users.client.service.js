@@ -39,18 +39,11 @@ angular.module('users').factory('User', ['$resource', 'AdminAuthService',
 
 angular.module('users').factory('AdminUpdateUser', ['$resource', 'AdminAuthService',
   function ($resource, AdminAuthService) {
+    console.log('$resource::\n', $resource);
     if (AdminAuthService.user === 'admin') {
       return $resource('api/v1/users/:userId', { userId: '@_id' }, {
         update: {
           method: 'PUT'
-        }
-      }, {
-        create: {
-          method: 'POST'
-        }
-      }, {
-        read: {
-          method: 'GET'
         }
       });
     } else {

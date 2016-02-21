@@ -39,16 +39,16 @@
               <div class="col-md-12">
                 <a data-ng-repeat="publishedProject in publishedProjects"
                    data-ng-href="/projects/{{publishedProject._id}}" class="col-md-4 story-summary animation-cards">
-                    <span>
-                        <span>
+                    <div class="row">
+                        <div class="col-md-4">
                             <img class="img-responsive" data-ng-src="{{publishedProject.mainImgThumbnail}}"/>
-                        </span>
+                        </div>
 
-                        <span class="pull-right">
+                        <div class="col-md-8">
                             <span data-ng-bind="publishedProject.title"></span><br/>
                             <span data-ng-bind="publishedProject.user.displayName">there</span><br/>
-                        </span>
-                    </span>
+                        </div>
+                    </div>
                 </a>
               </div>
             </div>

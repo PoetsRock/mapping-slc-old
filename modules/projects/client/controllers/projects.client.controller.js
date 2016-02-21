@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'getUserFavorites',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, getUserFavorites) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -68,6 +68,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     var publishUser = function (project) {
+      // console.log('publishUser ::::  $resource::\n', $resource);
+      console.log('publishUser ::::  project.user._id:: ', project.user._id);
       AdminUpdateUser.get({ userId: project.user._id },
         function (userData, getResponseHeader) {
           userData.associatedProjects.push(project._id);
@@ -238,18 +240,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-    // Find a list of Projects
+    /**
+     * Find a list of Projects
+     */
     $scope.find = function () {
       $scope.projects = Projects.query();
     };
 
-    // Find existing Project
+    /**
+     * Find existing Project
+     */
     $scope.findOne = function () {
-
       $scope.project = Projects.get({
         projectId: $stateParams.projectId
       }, function (project) {
         $scope.project = project;
+
         if (project.vimeoId) {
           $scope.vimeo = {
             video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
@@ -269,7 +275,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             $scope.images.push(project.imageGallery[i]);
           }
         }
-        getUserFavoriteStories($scope.project.user.favorites, $scope.project.id);
+        getUserFavoriteStoriesFn($scope.user.favorites, $scope.project.id);
       });
 
     };
@@ -337,52 +343,51 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      * Favorite project function
      */
 
-    //getUserFavorites.getUserFavoriteStories(userFavoriteProjects, projectId);
-    //getUserFavorites.toggleFavProject();
-
-    var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
-      userFavoriteProjects.forEach(function (userFavoriteProject) {
-        if (userFavoriteProject === projectId) {
-          $scope.isFavorite = true;
+    $scope.$watchCollection('user.favorites',
+      function (newVal, oldVal) {
+        console.log('PROJECTS CTRL :::::$scope.user.favorites BEFORE $watch\n', $scope.user.favorites, '\n');
+        console.log('PROJECTS CTRL watchUpdateFavorites newVal.length::::::\n', newVal.length, '\n\n');
+        console.log('PROJECTS CTRL watchUpdateFavorites::::::oldVal.length\n', oldVal.length);
+        if ($scope.user.favorites && newVal.length !== oldVal.length) {
+          $scope.user.favorites = newVal;
+          console.log('PROJECTS CTRL :::::$scope.user.favorites AFTER $watch\n', $scope.user.favorites, '\n');
         }
-      });
-    };
-
-    $scope.toggleFavProject = function () {
-      $scope.isFavorite = !$scope.isFavorite;
-      console.log('$scope.user.favorites:\n', $scope.user.favorites);
-      var updateFavoriteObj = { favorite: $scope.project.id, isFavorite: true };
-      if (!$scope.isFavorite) {
-        updateFavoriteObj.isFavorite = false;
-        removeItemFromArray($scope.project.id);
-          //.then(function(resolved, rejected) {
-          //  if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
-          //  $scope.watchUpdate(userFavorites);
-          //})
-      } else {
-        addItemToArray($scope.project.id);
-          //.then(function(resolved, rejected) {
-          //  if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
-          //  $scope.watchUpdate(userFavorites);
-          //})
       }
-      $http.put('/api/v1/users/' + $scope.user._id, updateFavoriteObj);
-        //.then(function(resolved, rejected) {
-        //  if(rejected) { console.log('error removing project: var `rejected`\n:', rejected); }
-        //  $scope.watchUpdate(userFavorites);
-        //})
+    );
+
+
+    //var removeItemFromArray = function(item) {
+    //  var updatedFavProjects = $scope.user.favorites.indexOf(item);
+    //  if (updatedFavProjects !== -1) {
+    //    $scope.user.favorites.splice(updatedFavProjects, 1);
+    //  }
+    //};
+    //
+    //var addItemToArray = function(addedItem) {
+    //  $scope.user.favorites.push(addedItem);
+    //};
+
+    //var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
+    //  userFavoriteProjects.forEach(function (userFavoriteProject) {
+    //    if (userFavoriteProject === projectId) {
+    //      $scope.isFavorite = true;
+    //    }
+    //  });
+    //};
+
+    var getUserFavoriteStoriesFn = function (userFavoriteProjects, projectId) {
+      userFavoritesService.getUserFavoriteStories(userFavoriteProjects, projectId,
+        function (err, data) {
+          $scope.isFavorite = data;
+        }
+      );
     };
 
-
-    var removeItemFromArray = function(item) {
-      var updatedFavProjects = $scope.user.favorites.indexOf(item);
-      if (updatedFavProjects !== -1) {
-        $scope.user.favorites.splice(updatedFavProjects, 1);
-      }
-    };
-
-    var addItemToArray = function(addedItem) {
-      $scope.user.favorites.push(addedItem);
+    $scope.toggleFavProjectFn = function () {
+      userFavoritesService.toggleFavProject($scope.isFavorite, $scope.project,
+        function (err, data) {
+          $scope.isFavorite = data;
+        });
     };
 
 

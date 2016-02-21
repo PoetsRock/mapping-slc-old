@@ -23,9 +23,10 @@
             <div class="row">
               <div class="col-lg-10">
                 <h1 data-ng-bind="project.title"></h1>
+                <p data-ng-bind="isFavorite"></p>
               </div>
               <div class="col-lg-2 pull-left">
-                <i class="fa fa-heart" ng-click="toggleFavProject()"
+                <i class="fa fa-heart" ng-click="toggleFavProjectFn()"
                    data-ng-class="{'favorite-true' : isFavorite, 'favorite-false' : !isFavorite}"></i>
               </div>
 
@@ -35,7 +36,7 @@
             <em class="text-muted">
               <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
               by
-              <a data-ng-href="/contributors/{{project.user._id}}"><span data-ng-bind="project.user.displayName"></span></a>
+              <a data-ng-href="/contributors/{{user._id}}"><span data-ng-bind="user.displayName"></span></a>
             </em>
           </div>
 
@@ -77,12 +78,9 @@
                 <h3>Related Stories</h3>
 
                 <div class="pull-right"
-                     data-ng-show="((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === 'admin'">
-                  <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
+                     data-ng-show="((authentication.user) && (authentication.user._id == user._id)) || isAdmin.user === 'admin'">
+                  <a class="btn btn-main grow" ui-sref="admin.adminEditProject({ 'projectId' : project._id })">
                     <i class="glyphicon glyphicon-edit"></i>
-                  </a>
-                  <a class="btn btn-primary btn-warning" data-ng-click="remove();">
-                    <i class="glyphicon glyphicon-trash"></i>
                   </a>
                 </div>
 

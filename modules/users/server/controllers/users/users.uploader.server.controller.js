@@ -39,6 +39,7 @@ exports.uploadUserProfileImage = function (req, res) {
   var fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
   var path = s3Config.directory.user + '/' + user._id + '/' + fileName;
   var readType = 'private';
+  //todo refactor to use moment on back end
   var expiration = moment().add(5, 'm').toDate(); //15 minutes
   var s3Policy = {
     'expiration': expiration,
@@ -212,6 +213,7 @@ exports.uploadUserProfileImageWithOptimization = function (req, res) {
   var fileName = req.body.fileName;
   var path = s3Config.directory.user + '/' + user._id + '/' + fileName;
   var readType = 'private';
+  //todo refactor to use moment on back end
   var expiration = moment().add(5, 'm').toDate(); //15 minutes
 
   tinify.key = config.tinyPngKey;

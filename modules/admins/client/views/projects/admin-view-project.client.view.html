@@ -1,4 +1,7 @@
-<secondary-menu-directive></secondary-menu-directive>
+<!--<secondary-menu-directive></secondary-menu-directive>-->
+<div id="main-menu" class="main-menu">
+  <google-menu></google-menu>
+</div>
 
 <section class="content background" data-ng-controller="RandomMapController"
          ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
@@ -39,17 +42,6 @@
 
             <div class="row projects-profile">
               <div class="col-xs-12">
-
-                <!--<a class="btn btn-main grow" data-ng-click="processNlpData()">-->
-                  <!--NLP!-->
-                  <!--<i class="fa fa-check"></i>-->
-                <!--</a>-->
-
-                <!--<a class="btn btn-main grow" data-ng-click="confirmPublishModal()">-->
-                  <!--Yodal My Modal-->
-                  <!--<i class="fa fa-check"></i>-->
-                <!--</a>-->
-
                 <form class="form-horizontal" data-ng-submit="update(project.$valid, toggleId)" novalidate>
                   <fieldset>
                     <project-view-form></project-view-form>

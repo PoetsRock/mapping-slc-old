@@ -1,3 +1,20 @@
+## modulus ignore paths
+
+/modules/admins/tests
+/modules/contacts/tests
+/modules/core/tests
+/modules/projects/tests
+/modules/users/tests
+/modules/**/tests
+/modules/**/*/tests
+
+docker-compose.yml
+gruntfile.js
+karma.conf.js
+manifest.yml
+protractor.conf.js
+Dockerfile
+
 # General
 *.csv
 /.local-configs
@@ -39,3 +56,26 @@ _site/
 /.aws
 
 access.log
+
+
+*~
+
+# OS
+# ===========
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+
+
+# General
+# =======
+*.log
+*.dat
+*.out
+*.pid
+*.gz
+*.tmp
+*.bak
+*.swp
+logs/

@@ -243,6 +243,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
               if(!$scope.overlayActive) {
                 $scope.shadeMap = true;
               }
+              //$scope.sidebar = !$scope.sidebar;
               $scope.projectProperties = e.target._geojson.properties;
               $scope.markerId = e.target._leaflet_id;
               $scope.showSidebar($scope.markerId, $scope.projectProperties);
