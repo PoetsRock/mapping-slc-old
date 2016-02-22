@@ -21,18 +21,9 @@
   </uib-tab>
 
   <uib-tab heading="Contributor">
-    <!--<Contributor></Contributor>-->
-    <!--<edit-profile></edit-profile>-->
-    <!--<admin-edit-user></admin-edit-user>-->
-
-    <form name="userAdminForm" class="form-horizontal" data-ng-submit="update(userToEdit.$valid)"
-          novalidate>
-      <fieldset>
-        <user-view-form></user-view-form>
-      </fieldset>
-    </form>
-
-
+    <div class="admin-user">
+      <user-view-form-wrapper></user-view-form-wrapper>
+    </div>
   </uib-tab>
 
 

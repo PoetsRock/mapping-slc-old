@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'UserData',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, UserData) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -19,7 +19,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
     //$scope.publishedProjects;
-    //$scope.project = {};
+    $scope.project = {};
 
 
     $scope.init = function () {
@@ -189,7 +189,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      *
      */
     $scope.update = function (isValid, toggleId) {
-      console.log('update :::: $scope.project', $scope.project);
+
+      console.log('inside func $scope.update():::: logging var `$scope.project`', $scope.project);
       //console.log('update :::: isValid', isValid);
       //console.log('update :::: toggleId', toggleId);
       //$scope.error = null;
@@ -251,11 +252,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      * Find existing Project
      */
     $scope.findOne = function () {
-      $scope.project = Projects.get({
-        projectId: $stateParams.projectId
-      }, function (project) {
+      // $scope.project = Projects.get({
+      Projects.get({ projectId: $stateParams.projectId },
+        function (project) {
         $scope.project = project;
-
+          console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
+          // console.log(' ::: $scope.findOne()  :::  var `$scope.project.user._id`:', $scope.project.user._id);
+          // console.log(' ::: $scope.findOne()  :::  var `$scope.user._id`        :', $scope.user._id);
         if (project.vimeoId) {
           $scope.vimeo = {
             video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
@@ -279,6 +282,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
 
     };
+
+
+    // /**
+    //  * Find existing User
+    //  *
+    //  * @param userIdToEdit {string} [optional] - if param exists, then function will use this as the userId for request
+    //  */
+    // $scope.adminFindOneUser = function(userIdToEdit) {
+    //   console.log(':::: userIdToEdit :::: ', userIdToEdit);
+    //   $scope.userToEdit = UserData.get({
+    //     userId: userIdToEdit
+    //   });
+    // };
+
+
 
     $scope.completed = function () {
       var formField;
@@ -345,12 +363,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.$watchCollection('user.favorites',
       function (newVal, oldVal) {
-        console.log('PROJECTS CTRL :::::$scope.user.favorites BEFORE $watch\n', $scope.user.favorites, '\n');
-        console.log('PROJECTS CTRL watchUpdateFavorites newVal.length::::::\n', newVal.length, '\n\n');
-        console.log('PROJECTS CTRL watchUpdateFavorites::::::oldVal.length\n', oldVal.length);
+        // console.log('PROJECTS CTRL :::::$scope.user.favorites BEFORE $watch\n', $scope.user.favorites, '\n');
+        // console.log('PROJECTS CTRL watchUpdateFavorites newVal.length::::::\n', newVal.length, '\n\n');
+        // console.log('PROJECTS CTRL watchUpdateFavorites::::::oldVal.length\n', oldVal.length);
         if ($scope.user.favorites && newVal.length !== oldVal.length) {
           $scope.user.favorites = newVal;
-          console.log('PROJECTS CTRL :::::$scope.user.favorites AFTER $watch\n', $scope.user.favorites, '\n');
+          // console.log('PROJECTS CTRL :::::$scope.user.favorites AFTER $watch\n', $scope.user.favorites, '\n');
         }
       }
     );

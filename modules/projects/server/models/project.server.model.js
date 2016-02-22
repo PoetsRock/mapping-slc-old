@@ -123,7 +123,7 @@ var ProjectSchema = new Schema({
   category: {
     type: [{
       type: String,
-      enum: ['multimedia', 'essay', 'literature', 'interview', 'map', 'video', 'audio', 'this was here']
+      enum: ['multimedia', 'essay', 'literature', 'interview', 'map', 'video', 'audio', 'this-was-here']
     }],
     trim: true
   },
@@ -142,6 +142,10 @@ var ProjectSchema = new Schema({
     type: [{
       type: String
     }]
+  },
+  projectViewCount: {
+    type: Number,
+    default: 0
   },
   vimeoId: {
     type: String,

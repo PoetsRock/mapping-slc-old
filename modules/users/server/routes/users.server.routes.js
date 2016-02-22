@@ -12,8 +12,8 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
 
-  app.route('/api/v1/users/:userId/media/:imageId')
-    .get(assets.getS3File);
+  // app.route('/api/v1/users/:userId/media/:imageId')
+  //   .get(assets.getS3File);
 
   // User's Favorite Projects Route
   app.route('/api/v1/users/:userId/images/:imageId')

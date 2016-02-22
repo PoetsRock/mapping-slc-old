@@ -9,7 +9,8 @@
 
     <div class="main-content-outer">
 
-      <section data-ng-controller="EditProfileController" data-ng-init="findOne()" class="main-content-inner">
+      <!--<section data-ng-controller="EditProfileController" data-ng-init="findOne()" class="main-content-inner">-->
+      <section data-ng-controller="EditProfileController" class="main-content-inner">
 
         <div class="admin">
 
@@ -24,40 +25,7 @@
               </a>
             </div>
 
-            <div class="page-header">
-              <h1>{{userToEdit.firstName}} {{userToEdit.lastName}}'s Profile
-                <a href="#" data-ng-show="userToEdit.profileImageURL"><span><img
-                  data-ng-src="{{userToEdit.profileImageURL}}" class="header-profile-image pull-right"/></span>
-                </a>
-
-                <a href="#" data-ng-show="!userToEdit.profileImageURL"><span><img data-ng-src="" class="header-profile-image pull-right"/></span>Upload a Pic
-                </a>
-              </h1>
-            </div>
-
-            <div class="row user-profile">
-              <div class="col-xs-12">
-                <form name="userAdminForm" class="form-horizontal" data-ng-submit="update(userToEdit.$valid)"
-                      novalidate>
-                  <fieldset>
-                    <user-view-form></user-view-form>
-                  </fieldset>
-                </form>
-              </div>
-            </div>
-
-
-            <hr>
-
-            <div class="pull-right">
-              <!--data-ng-show="((authentication.user) && (authentication.user._id == project.user._id))">-->
-              <!--<a class="btn btn-primary" href="/users/{{user._id}}/edit">-->
-              <!--<i class="glyphicon glyphicon-edit"></i>-->
-              <!--</a>-->
-              <a class="btn btn-main grow btn-warning" data-ng-click="remove();">
-                <i class="glyphicon glyphicon-trash"></i>
-              </a>
-            </div>
+            <user-view-form-wrapper></user-view-form-wrapper>
 
           </div>
         </div>
