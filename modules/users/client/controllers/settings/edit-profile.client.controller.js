@@ -5,7 +5,7 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
 
-    console.log('\n\n$scope.user:\n', $scope.user, '\n\n');
+    // console.log('\n\n$scope.user:\n', $scope.user, '\n\n');
 
     // Provides logic for the css in the forms
     UtilsService.cssLayout();
@@ -60,21 +60,34 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
       $scope.toggleId = editNum;
     };
 
+    $scope.toggleEditAllFn = function () {
+      $scope.toggleEdit = !$scope.toggle;
+      $scope.toggleId = editNum;
+    };
+
     //runs a query to return user ID for admin panel editing
     $scope.find = function () {
       $scope.users = Users.query();
     };
 
     // Find a list of Users
-    $scope.find = function () {
+    $scope.findAll = function () {
       $scope.users = Users.query($scope.query);
     };
 
     // Find existing User
-    $scope.findOne = function () {
-      $scope.userToEdit = UserData.get({
-        userId: $stateParams.userId
-      });
+    $scope.findOne = function (userIdToEdit) {
+      // if (userIdToEdit) {
+        console.log('here, here  :::: var `userIdToEdit`: ', userIdToEdit);
+      //   $scope.userToEdit = UserData.get({
+      //     userId: userIdToEdit
+      //   });
+      // } else {
+        $scope.userToEdit = UserData.get({
+          userId: $stateParams.userId
+        });
+      // }
+      console.log('$scope.userToEdit:\n', $scope.userToEdit);
     };
 
 

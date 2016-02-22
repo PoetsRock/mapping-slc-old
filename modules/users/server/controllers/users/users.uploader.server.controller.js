@@ -131,22 +131,22 @@ exports.getS3File = function (req, res) {
         message: 'ERROR, yo: ' + err
       })
     } else {
-      var imageAsBase64Array = callback.Body.toString('base64');
-      var imageAsUtf8 = callback.Body.toString('Utf8');
+      // var imageAsBase64Array = callback.Body.toString('base64');
+      // var imageAsUtf8 = callback.Body.toString('Utf8');
 
       console.log('callback.Body:\n', callback.Body, '\n\n\n');
+      console.log('userProfileImage:\n', userProfileImage, '\n\n\n');
 
-      //fs.writeFile(imageData.fileToGet, callback.Body, 'base64',
-      fs.writeFile(imageData.fileToGet, callback.Body, 'base64',
+      fs.writeFile(userProfileImage, callback.Body, 'base64',
         (err) => {
           if (err) {
             throw err;
           }
           res.status(200).send({
-            message: 'Success: Profile Image Delivered:\n',
-            fullResponse: callback,
-            imageAsBase64Array: imageAsBase64Array,
-            imageAsUtf8: imageAsUtf8
+            message: 'Success: Profile Image Delivered:\n'
+            // fullResponse: callback,
+            // imageAsBase64Array: imageAsBase64Array,
+            // imageAsUtf8: imageAsUtf8
           });
         });
     }
@@ -212,6 +212,7 @@ exports.uploadUserProfileImageWithOptimization = function (req, res) {
   var fileName = req.body.fileName;
   var path = s3Config.directory.user + '/' + user._id + '/' + fileName;
   var readType = 'private';
+  //todo refactor to use moment on back end
   var expiration = moment().add(5, 'm').toDate(); //15 minutes
 
   tinify.key = config.tinyPngKey;

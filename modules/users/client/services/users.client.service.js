@@ -44,14 +44,6 @@ angular.module('users').factory('AdminUpdateUser', ['$resource', 'AdminAuthServi
         update: {
           method: 'PUT'
         }
-      }, {
-        create: {
-          method: 'POST'
-        }
-      }, {
-        read: {
-          method: 'GET'
-        }
       });
     } else {
       return 'error - user is not admin'

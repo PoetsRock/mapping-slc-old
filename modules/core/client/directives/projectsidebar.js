@@ -29,6 +29,3 @@ angular.module('core').directive('projectSideBar', function () {
   };
 
 });
-
-
-

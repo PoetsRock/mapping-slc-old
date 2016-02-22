@@ -8,7 +8,6 @@ var _ = require('lodash'),
   testAssets = require('./config/assets/test'),
   glob = require('glob'),
   gulp = require('gulp'),
-  gulpIf = require('gulp-if'),
   eslint = require('gulp-eslint'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
@@ -174,9 +173,9 @@ gulp.task('eslint', function () {
     .pipe(eslint({
       fix: true
     }))
-    .pipe(eslint.format())
+    .pipe(eslint.format());
     // if fixed, write the file to dest
-    .pipe(gulpIf(isFixed, gulp.dest('../test/fixtures')));
+    // .pipe(gulpIf(isFixed, gulp.dest('../test/fixtures')));
 });
 
 
@@ -435,6 +434,12 @@ gulp.task('prod', function (done) {
 // Run the project in production mode
 gulp.task('heroku', function (done) {
   runSequence('env:dev', 'templatecache', ['uglify', 'cssmin'], done);
+});
+
+
+// Run the project in production mode
+gulp.task('modulus', function (done) {
+  runSequence('env:prod', 'templatecache', ['uglify', 'cssmin'], done);
 });
 
 

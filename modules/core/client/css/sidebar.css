@@ -1,27 +1,50 @@
 .project-sidebar {
+    background: #1F1D1D;
+    padding: 2% 1%;
+}
+
+.sidebar-right {
+    width: 25%;
+    height: 100%;
     z-index: 100;
     right: 0;
     position: absolute;
-    background: #1F1D1D;
-    height: 100%;
-    padding: 2% 1%;
-    width: 25%;
-    min-width: 300px;
+    /*min-width: 300px;*/
     -webkit-transition: all 1s ease;
     -moz-transition: all 1s ease;
     -o-transition: all 1s ease;
     transition: all 1s ease;
 }
 
-.project-sidebar.ng-show {
-    opacity: 1;
+.sidebar-right.ng-show {
     width: 25%;
-    min-width: 300px;
+    /*min-width: 300px;*/
+    height: 100%;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
 }
 
-.project-sidebar.ng-hide {
-    opacity: 0;
+.sidebar-right.ng-hide {
     width: 0;
+    height: 100%;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+.sidebar-right.ng-show > .row, .sidebar-right > .row.ng-show, .sidebar-right.on-add > .row, .sidebar-right.on-add .row, .sidebar-right.ng-show .row {
+    opacity: 0;
+}
+
+.sidebar-right.on-add > .row {
+    opacity: 0;
+}
+
+.sidebar-right.ng-hide > .row {
+    opacity: 0;
 }
 
 .project-sidebar div {

@@ -61,6 +61,7 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
+    console.log('update user, `res.jsonp(user)`:\n', user, '\n\n');
     res.jsonp(user);
   });
 };

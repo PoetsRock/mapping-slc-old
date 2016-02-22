@@ -150,6 +150,10 @@ var UserSchema = new Schema({
     type: Object,
     default: {}
   },
+  userProfileViewCount: {
+    type: Number,
+    default: 0
+  },
   bookmarks: {
     type: [{
       type: Object

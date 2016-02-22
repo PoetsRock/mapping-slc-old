@@ -14,11 +14,6 @@ angular.module('contacts').controller('ContactsController', ['$scope', '$statePa
     //provides logic for the css in the forms
     UtilsService.cssLayout();
 
-
-    //todo  'moment' is not defined.  --> from grunt jslint
-    // $scope.dateNow = moment();
-
-
     $scope.toggleSort = true;
     $scope.oneAtATime = true;
 
@@ -108,10 +103,8 @@ angular.module('contacts').controller('ContactsController', ['$scope', '$statePa
       $scope.messageData = messageData;
 
       $scope.sentToday = function () {
-        //if(messageData.created === moment()){
-        //	return moment().calendar(messageData.created);
-        //}else{
-        var today = moment().calendar(messageData.created);
+        console.log('Date.now(messageData.created): ', Date.now(messageData.created));
+        var today = Date.now(messageData.created);
         return today;
         //}
       };
