@@ -29,16 +29,11 @@ exports.update = function (req, res) {
     user = req.model;
     user = _.extend(user, req.body);
 
-    //console.log('user:\n', user);
-
     ////For security purposes only merge these parameters
     //user.firstName = req.body.firstName;
     //user.lastName = req.body.lastName;
     //user.displayName = user.firstName + ' ' + user.lastName;
     //user.roles = req.body.roles;
-    if (req.body.associatedProjects) {
-      user.associatedProjects.push(req.body.associatedProjects);
-    }
 
     // if true, then user has just added project as a favorite
     // so, projectId needs to be pushed into favorites array.
@@ -48,8 +43,6 @@ exports.update = function (req, res) {
     } else if (req.body.isFavorite === false && req.body.favorite) {
       user.favorites.pop(req.body.favorite);
     }
-    //console.log('user:\n', user);
-
 
   } else if (req.body._id) {
     user = req.body;

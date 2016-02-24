@@ -673,9 +673,14 @@ button > .grow {
     display: inline-block;
 }
 
+.core sign-in-directive {
+    left: 20%;
+    top: 1rem;
+    position: relative;
+}
+
 .core sign-in-directive ul {
     position: relative;
-    top: -4rem;
 }
 
 .videoWrapper {

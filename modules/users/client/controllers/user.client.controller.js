@@ -68,9 +68,9 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
 
     $scope.$watchCollection('userFavorites',
       function (newVal, oldVal) {
-        console.log(':::::$scope.userFavorites\n', $scope.userFavorites);
+        // console.log(':::::$scope.userFavorites\n', $scope.userFavorites);
         //console.log('watchUpdateFavorites newVal::::::\n', newVal, '\n\n');
-        console.log('watchUpdateFavorites::::::oldVal\n', oldVal);
+        // console.log('watchUpdateFavorites::::::oldVal\n', oldVal);
         
         if ($scope.userFavorites && $scope.userFavorites.length !== $scope.user.favorites.length) {
           $scope.userFavorites = newVal;

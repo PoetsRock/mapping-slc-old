@@ -1,30 +1,45 @@
-<uib-tabset justified="true">
+<div ng-cloak="" class="tabsDynamicHeight">
 
+  <md-content>
+    <md-tabs md-dynamic-height="" md-border-bottom="">
 
-  <uib-tab heading="Main Content">
-    <project-main-tab></project-main-tab>
-  </uib-tab>
+      <md-tab label="Main Content">
+        <md-content class="md-padding">
 
+          <project-main-tab></project-main-tab>
 
-  <uib-tab heading="Admin">
-    <project-admin-features></project-admin-features>
-  </uib-tab>
+        </md-content>
+      </md-tab>
 
+      <md-tab label="Admin">
+        <md-content class="md-padding">
+          <project-admin-features></project-admin-features>
+        </md-content>
+      </md-tab>
 
-  <uib-tab heading="Multimedia">
-    <project-multimedia></project-multimedia>
-  </uib-tab>
+      <md-tab label="Multimedia">
+        <md-content class="md-padding">
+          <project-multimedia></project-multimedia>
+        </md-content>
+      </md-tab>
 
+      <md-tab label="Project Editor">
+        <md-content class="md-padding">
+          <project-editor></project-editor>
+        </md-content>
+      </md-tab>
 
-  <uib-tab heading="Project Editor">
-    <project-editor></project-editor>
-  </uib-tab>
+      <md-tab label="Contributor">
+        <md-content class="md-padding">
 
-  <uib-tab heading="Contributor">
-    <div class="admin-user">
-      <user-view-form-wrapper></user-view-form-wrapper>
-    </div>
-  </uib-tab>
+          <div class="admin-user">
+            <user-view-form-wrapper></user-view-form-wrapper>
+          </div>
 
+        </md-content>
+      </md-tab>
 
-</uib-tabset>
+    </md-tabs>
+  </md-content>
+
+</div>

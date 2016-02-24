@@ -6,8 +6,8 @@
     <div class="list-group">
       <div class="row">
 
-        <a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProject.id})"
-           class="col-md-12 admin-list">
+        <a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProject.id})" class="col-md-12 md-whiteframe-8dp admin-list">
+
           <div class="row">
 
             <div class="col-md-3">
@@ -17,7 +17,7 @@
             <div class="col-md-8">
               <h4 class="list-group-item-heading" data-ng-bind="userProject.title"></h4>
               <small>
-                Submitted on <span data-ng-bind="userProject.createdOn | date:'medium'"></span>
+                Submitted on <span data-ng-bind="userProject.createdOn | date:'short'"></span>
               </small>
 
             </div>

@@ -36,9 +36,13 @@ var _ = require('lodash'),
 
 exports.uploadUserProfileImage = function (req, res) {
   var user = req.body.user;
-  var fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
+  var fileName = 'uploaded-profile-image.jpg';
+  if(1 !== 1) {
+    fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
+  }
   var path = s3Config.directory.user + '/' + user._id + '/' + fileName;
-  var readType = 'private';
+  // var readType = 'private';
+  var readType = 'public-read';
   var expiration = moment().add(5, 'm').toDate(); //15 minutes
   var s3Policy = {
     'expiration': expiration,
@@ -76,6 +80,7 @@ exports.uploadUserProfileImage = function (req, res) {
       success_action_status: 201
     }
   };
+  console.log('credentials:\n', credentials, '\n\n');
   res.jsonp(credentials);
 
 
@@ -92,7 +97,50 @@ exports.uploadUserProfileImage = function (req, res) {
 };
 
 
+/**
+ * get pre-signed URL from AWS S3
+ *
+ * req.params.id {string} - user._id
+ * req.params.imageId {string} - file name with extension
+ */
+exports.getS3SignedUrl = (req, res) => {
+  console.log('hereh hereh herehe her herhe rehr eh r');
+  // var params = { Bucket: 'myBucket', Key: 'myKey' };
 
+  var awsS3Config = {
+    accessKeyId: config.S3_ID,
+    secretAccessKey: config.S3_SECRET,
+    region: 'us-west-1'
+  };
+  var s3 = new AWS.S3(awsS3Config);
+  var fileToGet = req.params.imageId;
+  var userIdBucket = req.params.userId;
+  var imageData = {
+    fileToGet: fileToGet,
+    userIdBucket: userIdBucket,
+    params: {
+      Bucket: s3Config.bucket + '/' + s3Config.directory.user + '/' + userIdBucket,
+      Key: fileToGet
+    }
+  };
+  // var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
+  // var userProfileImage = pathToLocalDisk + fileToGet;
+
+  s3.getSignedUrl('getObject', imageData.params,
+    (err, url) => {
+      if(err) {
+        res.status(400).send({
+          message: 'Error',
+          error: err
+        })
+      }
+    console.log('The URL is: ', url);
+      res.status(200).send({
+        message: 'Success: URL is availble for 15 minutes',
+        url: url
+      })
+  });
+};
 
 /**
  * get file from AWS S3
@@ -134,8 +182,8 @@ exports.getS3File = function (req, res) {
       // var imageAsBase64Array = callback.Body.toString('base64');
       // var imageAsUtf8 = callback.Body.toString('Utf8');
 
-      console.log('callback.Body:\n', callback.Body, '\n\n\n');
-      console.log('userProfileImage:\n', userProfileImage, '\n\n\n');
+      // console.log('callback.Body:\n', callback.Body, '\n\n\n');
+      // console.log('userProfileImage:\n', userProfileImage, '\n\n\n');
 
       fs.writeFile(userProfileImage, callback.Body, 'base64',
         (err) => {
@@ -245,58 +293,4 @@ exports.uploadUserProfileImageWithOptimization = function (req, res) {
 
   res.jsonp(source);
 
-};
-
-
-/**
- * Update profile picture
- */
-exports.changeProfilePicture = function (req, res) {
-  var user = req.user;
-  var message = null;
-  //var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
-  //var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-
-  // Filtering to upload only images
-  upload.fileFilter = profileUploadFileFilter;
-
-  if (user) {
-    //var request = require('request');
-    //request.put({url: '/api/v1/users'}, {req: user}, function (error, response, body) {
-    //  if (!error && response.statusCode == 200) {
-    //console.log('response:\n', response); // Show the HTML for the Google homepage.
-    //console.log('body:\n', body); // Show the HTML for the Google homepage.
-    //}
-    //});
-
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading profile picture'
-        });
-      } else {
-        user.profileImageURL = config.uploads.profileUpload.dest + req.file.filename;
-
-        user.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            req.login(user, function (err) {
-              if (err) {
-                res.status(400).send(err);
-              } else {
-                res.json(user);
-              }
-            });
-          }
-        });
-      }
-    });
-  } else {
-    res.status(400).send({
-      message: 'User is not signed in'
-    });
-  }
 };

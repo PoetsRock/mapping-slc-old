@@ -21,6 +21,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //$scope.publishedProjects;
     $scope.project = {};
 
+    
 
     $scope.init = function () {
       $scope.publishedProjectsFn();
@@ -50,11 +51,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.projectStatusChanged = function () {
       if ($scope.project.status === 'published') {
         $scope.publishProject();
-        $scope.toggleEdit = false;
       } else {
         $scope.update();
-        $scope.toggleEdit = false;
       }
+      $scope.toggleEdit = false;
     };
 
     $scope.confirmPublishModal = function () {
@@ -68,14 +68,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
     var publishUser = function (project) {
-      // console.log('publishUser ::::  $resource::\n', $resource);
       console.log('publishUser ::::  project.user._id:: ', project.user._id);
       AdminUpdateUser.get({ userId: project.user._id },
-        function (userData, getResponseHeader) {
-          userData.associatedProjects.push(project._id);
-          if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser') {
+        function (userData) {
+          if (userData.roles[0] !== 'admin' || userData.roles[0] !== 'superUser' && project.status === 'published') {
             userData.roles[0] = 'contributor';
           }
+
+          console.log('userData  :::: ::\n', userData);
+          console.log('publishUser ::::  project._id:: ', project._id);
+
+          userData.associatedProjects.push(project._id);
+
           userData.$update(function (userData, putResponseHeaders) {
           });
         });
@@ -152,6 +156,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           $scope.zip = '';
           $scope.story = '';
           $scope.title = '';
+          publishUser(response);
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
         });
@@ -159,6 +164,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       $scope.updateLatLng(project);
       $scope.override = false;
+
+
+
     };
 
     // Remove existing Project
@@ -494,6 +502,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.nlpData = nlpData;
       }).error(function () {
       });
+    };
+
+
+    $scope.sorts = [
+      { category: 'sortOrder', name: 'Date Submitted', value: 'createdOn' },
+      { category: 'sortOrder', name: 'Title', value: 'title' },
+      { category: 'sortOrder', name: 'Author Name', value: 'user.lastName' },
+      { category: 'sortOrder', name: 'Submission Status', value: 'status' }
+    ];
+    
+    $scope.predicate = 'title';
+    $scope.reverse = true;
+    $scope.order = function(predicate) {
+      $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+      $scope.predicate = predicate;
+      console.log('predicate:\n', predicate);
     };
 
 

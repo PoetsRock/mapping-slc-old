@@ -34,7 +34,9 @@
     "rangy": "^1.3.0",
     "sidebar-v2": "^0.2.1",
     "classie": "^1.0.1",
-    "xmlToJSON.js": "^1.3.2"
+    "xmlToJSON.js": "^1.3.2",
+    "jquery-migrate": "^1.3.0",
+    "angular-material": "^1.0.5"
   },
   "resolutions": {
     "angular": "^1.5.x",

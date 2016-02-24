@@ -49,28 +49,51 @@ a.widget-box span {
 }
 
 .admin-list {
-    background-color: rgba(0, 0, 0, 0.1);
-    border: solid 1px #000000;
-    margin: 1% 2%;
-    padding: 2% 5%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: solid 4px #023a31;
+    margin: 1%;
+    padding: 1% 3%;
     width: 46%;
     color: #000;
+    border-radius: 3px;
     font-size: 1.75rem;
-    -webkit-transition: all ease 0.2s;
-    -moz-transition: all ease 0.2s;
-    -o-transition: all ease 0.2s;
-    transition: all ease 0.2s;
+    -webkit-transition: all ease 0.5s;
+    -moz-transition: all ease 0.5s;
+    -o-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+}
+
+.user-submissions .admin-list {
+    width: 100%;
+    left: 6%;
+}
+
+.user-submissions .admin-list .col-md-8 {
+    transform: translateY(50%);
+    font-family: ubuntu;
+    font-size: 3rem;
+    top: -10px;
+    position: relative;
+}
+
+.user-submissions .admin-list .col-md-8 small {
+    bottom: 15px;
+    position: relative;
+}
+
+.admin-list h3 {
+    padding: 15px 0;
 }
 
 .admin-list:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-    border: solid 1px #023a31;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: solid 4px #0b8043;
     text-decoration: none;
     color: #000;
-    -webkit-transition: all ease 0.2s;
-    -moz-transition: all ease 0.2s;
-    -o-transition: all ease 0.2s;
-    transition: all ease 0.2s;
+    -webkit-transition: all ease 0.5s;
+    -moz-transition: all ease 0.5s;
+    -o-transition: all ease 0.5s;
+    transition: all ease 0.5s;
 }
 
 .admin table, .admin tbody {
@@ -155,7 +178,6 @@ td i .selected {
 }
 
 .user-profile .row {
-    /*margin: 1% 0;*/
     padding-top: 2.5rem;
     border-bottom: 1px solid rgba(158, 158, 158, 1);
     border-bottom: 1px solid #000;
@@ -165,19 +187,10 @@ td i .selected {
     border-bottom: none;
 }
 
-.user-profile .row:hover {
-}
-
 .user-profile .col-xs-2 {
     text-align: right;
 }
 
-.user-profile .col-xs-10 {
-}
-
-.user-profile .col-xs-10:hover {
-
-}
 
 .user-profile .input_field-secondary:focus + .input_label-secondary .input_label-content-secondary, .user-profile .input-filled .input_label-secondary .input_label-content-secondary {
     transform: translate(-4.5em, 0.45em);
@@ -282,10 +295,26 @@ td i .selected {
     position: relative;
 }
 
-/*.chrisIsChris .header-profile-image {*/
 .admin-user .header-profile-image {
-    height: 50px;
-    width: 50px;
+    height: 75px;
+    width: 75px;
+    top: -2rem;
+    position: relative;
+    opacity: 0.9;
+    border: solid 2px transparent;
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+}
+
+.admin-user .header-profile-image:hover {
+    opacity: 1;
+    border: solid 2px #006600;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
 }
 
 .admin-user .page-header {
@@ -296,12 +325,6 @@ td i .selected {
 .admin-user span.pull-right {
     margin-left: 5%;
 }
-
-/*.tile {*/
-    /*width: 95%;*/
-    /*height: auto;*/
-    /*background-color: rgba(0, 0, 0, 0.5);*/
-/*}*/
 
 .tile img {
     width: 64px;
@@ -314,4 +337,11 @@ td i .selected {
 
 .clear-both {
     float: right;
+}
+
+#admin-projects-list {
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
 }
