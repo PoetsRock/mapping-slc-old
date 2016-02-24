@@ -4,47 +4,21 @@
 
     <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8">
 
-      <!--<h4>Upload on file select</h4>-->
-      <!--<button type="file" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/*" ngf-max-height="3000" ngf-max-size="5MB">-->
-      <!--Select File</button>-->
-      <!--<br><br>-->
-      <!--File:-->
-      <!--<div>{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->
-      <!--<span class="progress" ng-show="f.progress >= 0">-->
-      <!--<div style="width:{{f.progress}}%" ng-bind="f.progress + '%'"></div>-->
-      <!--</span>-->
-      <!--</div>-->
-      <!--{{errorMsg}}-->
 
 
-      <!--<a data-ng-repeat="file in listOfImages" data-ng-href="{{file.imagepath}}{{file.imagename}}" class="list-group-item">-->
-      <!--<img data-ng-src="{{imageURL}}" />-->
-      <!--</a>-->
 
-      <img data-ng-src="{{user.profileImage0}}" class="img-thumbnail user-profile-picture" />
+      <a data-ng-repeat="file in listOfImages" data-ng-href="{{file.imagepath}}{{file.imagename}}" class="list-group-item">
+      <img data-ng-src="{{imageURL}}" />
+      </a>
 
-
-      <img data-ng-src="{{user.profileImage0}}" class="img-thumbnail user-profile-picture" />
-
-
-      <!--<img data-ng-src="{{user.profileImage1}}" class="img-thumbnail user-profile-picture" />-->
-      <!--<img data-ng-src="{{user.profileImage2}}" class="img-thumbnail user-profile-picture" />-->
-      <!--<img data-ng-src="{{user.profileImage3}}" class="img-thumbnail user-profile-picture" />-->
-      <!--<img data-ng-src="{{user.profileImage4}}" class="img-thumbnail user-profile-picture" />-->
+      <img data-ng-src="{{user.profileImageURL}}" class="img-thumbnail user-profile-picture" />
 
       <div>
         <button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select
-                ngf-change="onFileSelect($files)">Choose File
+                ngf-change="onFileSelect($files)">New Profile Photo
         </button>
       </div>
 
-      <div>
-        <button type="button" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" data-ng-click="getImage()">Get Image
-        </button>
-      </div>
-
-
-      <!--<button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>-->
 
       <button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow">Cancel
       </button>
@@ -56,63 +30,38 @@
         Drop Images or PDFs Files Here
       </div>
 
-      <div ngf-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">File Drag/Drop is not supported for this
-        browser
+      <div ngf-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">File Drag/Drop is not supported for this browser
       </div>
 
 
-      <!--<form name="profileImg" class="signin form-horizontal">-->
-      <!--<fieldset>-->
 
 
-      <!--<div class="form-group text-center">-->
-      <!--<img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">-->
-      <!--Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">-->
-      <!--</div>-->
 
-      <!--<legend>Upload on form submit</legend>-->
-      <!--Username:-->
-      <!---->
-      <!--<input type="text" name="userName" ng-model="username" size="31" required>-->
 
-      <!--<i ng-show="profileImg.userName.$error.required">*required</i>-->
-
-      <!--<br>-->
-
-      <!--Photo:-->
-      <!--<input type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required>-->
-
-      <!--<i ng-show="profileImg.file.$error.required">*required</i>-->
-
-      <!--<br>-->
-
-      <!--<i ng-show="profileImg.file.$error.maxSize">File too large {{picFile.size / 1000000|number:1}}MB: max 2M</i>-->
-
-      <!--<img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb">-->
-      <!--<button ng-click="picFile = null" ng-show="picFile">Remove</button>-->
-
-      <!--<br>-->
-
-      <!--<button ng-disabled="!myForm.$valid" data-ng-click="uploadPic(picFile)">Submit</button>-->
 
         <span class="progress" ng-show="picFile.progress >= 0">
           <div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>
         </span>
 
-      <!--<span ng-show="picFile.result">Upload Successful</span>-->
-      <!--<span class="err" ng-show="errorMsg">{{errorMsg}}</span>-->
-
-      <!--<div ng-show="success" class="text-center text-success">-->
-      <!--<strong>Profile Picture Changed Successfully</strong>-->
-      <!--</div>-->
-
-      <!--<div ng-show="error" class="text-center text-danger">-->
-      <!--<strong ng-bind="error"></strong>-->
-      <!--</div>-->
 
 
-      <!--</fieldset>-->
-      <!--</form>-->
+
+
+      <span ng-show="picFile.result">Upload Successful</span>
+      <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+
+      <div ng-show="success" class="text-center text-success">
+      <strong>Profile Picture Changed Successfully</strong>
+      </div>
+
+      <div ng-show="error" class="text-center text-danger">
+      <strong ng-bind="error"></strong>
+      </div>
+
+
+
+
+
     </div>
 
   </div>

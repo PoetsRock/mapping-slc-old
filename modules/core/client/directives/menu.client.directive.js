@@ -4,6 +4,9 @@ angular.module('core').directive('leftMenu', function (MenuService) {
   return {
     restrict: 'EA',
     templateUrl: 'modules/core/client/directives/views/google-left-menu.client.view.html',
+    controller: function ($scope, Authentication) {
+      $scope.user = Authentication.user;
+    },
     replace: true,
     link: function (scope, elm, attrs) {
 

@@ -7,21 +7,17 @@ module.exports = function (app) {
 
   // Setting up the users profile api
   app.route('/api/v1/users/me').get(users.me);
-  app.route('/api/users').put(users.update);
-  app.route('/api/users/accounts').delete(users.removeOAuthProvider);
-  app.route('/api/users/password').post(users.changePassword);
-  app.route('/api/users/picture').post(users.changeProfilePicture);
 
-  // app.route('/api/v1/users/:userId/media/:imageId')
-  //   .get(assets.getS3File);
-
-  // User's Favorite Projects Route
-  app.route('/api/v1/users/:userId/images/:imageId')
+  // User Profile Image File to Client
+  app.route('/api/v1/users/:userId/media/:imageId')
     .get(assets.getS3File);
+
+  // User Profile Image
+  app.route('/api/v1/users/:userId/images/:imageId')
+    .get(assets.getS3SignedUrl);
 
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/v1/users/password').post(users.changePassword);
-  app.route('/api/v1/users/media/photo').post(users.changeProfilePicture);
   app.route('/api/v1/s3/upload').post(users.uploadUserProfileImage);
 
   // Finish by binding the user middleware

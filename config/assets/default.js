@@ -6,14 +6,17 @@ module.exports = {
       css: [
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
-        '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css',
         'public/lib/angular-bootstrap/ui-bootstrap-csp.css',
+        '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css',
+        'public/lib/angular-material/angular-material.css',
+        'public/lib/angular-material/angular-material.layouts.min.css',
         'public/lib/sidebar-v2/css/leaflet-sidebar.css',
         'public/lib/font-awesome/css/font-awesome.css',
         'public/lib/angular-notify/dist/angular-notify.css',
         'public/lib/ng-ckeditor/ng-ckeditor.css',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css',
-        'public/lib/c3/c3.css'
+        'public/lib/c3/c3.css',
+        'modules/redactor/redactor/redactor.css'
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -23,10 +26,12 @@ module.exports = {
         'public/lib/angular-messages/angular-messages.js',
         'public/lib/angular-ui-router/release/angular-ui-router.js',
         'public/lib/angular-aria/angular-aria.js',
-        'public/lib/angular-touch/angular-touch.js',
         'public/lib/angular-sanitize/angular-sanitize.js',
         'public/lib/jquery/dist/jquery.js',
+        'public/lib/jquery-migrate/jquery-migrate.min.js',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js',
+        'public/lib/angular-material/angular-material.min.js',
+        // 'public/lib/angular-material/angular-material-mocks.js',
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
@@ -39,7 +44,6 @@ module.exports = {
         'public/lib/ng-ckeditor/libs/ckeditor/ckeditor.js',
         'public/lib/ng-ckeditor/ng-ckeditor.js',
         'public/lib/sidebar-v2/js/leaflet-sidebar.js',
-        '//maps.stamen.com/js/tile.stamen.js?v1.3.0',
         'public/lib/classie/classie.js',
         'public/lib/masonry/dist/masonry.pkgd.js',
         'public/lib/moment/min/moment.js',
@@ -47,7 +51,10 @@ module.exports = {
         'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
         'public/lib/angular-notify/dist/angular-notify.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
-        'public/lib/ng-file-upload/ng-file-upload.js'
+        'public/lib/ng-file-upload/ng-file-upload.js',
+        'modules/redactor/client/redactor.js',
+        'modules/redactor/client/angular-redactor-2.js'
+
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

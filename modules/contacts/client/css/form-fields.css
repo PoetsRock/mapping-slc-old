@@ -201,7 +201,7 @@ textarea.input_field-secondary:active {
 
 .input_field-secondary:focus + .input_label-secondary .input_label-content-secondary,
 .input-filled .input_label-secondary .input_label-content-secondary {
-    color: #023A31;
+    color: #006400;
     -webkit-transform: translateY(3.0em) scale3d(0.955, 0.955, 1.5);
     transform: translateY(3.0em) scale3d(0.955, 0.955, 1.5);
 }

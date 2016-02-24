@@ -1,0 +1,35 @@
+.tabsDynamicHeight md-content {
+    background-color: transparent !important;
+}
+
+.tabsDynamicHeight md-content md-tabs {
+    background: #F9F2E2;
+    border: 1px solid #e1e1e1;
+}
+
+.tabsDynamicHeight md-content md-tabs md-tabs-wrapper {
+    background: transparent;
+}
+
+.tabsDynamicHeight md-content h1:first-child {
+    margin-top: 0;
+}
+
+md-tabs.md-default-theme .md-tab, md-tabs .md-tab {
+    color: #000;
+    text-transform: capitalize;
+}
+
+md-tabs.md-default-theme .md-tab.md-active, md-tabs .md-tab.md-active, md-tabs.md-default-theme .md-tab.md-active md-icon, md-tabs .md-tab.md-active md-icon, md-tabs.md-default-theme .md-tab.md-focused, md-tabs .md-tab.md-focused, md-tabs.md-default-theme .md-tab.md-focused md-icon, md-tabs .md-tab.md-focused md-icon {
+    color: #023A31;
+    font-size: 115%;
+}
+
+md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
+    color: #023A31;
+    background: #023A31;
+}
+
+md-tabs.md-default-theme .md-tab, md-tabs .md-tab:hover{
+    background-color: rgba(0,0,0,0.1);
+}

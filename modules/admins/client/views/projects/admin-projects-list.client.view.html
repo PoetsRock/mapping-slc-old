@@ -24,10 +24,22 @@
             <div class="page-header">
               <h1>Admin Panel</h1>
             </div>
+            
+            <div layout="row">
+              <md-input-container>
+                <label>Sort Order</label>
+                <md-select id="sortAdminProjectList" data-ng-model="sorts">
+                  <md-optgroup label="Sort By">
+                    <md-option ng-value="sort.value" ng-repeat="sort in sorts">{{sort.name}}
+                    </md-option>
+                  </md-optgroup>
+                </md-select>
+              </md-input-container>
+            </div>
+
 
             <div class="row">
-
-              <a data-ng-repeat="project in projects" data-ng-href="/admin/edit-project/{{project._id}}" class="col-md-6 col-sm-12 admin-list">
+              <a data-ng-repeat="project in projects | orderBy:sorts" data-ng-href="/admin/edit-project/{{project._id}}" class="col-md-6 col-sm-12 admin-list" id="admin-projects-list">
                 <h3 class="list-group-item-heading" data-ng-bind="project.title"></h3>
                 <div data-ng-bind="project.user.displayName"></div>
                 <small>
