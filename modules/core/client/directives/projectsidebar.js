@@ -5,7 +5,7 @@ angular.module('core').directive('projectSideBar', function () {
     restrict: 'EA',
     templateUrl: '/modules/core/client/directives/views/projects-sidebar.html',
     controller: function ($scope) {
-      let currentMarkerId = '';
+      var currentMarkerId = '';
       $scope.toggleSidebar = false;
 
       $scope.hideSidebar = function () {
