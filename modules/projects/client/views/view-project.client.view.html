@@ -65,10 +65,14 @@
                   </ul>
                 </div>
 
-
-                <div data-ng-show="project.story !== ''">
+                <md-content flex="" layout-padding=""data-ng-show="project.story !== ''">
                   <p data-ng-bind-html="trustAsHtml(project.story)"></p>
-                </div>
+                </md-content>
+
+                <!--<div data-ng-show="project.story !== ''">-->
+                  <!--<p data-ng-bind-html="trustAsHtml(project.story)"></p>-->
+                <!--</div>-->
+
                 <hr>
                 <div>
                   <img ng-src="{{project.mapImage}}" class="img-responsive">

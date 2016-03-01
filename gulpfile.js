@@ -11,6 +11,7 @@ var _ = require('lodash'),
   eslint = require('gulp-eslint'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
+  gutil = require('gulp-util'),
   plugins = gulpLoadPlugins({
     rename: {
       'gulp-angular-templatecache': 'templateCache'
@@ -206,6 +207,7 @@ gulp.task('uglify', function () {
     .pipe(plugins.uglify({
       mangle: false
     }))
+    .on('error', gutil.log)
     .pipe(plugins.concat('application.min.js'))
     .pipe(gulp.dest('public/dist'));
 });
@@ -348,8 +350,6 @@ gulp.task('protractor', ['webdriver_update'], function () {
       process.exit(1);
     });
 });
-
-
 
 
 // Run the project in development mode
