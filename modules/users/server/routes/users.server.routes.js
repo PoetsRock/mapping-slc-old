@@ -14,7 +14,8 @@ module.exports = function (app) {
 
   // User Profile Image
   app.route('/api/v1/users/:userId/images/:imageId')
-    .get(assets.getS3SignedUrl);
+    // .get(assets.getS3SignedUrl);
+    .get(assets.getS3File);
 
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/v1/users/password').post(users.changePassword);
