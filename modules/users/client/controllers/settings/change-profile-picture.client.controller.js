@@ -75,7 +75,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       }
     };
 
-    $scope.image;
+    // $scope.image;
     /**
      * hits back end route that calls `getS3File()`
      *
