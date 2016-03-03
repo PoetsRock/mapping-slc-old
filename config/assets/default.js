@@ -36,7 +36,6 @@ module.exports = {
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-        'public/lib/underscore/underscore-min.js',
         'public/lib/modernizr/modernizr.js',
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
