@@ -6,17 +6,19 @@ var defaultEnvConfig = require('./default'),
   config = require(path.resolve('./config/config'));
 
 module.exports = {
+
   secure: {
     ssl: true,
     privateKey: './config/sslcerts/key.pem',
     certificate: './config/sslcerts/cert.pem'
   },
-  //mongodb://heroku:GHylSebTwIoBrpEajS3nYmQAEvSkobA4Nm1OmbZciMYTh8eNh4GmURHDgNgs8Iw0kCQXSE5M6kjQyzDnk6ocVA@candidate.63.mongolayer.com:10524,candidate.64.mongolayer.com:10339/app44603052
+
   port: process.env.PORT || 8443,
+
   // Binding to 127.0.0.1 is safer in production.
   host: process.env.HOST || '127.0.0.1',
   db: {
-    uri: process.env.MONGOLAB_URI || process.env.MONGO_URL || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
+    uri: process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
     options: {
       user: '',
       pass: ''
@@ -24,6 +26,7 @@ module.exports = {
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
   },
+
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
     // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
