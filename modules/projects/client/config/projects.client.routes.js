@@ -32,6 +32,10 @@ angular.module('projects').config(['$stateProvider',
       //  roles: ['contributor', 'admin', 'superUser']
       //}
       templateUrl: 'modules/projects/client/views/project-for-submission.client.view.html'
+    })
+    .state('blank', {
+      url: '/blank',
+      templateUrl: 'modules/projects/client/views/blank.html'
     });
   }
 ]);

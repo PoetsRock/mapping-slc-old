@@ -144,6 +144,9 @@ module.exports = function (app) {
     .put(projects.updateFeaturedProjects);
 
 
+  app.route('/api/v1/projects/:projectId/s3/upload')
+    .post(projects.uploadProjectFiles);
+
    //mount the router on the app
   app.use('/', router);
 

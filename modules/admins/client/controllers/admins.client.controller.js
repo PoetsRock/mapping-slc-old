@@ -6,22 +6,6 @@ angular.module('admins').controller('AdminsController', ['$scope', 'd3', '$state
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
 
-    //for dropdown
-
-    $scope.colors = [{
-      name: 'Red',
-      hex: '#F21B1B'
-    }, {
-      name: 'Blue',
-      hex: '#1B66F2'
-    }, {
-      name: 'Green',
-      hex: '#07BA16'
-    }];
-
-    $scope.color = '';
-
-    //
     //function run($rootScope, $state, Authentication) {
     //
     //	$rootScope.$on('$stateChangeStart',

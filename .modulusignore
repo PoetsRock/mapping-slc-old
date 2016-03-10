@@ -79,3 +79,7 @@ Thumbs.db
 *.bak
 *.swp
 logs/
+
+
+
+/README_internal.md

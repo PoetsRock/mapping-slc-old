@@ -19,3 +19,7 @@ karma.conf.js
 manifest.yml
 protractor.conf.js
 Dockerfile
+
+
+
+/README_internal.md

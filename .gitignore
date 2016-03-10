@@ -19,6 +19,7 @@ coverage/
 # ======================
 config/env/local-*.js
 *.pem
+/ng-file-upload wiki.md
 /config/assets/development.js
 /modules/core/server/controllers/envVars.server.controller.js
 
@@ -40,3 +41,4 @@ _site/
 /.aws
 
 access.log
+/README_internal.md

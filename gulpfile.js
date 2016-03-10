@@ -232,18 +232,16 @@ gulp.task('imagemin', function () {
     .pipe(gulp.dest('public/dist/img'));
 });
 
-// node-inspector task
-gulp.task('node-inspector', function () {
-  return gulp.src([])
-    .pipe(plugins.nodeInspector({
-      debugPort: 5858,
-      webHost: 'localhost',
-      webPort: 1337,
-      saveLiveEdit: true,
-      preload: false,
-      hidden: [],
-      stackTraceLimit: 50,
-    }));
+// Nodemon debug task
+gulp.task('nodemon-debug', function () {
+  return plugins.nodemon({
+    exec: 'node_modules/node-inspector/bin/inspector.js --save-live-edit --preload=false --web-port 1337 & node --debug',
+    script: 'server.js',
+    nodeArgs: ['--debug'],
+    ext: 'js,html',
+    verbose: true,
+    watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+  });
 });
 
 // Copy local development environment config example
@@ -366,7 +364,7 @@ gulp.task('protractor', ['webdriver_update'], function () {
 
 // Run the project in development mode
 gulp.task('default', function (done) {
-  runSequence('env:dev', ['copyLocalEnvConfig', 'makeUploadsDir'], 'lint', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['copyLocalEnvConfig', 'makeUploadsDir'], ['nodemon', 'watch'], done);
 });
 
 // Lint CSS and JavaScript files.
@@ -418,7 +416,7 @@ gulp.task('build', function (done) {
 // optional arguments: 
 // Run the project in debug mode
 gulp.task('debug', function (done) {
-  runSequence('env:dev', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['nodemon-debug', 'watch'], done);
 });
 
 // Lint project files and minify them into two production files.
@@ -438,13 +436,13 @@ gulp.task('prod', function (done) {
 
 // Run the project in production mode
 gulp.task('heroku', function (done) {
-  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', done);
+  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
 
 
 // Run the project in production mode
 gulp.task('modulus', function (done) {
-  runSequence('env:prod', 'templatecache', ['uglify', 'cssmin'], done);
+  runSequence('env:prod', 'templatecache', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
 });
 
 

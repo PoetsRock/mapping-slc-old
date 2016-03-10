@@ -4,13 +4,77 @@
   <div class="row">
     <div class="col-md-12">
 
-      <h4>Upload Project Documents and Media</h4>
+      <!--upload multiple files-->
+      <div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="btn btn-main btn-footer-overlay grow" data-ng-model="project.files" ngf-select multiple
+              ngf-multiple="true" ngf-fix-orientation="true" accept=".jpg,.png,.pdf,.doc, docx,.rtf,.txt,image/*"
+              ngf-max-size="2MB" ngf-keep="'distinct'" ngf-model-invalid="errorFile" ng-change="log(project.files)">
+              Select Files
+            </div>
+          </div>
 
-      <input type="file" ngf-select ngf-change="onFileSelect($files)" data-ng-model="projectForm.keywords"
-             ng-change="showUploadFunction()">
+          <div class="col-md-4">
+            <button class="btn btn-main btn-footer-overlay grow" data-ng-click="project.files = null"
+              data-ng-show="project.files">Remove
+            </button>
+          </div>
 
-      <button data-ng-click="abort();" data-ng-hide="!uploading">Cancel Current Upload</button>
+        </div>
+      </div>
+
+      <div class="preview" data-ng-show="project.files">
+        <div data-ng-repeat="previewImage in previewImages">
+          <div>
+            <img ngf-thumbnail="previewImage" class="image-preview">
+          </div>
+          <div>
+            {{previewImage.name}}
+          </div>
+          <div>
+            {{previewImage.fileSize}} kb
+          </div>
+        </div>
+      </div>
+
+      <br/><br/>
+
+
+      <!--Drop File-->
+      <div ngf-file-drop class="drop-box" data-ng-model="project.files" ngf-drop ngf-drag-over-class="dragover"
+        ngf-multiple="true" ngf-allow-dir="false" accept=".jpg,.png,.pdf,.doc, docx,.rtf,.txt" ngf-keep="'distinct'"
+        data-ng-hide="uploading" ngf-model-invalid="errorFile" ng-change="log(project.files)">
+        Drop Images or Documents Here
+      </div>
+
+
+      <i data-ng-show="project.files.$error.required">*required</i>
+      <br>
+      <i data-ng-show="project.files.$error.maxSize">File too large {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+
+      <br/><br/>
+
+
+      <!--progress bar-->
+      <span class="progress" data-ng-show="project.files.progress >= 0">
+        <div style="width:{{project.files.progress}}%" ng-bind="project.files.progress + '%'"></div>
+      </span>
+
+
+      <!--errors: #1-->
+      <span data-ng-show="project.files.result">Upload Successful</span>
+
+      <!--errors: #2-->
+      <span class="err" data-ng-show="errorMsg">{{errorMsg}}</span>
+
+      <!--errors: #3-->
+      <button class="btn btn-main btn-footer-overlay grow" data-ng-click="abort();" data-ng-hide="!uploading">Cancel
+        Current Upload
+      </button>
 
     </div>
   </div>
 </div>
+
+
