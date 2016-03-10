@@ -21,10 +21,12 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
     $scope.imageURL = $scope.user.profileImageURL;
     var upload = null;
 
-    //todo (1) change server function to default images to generic file names -- for user: `uploaded-profile-image.jpg` ... for projects: something like `uploaded-main-project-image.jpg`
-    //todo (2) set public read permissions on images
-    ///todo (3) file optimization
+    
     $scope.onFileSelect = function (files) {
+      //todo (1) change server function to default images to generic file names -- for user: `uploaded-profile-image.jpg` ... for projects: something like `uploaded-main-project-image.jpg`
+      //todo (2) set public read permissions on images
+      ///todo (3) file optimization
+
       if (files.length > 0) {
         $scope.uploading = true;
         var filename = files[0].name;
@@ -34,8 +36,8 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
           filename: filename,
           type: type
         };
-        var configObj = { cache: true };
-        $http.post('api/v1/s3/upload', query, configObj)
+        console.log('query:::\n', query);
+        $http.post('api/v1/user/'+ query.user._id +'/s3/upload', query)
           .success(function (result) {
             console.log('result v1\n', result);
             Upload.upload({
@@ -140,7 +142,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       console.log('fileType:\n', fileType);
       console.log('query:\n', query);
 
-      $http.post('api/v1/s3/upload/media/photo', query)
+      $http.post('api/v1/users/'+ query.user._id +'/s3/upload', query)
         .then(function (result) {
 
           console.log('result:\n', result);

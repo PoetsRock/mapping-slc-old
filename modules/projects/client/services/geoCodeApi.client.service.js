@@ -6,10 +6,10 @@ angular.module('projects').service('GeoCodeApi', ['$http',
     // Geocodeapi service logic
 
     this.callGeoCodeApi = function (project, keys, projectSaveCallback) {
-      console.log('keys::::::::\n', keys);
-      console.log('keys.data.::::::::\n', keys.data);
-      console.log('data.HERE_KEY::::::::\n', keys.data.HERE_KEY);
-      console.log('data.HERE_SECRET::::::::\n', keys.data.HERE_SECRET);
+      // console.log('keys::::::::\n', keys);
+      // console.log('keys.data.::::::::\n', keys.data);
+      // console.log('data.HERE_KEY::::::::\n', keys.data.HERE_KEY);
+      // console.log('data.HERE_SECRET::::::::\n', keys.data.HERE_SECRET);
       var hereKey = keys.data.HERE_KEY;
       var hereSecret = keys.data.HERE_SECRET;
 

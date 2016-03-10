@@ -6,6 +6,14 @@
     top: 7px;
 }
 
+.image-preview {
+    width: 50px;
+    height: auto;
+    float: none;
+    position: relative;
+    top: 7px;
+}
+
 form .progress {
     line-height: 15px;
 }

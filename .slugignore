@@ -1,5 +1,10 @@
 ## heroku slug ignore paths
 
+/.local-configs
+/.bluemix
+/.git
+/.idea
+
 /modules/admins/tests
 /modules/contacts/tests
 /modules/core/tests
@@ -14,3 +19,7 @@ karma.conf.js
 manifest.yml
 protractor.conf.js
 Dockerfile
+
+
+
+/README_internal.md

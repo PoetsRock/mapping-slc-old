@@ -19,7 +19,7 @@ module.exports = function (app) {
 
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/v1/users/password').post(users.changePassword);
-  app.route('/api/v1/s3/upload').post(users.uploadUserProfileImage);
+  app.route('/api/v1/user/:userId/s3/upload').post(users.uploadUserProfileImage);
 
   // Finish by binding the user middleware
   app.param('userId', users.userByID);

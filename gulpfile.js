@@ -171,30 +171,8 @@ gulp.task('eslint', function () {
 
   return gulp.src(assets)
     .pipe(plugins.eslint())
-    .pipe(plugins.eslint.format())
-    .pipe(eslint({
-      fix: true
-    }))
-    .pipe(eslint.format());
-    // if fixed, write the file to dest
-    // .pipe(gulpIf(isFixed, gulp.dest('../test/fixtures')));
+    .pipe(plugins.eslint.format());
 });
-
-
-//// ESLint JS linting & fix task
-//gulp.task('eslint-fix', function () {
-//  var assets = _.union(
-//    defaultAssets.server.gulpConfig,
-//    defaultAssets.server.allJS,
-//    defaultAssets.client.js
-//  );
-//
-//
-//  return gulp.src(assets)
-//    .pipe(plugins.eslint())
-//    .pipe(plugins.eslint.format());
-//});
-
 
 // JS minifying task
 gulp.task('uglify', function () {
@@ -254,18 +232,16 @@ gulp.task('imagemin', function () {
     .pipe(gulp.dest('public/dist/img'));
 });
 
-// node-inspector task
-gulp.task('node-inspector', function () {
-  return gulp.src([])
-    .pipe(plugins.nodeInspector({
-      debugPort: 5858,
-      webHost: 'localhost',
-      webPort: 1337,
-      saveLiveEdit: true,
-      preload: false,
-      hidden: [],
-      stackTraceLimit: 50,
-    }));
+// Nodemon debug task
+gulp.task('nodemon-debug', function () {
+  return plugins.nodemon({
+    exec: 'node_modules/node-inspector/bin/inspector.js --save-live-edit --preload=false --web-port 1337 & node --debug',
+    script: 'server.js',
+    nodeArgs: ['--debug'],
+    ext: 'js,html',
+    verbose: true,
+    watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+  });
 });
 
 // Copy local development environment config example
@@ -388,23 +364,17 @@ gulp.task('protractor', ['webdriver_update'], function () {
 
 // Run the project in development mode
 gulp.task('default', function (done) {
-  runSequence('env:dev', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['copyLocalEnvConfig', 'makeUploadsDir'], ['nodemon', 'watch'], done);
 });
-
 
 // Lint CSS and JavaScript files.
 gulp.task('lint', function (done) {
   runSequence('less', 'sass', ['csslint', 'eslint', 'jshint'], done);
 });
 
-// EsLint - Lint & Fix JavaScript files.
-gulp.task('eslint-fix', function (done) {
-  runSequence('less', 'sass', ['eslint'], done);
-});
-
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
-  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+  runSequence('env:dev', ['uglify', 'cssmin'], done);
 });
 
 // Run the project tests
@@ -446,7 +416,7 @@ gulp.task('build', function (done) {
 // optional arguments: 
 // Run the project in debug mode
 gulp.task('debug', function (done) {
-  runSequence('env:dev', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['nodemon-debug', 'watch'], done);
 });
 
 // Lint project files and minify them into two production files.
@@ -461,19 +431,18 @@ gulp.task('prod-no-mini', function (done) {
 
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence('templatecache', 'build-no-lint', 'env:prod', ['nodemon', 'watch'], done);
+  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
-
 
 // Run the project in production mode
 gulp.task('heroku', function (done) {
-  runSequence('env:dev', 'templatecache', ['uglify', 'cssmin'], done);
+  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
 
 
 // Run the project in production mode
 gulp.task('modulus', function (done) {
-  runSequence('env:prod', 'templatecache', ['uglify', 'cssmin'], done);
+  runSequence('env:prod', 'templatecache', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
 });
 
 

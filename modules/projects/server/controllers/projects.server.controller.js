@@ -1,20 +1,34 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
+
 var mongoose = require('mongoose'),
+  fs = require('fs'),
   path = require('path'),
+  _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   Project = mongoose.model('Project'),
-  _ = require('lodash'),
+
   config = require(path.resolve('./config/config')),
   AlchemyAPI = require('alchemy-api'),
   projects = require('./projects.server.controller'),
-  sanitizeHtml = require('sanitize-html');
-//Promise = require('bluebird'),
-//fs = Promise.promisifyAll(require('fs')),
-//exports = Promise.promisifyAll(exports);
+  sanitizeHtml = require('sanitize-html'),
+  //Promise = require('bluebird'),
+  //fs = Promise.promisifyAll(require('fs')),
+  //exports = Promise.promisifyAll(exports);
+  s3Config = {
+    keys: require('../../../../config/env/production.js'),
+    bucket: 'mapping-slc-file-upload',
+    region: 'us-west-1',
+    directory: {
+      project: 'project-directory',
+      user: 'user-directory',
+      admin: 'admin-directory'
+    }
+  },
+  crypto = require('crypto'),
+  moment = require('moment'),
+  tinify = require('tinify'),
+  s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com';
 
 
 /**
@@ -447,4 +461,71 @@ let updateOldFeaturedProject = () => {
 exports.updateFeaturedProjects = function (req, res) {
   updateOldFeaturedProject();
   updateNewFeaturedProject(req.body);
+};
+
+
+exports.uploadProjectFiles = function (req, res) {
+  console.log('\n\n`uploadProjectFiles()` var `req.body`:\n', req.body, '\n\n');
+  console.log('\n\n`uploadProjectFiles()` var `req.body.type`:\n', req.body.type, '\n\n');
+  var user = req.body.user;
+  var project = req.body.project;
+  var fileName = project.name;
+  if (!/\s/g.test(fileName)) {
+    fileName = req.body.filename.replace(/\s/g, '_'); //
+    console.log('substitute all whitespace with underscores: ', fileName);
+  }
+  var path = s3Config.directory.project + '/' + project._id + '/' + fileName;
+  // var readType = 'private';
+  var readType = 'public-read';
+  var expiration = moment().add(5, 'm').toDate(); //15 minutes
+  var s3Policy = {
+    'expiration': expiration,
+    'conditions': [{
+      'bucket': s3Config.bucket
+    },
+      ['starts-with', '$key', path],
+      {
+        'acl': readType
+      },
+      {
+        'success_action_status': '201'
+      },
+      ['starts-with', '$Content-Type', req.body.type],
+      ['content-length-range', 2048, 10485760], //min and max
+    ]
+  };
+
+  var stringPolicy = JSON.stringify(s3Policy);
+  var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+
+  // sign policy
+  var signature = crypto.createHmac('sha1', config.S3_SECRET)
+    .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+
+  var credentials = {
+    url: s3Url,
+    fields: {
+      key: path,
+      AWSAccessKeyId: config.S3_ID,
+      acl: readType,
+      policy: base64Policy,
+      signature: signature,
+      'Content-Type': req.body.type,
+      success_action_status: 201
+    }
+  };
+  console.log('credentials:\n', credentials, '\n\n');
+  res.jsonp(credentials);
+
+
+  ////now save url to mongoDb
+
+  //user.profileImageURL = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.user + '/' + user._id + '/' + fileName;
+  //
+  //var updateUser = {
+  //  user: user
+  //};
+
+  //Users.update(updateUser);
+
 };
