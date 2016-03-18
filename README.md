@@ -1,20 +1,16 @@
 [![Mapping Sale Lake City Logo](http://www.mappingslc.org/images/mapping.png)](http://mappingslc.org/)
 
-## Mapping Salt Lake City
+# Mapping Salt Lake City
 
 Mapping Salt Lake City is a community-created archive of Salt Lake City’s neighborhoods and people that documents the city’s changes through art, critical and creative literature, personal maps and multi-media projects.
 
-We invite people to engage with and evolve this site by submitting their own contributions.
+This repo is the code base for a new site for Mapping Salt Lake City, which will launch in the summer of 2016.
 
 
 ## About Us
-[Paisley Rekdal](http://www.poetryfoundation.org/bio/paisley-rekdal) ([home page](http://www.paisleyrekdal.com/)) is
-the creator and Editor for Mapping Salt Lake City.
+[Paisley Rekdal](http://www.paisleyrekdal.com/)) is the creator and Editor for Mapping Salt Lake City.
 
 [Chris Tanseer](http://www.christanseer.com) is a founding member of the project and serves as the Assistant Editor and Lead Web Developer for the project.
-
-[Isomer Academy](http://www.isomer.io), a web development bootcamp in Salt Lake City, maintains the web site. Managed
- by Isomer instructors, the students work on the site as a core part of their training.
 
 We welcome you to join our community, either by assisting in the development of the site, or by [submitting work](http://www.mappingslc.org/index.php?option=com_k2&view=item&layout=item&id=4&Itemid=279) to the project.
 
@@ -26,53 +22,69 @@ Mapping Salt Lake City was inspired by the work of [Rebecca Solnit](http://rebec
 
 ## Prerequisites
 Make sure you have installed all these prerequisites on your development machine.
-* Node.js - [Download & Install Node.js](http://www.nodejs.org/download/) and the npm package manager, if you encounter any problems, you can also use this [Github Gist](https://gist.github.com/isaacs/579814) to install Node.js.
-* MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
-* Bower - You're going to use the [Bower Package Manager](http://bower.io/) to manage your front-end packages, in order to install it make sure you've installed Node.js and npm, then install bower globally using npm:
+
+  * Node.js - [Download & Install Node.js](http://www.nodejs.org/download/) and the npm package manager, if you encounter any problems, you can also use this [Github Gist](https://gist.github.com/isaacs/579814) to install Node.js.    
+	  
+	  * Currently, we're running on Node 4.x. If you have Node installed but are using a different version, you can use Node Versoion Manager (NVM) to switch between Node versions. [Mac and Linux users](https://github.com/creationix/nvm). [Windows users](https://github.com/coreybutler/nvm-windows).    	
+
+  * MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).    
+
+  * Bower - You're going to use the [Bower Package Manager](http://bower.io/) to manage your front-end packages, in order to install it make sure you've installed Node.js and npm, then install bower globally using npm:
 
 ```
 $ npm install -g bower
 ```
 
-Grunt - You're going to use the [Grunt Task Runner](http://gruntjs.com/) to automate your development process, in order to install it make sure you've installed Node.js and npm, then install grunt globally using npm:
+* Gulp - We use [Gulp](http://gulpjs.com/) ([their GitHub repo](https://github.com/gulpjs/gulp)) to automate the development process. In order to install it, make sure you've installed Node.js and npm, then install Gulp globally using npm:
 
 ```
-$ sudo npm install -g grunt-cli
+$ npm install --global gulp-cli
 ```
 
-### Cloning The Mapping SLC GitHub Repository
-You can also use Git to directly clone the Mapping Salt Lake City repository:
-```
-$ git clone https://github.com/PoetsRock/MappingSLC.git
-```
-This will clone the latest version of the Mapping Salt Lake City repository to your local machine.
+*NOTE from the Gulp folks: "If you have previously installed a version of gulp globally, please run npm rm --global gulp to make sure your old version doesn't collide with gulp-cli."
 
 ## Quick Install
-Begin by installing the Node.js dependencies.  Go to your application folder and run in the command line:
+
+### Cloning The Mapping SLC GitHub Repository
+Begin by creating a fork of the main Mapping SLC repo. Next, open up a terminal window and clone your fork to download the files to your local machine:  
+
+```
+$ git clone https://github.com/<YOUR GITHUB USER NAME>/mapping-slc.git
+```
+
+### Download Required Dependencies
+
+After you've clone a fork of Mapping SLC, go into the directory (which should be `cd mapping-slc`) and run:
+
+```
+$ bower install
+```
+
+This will install, among other libraries, "mslc," a private repo for Mapping SLC, where the Redactor source file[*](#redactor-misc-info) and API keys for local development are stored. If you do not see "mslc" in `public/lib/mslc/`, ensure you have permissions to access the ["mslc" repo](https://github.com/PoetsRock/mslc). If you need permissions, e-mail [Chris Tanseer](mailto:chris@christanseer.com).
+
+Now, you will need to copy and paste the `local-development.js` file that you will find at `/public/lib/mslc/local-development.js` to the directory `config/env/`. (Please ensure you do not upload this file to GitHub. It's set to be ignored in the `.gitignore` file. So, you shouldn't need to do anything.)
+
+Once you've copied the API Keys, install the Node.js dependencies by running:
+Additionally, you'll want to run:
 
 ```
 $ npm install
 ```
 
 We've noticed that, on occasion, you need to run this command two or three times to get all of the dependencies.
-Additionally, you'll want to run:
 
-```
-$ bower install
-```
-
-(If it asks you to pick a version of AngularJS, select version 1.2.26.)
+Running `npm install` will launch the app; however, it launches it in production mode. So, click `CTRL + c` to kill the process in order to launch the app for local environment.
 
 ## Running Your Application
-After the install process is over, you'll be able to run your application using Grunt, just run grunt default task:
+After the install process is over, you'll be able to run your application using Gulp, just run grunt default task:
 
 ```
-$ grunt
+$ gulp
 ```
 
 Your application should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
                             
-That's it! your application should be running by now, to proceed with your development check the other sections in this documentation. 
+That's it! Your application should be running by now, to proceed with your development check the other sections in this documentation. 
 If you encounter any problem try the Troubleshooting section.
 
 ## License
@@ -99,3 +111,6 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+[*](#redactor-misc-info)
