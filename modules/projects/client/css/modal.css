@@ -11,9 +11,9 @@
     color: #ffffff;
     background-color: rgba(2, 58, 49, 0.9);
     border: solid rgba(255, 255, 255, 0.7) 2px;
-    -webkit-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
-    -moz-box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
-    box-shadow: -15px 20px 15px rgba(0, 0, 0, .6);
+    -webkit-box-shadow: -7px 10px 15px rgba(0, 0, 0, .6);
+    -moz-box-shadow: -7px 10px 15px rgba(0, 0, 0, .6);
+    box-shadow: -7px 10px 15px rgba(0, 0, 0, .6);
 }
 
 /*.modal-body {*/

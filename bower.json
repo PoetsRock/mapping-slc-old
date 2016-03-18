@@ -37,7 +37,8 @@
     "xmlToJSON.js": "^1.3.2",
     "jquery-migrate": "^1.3.0",
     "angular-material": "^1.0.5",
-    "angular-route": "^1.5.0"
+    "angular-route": "^1.5.0",
+    "mslc": "git+ssh://git@github.com/poetsrock/mslc"
   },
   "resolutions": {
     "angular": "^1.5.x",

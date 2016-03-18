@@ -105,8 +105,8 @@ module.exports = function (app) {
 // API Keys Routes
   app.route('/api/v1/keys')
     .get(function (req, res) {
-      console.log('LOG CURRENT NODE ENVIRONMENT:');
-      console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
+      // console.log('LOG CURRENT NODE ENVIRONMENT:');
+      // console.log('process.env.NODE_ENV:\n', process.env.NODE_ENV);
 
       var environment = null;
       if (process.env.NODE_ENV === 'production') {
@@ -114,8 +114,8 @@ module.exports = function (app) {
       } else {
         environment = require('../../../../config/env/local-development.js').FRONT_END;
       }
-      console.log('LOG VARIABLE FOR CURRENT NODE ENVIRONMENT:');
-      console.log('var `environment` =\n', environment);
+      // console.log('LOG VARIABLE FOR CURRENT NODE ENVIRONMENT:');
+      // console.log('var `environment` =\n', environment);
       var publicKeys = {
         MAPBOX_KEY: environment.MAPBOX_KEY,
         MAPBOX_SECRET: environment.MAPBOX_SECRET,
@@ -126,8 +126,8 @@ module.exports = function (app) {
         CENSUS_KEY: environment.CENSUS_KEY
       };
 
-      console.log('LOG API KEYS OBJECT RETURNED FOR CURRENT NODE ENVIRONMENT:');
-      console.log(publicKeys);
+      // console.log('LOG API KEYS OBJECT RETURNED FOR CURRENT NODE ENVIRONMENT:');
+      // console.log(publicKeys);
 
       res.jsonp(publicKeys);
 
