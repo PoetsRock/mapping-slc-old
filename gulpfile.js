@@ -418,7 +418,7 @@ gulp.task('build', function (done) {
 });
 
 // Watch all server files for changes & run server tests (test:server) task on changes
-// optional arguments: 
+// optional arguments:
 // Run the project in debug mode
 gulp.task('debug', function (done) {
   runSequence('env:dev', ['nodemon-debug', 'watch'], done);
@@ -463,10 +463,10 @@ gulp.task('build-no-lint', function (done) {
  *  Heroku Buildpack for Node.js and gulp.js
  *
  * url: https://github.com/timdp/heroku-buildpack-nodejs-gulp
-    - Set your Heroku app's buildpack URL to https://github.com/timdp/heroku-buildpack-nodejs-gulp.git
-    Add a Gulp task called `heroku:production` that builds your app
-    Serve your app using Express or whatever
-**/
+ - Set your Heroku app's buildpack URL to https://github.com/timdp/heroku-buildpack-nodejs-gulp.git
+ Add a Gulp task called `heroku:production` that builds your app
+ Serve your app using Express or whatever
+ **/
 
 
 
