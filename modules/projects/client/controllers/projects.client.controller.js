@@ -555,17 +555,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       //todo (2) set public read permissions on images
       ///todo (3) file optimization
 
-      console.log('\nproject.files:\n', project.files, '\n\n');
-      console.log('\nfiles:\n', files, '\n\n');
-      console.log('\n$scope.projectFiles:\n', $scope.projectFiles, '\n\n');
+      console.log('\nproject.files:\n', project.files, '\n');
+      console.log('\nfiles:\n', files, '\n');
+      console.log('\n$scope.projectFiles:\n', $scope.projectFiles, '\n');
 
       // if (files.length > 0) {
 
         for (var i = 0; files.length > i; i++) {
-          console.log('\n[i]: ', [i], '\n\n');
-          console.log('\nfiles.length: ', files.length, '\n\n');
-          console.log('\nfiles[' + [i] + ']: ', files[i], '\n\n');
-          console.log('\nfiles[' + [i] + '].name: ', files[i].name, '\n\n');
+          console.log('\n[i]: ', [i], '\n');
+          console.log('\nfiles.length: ', files.length, '\n');
+          console.log('\nfiles[' + [i] + ']: ', files[i], '\n');
+          console.log('\nfiles[' + [i] + '].name: ', files[i].name, '\n');
           $scope.uploading = true;
           var filename = files[i].name;
           var type = files[i].type;
@@ -573,21 +573,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             project: project,
             user: $scope.user,
             filename: filename,
-            type: type
+            type: type,
+            file: files[i],
+            securityLevel: 'public-read'
           };
-
 
           console.log('route: api/v1/projects/' + query.project._id + '/s3/upload');
           console.log('query:\n', query);
 
           $http.post('api/v1/projects/' + query.project._id + '/s3/upload', query)
-          // $http.put('api/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured, $scope.project)
-          //   .then(function (resolved) {
-          //     console.log('resolved:\n', resolved);
-          //   });
             .then(function (resolved) {
               console.log('\nresolved v1,\n', resolved, '\n\n');
-              
+
+              /**
               Upload.upload({
                   url: resolved.data.url, //s3Url
 
@@ -622,6 +620,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
                   // called asynchronously if an error occurs
                   // or server returns response with an error status.
                 });
+              **/
 
 
               // })

@@ -254,7 +254,6 @@ exports.getS3File = function (req, res) {
 
 exports.uploadUserProfileImageWithOptimization = function (req, res) {
 
-
   var user = req.body.user;
   var bufferImage = new Buffer(req.body.toString('base64'), 'base64');
   var fileName = req.body.fileName;
