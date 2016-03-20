@@ -52,8 +52,8 @@ module.exports = {
         'public/lib/angular-notify/dist/angular-notify.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
         'public/lib/ng-file-upload/ng-file-upload.js',
-        // 'modules/redactor/client/redactor.js',
         'public/lib/mslc/redactor/redactor.js'
+        // 'modules/redactor/client/redactor.js'
         // 'modules/redactor/client/angular-redactor-2.js'
 
       ],

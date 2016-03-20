@@ -21,7 +21,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.project = {};
     $scope.previewImages = [];
 
-    $scope.log = function(projectFiles) {
+    $scope.log = function (projectFiles) {
       $scope.previewImages = projectFiles;
       console.log('`$scope.previewImages`: ', $scope.previewImages, '\n\n');
       // $scope.previewImages.fileSize = $scope.previewImages.map(Math.round($scope.previewImages.size)) ;
@@ -35,7 +35,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.initSubmissionStatus = function () {
       $scope.findOne();
     };
-    
+
     //provides logic for the css in the forms
     UtilsService.cssLayout();
 
@@ -132,7 +132,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     // Create new Project
     $scope.create = function (isValid, files) {
-      console.log('$scope.create() var `files` v1:\n', files, '\n\n');
+      // console.log('$scope.create() var `files` v1:\n', files, '\n\n');
       $scope.error = null;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
@@ -152,11 +152,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       saveProject = function () {
         project.$save(function (response) {
-          console.log('response:\n', response, '\n');
-          console.log('response._id: ', response._id, '\n');
-          console.log('$scope.create() var `files` v2:\n', files, '\n\n');
+          // console.log('response:\n', response, '\n');
+          // console.log('response._id: ', response._id, '\n');
+          console.log('$scope.create() var `files`:\n', files, '\n\n');
           projectUpload(response, files);
-          
+
           $scope.override = true;
           // $location.path('projects/' + response._id + '/status');
           $location.path('blank');
@@ -175,7 +175,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       $scope.updateLatLng(project);
       $scope.override = false;
-
 
 
     };
@@ -274,31 +273,31 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       // $scope.project = Projects.get({
       Projects.get({ projectId: $stateParams.projectId },
         function (project) {
-        $scope.project = project;
+          $scope.project = project;
           console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
           // console.log(' ::: $scope.findOne()  :::  var `$scope.project.user._id`:', $scope.project.user._id);
           // console.log(' ::: $scope.findOne()  :::  var `$scope.user._id`        :', $scope.user._id);
-        if (project.vimeoId) {
-          $scope.vimeo = {
-            video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
-            width: $window.innerWidth / 1.75,
-            height: $window.innerHeight / 1.75
-          };
-        }
-        if (project.soundCloudId) {
-          $scope.soundCloud = {
-            audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
-            width: $window.innerWidth / 1.75,
-            height: $window.innerHeight / 1.75
-          };
-        }
-        if (project.imageGallery) {
-          for (var i = 0; i < project.imageGallery.length; i++) {
-            $scope.images.push(project.imageGallery[i]);
+          if (project.vimeoId) {
+            $scope.vimeo = {
+              video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
+              width: $window.innerWidth / 1.75,
+              height: $window.innerHeight / 1.75
+            };
           }
-        }
-        getUserFavoriteStoriesFn($scope.user.favorites, $scope.project.id);
-      });
+          if (project.soundCloudId) {
+            $scope.soundCloud = {
+              audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
+              width: $window.innerWidth / 1.75,
+              height: $window.innerHeight / 1.75
+            };
+          }
+          if (project.imageGallery) {
+            for (var i = 0; i < project.imageGallery.length; i++) {
+              $scope.images.push(project.imageGallery[i]);
+            }
+          }
+          getUserFavoriteStoriesFn($scope.user.favorites, $scope.project.id);
+        });
 
     };
 
@@ -314,7 +313,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //     userId: userIdToEdit
     //   });
     // };
-
 
 
     $scope.completed = function () {
@@ -531,10 +529,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       { category: 'sortOrder', name: 'Photography', value: 'photography' },
       { category: 'sortOrder', name: 'This Was Here', value: 'this was here' }
     ];
-    
+
     $scope.predicate = 'title';
     $scope.reverse = true;
-    $scope.order = function(predicate) {
+    $scope.order = function (predicate) {
       $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
       $scope.predicate = predicate;
       console.log('predicate:\n', predicate);
@@ -544,103 +542,47 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //todo refactor into service
 
     // Project Uploader Service logic
-    
+
     $scope.projectFiles = [];
     $scope.uploading = false;
     var upload = null;
 
-
     var projectUpload = function (project, files) {
-      //todo (1) change server function to default images to generic file names -- for projects: something like `uploaded-main-project-image.jpg`
-      //todo (2) set public read permissions on images
-      ///todo (3) file optimization
+      $scope.uploading = true;
 
-      console.log('\nproject.files:\n', project.files, '\n');
-      console.log('\nfiles:\n', files, '\n');
-      console.log('\n$scope.projectFiles:\n', $scope.projectFiles, '\n');
+      files.forEach(function (file) {
+        Upload.imageDimensions(file)
+          .then(function (dimensions) {
 
-      // if (files.length > 0) {
-
-        for (var i = 0; files.length > i; i++) {
-          console.log('\n[i]: ', [i], '\n');
-          console.log('\nfiles.length: ', files.length, '\n');
-          console.log('\nfiles[' + [i] + ']: ', files[i], '\n');
-          console.log('\nfiles[' + [i] + '].name: ', files[i].name, '\n');
-          $scope.uploading = true;
-          var filename = files[i].name;
-          var type = files[i].type;
-          var query = {
-            project: project,
-            user: $scope.user,
-            filename: filename,
-            type: type,
-            file: files[i],
-            securityLevel: 'public-read'
-          };
-
-          console.log('route: api/v1/projects/' + query.project._id + '/s3/upload');
-          console.log('query:\n', query);
-
-          $http.post('api/v1/projects/' + query.project._id + '/s3/upload', query)
-            .then(function (resolved) {
-              console.log('\nresolved v1,\n', resolved, '\n\n');
-
-              /**
-              Upload.upload({
-                  url: resolved.data.url, //s3Url
-
-                  // transformRequest: function (data, headersGetter) {
-                  //   var headers = headersGetter();
-                  //   delete headers.Authorization;
-                  //   console.log('data v1\n', data);
-                  //   return data;
-                  // },
-
-                  fields: resolved.data.fields, //credentials
-                  method: 'POST',
-                  file: files[i]
-                })
-                .progress(function (evt) {
-                  console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
-                })
-                // file is uploaded successfully
-                //.then(function (data, status, headers, config) {
-                .then(function successCallback(response) {
-                  console.log('successCallback response:\n', response, '\n\n');
-                  // console.log('status:\n', status, '\n\n');
-                  //
-                  // var s3Result = xmlToJSON.parseString(data);   // parse
-                  // $scope.uploading = false;
-                  //
-                  // console.log('https://s3.amazonaws.com' + s3Result.PostResponse[0].Bucket[0]._text + '/' + s3Result.PostResponse[0].Key[0]._text);
-                  // console.log('The file ' + config.file.name + ' is uploaded successfully.\n');
-                  // console.log('Response:\n', s3Result);
-                }, function errorCallback(response) {
-                  console.log('errorCallback response:\n', response, '\n\n');
-                  // called asynchronously if an error occurs
-                  // or server returns response with an error status.
-                });
-              **/
-
-
-              // })
-            // .error(function (data, status, headers, config) {
-            //       console.log('data\n: ', data, '\n\n');
-            //       console.log('status\n: ', status, '\n\n');
-            //       console.log('headers\n: ', headers, '\n\n');
-            //       console.log('config\n: ', config, '\n\n');
-            //   // called asynchronously if an error occurs
-            //   // or server returns response with an error status.
-            //   $scope.uploading = false;
-            });
-
-        }
-        // console.log('here here oh my dear!');
-      // }
+            /** Get audio/video duration*/
+            // if(file.type === ) {
+            //   Upload.mediaDuration(file).then(function (durationInSeconds) { });
+            // }
+            var query = {
+              headers: {
+                'Content-Type': file.type
+              },
+              project: project,
+              user: $scope.user,
+              filename: file.name,
+              width: dimensions.width,
+              height: dimensions.height,
+              type: file.type,
+              size: file.size,
+              securityLevel: 'public-read',
+              file: file
+            };
+            $http.post('api/v1/projects/' + project._id + '/s3/upload', query)
+              .then(function successCallback(response) {
+                console.log('successCallback response:\n', response, '\n\n');
+              })
+              .catch(function errorCallback(errorResponse) {
+                console.log('errorResponse:\n', errorResponse);
+              });
+          });
+      });
+      $scope.uploading = false;
     };
-    
-    
-
   }
 
 ]);

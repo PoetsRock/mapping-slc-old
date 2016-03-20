@@ -157,12 +157,6 @@ var ProjectSchema = new Schema({
     es_indexed: true,
     trim: true
   },
-  imageGallery: {
-    type: [{
-      type: String
-    }],
-    trim: true
-  },
   featured: {
     type: Boolean,
     default: 'false'
@@ -173,25 +167,55 @@ var ProjectSchema = new Schema({
   featuredEndDate: {
     type: Date
   },
-  mainImage: {
-    type: String,
-    trim: true
-  },
+  // mainImage: {
+  //   type: String,
+  //   trim: true
+  // },
   //mainImage: {
   //  type: Buffer
   //},
   //mainImgThumbnail: {
   //  type: Buffer
   //},
-  mainImgThumbnail: {
-    type: String
-  },
+  // mainImgThumbnail: {
+  //   type: String
+  // },
+  //path to image file hosted on s3
   mainImageUrl: {
     type: String,
+    trim: true,
+    default: ''
+  },
+  //ETag ID for image file hosted on s3
+  mainImageEtag: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  //path to image file hosted on s3
+  mainImageThumbnailUrl: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  //ETag ID for image file hosted on s3
+  mainImageThumbnailEtag: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  //array of url paths to image files hosted on s3
+  imageGallery: {
+    type: [{
+      type: String
+    }],
     trim: true
   },
-  mainImgThumbnailUrl: {
-    type: String,
+  //array of ETag for image files hosted on s3
+  imageGalleryEtags: {
+    type: [{
+      type: String
+    }],
     trim: true
   },
   url: {
@@ -216,6 +240,8 @@ var ProjectSchema = new Schema({
     default: ''
   }
 });
+
+
 
 
 //create virtual attribute for full address

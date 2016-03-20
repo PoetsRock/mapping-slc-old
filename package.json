@@ -44,7 +44,6 @@
     "glob": "^7.0.0",
     "gulp": "^3.9.1",
     "helmet": "~1.1.0",
-    "imagemin-pngquant": "^4.2.0",
     "jasmine-core": "~2.4.1",
     "lodash": "^4.5 .0",
     "memjs": "^0.8.7",
