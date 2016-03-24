@@ -8,73 +8,197 @@
       <div>
         <div class="row">
           <div class="col-md-4">
-            <div class="btn btn-main btn-footer-overlay grow" data-ng-model="project.files" ngf-select multiple
-              ngf-multiple="true" ngf-fix-orientation="true" accept=".jpg,.png,.pdf,.doc, docx,.rtf,.txt,image/*"
-              ngf-max-size="2MB" ngf-keep="'distinct'" ngf-model-invalid="errorFile" ng-change="log(project.files)">
-              Select Files
+            <!--<div class="btn btn-main btn-footer-overlay grow" data-ng-model="project.files" ngf-select multiple-->
+            <!--ngf-multiple="true" ngf-fix-orientation="true" accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.rtf,.txt,image/*"-->
+            <!--ngf-max-size="2MB" ngf-keep="'distinct'" ngf-model-invalid="errorFile" ng-change="log(project.files)">-->
+            <!--Select Files-->
+            <!--</div>-->
+
+            <input type="file" id="fileInput" multiple data-ng-model="project.files" accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.rtf,.txt,image/*" data-ng-click="fileChange()">
+
+          </div>
+
+          <pre id="textFileDisplayArea"></pre>
+          <div id="fileDisplayArea"></div>
+
+
+            <!--<div class="col-md-4">-->
+              <!--<div class="btn btn-main btn-footer-overlay grow" data-ng-click="log(project.files)">Log Files</div>-->
+            <!--</div>-->
+
+
+            <div class="col-md-4">
+              <button class="btn btn-main btn-footer-overlay grow" data-ng-click="project.files = null"
+                      data-ng-show="project.files">Remove
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="preview" data-ng-show="project.files">
+          <div data-ng-repeat="previewImage in previewImages">
+            <div>
+              <img ngf-thumbnail="previewImage" class="image-preview">
+            </div>
+            <div>
+              {{previewImage.name}}
+            </div>
+            <div>
+              {{previewImage.fileSize}} kb
             </div>
           </div>
-
-          <div class="col-md-4">
-            <button class="btn btn-main btn-footer-overlay grow" data-ng-click="project.files = null"
-              data-ng-show="project.files">Remove
-            </button>
-          </div>
-
         </div>
-      </div>
 
-      <div class="preview" data-ng-show="project.files">
-        <div data-ng-repeat="previewImage in previewImages">
-          <div>
-            <img ngf-thumbnail="previewImage" class="image-preview">
-          </div>
-          <div>
-            {{previewImage.name}}
-          </div>
-          <div>
-            {{previewImage.fileSize}} kb
-          </div>
+        <br/><br/>
+
+
+        <!--Drop File-->
+        <div ngf-file-drop class="drop-box" data-ng-model="project.files" ngf-drop ngf-drag-over-class="dragover"
+             ngf-multiple="true" ngf-allow-dir="false" accept=".jpg,.png,.pdf,.doc, docx,.rtf,.txt"
+             ngf-keep="'distinct'"
+             data-ng-hide="uploading" ngf-model-invalid="errorFile" ng-change="log(project.files)">
+          Drop Images or Documents Here
         </div>
-      </div>
-
-      <br/><br/>
 
 
-      <!--Drop File-->
-      <div ngf-file-drop class="drop-box" data-ng-model="project.files" ngf-drop ngf-drag-over-class="dragover"
-        ngf-multiple="true" ngf-allow-dir="false" accept=".jpg,.png,.pdf,.doc, docx,.rtf,.txt" ngf-keep="'distinct'"
-        data-ng-hide="uploading" ngf-model-invalid="errorFile" ng-change="log(project.files)">
-        Drop Images or Documents Here
-      </div>
+        <i data-ng-show="project.files.$error.required">*required</i>
+        <br>
+        <i data-ng-show="project.files.$error.maxSize">File too large {{errorFile.size / 1000000|number:1}}MB: max
+          2M</i>
+
+        <br/><br/>
 
 
-      <i data-ng-show="project.files.$error.required">*required</i>
-      <br>
-      <i data-ng-show="project.files.$error.maxSize">File too large {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
-
-      <br/><br/>
-
-
-      <!--progress bar-->
+        <!--progress bar-->
       <span class="progress" data-ng-show="project.files.progress >= 0">
         <div style="width:{{project.files.progress}}%" ng-bind="project.files.progress + '%'"></div>
       </span>
 
 
-      <!--errors: #1-->
-      <span data-ng-show="project.files.result">Upload Successful</span>
+        <!--errors: #1-->
+        <span data-ng-show="project.files.result">Upload Successful</span>
 
-      <!--errors: #2-->
-      <span class="err" data-ng-show="errorMsg">{{errorMsg}}</span>
+        <!--errors: #2-->
+        <span class="err" data-ng-show="errorMsg">{{errorMsg}}</span>
 
-      <!--errors: #3-->
-      <button class="btn btn-main btn-footer-overlay grow" data-ng-click="abort();" data-ng-hide="!uploading">Cancel
-        Current Upload
-      </button>
+        <!--errors: #3-->
+        <button class="btn btn-main btn-footer-overlay grow" data-ng-click="abort();" data-ng-hide="!uploading">Cancel
+          Current Upload
+        </button>
 
+      </div>
     </div>
-  </div>
 </div>
 
 
+<!--
+
+
+    Thanks, MaximShoustin! I built off of your directive but tried to compartmentalize (i.e., avoid searching the entire document for the input element).
+
+.directive('chooseFileButton', function() {
+    return {
+        restrict: 'E',
+        link: function (scope, elem, attrs) {
+            var button = elem.find('button');
+            var input = elem.find('input');
+            input.css({ display:'none' });
+            button.bind('click', function() {
+                input[0].click();
+            });
+        }
+    };
+});
+Then you can use the directive this way (the requirement is to include a button and a file input inside the element).
+
+<choose-file-button>
+    <md-button aria-label="Upload a file" class="md-fab">
+        <md-icon class="fa" md-font-icon="fa-cloud-upload"></md-icon>
+    </md-button>
+    <input type="file">
+</choose-file-button>
+
+-->
+
+
+<!--
+
+
+  My current solution to this is just allowing the template for md-button be a <label> if you specify the button is of type="file", using an angular decorator. I've tested it in recent versions of Firefox and Chrome.
+
+$provide.decorator('mdButtonDirective', ['$delegate',
+function ($delegate) {
+  var getTemplate = $delegate[0].template;
+  $delegate[0].template = function ($element, $attrs) {
+    if ($attrs.type === 'file') {
+      return '<label class="md-button" ng-transclude></label>';
+    } else {
+      return getTemplate($element, $attrs);
+    }
+  };
+  return $delegate;
+}
+]);
+And the markup is as simple as
+
+<md-button type="file">
+  Select a file
+  <input type="file" nv-file-select uploader="$ctrl.uploader">
+</md-button>
+Lastly, you'll need css to hide the <input> element, I just use
+
+.md-button[type="file"] > input[type="file"] {
+display: none;
+}
+
+-->
+
+
+<!--https://github.com/angular/material/issues/2151-->
+
+
+<!--
+
+
+color
+rgb(0, 0, 0)
+cursor
+auto
+display
+block
+font-family
+NeutrafaceTextNormal, 'Neutraface Text', 'Segoe UI', Avenir, Helvetica-Light, Arial, sans-serif
+font-size
+16px
+font-style
+normal
+font-variant
+normal
+font-weight
+normal
+height
+32px
+letter-spacing
+normal
+line-height
+32px
+text-align
+start
+text-indent
+0px
+text-shadow
+none
+text-transform
+none
+width
+163.438px
+word-spacing
+0px
+-webkit-font-smoothing
+antialiased
+-webkit-user-select
+text
+
+
+-->

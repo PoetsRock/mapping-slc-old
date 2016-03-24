@@ -27,7 +27,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       //todo (2) set public read permissions on images
       ///todo (3) file optimization
 
-      if (files.length > 0) {
+      if (files.length === 1) {
         $scope.uploading = true;
         var filename = files[0].name;
         var type = files[0].type;
@@ -36,6 +36,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
           filename: filename,
           type: type
         };
+        console.log('files:::\n', files);
         console.log('query:::\n', query);
         $http.post('api/v1/user/'+ query.user._id +'/s3/upload', query)
           .success(function (result) {
@@ -62,9 +63,9 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
               console.log('The file ' + config.file.name + ' is uploaded successfully.\nResponse:\n', s3Result);
 
 
-              $scope.user.profileImageURL = 'https://s3.amazonaws.com' + s3Result.PostResponse[0].Bucket[0]._text +'/' + s3Result.PostResponse[0].Key[0]._text;
+              $scope.user.profileImageURL = 'https://s3-us-west-1.amazonaws.com/' + s3Result.PostResponse[0].Bucket[0]._text +'/' + s3Result.PostResponse[0].Key[0]._text;
 
-              console.log('https://s3.amazonaws.com' + s3Result.PostResponse[0].Bucket[0]._text +'/' + s3Result.PostResponse[0].Key[0]._text);
+              console.log('https://s3-us-west-1.amazonaws.com/' + s3Result.PostResponse[0].Bucket[0]._text +'/' + s3Result.PostResponse[0].Key[0]._text);
               console.log('$scope.user.profileImageURL final:\n', user.profileImageURL);
             });
           })

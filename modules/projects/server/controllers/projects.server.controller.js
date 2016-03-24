@@ -472,6 +472,9 @@ exports.updateFeaturedProjects = function (req, res) {
  * @param res
  */
 exports.uploadProjectFiles = function (req, res) {
+  // console.log('s3 upload project data var `req.body`:\n', req.body);
+  console.log('s3 upload project data var `req.body.file`:\n', req.body.file);
+  // console.log('s3 upload project data var `req.body.file[\'$ngfBlobUrl\']`:\n', req.body.file['$ngfBlobUrl']);
   var project = req.body.project;
   var file = req.body.file['$ngfBlobUrl'];
   var fileName = req.body.filename;
@@ -493,6 +496,7 @@ exports.uploadProjectFiles = function (req, res) {
     Bucket: s3Config.bucket
   };
 
+  let fileStream = fs.createReadStream(file);
   let s3obj = {
       ACL: req.body.securityLevel || 'private',
       region: 'us-west-1',
@@ -500,13 +504,18 @@ exports.uploadProjectFiles = function (req, res) {
       Bucket: s3Config.bucket,
       ContentLength: req.body.size,
       ContentType: req.body.type,
-      Body: file
+      Body: fileStream
       // Body: optimizedImage
       // ServerSideEncryption: 'AES256'
   };
-  console.log('s3obj:\n', s3obj);
+  // console.log('s3obj:\n', s3obj);
 
   let s3 = new AWS.S3(awsS3Config);
+
+  console.log('s3 upload project data var `s3obj.Body`:\n', s3obj.Body);
+
+
+
 
 /** now upload main image to S3 */
   s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })

@@ -21,12 +21,98 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.project = {};
     $scope.previewImages = [];
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $scope.fileInput;
+    $scope.fileDisplayArea;
+
+
     $scope.log = function (projectFiles) {
+      $scope.selectedFile = document.getElementById('input').files[0];
+      console.log('`selectedFile`: ', $scope.selectedFile, '\n\n');
       $scope.previewImages = projectFiles;
       console.log('`$scope.previewImages`: ', $scope.previewImages, '\n\n');
-      // $scope.previewImages.fileSize = $scope.previewImages.map(Math.round($scope.previewImages.size)) ;
-      // console.log('`projectFiles`: ', projectFiles, '\n\n');
+      console.log('`$scope.project.files`: ', $scope.project.files, '\n\n');
     };
+
+
+    $scope.fileChange = function() {
+      $scope.files = document.getElementById('fileInput');
+      $scope.fileDisplayArea = document.getElementById('fileDisplayArea');
+      console.log('`$scope.fileInput`: ', $scope.fileInput, '\n');
+      console.log('`$scope.fileDisplayArea`: ', $scope.fileDisplayArea, '\n');
+    };
+
+    $window.onload = function() {
+      $scope.fileInput = document.getElementById('fileInput');
+      $scope.fileDisplayArea = document.getElementById('fileDisplayArea');
+      console.log('`$scope.fileInput`: ', $scope.fileInput, '\n');
+      console.log('`$scope.fileDisplayArea`: ', $scope.fileDisplayArea, '\n');
+    };
+
+
+    // $window.onload = function() {
+    //   var fileInput = document.getElementById('fileInput');
+    //   var fileDisplayArea = document.getElementById('fileDisplayArea');
+    //
+    //   console.log('`$scope.fileInput 33 `: ', $scope.fileInput, '\n');
+    //   console.log('`$scope.fileDisplayArea 33 `: ', $scope.fileDisplayArea, '\n');
+    //
+    //   fileInput.addEventListener('change', function(e) {
+    //
+    //     console.log('event 1: ', e, '\n\n');
+    //     console.log('`fileInput 444`: ', fileInput, '\n\n');
+    //
+    //     var file = fileInput.files[0];
+    //     var imageType = /image.*/;
+    //
+    //     if (file.type.match(imageType)) {
+    //       var reader = new FileReader();
+    //
+    //       reader.onload = function(e) {
+    //         console.log('event 2: ', e, '\n\n');
+    //         fileDisplayArea.innerHTML = '';
+    //
+    //         // Create a new image.
+    //         var img = new Image();
+    //         // Set the img src property using the data URL.
+    //         img.src = reader.result;
+    //
+    //         // Add the image to the page.
+    //         fileDisplayArea.appendChild(img);
+    //       };
+    //
+    //       reader.readAsDataURL(file);
+    //     } else {
+    //       fileDisplayArea.innerHTML = 'File not supported!';
+    //     }
+    //
+    //   });
+    // };
+    //
+
 
     $scope.init = function () {
       $scope.publishedProjectsFn();
@@ -132,7 +218,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     // Create new Project
     $scope.create = function (isValid, files) {
-      // console.log('$scope.create() var `files` v1:\n', files, '\n\n');
+      console.log('$scope.create() var `$scope.project`:\n', $scope.project, '\n');
+      console.log('$scope.create() var `$scope.project`:\n', $scope.project.files, '\n');
+      console.log('$scope.create() var `files`:\n', files, '\n');
       $scope.error = null;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
@@ -551,13 +639,32 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.uploading = true;
 
       files.forEach(function (file) {
+        console.log('projectUpload func  ::: file type conditional check var ` file.type`:\n', file.type);
+        if(file.type === 'image/png' || file.type === 'image/jpeg') {
+          imageUploader(project, file);
+        }
+
+        if(file.type === 'text/*' || file.type === 'application/pdf') {
+          documentUploader(project, file);
+        }
+
+        if(file.type === '' || file.type === '') {
+          multimediaUploader(project, file);
+        }
+
+      });
+
+      $scope.uploading = false;
+    };
+
+
+
+
+
+    var imageUploader = function(project, file) {
+      console.log('imageUploader func  ::: var ` file`:\n', file);
         Upload.imageDimensions(file)
           .then(function (dimensions) {
-
-            /** Get audio/video duration*/
-            // if(file.type === ) {
-            //   Upload.mediaDuration(file).then(function (durationInSeconds) { });
-            // }
             var query = {
               headers: {
                 'Content-Type': file.type
@@ -580,9 +687,31 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
                 console.log('errorResponse:\n', errorResponse);
               });
           });
-      });
-      $scope.uploading = false;
+
+
+      var documentUploader = function(project, file) {
+
+      };
+
+      var multimediaUploader = function(project, file) {
+        /** Get audio/video duration*/
+          Upload.mediaDuration(file)
+            .then(function (durationInSeconds) {
+
+          });
+      };
+
+
+
+
+
+
+
+
     };
+
+
+
   }
 
 ]);

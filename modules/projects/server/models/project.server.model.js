@@ -147,16 +147,6 @@ var ProjectSchema = new Schema({
     type: Number,
     default: 0
   },
-  vimeoId: {
-    type: String,
-    es_indexed: true,
-    trim: true
-  },
-  soundCloudId: {
-    type: String,
-    es_indexed: true,
-    trim: true
-  },
   featured: {
     type: Boolean,
     default: 'false'
@@ -216,6 +206,29 @@ var ProjectSchema = new Schema({
     type: [{
       type: String
     }],
+    trim: true
+  },
+  documentFilesUrls: {
+    type: [{
+      type: String
+    }],
+    trim: true
+  },
+  //array of ETag for document files hosted on s3
+  documentFilesEtags: {
+    type: [{
+      type: String
+    }],
+    trim: true
+  },
+  vimeoId: {
+    type: String,
+    es_indexed: true,
+    trim: true
+  },
+  soundCloudId: {
+    type: String,
+    es_indexed: true,
     trim: true
   },
   url: {

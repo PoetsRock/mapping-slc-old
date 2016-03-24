@@ -5,6 +5,7 @@
 # Node and related ecosystem
 # ==========================
 .nodemonignore
+/modules/projects/server/.CustomFileInputs
 .sass-cache/
 node_modules/
 public/lib/
