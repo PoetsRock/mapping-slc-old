@@ -7,7 +7,6 @@ module.exports = function (app) {
     users = require('../../../users/server/controllers/users.server.controller.js'),
     projectsPolicy = require('../policies/projects.server.policy'),
     projects = require('../controllers/projects.server.controller.js'),
-    //featuredProjects = require('../controllers/featured-projects.server.controller'),
     mongoose = require('mongoose'),
     Project = mongoose.model('Project'),
     markerData = require('../models/project.server.model.js'),
@@ -144,10 +143,43 @@ module.exports = function (app) {
     .put(projects.updateFeaturedProjects);
 
 
-  app.route('/api/v1/projects/:projectId/s3/upload')
-    .post(projects.uploadProjectFiles);
 
-   //mount the router on the app
+  app.route('/api/v1/projects/:projectId/s3/upload')
+    .post(projects.parseFileUpload, projects.uploadProjectFiles);
+
+
+  /**
+
+   from `http://www.carbonatethis.com/tag/multiparty-js/`
+
+   app.post('/upload', function (req, res) {
+    var blobService = azure.createBlobService();
+    var form = new multiparty.Form();
+
+    form.on('part', function(part) {
+        if (part.filename) {
+            var filename = part.filename;
+            var size = part.byteCount;
+
+            var onError = function(error) {
+                if (error) {
+                    res.send({ grrr: error });
+                }
+            };
+            blobService.createBlockBlobFromStream('container', filename, part, size, onError);
+        } else {
+            form.handlePart(part);
+        }
+    });
+
+    form.parse(req);
+    res.send("SWEET");
+});
+
+   */
+
+
+  //mount the router on the app
   app.use('/', router);
 
   // Finish by binding the Project middleware
