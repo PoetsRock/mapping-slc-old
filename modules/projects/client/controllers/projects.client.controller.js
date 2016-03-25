@@ -22,98 +22,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.previewImages = [];
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $scope.fileInput;
-    $scope.fileDisplayArea;
-
-
-    $scope.log = function (projectFiles) {
-      $scope.selectedFile = document.getElementById('input').files[0];
-      console.log('`selectedFile`: ', $scope.selectedFile, '\n\n');
-      $scope.previewImages = projectFiles;
-      console.log('`$scope.previewImages`: ', $scope.previewImages, '\n\n');
-      console.log('`$scope.project.files`: ', $scope.project.files, '\n\n');
-    };
-
-
-    $scope.fileChange = function() {
-      $scope.files = document.getElementById('fileInput');
-      $scope.fileDisplayArea = document.getElementById('fileDisplayArea');
-      console.log('`$scope.fileInput`: ', $scope.fileInput, '\n');
-      console.log('`$scope.fileDisplayArea`: ', $scope.fileDisplayArea, '\n');
-    };
-
-    $window.onload = function() {
-      $scope.fileInput = document.getElementById('fileInput');
-      $scope.fileDisplayArea = document.getElementById('fileDisplayArea');
-      console.log('`$scope.fileInput`: ', $scope.fileInput, '\n');
-      console.log('`$scope.fileDisplayArea`: ', $scope.fileDisplayArea, '\n');
-    };
-
-
-    // $window.onload = function() {
-    //   var fileInput = document.getElementById('fileInput');
-    //   var fileDisplayArea = document.getElementById('fileDisplayArea');
-    //
-    //   console.log('`$scope.fileInput 33 `: ', $scope.fileInput, '\n');
-    //   console.log('`$scope.fileDisplayArea 33 `: ', $scope.fileDisplayArea, '\n');
-    //
-    //   fileInput.addEventListener('change', function(e) {
-    //
-    //     console.log('event 1: ', e, '\n\n');
-    //     console.log('`fileInput 444`: ', fileInput, '\n\n');
-    //
-    //     var file = fileInput.files[0];
-    //     var imageType = /image.*/;
-    //
-    //     if (file.type.match(imageType)) {
-    //       var reader = new FileReader();
-    //
-    //       reader.onload = function(e) {
-    //         console.log('event 2: ', e, '\n\n');
-    //         fileDisplayArea.innerHTML = '';
-    //
-    //         // Create a new image.
-    //         var img = new Image();
-    //         // Set the img src property using the data URL.
-    //         img.src = reader.result;
-    //
-    //         // Add the image to the page.
-    //         fileDisplayArea.appendChild(img);
-    //       };
-    //
-    //       reader.readAsDataURL(file);
-    //     } else {
-    //       fileDisplayArea.innerHTML = 'File not supported!';
-    //     }
-    //
-    //   });
-    // };
-    //
-
-
     $scope.init = function () {
       $scope.publishedProjectsFn();
     };
@@ -217,17 +125,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 
     // Create new Project
-    $scope.create = function (isValid, files) {
-      console.log('$scope.create() var `$scope.project`:\n', $scope.project, '\n');
-      console.log('$scope.create() var `$scope.project`:\n', $scope.project.files, '\n');
-      console.log('$scope.create() var `files`:\n', files, '\n');
+   $scope.create = function (isValid) {
       $scope.error = null;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
         return false;
       }
-
-      // Create new Project object
+    // Create new Project object
       var project = new Projects({
         createdBy: Authentication.user._id,
         street: this.project.street,
@@ -240,10 +144,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       saveProject = function () {
         project.$save(function (response) {
-          // console.log('response:\n', response, '\n');
-          // console.log('response._id: ', response._id, '\n');
-          console.log('$scope.create() var `files`:\n', files, '\n\n');
-          projectUpload(response, files);
+          var files = $scope.project.files;
+          $scope.uploadPic(response, files);
+          //uploadFilesService(response, files,
+          // //service returns value as callback
+          // function(fileInfo)
+          // {
+          //    //code
+          // });
 
           $scope.override = true;
           // $location.path('projects/' + response._id + '/status');
@@ -263,9 +171,182 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       $scope.updateLatLng(project);
       $scope.override = false;
+    };
+
+
+    /**
+     * uploads images from create project form
+     * @param project
+     * @param files
+     */
+
+    // Project Uploader Service logic
+
+    $scope.uploadPic = function (project, files) {
+      $scope.previewImages = $scope.project.files;
+
+      var url = '/api/v1/projects/' + project._id + '/s3/upload';
+      var fileAndDataObj = {
+        url: url,
+        data: {
+          file: files[0],
+          data: {
+            fileSize: files[0].size,
+            fileName: files[0].name,
+            fileType: files[0].type,
+            project: project
+          }
+        },
+        method: 'POST',
+        headers: {
+          'Content-Type': files[0].type
+          // },
+          // transformRequest: function(data, headersGetter) {
+          //   var headers = headersGetter();
+          //   delete headers.Authorization;
+          //   return data;
+        }
+      };
+      console.log('\n\n`fileAndDataObj`:\n', fileAndDataObj, '\n\n');
+
+      Upload.upload({
+          url: url,
+          data: {
+            file: files[0],
+            data: {
+              fileSize: files[0].size,
+              fileName: files[0].name,
+              fileType: files[0].type,
+              project: project
+            }
+          },
+          method: 'POST',
+          headers: {
+            'Content-Type': files[0].type
+            // },
+            // transformRequest: function(data, headersGetter) {
+            //   var headers = headersGetter();
+            //   delete headers.Authorization;
+            //   return data;
+          }
+        })
+        .then(function (response) {
+          console.log('Success ' + response.config.data.file.name + 'uploaded. Response: ' + response.data);
+        }, function (response) {
+          console.log('Error status: ' + response.status);
+        }, function (evt) {
+          console.log('evt:\n', evt);
+          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+          console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+        });
+    };
+
+
+    /*
+     alternative way of uploading, send the file binary with the file's content-type.
+     Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+     This is equivalent to angular $http() but allow you to listen to the progress event for HTML5 browsers.*/
+    // Upload.http(fileAndDataObj)
+
+    $scope.fileReaderNg = function (files) {
+      $scope.previewImages = $scope.project.files;
+      console.log('$scope.previewImages:\n', $scope.previewImages);
+
+      var fileReader = new FileReader();
+
+      // var fileList = $scope.project.files;
+      // var selectedFile;
+      // loop through files
+      // for (var i = 0; i < files.length; i++) {
+      //   selectedFile = files[i];
+      //   console.log('selectedFile.name: ', selectedFile.name);
+      //   console.log('selectedFile.size: ', selectedFile.size);
+      //   console.log('selectedFile.type: ', selectedFile.type);
+      // }
+
+      // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
+      fileReader.loadend = function (event) {
+
+        console.log('event.target.result:\n', event.target.result);
+      };
+
+      var newFile = fileReader.result;
+      var printEventType = function (event) {
+        console.log('got event: ' + event.type);
+      };
+
+      fileReader.onload = function (event) {
+        var arrayBuffer = fileReader.result;
+        console.log('arrayBuffer:\n', arrayBuffer.byteLength);
+        console.log('arrayBuffer.byteLength: ', arrayBuffer.byteLength);
+
+
+      };
+
+      // var readArrayBuffer = fileReader.readAsArrayBuffer(files[0]);
+      // console.log('readArrayBuffer:\n', readArrayBuffer);
+
+      // var binaryString = fileReader.readAsBinaryString(files);
+      // console.log('binaryString:\n', binaryString);
+
+      // var dataURL = fileReader.readAsDataURL(files[0]);
+      // console.log('dataURL:\n', dataURL);
 
 
     };
+
+
+    // var openFile = function(event) {
+    //   var input = event.target;
+    //
+    //   var reader = new FileReader();
+    //   reader.onload = function(){
+    //     var arrayBuffer = reader.result;
+    //
+    //     console.log(arrayBuffer.byteLength);
+    //   };
+    //   reader.readAsArrayBuffer(event.target.files[0]);
+    // };
+
+
+    // function fileReaderJs(files) {
+    //   var fileReader = new FileReader();
+    //
+    //   fileReader.file = files[0];
+    //
+    //   // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
+    //   fileReader.onloadend = function () {
+    //     console.log('Loaded file: ' + this.file.name + ' length: ' + this.result.length);
+    //     var binaryString = fileReader.readAsBinaryString(files[0]);
+    //     var dataURL = fileReader.readAsDataURL(files[0]);
+    //     console.log('binaryString:\n', binaryString);
+    //     console.log('dataURL:\n', dataURL);
+    //   };
+    // }
+
+    // var altUpload = Upload.http({
+    //   url: url,
+    //   headers : {
+    //     'Content-Type': file.type
+    //   },
+    //   data: file
+    // });
+    //
+    // altUpload.then(function (response) {
+    //   $timeout(function () {
+    //     file.result = response.data;
+    //     console.log('inside of promise: `file`:\n', file);
+    //     console.log('inside of promise: `response`:\n', response);
+    //     console.log('inside of promise: `file.result`:\n', file.result);
+    //   });
+    // }, function (response) {
+    //   if (response.status > 0)
+    //     $scope.errorMsg = response.status + ': ' + response.data;
+    // }, function (evt) {
+    //   // Math.min is to fix IE which reports 200% sometimes
+    //   file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    // });
+
 
     // Remove existing Project
     $scope.remove = function (project) {
@@ -640,15 +721,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       files.forEach(function (file) {
         console.log('projectUpload func  ::: file type conditional check var ` file.type`:\n', file.type);
-        if(file.type === 'image/png' || file.type === 'image/jpeg') {
+        if (file.type === 'image/png' || file.type === 'image/jpeg') {
           imageUploader(project, file);
         }
 
-        if(file.type === 'text/*' || file.type === 'application/pdf') {
+        if (file.type === 'text/*' || file.type === 'application/pdf') {
           documentUploader(project, file);
         }
 
-        if(file.type === '' || file.type === '') {
+        if (file.type === '' || file.type === '') {
           multimediaUploader(project, file);
         }
 
@@ -658,58 +739,70 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-
-
-
-    var imageUploader = function(project, file) {
+    var imageUploader = function (project, file) {
       console.log('imageUploader func  ::: var ` file`:\n', file);
-        Upload.imageDimensions(file)
-          .then(function (dimensions) {
-            var query = {
-              headers: {
-                'Content-Type': file.type
-              },
-              project: project,
-              user: $scope.user,
-              filename: file.name,
-              width: dimensions.width,
-              height: dimensions.height,
-              type: file.type,
-              size: file.size,
-              securityLevel: 'public-read',
-              file: file
-            };
-            $http.post('api/v1/projects/' + project._id + '/s3/upload', query)
-              .then(function successCallback(response) {
-                console.log('successCallback response:\n', response, '\n\n');
-              })
-              .catch(function errorCallback(errorResponse) {
-                console.log('errorResponse:\n', errorResponse);
-              });
-          });
+      Upload.imageDimensions(file)
+        .then(function (dimensions) {
+          var query = {
+            headers: {
+              'Content-Type': file.type
+            },
+            project: project,
+            user: $scope.user,
+            filename: file.name,
+            width: dimensions.width,
+            height: dimensions.height,
+            type: file.type,
+            size: file.size,
+            securityLevel: 'public-read',
+            file: file
+          };
+          $http.post('api/v1/projects/' + project._id + '/s3/upload', query)
+            .then(function successCallback(response) {
+              console.log('successCallback response:\n', response, '\n\n');
+            })
+            .catch(function errorCallback(errorResponse) {
+              console.log('errorResponse:\n', errorResponse);
+            });
+        });
 
 
-      var documentUploader = function(project, file) {
+      var documentUploader = function (project, file) {
 
       };
 
-      var multimediaUploader = function(project, file) {
+      var multimediaUploader = function (project, file) {
         /** Get audio/video duration*/
-          Upload.mediaDuration(file)
-            .then(function (durationInSeconds) {
+        Upload.mediaDuration(file)
+          .then(function (durationInSeconds) {
 
           });
       };
 
 
-
-
-
-
+      $scope.uploadPic = function (file) {
+        file.upload = Upload.upload({
+          url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
+          data: { username: $scope.username, file: file }
+        });
+        console.log('`file`:\n', file);
+        //console.log('`data.file`:\n', data.file);
+        file.upload.then(function (response) {
+          $timeout(function () {
+            file.result = response.data;
+            console.log('`file.result`:\n', file.result);
+          });
+        }, function (response) {
+          if (response.status > 0)
+            $scope.errorMsg = response.status + ': ' + response.data;
+        }, function (evt) {
+          // Math.min is to fix IE which reports 200% sometimes
+          file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+        });
+      }
 
 
     };
-
 
 
   }

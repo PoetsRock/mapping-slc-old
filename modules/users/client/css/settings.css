@@ -24,6 +24,12 @@ form .progress {
     border: 3px groove #CCC;
 }
 
+.progress div {
+    font-size: smaller;
+    background: orange;
+    width: 0;
+}
+
 .drop-box {
     background: rgba(0, 0, 0, 0.2);
     border: 5px dashed #ffffff;

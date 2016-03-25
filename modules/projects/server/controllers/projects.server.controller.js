@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   Project = mongoose.model('Project'),
-
+  multiparty = require('multiparty'),
+  util = require('util'),
   config = require(path.resolve('./config/config')),
   AlchemyAPI = require('alchemy-api'),
   projects = require('./projects.server.controller'),
@@ -464,6 +465,28 @@ exports.updateFeaturedProjects = function (req, res) {
   updateNewFeaturedProject(req.body);
 };
 
+
+exports.parseFileUpload = (req, res, next) => {
+  console.log('parseFileUpload middleware func, log `req` obj:\n', req, '\n\n');
+  // parse a file upload
+  var form = new multiparty.Form();
+
+  form.parse(req, function(err, fieldsObject, filesObject, fieldsList, filesList) {
+    console.log('parseFileUpload callback `err`:\n', err, '\n\n');
+    console.log('parseFileUpload callback `fieldsObject`:\n', fieldsObject, '\n\n');
+    console.log('parseFileUpload callback `filesObject`:\n', filesObject, '\n\n');
+    console.log('parseFileUpload callback `fieldsList`:\n', fieldsList, '\n\n');
+    console.log('parseFileUpload callback `filesList`:\n', filesList, '\n\n');
+
+    res.writeHead(200, {'content-type': 'text/plain'});
+    res.write('received upload:\n\n');
+    res.end(util.inspect({fields: fieldsObject, files: filesObject}));
+
+  });
+  next();
+};
+
+
 /**
  *
  * Uploads images and files to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
@@ -471,23 +494,27 @@ exports.updateFeaturedProjects = function (req, res) {
  * @param req
  * @param res
  */
-exports.uploadProjectFiles = function (req, res) {
-  // console.log('s3 upload project data var `req.body`:\n', req.body);
-  console.log('s3 upload project data var `req.body.file`:\n', req.body.file);
-  // console.log('s3 upload project data var `req.body.file[\'$ngfBlobUrl\']`:\n', req.body.file['$ngfBlobUrl']);
-  var project = req.body.project;
-  var file = req.body.file['$ngfBlobUrl'];
-  var fileName = req.body.filename;
-  
-  if (!/\s/g.test(fileName)) {
-    fileName = req.body.filename.replace(/\s/g, '_');
-  }
+exports.uploadProjectFiles = (req, res) => {
 
-/** now call on function that compresses image and also creates cropped thumbnail version */
+  // console.log('req:\n', req, '\n\n\n\n\n');
+  // console.log('\n\n\n\n\n:::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n\n\n');
+  console.log('req.body:\n', req.body, '\n\n');
+  console.log('req.files:\n', req.files, '\n\n');
+  console.log('req.files.file:\n', req.files.file, '\n\n');
+
+  // var project = req.body.project;
+  // var file = project.file['$ngfBlobUrl'] || {};
+  // var fileName = project.files.name || 'default11.jpg';
+  
+  // if (!/\s/g.test(fileName)) {
+  //   fileName = req.body.filename.replace(/\s/g, '_');
+  // }
+
+///** now call on function that compresses image and also creates cropped thumbnail version */
   // let optimizedImage = _compressImage(image);
 
 
-/** config aws s3 config settings, file object, and create a new instance of the s3 service */
+///** config aws s3 config settings, file object, and create a new instance of the s3 service */
   let awsS3Config = {
     accessKeyId: config.S3_ID,
     secretAccessKey: config.S3_SECRET,
@@ -495,9 +522,13 @@ exports.uploadProjectFiles = function (req, res) {
     Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
     Bucket: s3Config.bucket
   };
-
+  console.log('file:\n', file, '\n\n');
   let fileStream = fs.createReadStream(file);
+  console.log('fileStream:\n', fileStream, '\n\n');
   let s3obj = {
+      header: {
+        'x-amz-decoded-content-length': file.size
+      },
       ACL: req.body.securityLevel || 'private',
       region: 'us-west-1',
       Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
@@ -508,41 +539,49 @@ exports.uploadProjectFiles = function (req, res) {
       // Body: optimizedImage
       // ServerSideEncryption: 'AES256'
   };
-  // console.log('s3obj:\n', s3obj);
+  console.log('s3obj:\n', s3obj, '\n\n');
+  console.log('s3 upload project data var `s3obj.Body`:\n', s3obj.Body, '\n\n');
 
   let s3 = new AWS.S3(awsS3Config);
 
-  console.log('s3 upload project data var `s3obj.Body`:\n', s3obj.Body);
 
 
 
+// /** now upload main image to S3 */
+//   s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
+//     .on('httpUploadProgress', function(evt) { console.log(evt); })
+//     .send(function(err, data) {
+//       if(err) {
+//         console.log('s3 upload error message:\n', err);
+//       }
+//       console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
+//
+//       /** now save main image url and ETag to mongoDb */
+//       let updatedProject = {
+//         mainImageUrl: data.Location,
+//         mainImageEtag: data.ETag
+//       };
+//       Project.update(updatedProject);
+//
+//       /** call function that creates and uploads thumbnail version of main image */
+//       // // let imageThumbnail = {
+//       // //   image: file
+//       // // };
+//       // _createAndSaveThumbnail(file);
+//
+//       /** now respond with a success message */
+//       res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
+//     });
 
-/** now upload main image to S3 */
-  s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
-    .on('httpUploadProgress', function(evt) { console.log(evt); })
-    .send(function(err, data) {
-      if(err) {
-        console.log('s3 upload error message:\n', err);
-      }
-      console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
 
-      /** now save main image url and ETag to mongoDb */
-      let updatedProject = {
-        mainImageUrl: data.Location,
-        mainImageEtag: data.ETag
-      };
-      Project.update(updatedProject);
-
-      /** call function that creates and uploads thumbnail version of main image */
-      // // let imageThumbnail = {
-      // //   image: file
-      // // };
-      // _createAndSaveThumbnail(file);
-
-      /** now respond with a success message */
-      res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
-    });
+  let response = {
+    message: 's3 file upload was successful',
+    's3obj': s3obj
+  };
+  res.jsonp(response);
 };
+
+
 
 
 /**
