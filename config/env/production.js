@@ -114,6 +114,8 @@ module.exports = {
   ALCHEMY_KEY: process.env.ALCHEMY_KEY,
   ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
 
+  TINY_PNG_KEY: process.env.TINY_PNG_KEY,
+  
   S3_ID: process.env.S3_ID,
   S3_SECRET: process.env.S3_SECRET,
   S3_BUCKET: process.env.S3_BUCKET || 'MAPPING-SLC-FILE-UPLOAD',

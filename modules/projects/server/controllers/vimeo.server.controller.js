@@ -70,4 +70,17 @@ exports.getOneVideo = function (req, res) {
   });
 
 
+var i =
+{
+  data: {
+    fields: {
+      'data[securityLevel]': [Object],
+      'data[fileSize]': [Object],
+      'data[fileName]': [Object],
+      'data[fileType]': [Object]
+    },
+    files: { file: [Object] }
+  }
+};
+
 };

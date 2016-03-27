@@ -178,6 +178,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      * uploads images from create project form
      * @param project
      * @param files
+     * @param acl
      */
 
     // Project Uploader Service logic
@@ -186,15 +187,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.previewImages = $scope.project.files;
 
       var url = '/api/v1/projects/' + project._id + '/s3/upload';
+      var acl = 'public-read';
       var fileAndDataObj = {
         url: url,
         data: {
           file: files[0],
           data: {
+            // width: dimensions.width,
+            // height: dimensions.height,
+            securityLevel: acl || 'private',
             fileSize: files[0].size,
             fileName: files[0].name,
-            fileType: files[0].type,
-            project: project
+            fileType: files[0].type
+            // project: project
           }
         },
         method: 'POST',
@@ -209,15 +214,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       };
       console.log('\n\n`fileAndDataObj`:\n', fileAndDataObj, '\n\n');
 
+      // Upload.imageDimensions(file)
+      //   .then(function (dimensions) {
       Upload.upload({
           url: url,
           data: {
             file: files[0],
             data: {
+              // width: dimensions.width,
+              // height: dimensions.height,
+              securityLevel: acl || 'private',
               fileSize: files[0].size,
               fileName: files[0].name,
-              fileType: files[0].type,
-              project: project
+              fileType: files[0].type
+              // project: project
             }
           },
           method: 'POST',
