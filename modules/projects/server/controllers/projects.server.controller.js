@@ -13,9 +13,9 @@ var mongoose = require('mongoose'),
   AlchemyAPI = require('alchemy-api'),
   projects = require('./projects.server.controller'),
   sanitizeHtml = require('sanitize-html'),
-  //Promise = require('bluebird'),
-  //fs = Promise.promisifyAll(require('fs')),
-  //exports = Promise.promisifyAll(exports);
+//Promise = require('bluebird'),
+//fs = Promise.promisifyAll(require('fs')),
+//exports = Promise.promisifyAll(exports);
   AWS = require('aws-sdk'),
   s3Config = {
     keys: require('../../../../config/env/production.js'),
@@ -27,10 +27,11 @@ var mongoose = require('mongoose'),
       admin: 'admin-directory'
     }
   },
+  s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com',
   crypto = require('crypto'),
   moment = require('moment'),
   tinify = require('tinify'),
-  s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com';
+  apiKeys = require('../../../../config/env/production.js');
 
 
 /**
@@ -113,7 +114,7 @@ exports.updateAll = function (req, res) {
   for (let i = 0; i < projects.length; i++) {
     project = _.extend(projects[i], req.body);
     project.save(function (err) {
-      if(!err) {
+      if (!err) {
         updatedProjects.push(project);
       }
     });
@@ -309,7 +310,6 @@ exports.nlpProjects = function (req, res, next) {
 };
 
 
-
 /**
  function nlpKeywords(sanitizedText) {
   //return new Promise( //deleted bluebird, use native es6 promises if needed
@@ -467,25 +467,29 @@ exports.updateFeaturedProjects = function (req, res) {
 
 
 exports.parseFileUpload = (req, res, next) => {
-  console.log('parseFileUpload middleware func, log `req` obj:\n', req, '\n\n');
   // parse a file upload
   var form = new multiparty.Form();
 
-  form.parse(req, function(err, fieldsObject, filesObject, fieldsList, filesList) {
-    console.log('parseFileUpload callback `err`:\n', err, '\n\n');
-    console.log('parseFileUpload callback `fieldsObject`:\n', fieldsObject, '\n\n');
-    console.log('parseFileUpload callback `filesObject`:\n', filesObject, '\n\n');
-    console.log('parseFileUpload callback `fieldsList`:\n', fieldsList, '\n\n');
-    console.log('parseFileUpload callback `filesList`:\n', filesList, '\n\n');
+  form.parse(req, function (err, fieldsObject, filesObject) {
+    if (err) {
+      // console.log('parseFileUpload callback `err`:\n', err, '\n\n');
+    }
+    // console.log('parseFileUpload callback `fieldsObject`:\n', fieldsObject, '\n\n');
+    // console.log('parseFileUpload callback `filesObject`:\n', filesObject, '\n\n');
+    // res.writeHead(200, {'content-type': 'text/plain'});
+    // res.write('received upload:\n\n');
+    // res.end(util.inspect({fields: fieldsObject, files: filesObject}));
 
-    res.writeHead(200, {'content-type': 'text/plain'});
-    res.write('received upload:\n\n');
-    res.end(util.inspect({fields: fieldsObject, files: filesObject}));
-
+    if (!req.body) {
+      return req.body = {};
+    }
+    req.body.data = { fields: fieldsObject, files: filesObject };
+    req.body.dataAsStr = util.inspect({ fields: fieldsObject, files: filesObject });
+    // console.log('parseFileUpload callback `req.body`:\n', req.body, '\n\n');
+    next();
   });
-  next();
-};
 
+};
 
 /**
  *
@@ -496,25 +500,44 @@ exports.parseFileUpload = (req, res, next) => {
  */
 exports.uploadProjectFiles = (req, res) => {
 
+  var project = req.project;
+  var user = req.user;
+
+  // for(var i = 0; )
+
   // console.log('req:\n', req, '\n\n\n\n\n');
   // console.log('\n\n\n\n\n:::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n\n\n');
-  console.log('req.body:\n', req.body, '\n\n');
-  console.log('req.files:\n', req.files, '\n\n');
-  console.log('req.files.file:\n', req.files.file, '\n\n');
+  // console.log('req.headers:\n', req.headers, '\n\n');
+  // console.log('req.project:\n', req.project, '\n\n');
+  // console.log('req.user:\n', req.user, '\n\n');
+  // console.log('req.body.data:\n', req.body.data, '\n\n');
+  // console.log('req.body.data.fields:\n', req.body.data.fields, '\n\n');
+  // console.log('req.body.data.fields[\'data[securityLevel]\']:\n', req.body.data.fields['data[securityLevel]'], '\n\n');
+  // console.log('req.body.data.fields:\n', req.body.data.fields['data'][securityLevel], '\n\n');
+  // console.log('req.body.data.files:\n', req.body.data.files, '\n\n');
+  //
+  // console.log('req.body.data.files.file[0].path:\n', req.body.data.files.file[0].path, '\n\n');
+  // console.log('req.body.data.files.file[0].headers:\n', req.body.data.files.file[0].headers, '\n\n');
+  // console.log('req.body.data.files.file[0].headers[\'content-type\']:\n', req.body.data.files.file[0].headers['content-type'], '\n\n');
+  // console.log('req.body.data.files.file[0].size:\n', req.body.data.files.file[0].size, '\n\n');
+  // console.log('req.body.data.files.file[0].originalFilename:\n', req.body.data.files.file[0].originalFilename, '\n\n');
+  //
+  // console.log('req.body.data.files.file[0]:\n', req.body.data.files.file[0], '\n\n');
 
-  // var project = req.body.project;
-  // var file = project.file['$ngfBlobUrl'] || {};
-  // var fileName = project.files.name || 'default11.jpg';
-  
-  // if (!/\s/g.test(fileName)) {
-  //   fileName = req.body.filename.replace(/\s/g, '_');
-  // }
+  // console.log('req.body.data.files.file[0].originalFilename:\n', req.body.data.files.file[0].originalFilename, '\n\n');
 
-///** now call on function that compresses image and also creates cropped thumbnail version */
-  // let optimizedImage = _compressImage(image);
+  var file = req.body.data.files.file[0];
+  var filePath = req.body.data.files.file[0].path;
+  var headers = req.body.data.files.file[0].headers;
+  var fileName = req.body.data.files.file[0].originalFilename;
+  var type = req.body.data.files.file[0].headers['content-type'];
+  var aclLevel = req.body.data.fields['data[securityLevel]'];
 
+  if (/\s/g.test(fileName)) {
+    fileName = fileName.replace(/\s/g, '_');
+  }
 
-///** config aws s3 config settings, file object, and create a new instance of the s3 service */
+  /** config aws s3 config settings, file object, and create a new instance of the s3 service */
   let awsS3Config = {
     accessKeyId: config.S3_ID,
     secretAccessKey: config.S3_SECRET,
@@ -522,66 +545,94 @@ exports.uploadProjectFiles = (req, res) => {
     Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
     Bucket: s3Config.bucket
   };
-  console.log('file:\n', file, '\n\n');
-  let fileStream = fs.createReadStream(file);
-  console.log('fileStream:\n', fileStream, '\n\n');
+  let fileStream = fs.createReadStream(filePath);
   let s3obj = {
-      header: {
-        'x-amz-decoded-content-length': file.size
-      },
-      ACL: req.body.securityLevel || 'private',
+    header: { 'x-amz-decoded-content-length': file.size },
+    ACL: aclLevel || 'private',
+    region: 'us-west-1',
+    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+    Bucket: s3Config.bucket,
+    ContentLength: file.size,
+    ContentType: type,
+    Body: fileStream
+    // ServerSideEncryption: 'AES256'
+  };
+
+  /** now call on function that compresses image and also creates cropped thumbnail version */
+  tinify.key = config.TINY_PNG_KEY;
+  tinify.key = config.TINY_PNG_KEY;
+  let source = tinify.fromFile(filePath);
+  source.store({
+    service: 's3',
+    aws_access_key_id: config.S3_ID,
+    aws_secret_access_key: config.S3_SECRET,
+    region: 'us-west-1',
+    path: s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName
+  });
+
+  source.resize({
+      method: 'cover',
+      width: 150,
+      height: 150
+    })
+    .store({
+      service: 's3',
+      aws_access_key_id: config.S3_ID,
+      aws_secret_access_key: config.S3_SECRET,
       region: 'us-west-1',
-      Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
-      Bucket: s3Config.bucket,
-      ContentLength: req.body.size,
-      ContentType: req.body.type,
-      Body: fileStream
-      // Body: optimizedImage
-      // ServerSideEncryption: 'AES256'
+      path: s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + 'thumb_' + fileName
+    });
+
+  /** now save the image URLs to mongoDb */
+  let updatedProject = {
+    mainImageUrl: 'https://' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
+    mainImageThumbnailUrl: 'https://' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + 'thumb_' + fileName
   };
-  console.log('s3obj:\n', s3obj, '\n\n');
-  console.log('s3 upload project data var `s3obj.Body`:\n', s3obj.Body, '\n\n');
-
-  let s3 = new AWS.S3(awsS3Config);
+  Project.update(updatedProject);
 
 
-
-
-// /** now upload main image to S3 */
-//   s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
-//     .on('httpUploadProgress', function(evt) { console.log(evt); })
-//     .send(function(err, data) {
-//       if(err) {
-//         console.log('s3 upload error message:\n', err);
-//       }
-//       console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
-//
-//       /** now save main image url and ETag to mongoDb */
-//       let updatedProject = {
-//         mainImageUrl: data.Location,
-//         mainImageEtag: data.ETag
-//       };
-//       Project.update(updatedProject);
-//
-//       /** call function that creates and uploads thumbnail version of main image */
-//       // // let imageThumbnail = {
-//       // //   image: file
-//       // // };
-//       // _createAndSaveThumbnail(file);
-//
-//       /** now respond with a success message */
-//       res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
-//     });
-
-
-  let response = {
-    message: 's3 file upload was successful',
-    's3obj': s3obj
-  };
-  res.jsonp(response);
+  let response = 's3 file upload was successful';
+  res.send(response);
 };
 
 
+// /** now upload image to S3 */
+//
+//  let s3 = new AWS.S3(awsS3Config);
+//
+//  s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
+//    .on('httpUploadProgress', function(evt) { console.log(evt); })
+//    .send(function(err, data) {
+//      if(err) {
+//        console.log('s3 upload error message:\n', err);
+//      }
+//      console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
+//
+//      /** now save main image url and ETag to mongoDb */
+//      let updatedProject = {
+//        mainImageUrl: data.Location,
+//        mainImageEtag: data.ETag
+//      };
+//      Project.update(updatedProject);
+//
+//      /** call function that creates and uploads thumbnail version of main image */
+//      // // let imageThumbnail = {
+//      // //   image: file
+//      // // };
+//      // _createAndSaveThumbnail(file);
+//
+//      /** now respond with a success message */
+//      // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
+//
+//      let response = {
+//        message: 's3 file upload was successful',
+//        s3obj: s3obj
+//      };
+//      res.jsonp(response);
+//
+//    });
+//
+// };
 
 
 /**
@@ -618,11 +669,11 @@ let _createAndSaveThumbnail = (image) => {
  */
 let _compressImage = (imageUrl) => {
   tinify.key = config.tinyPngKey;
-  fs.readFile(imageUrl, function(err, sourceData) {
+  fs.readFile(imageUrl, function (err, sourceData) {
     if (err) {
       throw err;
     }
-    tinify.fromBuffer(sourceData).toBuffer(function(err, optimizedImg) {
+    tinify.fromBuffer(sourceData).toBuffer(function (err, optimizedImg) {
       if (err) {
         throw err;
       }
