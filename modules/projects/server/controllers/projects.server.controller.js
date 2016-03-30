@@ -498,8 +498,8 @@ exports.parseFileUpload = (req, res, next) => {
  */
 
 exports.uploadProjectDocuments = (req, res) => {
-
   let project = req.body.project;
+  let fileType = req.body.type;
   let fileName = req.body.filename;
   if(1 !== 1) {
     fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
@@ -539,24 +539,24 @@ exports.uploadProjectDocuments = (req, res) => {
       acl: readType,
       policy: base64Policy,
       signature: signature,
-      'Content-Type': req.body.type,
+      'Content-Type': fileType,
       success_action_status: 201
     }
   };
 
+  if(fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    fileType = 'application/docx'
+  }
   /** save document URLs to MongoDb */
+    let newFile = {
+      fileUrl : 'https://s3-us-west-1.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
+      fileName : fileName,
+      fileType : fileType,
+      fileSize : req.body.size
+    };
 
-  
-  // "fileUrls" : [
-  // "https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/565a966a087f5958b73386e6/test.docx",
-  //   "https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/565a966a087f5958b73386e6/test.pdf"
-  // ],
-  
-  let newFileUrl = 'https://s3-us-west-1.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName;
-
-  let updatedFileUrls = project.fileUrls.push(newFileUrl);
-  console.log(':::: updatedFileUrls :::::\n', updatedFileUrls);
-  console.log(':::: project.fileUrls :::::\n', project.fileUrls);
+  project.fileUrls = project.fileUrls || [];
+  project.fileUrls.push(newFile);
   Project.update( {_id: project._id}, { fileUrls: project.fileUrls }, { runValidators: true }, function(err, response) {
     if(err) {
       let errMessage = {
@@ -567,7 +567,6 @@ exports.uploadProjectDocuments = (req, res) => {
       res.jsonp(errMessage);
     }
     console.log('::::: file upload update db successful::: var `response`:\n', response, '\n\n');
-    console.log('credentials:\n', credentials, '\n\n');
     res.jsonp(credentials);
   });
 };

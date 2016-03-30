@@ -380,3 +380,12 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     color: #000000;
     transform: translate3d(0, -6px, 0) scale(1.05)
 }
+
+.project-files {
+    display: inline-flex;
+    margin: 2%;
+}
+
+.project-files div div div {
+    display: inline-flex;
+}

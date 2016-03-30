@@ -713,45 +713,57 @@ $scope.uploadPic = function (project, files) {
 };
 
 
-
-/*
- alternative way of uploading, send the file binary with the file's content-type.
- Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
- This is equivalent to angular $http() but allow you to listen to the progress event for HTML5 browsers.*/
-// Upload.http(fileAndDataObj)
-
-$scope.fileReaderNg = function (files) {
-  $scope.previewImages = $scope.project.files;
-  console.log('$scope.previewImages:\n', $scope.previewImages);
+/**
+ *
+ * @param fileArray
+ *
+ * `fileArray` is which ever property the files belong to.
+ * for example, if they are document files, then the function would be passed
+ * `$scope.project.fileUrls` as the argument; if images, then `$scope.project.imageGallery`
+ * or `$scope.project.imageGalleryThumbnailUrls`
+ *
+ */
+$scope.fileReaderNg = function (fileArray) {
 
   var fileReader = new FileReader();
 
-  // var fileList = $scope.project.files;
-  // var selectedFile;
+  var files = fileArray;
+  var file = fileArray[0];
+  // console.log('files:\n', files);
+  // console.log('file:\n', file);
+  // console.log('file.type:\n', file.type);
+
+  // var dataURL = fileReader.readAsDataURL(files[0]);
+  // console.log('dataURL:\n', dataURL);
+
+  var fileList = files;
+  var selectedFile;
   // loop through files
-  // for (var i = 0; i < files.length; i++) {
-  //   selectedFile = files[i];
-  //   console.log('selectedFile.name: ', selectedFile.name);
-  //   console.log('selectedFile.size: ', selectedFile.size);
-  //   console.log('selectedFile.type: ', selectedFile.type);
-  // }
+  for (var i = 0; i < files.length; i++) {
+    selectedFile = files[i];
+    // selectedFile = fileReader.readAsDataURL(files[i]);
+    // selectedFile = fileReader.readAsArrayBuffer(files[i]);
+    // selectedFile = fileReader.readAsBinaryString(files[i]);
+    console.log('selectedFile' + [i] + ': ', selectedFile);
+    console.log('selectedFile.name: ', selectedFile.name);
+    console.log('selectedFile.size: ', selectedFile.size);
+    console.log('selectedFile.type: ', selectedFile.type);
+  }
 
   // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
   fileReader.loadend = function (event) {
-
-    console.log('event.target.result:\n', event.target.result);
+    // console.log('event.target.result:\n', event.target.result);
   };
 
   var newFile = fileReader.result;
   var printEventType = function (event) {
-    console.log('got event: ' + event.type);
+    // console.log('got event: ' + event.type);
   };
 
   fileReader.onload = function (event) {
     var arrayBuffer = fileReader.result;
-    console.log('arrayBuffer:\n', arrayBuffer.byteLength);
-    console.log('arrayBuffer.byteLength: ', arrayBuffer.byteLength);
-
+    // console.log('arrayBuffer:\n', arrayBuffer.byteLength);
+    // console.log('arrayBuffer.byteLength: ', arrayBuffer.byteLength);
 
   };
 
@@ -866,16 +878,14 @@ $scope.onFileSelect = function (files) {
   console.log('$scope.onFileSelect() var `files`:\n', files);
   if (files.length === 1) {
     $scope.uploading = true;
-    var filename = files[0].name;
-    var type = files[0].type;
     var query = {
       project: $scope.project,
-      filename: filename,
-      type: type
+      filename: files[0].name,
+      type: files[0].type,
+      size: files[0].size
     };
     console.log('files:::\n', files);
     console.log('query:::\n', query);
-    console.log('$stateParams:::\n', $stateParams);
     $http.post('api/v1/projects/'+ $scope.project._id +'/s3/upload/documents', query)
       .success(function (result) {
         console.log('result v1\n', result);

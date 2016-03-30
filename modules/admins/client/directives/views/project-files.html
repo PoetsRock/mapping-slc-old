@@ -1,23 +1,22 @@
 <section class="project-files">
   <div class="row">
     <div data-ng-show="project.fileUrls">
-      <h5>Files</h5>
-      <div class="row">
-        <div class="col-md-3 project-files" data-ng-repeat="file in files track by $index">
-          <a data-ng-href="{{file}}">
-            <!--<img data-ng-src="{{}}">-->
-            <img src="/modules/core/client/img/icons_pdf.png" class="img-responsive">
+      <h3>Files</h3>
+      <!--<div class="row">-->
+        <div class="project-files" data-ng-repeat="file in files track by $index">
+          <a data-ng-href="{{file.fileUrl}}" target="_blank">
+            <img data-ng-src="/modules/core/client/img/icons/{{file.fileType}}.png" class="img-responsive">
+            <div>{{file.fileName}}</div>
           </a>
-          <div class="btn btn-main btn-footer-overlay grow" data-ng-click="">Download</div>
         </div>
-      </div>
+      <!--</div>-->
 
       <!--<div class="btn btn-main btn-footer-overlay grow" data-ng-click="documentUploader(project, files)">Add File</div>-->
 
-
+<br />
 
       <!--upload single file-->
-      <div>
+      <div class="row">
         <div type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select ngf-change="onFileSelect($files)" ng-model="file" name="file" ngf-max-size="10MB">
           Add File
         </div>

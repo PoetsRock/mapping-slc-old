@@ -9,6 +9,8 @@ angular.module('angular-redactor').controller('RedactorController', ['$scope', '
     
     $scope.redactorOptions = { };
 
+    $scope.files;
+
 
 
     $scope.changeContent = function () {
