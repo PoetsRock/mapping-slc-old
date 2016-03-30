@@ -352,3 +352,9 @@ project-status-user-info edit-profile .form-group {
     -o-transform: translate(25%);
     transform: translate(25%);
 }
+
+/* hide link to facebook commnets plugin ad */
+#facebook ._2pi8 ._5lm5._2pi3._3-8y, #facebook ._5lm5 {
+    display: none;
+    font-size: 2px;
+}

@@ -208,14 +208,21 @@ var ProjectSchema = new Schema({
     }],
     trim: true
   },
-  documentFilesUrls: {
+  //array of url paths to image files hosted on s3
+  imageGalleryThumbnailUrls: {
+    type: [{
+      type: String
+    }],
+    trim: true
+  },
+  fileUrls: {
     type: [{
       type: String
     }],
     trim: true
   },
   //array of ETag for document files hosted on s3
-  documentFilesEtags: {
+  fileEtags: {
     type: [{
       type: String
     }],

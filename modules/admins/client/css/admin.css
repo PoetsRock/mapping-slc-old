@@ -243,6 +243,10 @@ td i .selected {
     transition: all 0.25s ease;
 }
 
+.admin-nav {
+    margin-bottom: 5%;
+}
+
 .admin-user > .admin-nav a {
     position: relative;
 }

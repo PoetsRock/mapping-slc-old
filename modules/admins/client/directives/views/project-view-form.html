@@ -3,11 +3,10 @@
   <md-content>
     <md-tabs md-dynamic-height="" md-border-bottom="">
 
+
       <md-tab label="Main Content">
         <md-content class="md-padding">
-
           <project-main-tab></project-main-tab>
-
         </md-content>
       </md-tab>
 
@@ -17,9 +16,11 @@
         </md-content>
       </md-tab>
 
-      <md-tab label="Multimedia">
+      <md-tab label="Contributor">
         <md-content class="md-padding">
-          <project-multimedia></project-multimedia>
+          <div class="admin-user">
+            <user-view-form-wrapper></user-view-form-wrapper>
+          </div>
         </md-content>
       </md-tab>
 
@@ -29,15 +30,25 @@
         </md-content>
       </md-tab>
 
-      <md-tab label="Contributor">
+      <md-tab label="Files">
         <md-content class="md-padding">
-
-          <div class="admin-user">
-            <user-view-form-wrapper></user-view-form-wrapper>
-          </div>
-
+          <project-files></project-files>
         </md-content>
       </md-tab>
+
+      <md-tab label="Images">
+        <md-content class="md-padding">
+          <project-images></project-images>
+        </md-content>
+      </md-tab>
+
+      <md-tab label="Multimedia">
+        <md-content class="md-padding">
+          <project-multimedia></project-multimedia>
+        </md-content>
+      </md-tab>
+
+
 
     </md-tabs>
   </md-content>

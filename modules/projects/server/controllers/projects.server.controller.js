@@ -87,7 +87,7 @@ exports.read = function (req, res) {
  * Update a Project
  */
 exports.update = function (req, res) {
-  //console.log('\n\n\n:::::::1111 update `project`:::::::\n', req.body);
+  console.log('\n\n\n:::::::1111 update `project`:::::::\n', req.body);
   var project = _.extend(req.project, req.body);
   project.save(function (err) {
     if (err) {
@@ -491,6 +491,170 @@ exports.parseFileUpload = (req, res, next) => {
 
 };
 
+
+
+/**
+ * upload user profile image to Amazon S3
+ */
+
+exports.uploadProjectDocuments = (req, res) => {
+
+  let project = req.body.project;
+  let fileName = req.body.filename;
+  if(1 !== 1) {
+    fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
+  }
+  let path = s3Config.directory.project + '/' + project._id + '/' + fileName;
+  let readType = 'public-read';
+  let expiration = moment().add(5, 'm').toDate(); //15 minutes
+  let s3Policy = {
+    'expiration': expiration,
+    'conditions': [{
+      'bucket': s3Config.bucket
+    },
+      ['starts-with', '$key', path],
+      {
+        'acl': readType
+      },
+      {
+        'success_action_status': '201'
+      },
+      ['starts-with', '$Content-Type', req.body.type],
+      ['content-length-range', 2048, 10485760], //min and max
+    ]
+  };
+
+  let stringPolicy = JSON.stringify(s3Policy);
+  let base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+
+  // sign policy
+  let signature = crypto.createHmac('sha1', config.S3_SECRET)
+    .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+
+  let credentials = {
+    url: s3Url,
+    fields: {
+      key: path,
+      AWSAccessKeyId: config.S3_ID,
+      acl: readType,
+      policy: base64Policy,
+      signature: signature,
+      'Content-Type': req.body.type,
+      success_action_status: 201
+    }
+  };
+
+  /** save document URLs to MongoDb */
+
+  
+  // "fileUrls" : [
+  // "https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/565a966a087f5958b73386e6/test.docx",
+  //   "https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/565a966a087f5958b73386e6/test.pdf"
+  // ],
+  
+  let newFileUrl = 'https://s3-us-west-1.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName;
+
+  let updatedFileUrls = project.fileUrls.push(newFileUrl);
+  console.log(':::: updatedFileUrls :::::\n', updatedFileUrls);
+  console.log(':::: project.fileUrls :::::\n', project.fileUrls);
+  Project.update( {_id: project._id}, { fileUrls: project.fileUrls }, { runValidators: true }, function(err, response) {
+    if(err) {
+      let errMessage = {
+        message: 'Error dating database for project file upload',
+        error: err
+      };
+      console.log('errMessage:\n', errMessage, '\n\n');
+      res.jsonp(errMessage);
+    }
+    console.log('::::: file upload update db successful::: var `response`:\n', response, '\n\n');
+    console.log('credentials:\n', credentials, '\n\n');
+    res.jsonp(credentials);
+  });
+};
+
+
+
+
+/**
+ *
+ * Uploads documents to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
+ *
+ * @param req
+ * @param res
+ */
+exports.streamProjectDocuments = (req, res) => {
+
+  var project = req.project;
+
+  var file = req.body.data.files.file[0];
+  var filePath = req.body.data.files.file[0].path;
+  var fileName = req.body.data.files.file[0].originalFilename;
+  var type = req.body.data.files.file[0].headers['content-type'];
+  var aclLevel = req.body.data.fields['data[securityLevel]'];
+
+  if (/\s/g.test(fileName)) {
+    fileName = fileName.replace(/\s/g, '_');
+  }
+
+  /** config aws s3 config settings, file object, and create a new instance of the s3 service */
+  let awsS3Config = {
+    accessKeyId: config.S3_ID,
+    secretAccessKey: config.S3_SECRET,
+    region: 'us-west-1',
+    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+    Bucket: s3Config.bucket
+  };
+  let fileStream = fs.createReadStream(filePath);
+  let s3obj = {
+    header: { 'x-amz-decoded-content-length': file.size },
+    ACL: aclLevel || 'private',
+    region: 'us-west-1',
+    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+    Bucket: s3Config.bucket,
+    ContentLength: file.size,
+    ContentType: type,
+    Body: fileStream
+    // ServerSideEncryption: 'AES256'
+  };
+
+
+
+/** now upload image to S3 */
+
+ let s3 = new AWS.S3(awsS3Config);
+
+ s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
+   .on('httpUploadProgress', function(evt) { console.log(evt); })
+   .send(function(err, data) {
+     if(err) {
+       console.log('s3 upload error message:\n', err);
+     }
+     console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
+
+     /** now save main document url and ETag to mongoDb */
+     let updatedProject = {
+       fileUrls: data.Location,
+       fileEtags: data.ETag
+     };
+     Project.update(updatedProject);
+
+     /** now respond with a success message */
+     // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
+
+     let response = {
+       message: 's3 file upload was successful',
+       s3obj: s3obj
+     };
+     res.jsonp(response);
+
+   });
+
+};
+
+
+
+
+
 /**
  *
  * Uploads images and files to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
@@ -596,45 +760,6 @@ exports.uploadProjectFiles = (req, res) => {
 };
 
 
-// /** now upload image to S3 */
-//
-//  let s3 = new AWS.S3(awsS3Config);
-//
-//  s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
-//    .on('httpUploadProgress', function(evt) { console.log(evt); })
-//    .send(function(err, data) {
-//      if(err) {
-//        console.log('s3 upload error message:\n', err);
-//      }
-//      console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
-//
-//      /** now save main image url and ETag to mongoDb */
-//      let updatedProject = {
-//        mainImageUrl: data.Location,
-//        mainImageEtag: data.ETag
-//      };
-//      Project.update(updatedProject);
-//
-//      /** call function that creates and uploads thumbnail version of main image */
-//      // // let imageThumbnail = {
-//      // //   image: file
-//      // // };
-//      // _createAndSaveThumbnail(file);
-//
-//      /** now respond with a success message */
-//      // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
-//
-//      let response = {
-//        message: 's3 file upload was successful',
-//        s3obj: s3obj
-//      };
-//      res.jsonp(response);
-//
-//    });
-//
-// };
-
-
 /**
  *
  * Uploads images and files to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
@@ -692,4 +817,114 @@ let _compressImage = (imageUrl) => {
  */
 let _createThumbnail = (image) => {
 
+};
+
+
+
+
+
+
+
+/**
+ * get pre-signed URL from AWS S3
+ *
+ * req.params.id {string} - user._id
+ * req.params.imageId {string} - file name with extension
+ */
+exports.getS3SignedUrl = (req, res) => {
+  console.log('hereh hereh herehe her herhe rehr eh r');
+  // var params = { Bucket: 'myBucket', Key: 'myKey' };
+
+  var awsS3Config = {
+    accessKeyId: config.S3_ID,
+    secretAccessKey: config.S3_SECRET,
+    region: 'us-west-1'
+  };
+  var s3 = new AWS.S3(awsS3Config);
+  var fileToGet = req.params.fileId;
+  var userIdBucket = req.params.userId;
+  var fileData = {
+    fileToGet: fileToGet,
+    userIdBucket: userIdBucket,
+    params: {
+      Bucket: s3Config.bucket + '/' + s3Config.directory.user + '/' + userIdBucket,
+      Key: fileToGet
+    }
+  };
+  // var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
+  // var userProfileImage = pathToLocalDisk + fileToGet;
+
+  s3.getSignedUrl('getObject', fileData.params,
+    (err, url) => {
+      if(err) {
+        res.status(400).send({
+          message: 'Error',
+          error: err
+        })
+      }
+      console.log('The URL is: ', url);
+      res.status(200).send({
+        message: 'Success: URL is availble for 15 minutes',
+        url: url
+      })
+    });
+};
+
+/**
+ * get file from AWS S3
+ *
+ * req.params.id {string} - user._id
+ * req.params.imageId {string} - file name with extension
+ */
+
+exports.getS3File = function (req, res) {
+  var awsS3Config = {
+    accessKeyId: config.S3_ID,
+    secretAccessKey: config.S3_SECRET,
+    region: 'us-west-1'
+  };
+  var s3 = new AWS.S3(awsS3Config);
+  var fileToGet = req.params.fileId;
+  var userIdBucket = req.params.userId;
+  var fileData = {
+    fileToGet: fileToGet,
+    userIdBucket: userIdBucket,
+    params: {
+      Bucket: s3Config.bucket + '/' + s3Config.directory.user + '/' + userIdBucket,
+      Key: fileToGet
+    }
+  };
+  var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
+  var userProfileImage = pathToLocalDisk + fileToGet;
+  //var fileType = '';
+
+
+  s3.getObject(fileData.params, function (err, callback) {
+    //require('string_decoder');
+    if (err) {
+      console.log('err:\n', err);
+      res.send({
+        message: 'ERROR, yo: ' + err
+      })
+    } else {
+      // var imageAsBase64Array = callback.Body.toString('base64');
+      // var imageAsUtf8 = callback.Body.toString('Utf8');
+
+      // console.log('callback.Body:\n', callback.Body, '\n\n\n');
+      // console.log('userProfileImage:\n', userProfileImage, '\n\n\n');
+
+      fs.writeFile(userProfileImage, callback.Body, 'base64',
+        (err) => {
+          if (err) {
+            throw err;
+          }
+          res.status(200).send({
+            message: 'Success: File Delivered:\n'
+            // fullResponse: callback,
+            // imageAsBase64Array: imageAsBase64Array,
+            // imageAsUtf8: imageAsUtf8
+          });
+        });
+    }
+  });
 };
