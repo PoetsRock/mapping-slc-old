@@ -103,8 +103,8 @@
 
               <div class="row"> <!-- Row #3 -->
                 <div class="col-md-6">
-                  <!--<div class="form-group" show-errors data-ng-show="!userForm.password.$pristine">-->
-                  <div show-errors data-ng-show="!userForm.password.$pristine">
+                  <div class="form-group" show-errors data-ng-show="!userForm.password.$pristine">
+                  <!--<div show-errors data-ng-show="!userForm.password.$pristine">-->
                     <span class="input input-secondary" data-ng-class="{'input-filled': credentials.passwordVerify}">
                       <input class="input_field input_field-secondary" type="password" id="passwordVerify"
                              data-ng-model="credentials.passwordVerify"/>
@@ -117,8 +117,8 @@
                 </div>
 
                 <div class="col-md-6">
-                  <!--<div class="form-group" show-errors ng-show="!userForm.password.$error.required">-->
-                  <div show-errors ng-show="!userForm.password.$error.required">
+                  <div class="form-group" show-errors ng-show="!userForm.password.$error.required">
+                  <!--<div show-errors ng-show="!userForm.password.$error.required">-->
                     <label>Password Requirements</label>
                     <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}">
                       <span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span>
@@ -145,7 +145,7 @@
 
 
               <div class="row">
-                <div class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-10">
+                <div class="col-xs-offset-4 col-xs-6 col-md-offset-4 col-md-8">
                   <div class="form-group">
                     <div>
                       <button type="submit" class="btn btn-main grow">Sign up</button>

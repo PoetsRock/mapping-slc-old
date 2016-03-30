@@ -1,24 +1,28 @@
 'use strict';
 
 (function () {
-  
+
+  var project = {
+    _id: '56f4e0deb11c53c0117d967c'
+  };
   var redactorOptions = {
     plugins: ['source', 'alignment', 'filemanager', 'imagemanager', 'video'],
-    focus: true
+    focus: true,
+    imageUpload: '/api/v1/projects/' + project._id + '/s3/upload',
+    imageUploadParam: {}
   };
 
   angular.module('angular-redactor')
     .constant('redactorOptions', redactorOptions)
     .directive('redactor', ['$timeout', function ($timeout) {
 
-      var project = {
-        _id: '56f4e0deb11c53c0117d967c'
-      };
-
       return {
         restrict: 'A',
         require: 'ngModel',
         link: function (scope, element, attrs, ngModel) {
+
+          console.log(':::element::::\n', element);
+          console.log(':::111 ngModel 111::::\n', ngModel);
 
           // Expose scope var with loaded state of Redactor
           scope.redactorLoaded = false;
@@ -26,9 +30,12 @@
           var updateModel = function updateModel(value) {
               // $timeout to avoid $digest collision
               $timeout(function () {
+                console.log(':::value::::\n', value);
                 scope.$apply(function () {
                   ngModel.$setViewValue(value);
                 });
+                console.log(':::ngModel::::\n', ngModel);
+                console.log(':::ngModel.$viewValue::::\n', ngModel.$viewValue);
               });
             },
             options = {
@@ -61,7 +68,6 @@
               });
             }
           };
-
 
         }
       };

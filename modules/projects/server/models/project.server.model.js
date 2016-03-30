@@ -215,12 +215,21 @@ var ProjectSchema = new Schema({
     }],
     trim: true
   },
-  fileUrls: {
-    type: [{
-      type: String
-    }],
-    trim: true
-  },
+  fileUrls: [
+    {
+      fileName: String,
+      fileSize: Number,
+      fileType: String,
+      fileUrl: String
+    }
+  ],
+  // commentsReaders: [{
+  //   fileName: String,
+  //   fileSize: Number,
+  //   fileType: String,
+  //   fileUrl: String,
+  //   trim: true
+  // }],
   //array of ETag for document files hosted on s3
   fileEtags: {
     type: [{
