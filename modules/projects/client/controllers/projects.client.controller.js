@@ -15,6 +15,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.isPublished = false;
     $scope.userToEdit = {};
     $scope.images = [];
+    $scope.files = [];
     $scope.override = false;
     $scope.isFavorite = false;
     $scope.trustAsHtml = $sce.trustAsHtml;
@@ -125,13 +126,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 
     // Create new Project
-   $scope.create = function (isValid) {
+    $scope.create = function (isValid) {
       $scope.error = null;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'projectForm');
         return false;
       }
-    // Create new Project object
+      // Create new Project object
       var project = new Projects({
         createdBy: Authentication.user._id,
         street: this.project.street,
@@ -172,190 +173,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.updateLatLng(project);
       $scope.override = false;
     };
-
-
-    /**
-     * uploads images from create project form
-     * @param project
-     * @param files
-     * @param acl
-     */
-
-    // Project Uploader Service logic
-
-    $scope.uploadPic = function (project, files) {
-      $scope.previewImages = $scope.project.files;
-
-      var url = '/api/v1/projects/' + project._id + '/s3/upload';
-      var acl = 'public-read';
-      var fileAndDataObj = {
-        url: url,
-        data: {
-          file: files[0],
-          data: {
-            // width: dimensions.width,
-            // height: dimensions.height,
-            securityLevel: acl || 'private',
-            fileSize: files[0].size,
-            fileName: files[0].name,
-            fileType: files[0].type
-            // project: project
-          }
-        },
-        method: 'POST',
-        headers: {
-          'Content-Type': files[0].type
-          // },
-          // transformRequest: function(data, headersGetter) {
-          //   var headers = headersGetter();
-          //   delete headers.Authorization;
-          //   return data;
-        }
-      };
-      console.log('\n\n`fileAndDataObj`:\n', fileAndDataObj, '\n\n');
-
-      // Upload.imageDimensions(file)
-      //   .then(function (dimensions) {
-      Upload.upload({
-          url: url,
-          data: {
-            file: files[0],
-            data: {
-              // width: dimensions.width,
-              // height: dimensions.height,
-              securityLevel: acl || 'private',
-              fileSize: files[0].size,
-              fileName: files[0].name,
-              fileType: files[0].type
-              // project: project
-            }
-          },
-          method: 'POST',
-          headers: {
-            'Content-Type': files[0].type
-            // },
-            // transformRequest: function(data, headersGetter) {
-            //   var headers = headersGetter();
-            //   delete headers.Authorization;
-            //   return data;
-          }
-        })
-        .then(function (response) {
-          console.log('Success ' + response.config.data.file.name + 'uploaded. Response: ' + response.data);
-        }, function (response) {
-          console.log('Error status: ' + response.status);
-        }, function (evt) {
-          console.log('evt:\n', evt);
-          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-          console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
-    };
-
-
-    /*
-     alternative way of uploading, send the file binary with the file's content-type.
-     Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
-     This is equivalent to angular $http() but allow you to listen to the progress event for HTML5 browsers.*/
-    // Upload.http(fileAndDataObj)
-
-    $scope.fileReaderNg = function (files) {
-      $scope.previewImages = $scope.project.files;
-      console.log('$scope.previewImages:\n', $scope.previewImages);
-
-      var fileReader = new FileReader();
-
-      // var fileList = $scope.project.files;
-      // var selectedFile;
-      // loop through files
-      // for (var i = 0; i < files.length; i++) {
-      //   selectedFile = files[i];
-      //   console.log('selectedFile.name: ', selectedFile.name);
-      //   console.log('selectedFile.size: ', selectedFile.size);
-      //   console.log('selectedFile.type: ', selectedFile.type);
-      // }
-
-      // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
-      fileReader.loadend = function (event) {
-
-        console.log('event.target.result:\n', event.target.result);
-      };
-
-      var newFile = fileReader.result;
-      var printEventType = function (event) {
-        console.log('got event: ' + event.type);
-      };
-
-      fileReader.onload = function (event) {
-        var arrayBuffer = fileReader.result;
-        console.log('arrayBuffer:\n', arrayBuffer.byteLength);
-        console.log('arrayBuffer.byteLength: ', arrayBuffer.byteLength);
-
-
-      };
-
-      // var readArrayBuffer = fileReader.readAsArrayBuffer(files[0]);
-      // console.log('readArrayBuffer:\n', readArrayBuffer);
-
-      // var binaryString = fileReader.readAsBinaryString(files);
-      // console.log('binaryString:\n', binaryString);
-
-      // var dataURL = fileReader.readAsDataURL(files[0]);
-      // console.log('dataURL:\n', dataURL);
-
-
-    };
-
-
-    // var openFile = function(event) {
-    //   var input = event.target;
-    //
-    //   var reader = new FileReader();
-    //   reader.onload = function(){
-    //     var arrayBuffer = reader.result;
-    //
-    //     console.log(arrayBuffer.byteLength);
-    //   };
-    //   reader.readAsArrayBuffer(event.target.files[0]);
-    // };
-
-
-    // function fileReaderJs(files) {
-    //   var fileReader = new FileReader();
-    //
-    //   fileReader.file = files[0];
-    //
-    //   // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
-    //   fileReader.onloadend = function () {
-    //     console.log('Loaded file: ' + this.file.name + ' length: ' + this.result.length);
-    //     var binaryString = fileReader.readAsBinaryString(files[0]);
-    //     var dataURL = fileReader.readAsDataURL(files[0]);
-    //     console.log('binaryString:\n', binaryString);
-    //     console.log('dataURL:\n', dataURL);
-    //   };
-    // }
-
-    // var altUpload = Upload.http({
-    //   url: url,
-    //   headers : {
-    //     'Content-Type': file.type
-    //   },
-    //   data: file
-    // });
-    //
-    // altUpload.then(function (response) {
-    //   $timeout(function () {
-    //     file.result = response.data;
-    //     console.log('inside of promise: `file`:\n', file);
-    //     console.log('inside of promise: `response`:\n', response);
-    //     console.log('inside of promise: `file.result`:\n', file.result);
-    //   });
-    // }, function (response) {
-    //   if (response.status > 0)
-    //     $scope.errorMsg = response.status + ': ' + response.data;
-    // }, function (evt) {
-    //   // Math.min is to fix IE which reports 200% sometimes
-    //   file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-    // });
 
 
     // Remove existing Project
@@ -449,13 +266,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      * Find existing Project
      */
     $scope.findOne = function () {
-      // $scope.project = Projects.get({
+
       Projects.get({ projectId: $stateParams.projectId },
         function (project) {
           $scope.project = project;
+          // $scope.images = project.imageGallery;
           console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
-          // console.log(' ::: $scope.findOne()  :::  var `$scope.project.user._id`:', $scope.project.user._id);
-          // console.log(' ::: $scope.findOne()  :::  var `$scope.user._id`        :', $scope.user._id);
           if (project.vimeoId) {
             $scope.vimeo = {
               video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
@@ -473,6 +289,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           if (project.imageGallery) {
             for (var i = 0; i < project.imageGallery.length; i++) {
               $scope.images.push(project.imageGallery[i]);
+            }
+          }
+          if (project.fileUrls) {
+            for (var i = 0; i < project.fileUrls.length; i++) {
+              $scope.files.push(project.fileUrls[i]);
             }
           }
           getUserFavoriteStoriesFn($scope.user.favorites, $scope.project.id);
@@ -790,7 +611,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       };
 
 
-      $scope.uploadPic = function (file) {
+      var imageUploader = function (file) {
         file.upload = Upload.upload({
           url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
           data: { username: $scope.username, file: file }
@@ -813,6 +634,302 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 
     };
+
+
+/**
+ * uploads images from create project form
+ * @param project
+ * @param files
+ */
+
+// Project Uploader Service logic
+
+$scope.uploadPic = function (project, files) {
+  $scope.previewImages = $scope.project.files;
+
+  var url = '/api/v1/projects/' + project._id + '/s3/upload';
+  var acl = 'public-read';
+  var fileAndDataObj = {
+    url: url,
+    data: {
+      file: files[0],
+      data: {
+        // width: dimensions.width,
+        // height: dimensions.height,
+        securityLevel: acl || 'private',
+        fileSize: files[0].size,
+        fileName: files[0].name,
+        fileType: files[0].type
+        // project: project
+      }
+    },
+    method: 'POST',
+    headers: {
+      'Content-Type': files[0].type
+      // },
+      // transformRequest: function(data, headersGetter) {
+      //   var headers = headersGetter();
+      //   delete headers.Authorization;
+      //   return data;
+    }
+  };
+  console.log('\n\n`fileAndDataObj`:\n', fileAndDataObj, '\n\n');
+
+  // Upload.imageDimensions(file)
+  //   .then(function (dimensions) {
+  Upload.upload({
+      url: url,
+      data: {
+        file: files[0],
+        data: {
+          // width: dimensions.width,
+          // height: dimensions.height,
+          securityLevel: acl || 'private',
+          fileSize: files[0].size,
+          fileName: files[0].name,
+          fileType: files[0].type
+          // project: project
+        }
+      },
+      method: 'POST',
+      headers: {
+        'Content-Type': files[0].type
+        // },
+        // transformRequest: function(data, headersGetter) {
+        //   var headers = headersGetter();
+        //   delete headers.Authorization;
+        //   return data;
+      }
+    })
+    .then(function (response) {
+      console.log('Success ' + response.config.data.file.name + 'uploaded. Response: ' + response.data);
+    }, function (response) {
+      console.log('Error status: ' + response.status);
+    }, function (evt) {
+      console.log('evt:\n', evt);
+      var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+    });
+};
+
+
+
+/*
+ alternative way of uploading, send the file binary with the file's content-type.
+ Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+ This is equivalent to angular $http() but allow you to listen to the progress event for HTML5 browsers.*/
+// Upload.http(fileAndDataObj)
+
+$scope.fileReaderNg = function (files) {
+  $scope.previewImages = $scope.project.files;
+  console.log('$scope.previewImages:\n', $scope.previewImages);
+
+  var fileReader = new FileReader();
+
+  // var fileList = $scope.project.files;
+  // var selectedFile;
+  // loop through files
+  // for (var i = 0; i < files.length; i++) {
+  //   selectedFile = files[i];
+  //   console.log('selectedFile.name: ', selectedFile.name);
+  //   console.log('selectedFile.size: ', selectedFile.size);
+  //   console.log('selectedFile.type: ', selectedFile.type);
+  // }
+
+  // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
+  fileReader.loadend = function (event) {
+
+    console.log('event.target.result:\n', event.target.result);
+  };
+
+  var newFile = fileReader.result;
+  var printEventType = function (event) {
+    console.log('got event: ' + event.type);
+  };
+
+  fileReader.onload = function (event) {
+    var arrayBuffer = fileReader.result;
+    console.log('arrayBuffer:\n', arrayBuffer.byteLength);
+    console.log('arrayBuffer.byteLength: ', arrayBuffer.byteLength);
+
+
+  };
+
+  // var readArrayBuffer = fileReader.readAsArrayBuffer(files[0]);
+  // console.log('readArrayBuffer:\n', readArrayBuffer);
+
+  // var binaryString = fileReader.readAsBinaryString(files);
+  // console.log('binaryString:\n', binaryString);
+
+  // var dataURL = fileReader.readAsDataURL(files[0]);
+  // console.log('dataURL:\n', dataURL);
+
+
+};
+
+
+// var openFile = function(event) {
+//   var input = event.target;
+//
+//   var reader = new FileReader();
+//   reader.onload = function(){
+//     var arrayBuffer = reader.result;
+//
+//     console.log(arrayBuffer.byteLength);
+//   };
+//   reader.readAsArrayBuffer(event.target.files[0]);
+// };
+
+
+// function fileReaderJs(files) {
+//   var fileReader = new FileReader();
+//
+//   fileReader.file = files[0];
+//
+//   // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
+//   fileReader.onloadend = function () {
+//     console.log('Loaded file: ' + this.file.name + ' length: ' + this.result.length);
+//     var binaryString = fileReader.readAsBinaryString(files[0]);
+//     var dataURL = fileReader.readAsDataURL(files[0]);
+//     console.log('binaryString:\n', binaryString);
+//     console.log('dataURL:\n', dataURL);
+//   };
+// }
+
+// var altUpload = Upload.http({
+//   url: url,
+//   headers : {
+//     'Content-Type': file.type
+//   },
+//   data: file
+// });
+//
+// altUpload.then(function (response) {
+//   $timeout(function () {
+//     file.result = response.data;
+//     console.log('inside of promise: `file`:\n', file);
+//     console.log('inside of promise: `response`:\n', response);
+//     console.log('inside of promise: `file.result`:\n', file.result);
+//   });
+// }, function (response) {
+//   if (response.status > 0)
+//     $scope.errorMsg = response.status + ': ' + response.data;
+// }, function (evt) {
+//   // Math.min is to fix IE which reports 200% sometimes
+//   file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+// });
+
+
+
+
+$scope.documentUploader = function (project, files) {
+  var url = '/api/v1/projects/' + project._id + '/s3/upload/documents';
+  var acl = 'public-read';
+  var fileAndDataObj = {
+    url: url,
+    data: {
+      file: files[0],
+      data: {
+        securityLevel: acl || 'private',
+        fileSize: files[0].size,
+        fileName: files[0].name,
+        fileType: files[0].type
+      }
+    },
+    method: 'POST',
+    headers: {
+      'Content-Type': files[0].type
+    }
+  };
+  console.log('\n\n`fileAndDataObj`:\n', fileAndDataObj, '\n\n');
+
+  Upload.upload(fileAndDataObj)
+    .then(function (response) {
+      console.log('Success ' + response.config.data.file.name + 'uploaded. Response: ' + response.data);
+    }, function (response) {
+      console.log('Error status: ' + response.status);
+    }, function (evt) {
+      console.log('evt:\n', evt);
+      var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+    });
+};
+
+
+
+$scope.uploading = false;
+// $scope.imageURL = $scope.user.profileImageURL;
+var upload = null;
+
+
+$scope.onFileSelect = function (files) {
+  console.log('$scope.onFileSelect() var `files`:\n', files);
+  if (files.length === 1) {
+    $scope.uploading = true;
+    var filename = files[0].name;
+    var type = files[0].type;
+    var query = {
+      project: $scope.project,
+      filename: filename,
+      type: type
+    };
+    console.log('files:::\n', files);
+    console.log('query:::\n', query);
+    console.log('$stateParams:::\n', $stateParams);
+    $http.post('api/v1/projects/'+ $scope.project._id +'/s3/upload/documents', query)
+      .success(function (result) {
+        console.log('result v1\n', result);
+        Upload.upload({
+          url: result.url, //s3Url
+          transformRequest: function (data, headersGetter) {
+            var headers = headersGetter();
+            delete headers.Authorization;
+            console.log('data v1\n', data);
+            return data;
+          },
+          fields: result.fields, //credentials
+          method: 'POST',
+          file: files[0]
+        }).progress(function (evt) {
+          console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
+        }).success(function (data, status, headers, config) {
+          var s3Result = xmlToJSON.parseString(data);   // parse
+          // file is uploaded successfully
+          $scope.uploading = false;
+          console.log('s3Result:::\n', s3Result);
+          console.log('status: ', status);
+          console.log('The file ' + config.file.name + ' is uploaded successfully.\nResponse:\n', s3Result);
+        });
+      })
+      .error(function (data, status, headers, config) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        $scope.uploading = false;
+      });
+
+  }
+};
+
+/**
+ * hits back end route that calls `getS3File()`
+ *
+ **/
+$scope.files = [];
+$scope.getFiles = function() {
+  $http.get('/api/v1/projects/' + $scope.project._id + '/files/' + $scope.project.fileUrls, {cache: true})
+    .then(function(err, files) {
+      if(err) {
+        console.log('ERROR IN PROJECTS CONTROLLER\nerr in getting FILES:\n', err, '\n\n');
+        return;
+      }
+      $scope.files = files;
+      console.log('file from `projects.controller.client.controller.js`:\n', image, '\n\n');
+    });
+};
+
+
+
+
 
 
   }

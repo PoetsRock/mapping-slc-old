@@ -11,7 +11,8 @@
         if (!this.opts.imageManagerJson) {
           return;
         }
-
+        var button = this.button.addAfter('lists', 'image', this.lang.get('image'));
+        this.button.addCallback(button, this.imagemanager.show);
         this.modal.addCallback('image', this.imagemanager.load);
       },
       load: function () {
