@@ -19,6 +19,12 @@
         var $box = $('<div style="overflow: auto; height: 300px; display: none;" class="redactor-modal-tab" data-title="Choose">');
         this.modal.getModal().append($box);
 
+        /**
+         *
+         *
+         * is it possible to substitute this ajax call for an angular uploader?
+         *
+         */
         $.ajax({
           dataType: 'json',
           cache: false,
