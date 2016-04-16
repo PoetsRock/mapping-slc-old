@@ -870,10 +870,8 @@ $scope.documentUploader = function (project, files) {
 
 
 $scope.uploading = false;
-// $scope.imageURL = $scope.user.profileImageURL;
 var upload = null;
-
-
+    
 $scope.onFileSelect = function (files) {
   console.log('$scope.onFileSelect() var `files`:\n', files);
   if (files.length === 1) {
@@ -912,8 +910,7 @@ $scope.onFileSelect = function (files) {
         });
       })
       .error(function (data, status, headers, config) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
+        // called asynchronously if an error occurs or server returns response with an error status.
         $scope.uploading = false;
       });
 

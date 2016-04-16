@@ -27,17 +27,15 @@
     "bootstrap": "^3.x.x",
     "font-awesome": "^4.x.x",
     "modernizr": "^3.0.x",
-    "ng-ckeditor": "^0.2.x",
     "ng-file-upload": "^12.0.1",
     "ng-file-upload-shim": "^10.1.9",
     "owasp-password-strength-test": "^1.3.0",
     "rangy": "^1.3.0",
-    "sidebar-v2": "^0.2.1",
     "classie": "^1.0.1",
     "xmlToJSON.js": "^1.3.2",
     "jquery-migrate": "^1.3.0",
     "angular-material": "^1.0.5",
-    "angular-route": "^1.5.x"
+    "mslc": "git+ssh://git@github.com/poetsrock/mslc"
   },
   "resolutions": {
     "angular": "^1.5.x",

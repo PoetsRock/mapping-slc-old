@@ -1,3 +1,4 @@
+/modules/redactor/client/redactor.js
 # General
 *.csv
 /.local-configs

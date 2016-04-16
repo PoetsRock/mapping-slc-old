@@ -1,0 +1,38 @@
+<section class="content background" data-ng-controller="RedactorController" >
+
+
+  <section>
+  <h1>Demo</h1>
+
+  <div class="panel panel-default">
+    <div class="panel-heading"><h3>Default</h3></div>
+    <div class="panel-body">
+      <div class="form-group">
+
+        <textarea id="redactor" ng-model="project.story" redactor cols="30" rows="10"></textarea>
+
+      </div>
+      <br/>
+      <p>{{project.story}}</p>
+      <div class="form-group">
+        <button class="btn btn-default" ng-click="changeContent()">Change content</button>
+      </div>
+
+
+    </div>
+  </div>
+  </section>
+
+  <!--<div>-->
+    <!--<button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select ngf-change="onFileSelect($files)">New Profile Photo-->
+    <!--</button>-->
+  <!--</div>-->
+
+  <!--<div>-->
+    <!--<p>-->
+      <!--<button id="btn-save" style="display: none;" type="primary" outline>Save</button>-->
+      <!--<button id="btn-cancel" style="display: none;" outline>Cancel</button>-->
+    <!--</p>-->
+  <!--</div>-->
+
+</section>

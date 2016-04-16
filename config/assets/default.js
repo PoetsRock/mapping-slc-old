@@ -10,13 +10,9 @@ module.exports = {
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css',
         'public/lib/angular-material/angular-material.css',
         'public/lib/angular-material/angular-material.layouts.min.css',
-        'modules/redactor/redactor/redactor.css',
-        'public/lib/sidebar-v2/css/leaflet-sidebar.css',
         'public/lib/font-awesome/css/font-awesome.css',
         'public/lib/angular-notify/dist/angular-notify.css',
-        'public/lib/ng-ckeditor/ng-ckeditor.css',
-        'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css',
-        'public/lib/c3/c3.css'
+        'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -40,21 +36,13 @@ module.exports = {
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
-        'public/lib/d3/d3.js',
-        'public/lib/ng-ckeditor/libs/ckeditor/ckeditor.js',
-        'public/lib/ng-ckeditor/ng-ckeditor.js',
-        'public/lib/sidebar-v2/js/leaflet-sidebar.js',
+        'public/lib/mslc/redactor/redactor.js',
         'public/lib/classie/classie.js',
-        'public/lib/masonry/dist/masonry.pkgd.js',
         'public/lib/moment/min/moment.js',
-        'public/lib/c3/c3.js',
         'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
         'public/lib/angular-notify/dist/angular-notify.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
-        'public/lib/ng-file-upload/ng-file-upload.js',
-        'public/lib/mslc/redactor/redactor.js'
-        // 'modules/redactor/client/redactor.js'
-        // 'modules/redactor/client/angular-redactor-2.js'
+        'public/lib/ng-file-upload/ng-file-upload.js'
 
       ],
       tests: [
