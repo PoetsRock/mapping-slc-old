@@ -8,7 +8,7 @@
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
   <section class="container">
-    <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
+    <a ui-sref="home" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
 
     <div class="main-content-outer">
 
@@ -19,7 +19,14 @@
           <div class="page-header">
 
             <div class="row">
-              <div><h1 class="col-md-6">Projects</h1></div>
+              <div class="col-md-6">
+                <h1>Projects</h1>
+                <span>
+                  <a tooltip-placement="right" uib-tooltip="Map View" data-ng-click="showMap()">
+                    <i class="fa fa-map-o"></i>
+                  </a>
+                </span>
+              </div>
               <div class="col-md-6 search-input-div">
                 <span class="input input-secondary pull-right">
                     <input class="input_field input_field-secondary" type="text" id="search"
@@ -34,62 +41,39 @@
 
           </div>
 
-          <a class="list-group">
-
-            <!--<div class="row">-->
-              <!--<div class="col-md-12">-->
-                <!--<a data-ng-repeat="publishedProject in publishedProjects" data-ng-href="/projects/{{publishedProject._id}}" class="col-md-4 story-summary animation-cards">-->
-                    <!--<div class="row">-->
-                        <!--<div class="col-md-4">-->
-                            <!--<img class="img-responsive" data-ng-src="{{publishedProject.mainImgThumbnail}}"/>-->
-                        <!--</div>-->
-
-                        <!--<div class="col-md-8">-->
-                            <!--<span data-ng-bind="publishedProject.title"></span><br/>-->
-                            <!--<span data-ng-bind="publishedProject.user.displayName">there</span><br/>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</a>-->
-              <!--</div>-->
-            <!--</div>-->
-
-            <a data-ng-repeat="publishedProject in publishedProjects" data-ng-href="/projects/{{publishedProject._id}}" class="carddemoBasicUsage">
-              <md-content class="md-padding" layout-xs="column" layout="row">
-                <div flex-xs="" flex-gt-xs="50" layout="column">
-                  <md-card>
-                    <md-card-title>
-                      <md-card-title-text>
-                        <span class="md-headline" data-ng-bind="publishedProject.title"></span>
-                        <span class="md-subhead" data-ng-bind="publishedProject.user.displayName"></span>
-                      </md-card-title-text>
-                      <md-card-title-media>
-                        <div class="md-media-md card-media">
-                          <img class="img-responsive" data-ng-src="{{publishedProject.mainImgThumbnail}}"/>
-                        </div>
-                      </md-card-title-media>
-                    </md-card-title>
-                    <!--<md-card-actions layout="row" layout-align="end center">-->
-                      <!--<md-button>Action 1</md-button>-->
-                      <!--<md-button>Action 2</md-button>-->
-                    <!--</md-card-actions>-->
-                  </md-card>
-                </div>
+          <div class="list-group">
+            <a data-ng-repeat="publishedProject in publishedProjects" data-ng-href="/projects/{{publishedProject._id}}"
+               class="carddemoBasicUsage">
+              <md-content class="md-padding" layout-lg="xs" layout="column">
+                <!--<div flex-xs="" flex-gt-xs="50" layout="column">-->
+                <md-card>
+                  <md-card-title>
+                    <md-card-title-text>
+                      <span class="md-headline" data-ng-bind="publishedProject.title"></span>
+                      <span class="md-subhead" data-ng-bind="publishedProject.user.displayName"></span>
+                    </md-card-title-text>
+                    <md-card-title-media>
+                      <div class="md-media-md card-media">
+                        <img class="img-responsive" data-ng-src="{{publishedProject.mainImgThumbnail}}"/>
+                      </div>
+                    </md-card-title-media>
+                  </md-card-title>
+                </md-card>
               </md-content>
             </a>
 
 
             <div class="alert alert-warning text-center"
                  data-ng-hide="!PublishingService.getPublishedProjects() || projects.length">
-              No Projects yet, why don't you <a href="/projects/create">create one</a>?
+              No Projects yet, why don't you <a ui-sref="create">create one</a>?
             </div>
-
           </div>
+
+          <!--see `modules/core/client/services/utils.client.service.js` for pagination script`-->
+          <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength"
+                          ng-model="currentPage" ng-change="pageChanged()">
+          </uib-pagination>
         </div>
-
-        <!--see `modules/core/client/services/utils.client.service.js` for pagination script`-->
-        <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()">
-        </uib-pagination>
-
       </section>
     </div>
   </section>

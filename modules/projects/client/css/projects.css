@@ -354,7 +354,12 @@ project-status-user-info edit-profile .form-group {
 }
 
 /* hide link to facebook commnets plugin ad */
-#facebook ._2pi8 ._5lm5._2pi3._3-8y, #facebook ._5lm5 {
+#facebook ._2pi8 ._5lm5._2pi3._3-8y {
     display: none;
     font-size: 2px;
+}
+
+
+.list-projects md-content {
+    background-color: transparent;
 }
