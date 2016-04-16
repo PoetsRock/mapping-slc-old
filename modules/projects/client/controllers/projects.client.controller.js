@@ -155,8 +155,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           // });
 
           $scope.override = true;
-          // $location.path('projects/' + response._id + '/status');
-          $location.path('blank');
+          $location.path('projects/' + response._id + '/status');
+          
           // Clear form fields
           $scope.street = '';
           $scope.city = '';
@@ -933,13 +933,13 @@ $scope.getFiles = function() {
       console.log('file from `projects.controller.client.controller.js`:\n', image, '\n\n');
     });
 };
-
-
-
+    
+$scope.showMap = function() {
+  UtilsService.showMap();
+};
 
 
 
   }
-
 ]);
 

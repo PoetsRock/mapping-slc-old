@@ -1,8 +1,12 @@
 'use strict';
 
-angular.module('core').service('UtilsService', ['$http', '$window', '$filter', 'AdminUpdateUser',
-  function ($http, $window, $filter, AdminUpdateUser) {
+angular.module('core').service('UtilsService', ['$http', '$window', '$filter', '$location', 'AdminUpdateUser',
+  function ($http, $window, $filter, $location, AdminUpdateUser) {
 
+    this.showMap = function() {
+      $location.path('/');
+      scope.toggleOverlayFunction('overlay');
+    };
 
     //logic for css on the contact form
     this.cssLayout = function () {

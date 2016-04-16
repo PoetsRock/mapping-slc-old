@@ -12,7 +12,10 @@ module.exports = {
         'public/lib/angular-material/angular-material.layouts.min.css',
         'public/lib/font-awesome/css/font-awesome.css',
         'public/lib/angular-notify/dist/angular-notify.css',
-        'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css'
+        'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css',
+        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/css/froala_editor.min.css',
+        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/css/froala_editor.pkgd.min.css',
+        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/css/froala_style.min.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -36,6 +39,10 @@ module.exports = {
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
+        
+        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/js/froala_editor.min.js',
+        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/js/froala_editor.pkgd.min.js',
+
         'public/lib/mslc/redactor/redactor.js',
         'public/lib/classie/classie.js',
         'public/lib/moment/min/moment.js',
@@ -43,7 +50,6 @@ module.exports = {
         'public/lib/angular-notify/dist/angular-notify.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
         'public/lib/ng-file-upload/ng-file-upload.js'
-
       ],
       tests: [
         'public/lib/angular-mocks/angular-mocks.js',
