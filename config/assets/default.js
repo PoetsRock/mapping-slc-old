@@ -13,13 +13,28 @@ module.exports = {
         'public/lib/font-awesome/css/font-awesome.css',
         'public/lib/angular-notify/dist/angular-notify.css',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css',
-        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/css/froala_editor.min.css',
-        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/css/froala_editor.pkgd.min.css',
-        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/css/froala_style.min.css'
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/froala_editor.min.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/froala_style.min.css',
+
+        //load css for plugins for Froala text editor
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/char_counter.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/code_view.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/colors.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/emoticons.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/file.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/fullscreen.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/image_manager.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/image.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/line_breaker.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/table.css',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/css/plugins/video.css'
+
+
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
         'public/lib/jquery-migrate/jquery-migrate.min.js',
+        'public/lib/modernizr/modernizr.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-animate/angular-animate.js',
@@ -35,21 +50,42 @@ module.exports = {
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-        'public/lib/modernizr/modernizr.js',
+        'public/lib/angular-notify/dist/angular-notify.js',
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
-        
-        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/js/froala_editor.min.js',
-        'public/lib/mslc/angular-froala/public/lib/froala-wysiwyg-editor/js/froala_editor.pkgd.min.js',
-
-        'public/lib/mslc/redactor/redactor.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/froala_editor.min.js',
         'public/lib/classie/classie.js',
         'public/lib/moment/min/moment.js',
         'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
-        'public/lib/angular-notify/dist/angular-notify.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
-        'public/lib/ng-file-upload/ng-file-upload.js'
+        'public/lib/ng-file-upload/ng-file-upload.js',
+
+        //load plugins for Froala text editor
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/align.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/char_counter.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/code_beautifier.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/code_view.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/colors.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/emoticons.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/entities.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/file.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/font_family.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/font_size.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/fullscreen.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/image.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/image_manager.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/inline_style.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/line_breaker.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/link.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/lists.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/paragraph_format.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/paragraph_style.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/quote.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/save.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/table.min.js',
+        'public/lib/mslc/angular-froala/froala-wysiwyg-editor/js/plugins/video.min.js'
+
       ],
       tests: [
         'public/lib/angular-mocks/angular-mocks.js',
@@ -79,7 +115,7 @@ module.exports = {
     ],
     views: [
       'modules/*/client/views/**/*.html',
-      'modules/**/*/directives/views/**/*.html'
+      'modules/*/client/directives/views/**/*.html'
     ],
     templates: ['build/templates.js']
   },

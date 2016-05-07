@@ -1,0 +1,38 @@
+.text-editor {
+  min-height: 550px;
+}
+
+body .text-editor {
+  padding: 20px;
+}
+
+.sample {
+  padding-bottom: 50px;
+  margin-left: 30px;
+  border-top: 1px solid lightgray;
+}
+
+.manual {
+  margin-bottom: 20px;
+}
+
+
+/* styling for preview tabs */
+.tabsdemoStaticTabs .after-tabs-area > span {
+  margin-top: 25px;
+  padding-right: 15px;
+  vertical-align: middle;
+  line-height: 30px;
+  height: 35px; }
+
+.text-editor header .fa-pencil {
+  margin: 0 15px;
+  font-size: 2.5rem;
+  color: green;
+  top: 45px;
+  position: absolute;
+}
+
+.text-editor header {
+  display: flex;
+}
