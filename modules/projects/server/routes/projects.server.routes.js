@@ -54,7 +54,7 @@ module.exports = function (app) {
 
 
   /**
-   * Update Project Keyowrds Using Natural Language Processing Engine
+   * Update Project Keywords Using Natural Language Processing Engine
    */
   app.route('/api/v1/nlp')
     .put(projects.nlpProjects, projects.update);
@@ -144,6 +144,13 @@ module.exports = function (app) {
 
 
 
+
+  app.route('/api/v1/projects/:projectId/upload')
+    .post(projects.parseFileUpload, projects.uploadProjectFiles);
+
+  app.route('/api/v1/projects/:projectId/:source/upload')
+    .post(projects.parseFileUpload, projects.uploadProjectFiles);
+  
   app.route('/api/v1/projects/:projectId/s3/upload')
     .post(projects.parseFileUpload, projects.uploadProjectFiles);
 
@@ -162,5 +169,7 @@ module.exports = function (app) {
 
   // Finish by binding the Project middleware
   app.param('projectId', projects.projectByID);
+
+  app.param('source', projects.source);
 
 };

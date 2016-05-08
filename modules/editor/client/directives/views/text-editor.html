@@ -6,15 +6,13 @@
       <h2>Editor</h2>
 
       <!--Icon Toggle that Shows/Hides Wysiwyg Editor-->
-      <span data-ng-show="!showWysiwyg" data-ng-click="initControls.initialize(); showWysiwyg=!showWysiwyg"><i class="fa fa-pencil"></i></span>
-      <span data-ng-click="showWysiwyg=!showWysiwyg" data-ng-show="showWysiwyg"><i class="fa fa-pencil"></i></span>
+      <span data-ng-click="showWysiwyg=!showWysiwyg"><i class="fa fa-pencil"></i></span>
     </header>
 
     <!--Froala Wysiwyg Text Editor, displayed when $scope.wysiwyg equals `true`-->
-    <section>
-      <div id="froala-sample-3" froala froala-init="initialize(initControls)" ng-model="projectText" data-ng-show="showWysiwyg"></div>
-    </section>
-
+    <div data-ng-show="showWysiwyg">
+      <textarea id="wysiwyg-editor" froala="froalaOptions" ng-model="projectText"></textarea>
+    </div>
 
     <!--Render Preview when wysiwyg is not displayed-->
     <section class="" data-ng-show="!showWysiwyg && projectText">
@@ -27,10 +25,10 @@
       <div class="row" data-ng-show="showWysiwyg">
         <div class="col-xs-12">
             <span class="pull-right">
-              <button data-ng-click="toggleEditFn(0)" class="btn btn-main grow btn-warning">Cancel</button>
+              <button data-ng-click="" class="btn btn-main grow btn-warning">Cancel</button>
             </span>
             <span class="pull-right">
-              <button type="submit" data-ng-click="submit(14)" class="btn btn-main grow">Save</button>
+              <button type="submit" data-ng-click="" class="btn btn-main grow">Save</button>
             </span>
         </div>
       </div>
