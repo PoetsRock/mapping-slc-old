@@ -4,18 +4,15 @@
 var mongoose = require('mongoose'),
   fs = require('fs'),
   path = require('path'),
+  util = require('util'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   Project = mongoose.model('Project'),
   multiparty = require('multiparty'),
-  util = require('util'),
   config = require(path.resolve('./config/config')),
   AlchemyAPI = require('alchemy-api'),
   projects = require('./projects.server.controller'),
   sanitizeHtml = require('sanitize-html'),
-//Promise = require('bluebird'),
-//fs = Promise.promisifyAll(require('fs')),
-//exports = Promise.promisifyAll(exports);
   AWS = require('aws-sdk'),
   s3Config = {
     keys: require('../../../../config/env/production.js'),
@@ -237,6 +234,11 @@ exports.projectByID = function (req, res, next, id) {
     });
 };
 
+
+exports.source = (req, res, next, id) => {
+  req.source = id;
+  next();
+};
 
 /**
  * Project middleware test
@@ -469,28 +471,14 @@ exports.updateFeaturedProjects = function (req, res) {
 exports.parseFileUpload = (req, res, next) => {
   // parse a file upload
   var form = new multiparty.Form();
-
   form.parse(req, function (err, fieldsObject, filesObject) {
-    if (err) {
-      // console.log('parseFileUpload callback `err`:\n', err, '\n\n');
-    }
-    // console.log('parseFileUpload callback `fieldsObject`:\n', fieldsObject, '\n\n');
-    // console.log('parseFileUpload callback `filesObject`:\n', filesObject, '\n\n');
-    // res.writeHead(200, {'content-type': 'text/plain'});
-    // res.write('received upload:\n\n');
-    // res.end(util.inspect({fields: fieldsObject, files: filesObject}));
-
-    if (!req.body) {
-      return req.body = {};
-    }
+    if (err) { console.log('parseFileUpload callback `err`:\n', err, '\n\n'); }
+    if (!req.body) { return req.body = {}; }
     req.body.data = { fields: fieldsObject, files: filesObject };
     req.body.dataAsStr = util.inspect({ fields: fieldsObject, files: filesObject });
-    // console.log('parseFileUpload callback `req.body`:\n', req.body, '\n\n');
     next();
   });
-
 };
-
 
 
 /**
@@ -618,7 +606,7 @@ exports.streamProjectDocuments = (req, res) => {
 
 
 
-/** now upload image to S3 */
+/** now upload document to S3 */
 
  let s3 = new AWS.S3(awsS3Config);
 
@@ -662,39 +650,18 @@ exports.streamProjectDocuments = (req, res) => {
  * @param res
  */
 exports.uploadProjectFiles = (req, res) => {
+  console.log('req.body.data.files[0]:\n', req.body.data.files[0], '\n');
 
-  var project = req.project;
-  var user = req.user;
+  let project = {};
+  if(req.project) {
+    project = req.project;
+  }
 
-  // for(var i = 0; )
-
-  // console.log('req:\n', req, '\n\n\n\n\n');
-  // console.log('\n\n\n\n\n:::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n\n\n');
-  // console.log('req.headers:\n', req.headers, '\n\n');
-  // console.log('req.project:\n', req.project, '\n\n');
-  // console.log('req.user:\n', req.user, '\n\n');
-  // console.log('req.body.data:\n', req.body.data, '\n\n');
-  // console.log('req.body.data.fields:\n', req.body.data.fields, '\n\n');
-  // console.log('req.body.data.fields[\'data[securityLevel]\']:\n', req.body.data.fields['data[securityLevel]'], '\n\n');
-  // console.log('req.body.data.fields:\n', req.body.data.fields['data'][securityLevel], '\n\n');
-  // console.log('req.body.data.files:\n', req.body.data.files, '\n\n');
-  //
-  // console.log('req.body.data.files.file[0].path:\n', req.body.data.files.file[0].path, '\n\n');
-  // console.log('req.body.data.files.file[0].headers:\n', req.body.data.files.file[0].headers, '\n\n');
-  // console.log('req.body.data.files.file[0].headers[\'content-type\']:\n', req.body.data.files.file[0].headers['content-type'], '\n\n');
-  // console.log('req.body.data.files.file[0].size:\n', req.body.data.files.file[0].size, '\n\n');
-  // console.log('req.body.data.files.file[0].originalFilename:\n', req.body.data.files.file[0].originalFilename, '\n\n');
-  //
-  // console.log('req.body.data.files.file[0]:\n', req.body.data.files.file[0], '\n\n');
-
-  // console.log('req.body.data.files.file[0].originalFilename:\n', req.body.data.files.file[0].originalFilename, '\n\n');
-
-  var file = req.body.data.files.file[0];
-  var filePath = req.body.data.files.file[0].path;
-  var headers = req.body.data.files.file[0].headers;
-  var fileName = req.body.data.files.file[0].originalFilename;
-  var type = req.body.data.files.file[0].headers['content-type'];
-  var aclLevel = req.body.data.fields['data[securityLevel]'];
+  let file = req.body.data.files.file[0],
+      filePath = req.body.data.files.file[0].path,
+      fileName = req.body.data.files.file[0].originalFilename,
+      type = req.body.data.files.file[0].headers['content-type'],
+      aclLevel = req.body.data.fields['data[securityLevel]'];
 
   if (/\s/g.test(fileName)) {
     fileName = fileName.replace(/\s/g, '_');
@@ -708,7 +675,11 @@ exports.uploadProjectFiles = (req, res) => {
     Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
     Bucket: s3Config.bucket
   };
+
   let fileStream = fs.createReadStream(filePath);
+
+
+  /** `s3obj`: {object} credentials and config needed for uploading directly to s3 without optimizing image  **/
   let s3obj = {
     header: { 'x-amz-decoded-content-length': file.size },
     ACL: aclLevel || 'private',
@@ -926,4 +897,12 @@ exports.getS3File = function (req, res) {
         });
     }
   });
+};
+
+
+exports.testWysiwyg = (req, res) => {
+  console.log('\n\n\nreq.body.data.files.file\n', req.body.data.files.file);
+  console.log('\n\n\nreq.body.data.files.file[0].path\n', req.body.data.files.file[0].path);
+  // res.send({ link: 'http://lorempixel.com/g/400/200/' });
+  res.send({ link: req.body.data.files.file[0].path });
 };

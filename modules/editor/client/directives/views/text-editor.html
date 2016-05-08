@@ -1,0 +1,72 @@
+<section data-ng-controller="TextEditorController" data-ng-init="">
+
+  <div class="text-editor">
+
+    <header>
+      <h2>Editor</h2>
+
+      <!--Icon Toggle that Shows/Hides Wysiwyg Editor-->
+      <span data-ng-click="showWysiwyg=!showWysiwyg"><i class="fa fa-pencil"></i></span>
+    </header>
+
+    <!--Froala Wysiwyg Text Editor, displayed when $scope.wysiwyg equals `true`-->
+    <div data-ng-show="showWysiwyg">
+      <textarea id="wysiwyg-editor" froala="froalaOptions" ng-model="projectText"></textarea>
+    </div>
+
+    <!--Render Preview when wysiwyg is not displayed-->
+    <section class="" data-ng-show="!showWysiwyg && projectText">
+      <h2>Project</h2>
+      <div froala-view="projectText"></div>
+    </section>
+
+    <!--Save & Cancel buttons, displayed when wysiwyg is displayed-->
+    <section>
+      <div class="row" data-ng-show="showWysiwyg">
+        <div class="col-xs-12">
+            <span class="pull-right">
+              <button data-ng-click="" class="btn btn-main grow btn-warning">Cancel</button>
+            </span>
+            <span class="pull-right">
+              <button type="submit" data-ng-click="" class="btn btn-main grow">Save</button>
+            </span>
+        </div>
+      </div>
+    </section>
+
+
+    <!--Wysiwyg content preview tabs, displayed when wysiwyg is displayed-->
+    <section class="" data-ng-show="showWysiwyg">
+      <md-content class="md-padding">
+        <md-tabs md-stretch-tabs class="">
+          <md-tab id="preview-text-tab">
+            <md-tab-label>Preview</md-tab-label>
+            <md-tab-body>
+              <div froala-view="projectText"></div>
+            </md-tab-body>
+          </md-tab>
+
+          <md-tab id="preview-code-tab">
+            <md-tab-label>Preview as Code</md-tab-label>
+            <md-tab-body>
+               <pre>
+                {{projectText}}
+              </pre>
+            </md-tab-body>
+          </md-tab>
+
+
+          <md-tab id="tab3">
+            <md-tab-label></md-tab-label>
+            <md-tab-body></md-tab-body>
+          </md-tab>
+
+        </md-tabs>
+
+      </md-content>
+    </section>
+
+
+  </div>
+
+</section>

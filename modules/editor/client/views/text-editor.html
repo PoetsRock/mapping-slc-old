@@ -1,0 +1,29 @@
+<div id="main-menu" class="main-menu">
+  <google-menu></google-menu>
+</div>
+
+<section class="content background" data-ng-controller="RandomMapController"
+         ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
+         data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
+
+  <section class="container">
+    <a ui-sref="home" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
+
+    <div class="main-content-outer">
+
+      <section class="main-content-inner">
+
+
+      <div class="row">
+        <div class="col-md-12">
+
+          <wysiwyg></wysiwyg>
+
+        </div>
+      </div>
+
+
+      </section>
+    </div>
+  </section>
+</section>
