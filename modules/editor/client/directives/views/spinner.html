@@ -1,0 +1,202 @@
+<!--<style>-->
+  <!--.loader{-->
+    <!--height: 100px;-->
+    <!--/*width: 20%;*/-->
+    <!--text-align: center;-->
+    <!--padding: 1em;-->
+    <!--margin: 0 auto 1em;-->
+    <!--display: block;-->
+    <!--vertical-align: top;-->
+  <!--}-->
+
+  <!--/*-->
+    <!--Set the color of the icon-->
+  <!--*/-->
+  <!--svg path,-->
+  <!--svg rect{-->
+    <!--fill: #023a31;-->
+  <!--}-->
+<!--</style>-->
+<!--<div class="loader loader&#45;&#45;style2" title="1">-->
+  <!--<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"-->
+     <!--width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">-->
+  <!--<path fill="#000" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">-->
+    <!--<animateTransform attributeType="xml"-->
+      <!--attributeName="transform"-->
+      <!--type="rotate"-->
+      <!--from="0 25 25"-->
+      <!--to="360 25 25"-->
+      <!--dur="0.6s"-->
+      <!--repeatCount="indefinite"/>-->
+    <!--</path>-->
+  <!--</svg>-->
+<!--</div>-->
+
+
+<!-------------------------------------------------------------------------------------->
+
+
+<style>
+  .sk-folding-cube {
+    margin: 20px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    -webkit-transform: rotateZ(45deg);
+    transform: rotateZ(45deg);
+  }
+
+  .sk-folding-cube .sk-cube {
+    float: left;
+    width: 50%;
+    height: 50%;
+    position: relative;
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+  .sk-folding-cube .sk-cube:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+    animation: sk-foldCubeAngle 2.4s infinite linear both;
+    -webkit-transform-origin: 100% 100%;
+    -ms-transform-origin: 100% 100%;
+    transform-origin: 100% 100%;
+  }
+  .sk-folding-cube .sk-cube2 {
+    -webkit-transform: scale(1.1) rotateZ(90deg);
+    transform: scale(1.1) rotateZ(90deg);
+  }
+  .sk-folding-cube .sk-cube3 {
+    -webkit-transform: scale(1.1) rotateZ(180deg);
+    transform: scale(1.1) rotateZ(180deg);
+  }
+  .sk-folding-cube .sk-cube4 {
+    -webkit-transform: scale(1.1) rotateZ(270deg);
+    transform: scale(1.1) rotateZ(270deg);
+  }
+  .sk-folding-cube .sk-cube2:before {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+  }
+  .sk-folding-cube .sk-cube3:before {
+    -webkit-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+  }
+  .sk-folding-cube .sk-cube4:before {
+    -webkit-animation-delay: 0.9s;
+    animation-delay: 0.9s;
+  }
+  @-webkit-keyframes sk-foldCubeAngle {
+    0%, 10% {
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      opacity: 0;
+    } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+      } 90%, 100% {
+          -webkit-transform: perspective(140px) rotateY(180deg);
+          transform: perspective(140px) rotateY(180deg);
+          opacity: 0;
+        }
+  }
+
+  @keyframes sk-foldCubeAngle {
+    0%, 10% {
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      opacity: 0;
+    } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+      } 90%, 100% {
+          -webkit-transform: perspective(140px) rotateY(180deg);
+          transform: perspective(140px) rotateY(180deg);
+          opacity: 0;
+        }
+  }
+</style>
+
+
+<div class="sk-folding-cube">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>
+</div>
+
+
+<!-------------------------------------------------------------------------------------->
+
+
+<!--<style>-->
+  <!--.spinner {-->
+    <!--margin: 100px auto;-->
+    <!--width: 50px;-->
+    <!--height: 40px;-->
+    <!--text-align: center;-->
+    <!--font-size: 10px;-->
+  <!--}-->
+
+  <!--.spinner > div {-->
+    <!--background-color: #333;-->
+    <!--height: 100%;-->
+    <!--width: 6px;-->
+    <!--display: inline-block;-->
+
+    <!-- -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;-->
+    <!--animation: sk-stretchdelay 1.2s infinite ease-in-out;-->
+  <!--}-->
+
+  <!--.spinner .rect2 {-->
+    <!-- -webkit-animation-delay: -1.1s;-->
+    <!--animation-delay: -1.1s;-->
+  <!--}-->
+
+  <!--.spinner .rect3 {-->
+    <!-- -webkit-animation-delay: -1.0s;-->
+    <!--animation-delay: -1.0s;-->
+  <!--}-->
+
+  <!--.spinner .rect4 {-->
+    <!-- -webkit-animation-delay: -0.9s;-->
+    <!--animation-delay: -0.9s;-->
+  <!--}-->
+
+  <!--.spinner .rect5 {-->
+    <!-- -webkit-animation-delay: -0.8s;-->
+    <!--animation-delay: -0.8s;-->
+  <!--}-->
+
+  <!--@-webkit-keyframes sk-stretchdelay {-->
+    <!--0%, 40%, 100% { -webkit-transform: scaleY(0.4) }-->
+    <!--20% { -webkit-transform: scaleY(1.0) }-->
+  <!--}-->
+
+  <!--@keyframes sk-stretchdelay {-->
+    <!--0%, 40%, 100% {-->
+      <!--transform: scaleY(0.4);-->
+      <!-- -webkit-transform: scaleY(0.4);-->
+    <!--}  20% {-->
+         <!--transform: scaleY(1.0);-->
+         <!-- -webkit-transform: scaleY(1.0);-->
+       <!--}-->
+  <!--}-->
+<!--</style>-->
+
+<!--<div class="spinner">-->
+  <!--<div class="rect1"></div>-->
+  <!--<div class="rect2"></div>-->
+  <!--<div class="rect3"></div>-->
+  <!--<div class="rect4"></div>-->
+  <!--<div class="rect5"></div>-->
+<!--</div>-->
