@@ -1,4 +1,3 @@
-<section data-ng-controller="HomeController">
 <section class="featured-projects">
   <div>
     <div class="text-center page-header">
@@ -6,26 +5,18 @@
     </div>
 
     <div class="row">
-
       <ul class="grid col-md-4" data-ng-repeat="featuredProject in featuredProjects"
           ng-mouseenter="showTitle=true" ng-mouseleave="showTitle=false">
-
-
         <a ui-sref="viewProject({projectId: featuredProject.id})">
           <div class="featured-label">
-            <!--desaturate-->
             <img class="img-responsive" data-ng-src="{{featuredProject.mainImgThumbnail}}"/>
             <div class="featured-projects-title">
                 <p>{{featuredProject.title}}</p>
             </div>
-
           </div>
         </a>
-
       </ul>
-
-
     </div>
+
   </div>
-</section>
 </section>

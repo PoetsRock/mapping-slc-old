@@ -1,20 +1,18 @@
 'use strict';
 
 angular.module('core').service('MarkerDataService', ['$http',
-  function ($http) {
+  function ($http, markerData) {
     // Project Marker Data Service
 
     this.getMarkerData = function () {
-      return $http.get('/api/v1/markerData').success(function (projects) {
-          //console.log('projects: \n', projects);
-          //for (var prop in projects) {
-          //    console.log('projects[prop].lng: \n', projects[prop].lng);
-          //}
-
+      return $http.get('/api/v1/markerData', { cache: true })
+        .then(function (projects) {
+          return projects.data;
         })
-        .error(function (error) {
+        .catch(function (error) {
           console.log('marker data error: \n', error);
         });
     };
+
   }
 ]);

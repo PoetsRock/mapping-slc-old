@@ -54,6 +54,7 @@ module.exports = {
         '//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
+        'public/lib/angular-local-storage/dist/angular-local-storage.min.js',
         'public/lib/mslc/angular-froala/src/js/froala_editor.min.js',
         'public/lib/classie/classie.js',
         'public/lib/moment/min/moment.js',
