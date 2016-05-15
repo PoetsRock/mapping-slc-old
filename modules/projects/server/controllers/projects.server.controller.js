@@ -1,34 +1,65 @@
 'use strict';
 
 
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
   fs = require('fs'),
   path = require('path'),
   util = require('util'),
   _ = require('lodash'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   Project = mongoose.model('Project'),
-  multiparty = require('multiparty'),
   config = require(path.resolve('./config/config')),
-  AlchemyAPI = require('alchemy-api'),
   projects = require('./projects.server.controller'),
-  sanitizeHtml = require('sanitize-html'),
-  AWS = require('aws-sdk'),
-  s3Config = {
-    keys: require('../../../../config/env/production.js'),
-    bucket: 'mapping-slc-file-upload',
-    region: 'us-west-1',
-    directory: {
-      project: 'project-directory',
-      user: 'user-directory',
-      admin: 'admin-directory'
-    }
-  },
-  s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com',
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  AlchemyAPI = require('alchemy-api'),
+  apiKeys = require('../../../../config/env/production.js'),
   crypto = require('crypto'),
   moment = require('moment'),
-  tinify = require('tinify'),
-  apiKeys = require('../../../../config/env/production.js');
+  Promise = require('bluebird'),
+  request = require('request'),
+  sanitizeHtml = require('sanitize-html');
+
+
+/**
+ * Project middleware for getProjectById
+ **/
+exports.projectById = function (req, res, next, id) {
+  Project.findById(id)
+    .populate('user')
+    .exec(function (err, project) {
+      if (err) return next(err);
+      if (!project) return next(new Error('Failed to load Project ' + id));
+      req.project = project;
+      next();
+    });
+};
+
+
+/**
+ * Middleware that return sourceId from url params
+ */
+exports.source = (req, res, next, id) => {
+  req.source = id;
+  next();
+};
+
+/**
+ * Middleware that return an imageId from the url params
+ */
+exports.imageId = (req, res, next, id) => {
+  req.imageId = id;
+  next();
+};
+
+
+/**
+ * Project authorization middleware
+ */
+exports.hasAuthorization = function (req, res, next) {
+  if (req.project.user.id !== req.user.id) {
+    return res.status(403).send('User is not authorized');
+  }
+  next();
+};
 
 
 /**
@@ -170,8 +201,8 @@ exports.list = function (req, res) {
 exports.listPublished = function (req, res) {
   //req.params
   Project.find({
-      'status': 'published'
-    })
+    'status': 'published'
+  })
     .sort('-created')
     .populate('user')
     .exec(function (err, projects) {
@@ -192,8 +223,8 @@ exports.listPublished = function (req, res) {
 exports.markerList = function (req, res) {
   //todo filter this response to contain just what's needed for markers
   Project.find({
-      'status': 'published'
-    })
+    'status': 'published'
+  })
     .sort('-created')
     .exec(function (err, projects) {
       if (err) {
@@ -204,61 +235,6 @@ exports.markerList = function (req, res) {
         res.jsonp(projects);
       }
     });
-};
-
-exports.findOneVideoId = function (req, res) {
-  Project.findById(req.body._id)
-    .exec(function (err, project) {
-      if (err) {
-        return next(err);
-      }
-      if (!project) {
-        return next(new Error('Failed to load project ' + id + 'associated with the requested video.')
-        )
-      }
-      res.vimeoId = project.vimeoId;
-    });
-};
-
-/**
- * Project middleware
- **/
-exports.projectByID = function (req, res, next, id) {
-  Project.findById(id)
-    .populate('user')
-    .exec(function (err, project) {
-      if (err) return next(err);
-      if (!project) return next(new Error('Failed to load Project ' + id));
-      req.project = project;
-      next();
-    });
-};
-
-
-exports.source = (req, res, next, id) => {
-  req.source = id;
-  next();
-};
-
-/**
- * Project middleware test
- */
-exports.middleWareTest = function (req, res, next) {
-  let project = _.extend(req.project, req.body);
-  project.testField = 'working';
-  req.project = project;
-  next();
-};
-
-
-/**
- * Project authorization middleware
- */
-exports.hasAuthorization = function (req, res, next) {
-  if (req.project.user.id !== req.user.id) {
-    return res.status(403).send('User is not authorized');
-  }
-  next();
 };
 
 
@@ -468,441 +444,48 @@ exports.updateFeaturedProjects = function (req, res) {
 };
 
 
-exports.parseFileUpload = (req, res, next) => {
-  // parse a file upload
-  var form = new multiparty.Form();
-  form.parse(req, function (err, fieldsObject, filesObject) {
-    if (err) { console.log('parseFileUpload callback `err`:\n', err, '\n\n'); }
-    if (!req.body) { return req.body = {}; }
-    req.body.data = { fields: fieldsObject, files: filesObject };
-    req.body.dataAsStr = util.inspect({ fields: fieldsObject, files: filesObject });
-    next();
-  });
-};
 
 
-/**
- * upload user profile image to Amazon S3
- */
+exports.googlePlacesData = (req, res) => {
+    var results = {};
+    var tempResults = [];
+    var query = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0&location=40.773,-111.902&radius=1000';
+    request(query, function (error, response, body) {
+      body = JSON.parse(body);
+      res.jsonp(body);
+      var pageToken = body['next_page_token'];
+      console.log('pageToken: ', pageToken);
+      console.log('body2: ', body);
+      results = body;
 
-exports.uploadProjectDocuments = (req, res) => {
-  let project = req.body.project;
-  let fileType = req.body.type;
-  let fileName = req.body.filename;
-  if(1 !== 1) {
-    fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
-  }
-  let path = s3Config.directory.project + '/' + project._id + '/' + fileName;
-  let readType = 'public-read';
-  let expiration = moment().add(5, 'm').toDate(); //15 minutes
-  let s3Policy = {
-    'expiration': expiration,
-    'conditions': [{
-      'bucket': s3Config.bucket
-    },
-      ['starts-with', '$key', path],
-      {
-        'acl': readType
-      },
-      {
-        'success_action_status': '201'
-      },
-      ['starts-with', '$Content-Type', req.body.type],
-      ['content-length-range', 2048, 10485760], //min and max
-    ]
-  };
-
-  let stringPolicy = JSON.stringify(s3Policy);
-  let base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
-
-  // sign policy
-  let signature = crypto.createHmac('sha1', config.S3_SECRET)
-    .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
-
-  let credentials = {
-    url: s3Url,
-    fields: {
-      key: path,
-      AWSAccessKeyId: config.S3_ID,
-      acl: readType,
-      policy: base64Policy,
-      signature: signature,
-      'Content-Type': fileType,
-      success_action_status: 201
-    }
-  };
-
-  if(fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-    fileType = 'application/docx'
-  }
-  /** save document URLs to MongoDb */
-    let newFile = {
-      fileUrl : 'https://s3-us-west-1.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
-      fileName : fileName,
-      fileType : fileType,
-      fileSize : req.body.size
-    };
-
-  project.fileUrls = project.fileUrls || [];
-  project.fileUrls.push(newFile);
-  Project.update( {_id: project._id}, { fileUrls: project.fileUrls }, { runValidators: true }, function(err, response) {
-    if(err) {
-      let errMessage = {
-        message: 'Error dating database for project file upload',
-        error: err
-      };
-      console.log('errMessage:\n', errMessage, '\n\n');
-      res.jsonp(errMessage);
-    }
-    console.log('::::: file upload update db successful::: var `response`:\n', response, '\n\n');
-    res.jsonp(credentials);
-  });
-};
-
-
-
-
-/**
- *
- * Uploads documents to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
- *
- * @param req
- * @param res
- */
-exports.streamProjectDocuments = (req, res) => {
-
-  var project = req.project;
-
-  var file = req.body.data.files.file[0];
-  var filePath = req.body.data.files.file[0].path;
-  var fileName = req.body.data.files.file[0].originalFilename;
-  var type = req.body.data.files.file[0].headers['content-type'];
-  var aclLevel = req.body.data.fields['data[securityLevel]'];
-
-  if (/\s/g.test(fileName)) {
-    fileName = fileName.replace(/\s/g, '_');
-  }
-
-  /** config aws s3 config settings, file object, and create a new instance of the s3 service */
-  let awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket
-  };
-  let fileStream = fs.createReadStream(filePath);
-  let s3obj = {
-    header: { 'x-amz-decoded-content-length': file.size },
-    ACL: aclLevel || 'private',
-    region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket,
-    ContentLength: file.size,
-    ContentType: type,
-    Body: fileStream
-    // ServerSideEncryption: 'AES256'
-  };
-
-
-
-/** now upload document to S3 */
-
- let s3 = new AWS.S3(awsS3Config);
-
- s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
-   .on('httpUploadProgress', function(evt) { console.log(evt); })
-   .send(function(err, data) {
-     if(err) {
-       console.log('s3 upload error message:\n', err);
-     }
-     console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
-
-     /** now save main document url and ETag to mongoDb */
-     let updatedProject = {
-       fileUrls: data.Location,
-       fileEtags: data.ETag
-     };
-     Project.update(updatedProject);
-
-     /** now respond with a success message */
-     // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
-
-     let response = {
-       message: 's3 file upload was successful',
-       s3obj: s3obj
-     };
-     res.jsonp(response);
-
-   });
-
-};
-
-
-
-
-
-/**
- *
- * Uploads images and files to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
- *
- * @param req
- * @param res
- */
-exports.uploadProjectFiles = (req, res) => {
-  console.log('req.body.data.files[0]:\n', req.body.data.files[0], '\n');
-
-  let project = {};
-  if(req.project) {
-    project = req.project;
-  }
-
-  let file = req.body.data.files.file[0],
-      filePath = req.body.data.files.file[0].path,
-      fileName = req.body.data.files.file[0].originalFilename,
-      type = req.body.data.files.file[0].headers['content-type'],
-      aclLevel = req.body.data.fields['data[securityLevel]'];
-
-  if (/\s/g.test(fileName)) {
-    fileName = fileName.replace(/\s/g, '_');
-  }
-
-  /** config aws s3 config settings, file object, and create a new instance of the s3 service */
-  let awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket
-  };
-
-  let fileStream = fs.createReadStream(filePath);
-
-
-  /** `s3obj`: {object} credentials and config needed for uploading directly to s3 without optimizing image  **/
-  let s3obj = {
-    header: { 'x-amz-decoded-content-length': file.size },
-    ACL: aclLevel || 'private',
-    region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket,
-    ContentLength: file.size,
-    ContentType: type,
-    Body: fileStream
-    // ServerSideEncryption: 'AES256'
-  };
-
-  /** now call on function that compresses image and also creates cropped thumbnail version */
-  tinify.key = config.TINY_PNG_KEY;
-  tinify.key = config.TINY_PNG_KEY;
-  let source = tinify.fromFile(filePath);
-  source.store({
-    service: 's3',
-    aws_access_key_id: config.S3_ID,
-    aws_secret_access_key: config.S3_SECRET,
-    region: 'us-west-1',
-    path: s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName
-  });
-
-  source.resize({
-      method: 'cover',
-      width: 150,
-      height: 150
-    })
-    .store({
-      service: 's3',
-      aws_access_key_id: config.S3_ID,
-      aws_secret_access_key: config.S3_SECRET,
-      region: 'us-west-1',
-      path: s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + 'thumb_' + fileName
-    });
-
-  /** now save the image URLs to mongoDb */
-  let updatedProject = {
-    mainImageUrl: 'https://' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
-    mainImageThumbnailUrl: 'https://' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + 'thumb_' + fileName
-  };
-  Project.update(updatedProject);
-
-
-  let response = 's3 file upload was successful';
-  res.send(response);
-};
-
-
-/**
- *
- * Uploads images and files to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
- *
- * @param {object} image
- */
-let _createAndSaveThumbnail = (image) => {
-
-// let optimizedThumbnail = _createThumbnail(image);
-
-  /** now upload thumbnail image to S3 */
-// s3obj.Body = optimizedThumbnail;
-// s3.upload({ Bucket: s3ThumbObj.Bucket, Key: s3ThumbObj.Key, Body: s3ThumbObj.Body })
-//   .send(function(err, data) {
-//     if(err) {
-//       console.log('s3 upload image thumbnail error message:\n', err);
-//     }
-//     let mainImageThumbnail = data;
-//     console.log('s3 upload project data var `imageResponse`:\n', mainImageThumbnail);
-//     return mainImageThumbnail;
-//   });
-
-
-};
-
-/**
- *
- * Compress an image before uploading file
- *
- * @param {string} imageUrl
- * @returns {string} optimizedImg
- */
-let _compressImage = (imageUrl) => {
-  tinify.key = config.tinyPngKey;
-  fs.readFile(imageUrl, function (err, sourceData) {
-    if (err) {
-      throw err;
-    }
-    tinify.fromBuffer(sourceData).toBuffer(function (err, optimizedImg) {
-      if (err) {
-        throw err;
-      }
-      return optimizedImg;
-    });
-  });
-};
-
-
-/**
- *
- * Create a cropped thumbnail image and compress it before uploading files
- *
- * @param image
- * @ returns {string}
- */
-let _createThumbnail = (image) => {
-
-};
-
-
-
-
-
-
-
-/**
- * get pre-signed URL from AWS S3
- *
- * req.params.id {string} - user._id
- * req.params.imageId {string} - file name with extension
- */
-exports.getS3SignedUrl = (req, res) => {
-  console.log('hereh hereh herehe her herhe rehr eh r');
-  // var params = { Bucket: 'myBucket', Key: 'myKey' };
-
-  var awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1'
-  };
-  var s3 = new AWS.S3(awsS3Config);
-  var fileToGet = req.params.fileId;
-  var userIdBucket = req.params.userId;
-  var fileData = {
-    fileToGet: fileToGet,
-    userIdBucket: userIdBucket,
-    params: {
-      Bucket: s3Config.bucket + '/' + s3Config.directory.user + '/' + userIdBucket,
-      Key: fileToGet
-    }
-  };
-  // var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
-  // var userProfileImage = pathToLocalDisk + fileToGet;
-
-  s3.getSignedUrl('getObject', fileData.params,
-    (err, url) => {
-      if(err) {
-        res.status(400).send({
-          message: 'Error',
-          error: err
-        })
-      }
-      console.log('The URL is: ', url);
-      res.status(200).send({
-        message: 'Success: URL is availble for 15 minutes',
-        url: url
-      })
+      var secondQuery = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?pagetoken=' + pageToken + '&key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0';
+      console.log('secondQuery: ', secondQuery);
+      request(secondQuery, function (error, response, body) {
+        console.log('body2: ', body);
+        tempResults = results.push(body);
+        console.log('final results: ', results);
+      });
     });
 };
 
-/**
- * get file from AWS S3
- *
- * req.params.id {string} - user._id
- * req.params.imageId {string} - file name with extension
- */
 
-exports.getS3File = function (req, res) {
-  var awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1'
+exports.getApiKeys = (req, res) => {
+
+  var environment = null;
+  if (process.env.NODE_ENV === 'production') {
+    environment = process.env;
+  } else {
+    environment = require('../../../../config/env/local-development.js').FRONT_END;
+  }
+  var publicKeys = {
+    MAPBOX_KEY: environment.MAPBOX_KEY,
+    MAPBOX_SECRET: environment.MAPBOX_SECRET,
+
+    HERE_KEY: environment.HERE_KEY,
+    HERE_SECRET: environment.HERE_SECRET,
+
+    CENSUS_KEY: environment.CENSUS_KEY
   };
-  var s3 = new AWS.S3(awsS3Config);
-  var fileToGet = req.params.fileId;
-  var userIdBucket = req.params.userId;
-  var fileData = {
-    fileToGet: fileToGet,
-    userIdBucket: userIdBucket,
-    params: {
-      Bucket: s3Config.bucket + '/' + s3Config.directory.user + '/' + userIdBucket,
-      Key: fileToGet
-    }
-  };
-  var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
-  var userProfileImage = pathToLocalDisk + fileToGet;
-  //var fileType = '';
-
-
-  s3.getObject(fileData.params, function (err, callback) {
-    //require('string_decoder');
-    if (err) {
-      console.log('err:\n', err);
-      res.send({
-        message: 'ERROR, yo: ' + err
-      })
-    } else {
-      // var imageAsBase64Array = callback.Body.toString('base64');
-      // var imageAsUtf8 = callback.Body.toString('Utf8');
-
-      // console.log('callback.Body:\n', callback.Body, '\n\n\n');
-      // console.log('userProfileImage:\n', userProfileImage, '\n\n\n');
-
-      fs.writeFile(userProfileImage, callback.Body, 'base64',
-        (err) => {
-          if (err) {
-            throw err;
-          }
-          res.status(200).send({
-            message: 'Success: File Delivered:\n'
-            // fullResponse: callback,
-            // imageAsBase64Array: imageAsBase64Array,
-            // imageAsUtf8: imageAsUtf8
-          });
-        });
-    }
-  });
-};
-
-
-exports.testWysiwyg = (req, res) => {
-  console.log('\n\n\nreq.body.data.files.file\n', req.body.data.files.file);
-  console.log('\n\n\nreq.body.data.files.file[0].path\n', req.body.data.files.file[0].path);
-  // res.send({ link: 'http://lorempixel.com/g/400/200/' });
-  res.send({ link: req.body.data.files.file[0].path });
+  res.jsonp(publicKeys);
+  
 };

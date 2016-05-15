@@ -56,12 +56,19 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
     $scope.toggleId = 0;
 
     $scope.toggleEditFn = function (editNum) {
-      $scope.toggleEdit = !$scope.toggle;
+      //todo console logs are to evaluate a possible bug - the same code (that's currenlty commented out) caused a bug in the `ProjectsController`  `$scope.toggle` in the line `$scope.toggleEdit = !$scope.toggle;` was undefined in projects controller ::  `$scope.toggleEdit = !$scope.toggleEdit;` solved the issue in the projects controller
+      console.log('$scope.toggleEditFn - ');
+      console.log('`editNum`:', editNum);
+      console.log('`$scope.toggle`:', $scope.toggle);
+      console.log('`$scope.toggleEdit`:', $scope.toggleEdit);
+      // $scope.toggleEdit = !$scope.toggle;
+      $scope.toggleEdit = !$scope.toggleEdit;
       $scope.toggleId = editNum;
     };
 
     $scope.toggleEditAllFn = function () {
-      $scope.toggleEdit = !$scope.toggle;
+      // $scope.toggleEdit = !$scope.toggle;
+      $scope.toggleEdit = !$scope.toggleEdit;
       $scope.toggleId = editNum;
     };
 

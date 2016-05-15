@@ -1,8 +1,8 @@
 'use strict';
 
 // Admins controller
-angular.module('admins').controller('AdminsController', ['$scope', 'd3', '$stateParams', '$location', 'Authentication', 'Projects', 'UserData', 'Contacts', 'AdminAuthService',
-  function ($scope, d3, $stateParams, $location, Authentication, Projects, UserData, Contacts, AdminAuthService) {
+angular.module('admins').controller('AdminsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', 'UserData', 'Contacts', 'AdminAuthService',
+  function ($scope, $stateParams, $location, Authentication, Projects, UserData, Contacts, AdminAuthService) {
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
 
@@ -116,44 +116,6 @@ angular.module('admins').controller('AdminsController', ['$scope', 'd3', '$state
     };
 
 
-    //featured projects --- either a service injected into core or in core ctrl
-
-
-    //
-    // /**
-    //  * Find existing Project and Contributor's user id
-    //  */
-    // $scope.adminFindOneProject = function () {
-    //   // $scope.project = Projects.get({
-    //   Projects.get({ projectId: $stateParams.projectId },
-    //     function (project) {
-    //       $scope.project = project;
-    //       // console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
-    //       console.log(' ::: $scope.findOne()  :::  var `$scope.project.user._id`:', $scope.project.user._id);
-    //       // console.log(' ::: $scope.findOne()  :::  var `$scope.user._id`        :', $scope.user._id);
-    //       if (project.vimeoId) {
-    //         $scope.vimeo = {
-    //           video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),
-    //           width: $window.innerWidth / 1.75,
-    //           height: $window.innerHeight / 1.75
-    //         };
-    //       }
-    //       if (project.soundCloudId) {
-    //         $scope.soundCloud = {
-    //           audio: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + project.soundCloudId + '&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true',
-    //           width: $window.innerWidth / 1.75,
-    //           height: $window.innerHeight / 1.75
-    //         };
-    //       }
-    //       if (project.imageGallery) {
-    //         for (var i = 0; i < project.imageGallery.length; i++) {
-    //           $scope.images.push(project.imageGallery[i]);
-    //         }
-    //       }
-    //       getUserFavoriteStoriesFn($scope.user.favorites, $scope.project.id);
-    //     });
-    //
-    // };
     
   }
 ]);

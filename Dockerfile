@@ -1,8 +1,8 @@
 # Build:
-# docker build -t mapping-slc .
+# docker build -t meanjs/mean .
 #
 # Run:
-# docker run -it mapping-slc
+# docker run -it meanjs/mean
 #
 # Compose:
 # docker-compose up -d
@@ -18,8 +18,13 @@ RUN apt-get install -yqq wget aptitude htop vim git traceroute dnsutils curl ssh
 RUN apt-get install -y ruby
 RUN gem install sass
 
+# http://stackoverflow.com/questions/21926425/docker-having-trouble-running-npm-install-after-creating-a-new-user
+# ADD package.json /tmp/package.json
+# RUN cd /tmp && npm install
+# RUN mkdir -p /src && cp -a /tmp/node_modules /src
+
 # Install NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_4.4.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 RUN sudo apt-get install -yq nodejs
 
 # Install MEAN.JS Prerequisites

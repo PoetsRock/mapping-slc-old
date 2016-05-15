@@ -11,7 +11,7 @@ angular.module('editor').value('froalaConfig', {
 
       // when `false`, turns off debugging for prod
       // https://docs.angularjs.org/guide/production
-      $compileProvider.debugInfoEnabled(false);
+      $compileProvider.debugInfoEnabled(true);
     }
   ])
 

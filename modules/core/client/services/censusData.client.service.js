@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('core').service('CensusDataService', ['$http', 'ApiKeys',
-  function ($http, ApiKeys) {
+  function ($http, ApiKeys, $scope) {
 
+    $scope.censusDataTractLayer = true;
+    
     //Census Data for Population Stats service logic
 
     var censusDataKey = 'P0010001';
