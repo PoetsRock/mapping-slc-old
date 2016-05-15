@@ -33,3 +33,19 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
 md-tabs.md-default-theme .md-tab, md-tabs .md-tab:hover{
     background-color: rgba(0,0,0,0.1);
 }
+
+
+
+/* buttons */
+
+a.md-button.md-default-theme.md-raised:not([disabled]):hover, a.md-button.md-raised:not([disabled]):hover, .md-button.md-default-theme.md-raised:not([disabled]):hover, .md-button.md-raised:not([disabled]):hover {
+    color: #023A31;
+    background-color: rgba(0, 45, 0, 0.4);
+    border-color: #000000;
+}
+
+a.md-button.md-default-theme.md-raised:not([disabled]), a.md-button.md-raised:not([disabled]), .md-button.md-default-theme.md-raised:not([disabled]), .md-button.md-raised:not([disabled]) {
+    color: #ffffff;
+    background-color: #023A31;
+    text-transform: capitalize;
+}

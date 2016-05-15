@@ -22,6 +22,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.project = {};
     $scope.previewImages = [];
 
+    $scope.showWysiwyg1 = false;
 
     $scope.init = function () {
       $scope.publishedProjectsFn();
@@ -494,9 +495,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.toggleEdit = false;
     $scope.toggleId = 0;
 
-    $scope.toggleEditFn = function (editNum) {
-      console.log('$scope.toggleEditFn  var `editNum`:', editNum);
-      $scope.toggleEdit = !$scope.toggle;
+    $scope.toggleEditFn = function (editNum, isEdit, originalData) {
+      if(isEdit === 'edit') {
+        //originalData.value = $scope.project.storySummary;
+        console.log('isEdit: ', isEdit);
+        console.log('originalData: ', originalData);
+        console.log('$scope.project.storySummary: ', $scope.project.storySummary);
+      }
+      if(isEdit === 'cancel') {
+        $scope.project.story = originalData;
+        console.log('isEdit: ', isEdit);
+        console.log('originalData: ', originalData);
+        console.log('$scope.project.storySummary: ', $scope.project.storySummary);
+      }
+      $scope.toggleEdit = !$scope.toggleEdit;
       $scope.toggleId = editNum;
     };
 

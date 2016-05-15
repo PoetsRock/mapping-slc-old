@@ -83,6 +83,6 @@ module.exports = function (app) {
   app.use('/', router);
 
   // Finish by binding the Project middleware
-  app.param('projectId', projects.projectByID);
+  app.param('projectId', projects.projectById);
 
 };

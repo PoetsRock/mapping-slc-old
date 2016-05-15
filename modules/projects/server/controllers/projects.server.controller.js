@@ -22,7 +22,7 @@ let mongoose = require('mongoose'),
 /**
  * Project middleware for getProjectById
  **/
-exports.projectByID = function (req, res, next, id) {
+exports.projectById = function (req, res, next, id) {
   Project.findById(id)
     .populate('user')
     .exec(function (err, project) {
@@ -39,6 +39,14 @@ exports.projectByID = function (req, res, next, id) {
  */
 exports.source = (req, res, next, id) => {
   req.source = id;
+  next();
+};
+
+/**
+ * Middleware that return an imageId from the url params
+ */
+exports.imageId = (req, res, next, id) => {
+  req.imageId = id;
   next();
 };
 

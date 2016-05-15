@@ -16,11 +16,11 @@ var mongoose = require('mongoose'),
   s3Config = {
     bucket: 'mapping-slc-file-upload',
     region: 'us-west-1',
-    directory: {
-      project: 'project-directory',
-      user: 'user-directory',
-      admin: 'admin-directory'
-    }
+    directory: [
+      { name: 'project', path: 'project-directory' },
+      { name: 'user', path: 'user-directory' },
+      { name: 'admin', path: 'admin-directory' }
+    ]
   },
   s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com',
   crypto = require('crypto'),
@@ -54,8 +54,6 @@ exports.parseFileUpload = (req, res, next) => {
 };
 
 
-
-
 exports.findOneVideoId = function (req, res) {
   Project.findById(req.body._id)
     .exec(function (err, project) {
@@ -71,28 +69,22 @@ exports.findOneVideoId = function (req, res) {
 };
 
 
-
-
-
-
-
-
 /**
  *
- * upload project documents to Amazon S3
+ * create AWS credentials for front end upload to S3
  *
  * @param req
  * @param res
  *
  */
-exports.uploadProjectDocuments = (req, res) => {
+exports.createUploadCredentials = (req, res) => {
   let project = req.body.project;
   let fileType = req.body.type;
   let fileName = req.body.filename;
   if (1 !== 1) {
     fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
   }
-  let path = s3Config.directory.project + '/' + project._id + '/' + fileName;
+  let path = 'project-directory/' + project._id + '/' + fileName;
   let readType = 'public-read';
   let expiration = moment().add(5, 'm').toDate(); //15 minutes
   let s3Policy = {
@@ -137,7 +129,7 @@ exports.uploadProjectDocuments = (req, res) => {
   }
   /** save document URLs to MongoDb */
   let newFile = {
-    fileUrl: 'https://s3-us-west-1.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
+    fileUrl: 'https://s3-us-west-1.amazonaws.com/' + s3Config.bucket + '/' + 'project-directory/' + project._id + '/' + fileName,
     fileName: fileName,
     fileType: fileType,
     fileSize: req.body.size
@@ -189,7 +181,7 @@ exports.streamProjectDocuments = (req, res) => {
     accessKeyId: config.S3_ID,
     secretAccessKey: config.S3_SECRET,
     region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+    Key: 'project-directory/' + project._id + '/' + fileName,
     Bucket: s3Config.bucket
   };
   let fileStream = fs.createReadStream(filePath);
@@ -197,7 +189,7 @@ exports.streamProjectDocuments = (req, res) => {
     header: { 'x-amz-decoded-content-length': file.size },
     ACL: aclLevel || 'private',
     region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+    Key: 'project-directory/' + project._id + '/' + fileName,
     Bucket: s3Config.bucket,
     ContentLength: file.size,
     ContentType: type,
@@ -206,10 +198,11 @@ exports.streamProjectDocuments = (req, res) => {
   };
 
 
+
   /** now upload document to S3 */
   let s3 = new AWS.S3(awsS3Config);
 
-  s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Body: s3obj.Body })
+  s3.upload({ Bucket: s3obj.Bucket, Key: s3obj.Key, Metadata: {}, Body: s3obj.Body })
     .on('httpUploadProgress', function (evt) {
       console.log(evt);
     })
@@ -273,18 +266,21 @@ exports.uploadProjectImages = (req, res) => {
     accessKeyId: config.S3_ID,
     secretAccessKey: config.S3_SECRET,
     region: 'us-west-1',
-    Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+    Key: 'project-directory/' + project._id + '/' + fileName,
     Bucket: s3Config.bucket
   };
 
 
+  // let metaData
+  // Metadata: metaData,
+
   if (req.source !== 'wysiwyg') {
 
     let configObj = {
+      file: fs.createReadStream(filePath),
       projectId: project._id,
-      fileName,
-      filePath,
-      filePathThumb
+      fileName: fileName,
+      filePathThumb: filePathThumb
     };
 
     _imageOptimizationAndThumb(configObj)
@@ -294,8 +290,8 @@ exports.uploadProjectImages = (req, res) => {
 
     /** configure response object */
     let updatedImageAndThumb = {
-      mainImageUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
-      mainImageThumbnailUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + 'thumb_' + fileName
+      mainImageUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + 'project-directory/' + project._id + '/' + fileName,
+      mainImageThumbnailUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + 'project-directory/' + project._id + '/' + 'thumb_' + fileName
     };
 
     /** now save the image URLs to mongoDb */
@@ -315,7 +311,7 @@ exports.uploadProjectImages = (req, res) => {
       header: { 'x-amz-decoded-content-length': file.size },
       ACL: file.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
       region: 'us-west-1',
-      Key: s3Config.directory.project + '/' + project._id + '/' + fileName,
+      Key: 'project-directory/' + project._id + '/' + fileName,
       Bucket: s3Config.bucket,
       ContentLength: file.size,
       ContentType: type,
@@ -338,7 +334,7 @@ exports.uploadProjectImages = (req, res) => {
 
         /** now save main document url and ETag to mongoDb */
         let updatedProject = {
-          mainImageUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory.project + '/' + project._id + '/' + fileName,
+          mainImageUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + 'project-directory/' + project._id + '/' + fileName,
           fileUrls: data.Location,
           fileEtags: data.ETag
         };
@@ -357,7 +353,8 @@ exports.uploadProjectImages = (req, res) => {
 let _imageOptimizationAndThumb = (configObj) => {
 
   return _compressImage(configObj.projectId, configObj.fileName, configObj.filePath)
-    .then(() => {
+    .then(response => {
+      console.log('response'. response);
       return _createThumbnail(configObj.projectId, configObj.fileName, configObj.filePathThumb);
     });
 };
@@ -387,7 +384,7 @@ let _createThumbnail = (projectId, fileName, filePath) => {
       aws_access_key_id: config.S3_ID,
       aws_secret_access_key: config.S3_SECRET,
       region: 'us-west-1',
-      path: s3Config.bucket + '/' + s3Config.directory.project + '/' + projectId + '/thumbs/' + 'thumb_' + fileName
+      path: s3Config.bucket + '/' + 'project-directory/' + projectId + '/thumbs/' + 'thumb_' + fileName
     });
 };
 
@@ -395,41 +392,139 @@ let _createThumbnail = (projectId, fileName, filePath) => {
  *
  * * Compress an image before uploading file
  *
- * @param {string} projectId
+ * @param {string} dirDestination - name of the directory for upload path, either `project` or `user`
+ * @param {string} sourceId - the id of either the project or user
  * @param {string} fileName
  * @param {string} filePath
  *
  * @returns {string} optimizedImg
  * @private
  */
-let _compressImage = (projectId, fileName, filePath) => {
+let _compressImage = (dirDestination, sourceId, fileName, filePath) => {
   tinify.key = config.TINY_PNG_KEY;
+  
   let source = tinify.fromFile(filePath);
-  // console.log('here!!!');
-  // console.log('projectId', projectId);
-  // console.log('fileName', fileName);
-  // console.log('filePath', filePath);
-  // console.log('config.S3_ID  ::: config.S3_SECRET\n', config.S3_ID, ' ::: ', config.S3_SECRET);
-  // console.log('s3Config', s3Config);
+  let bufferSource = tinify.fromBuffer(filePath);
+  var sourceIdBucket = req.params.sourceId || req.params.userId || req.params.projectId;
+  let directory = s3Config.directory.find(x => { return x.name === dirDestination })
+  .then(response => {
+    return response.path;
+  });
+  console.log('s3 upload directory:::::::::::::::', directory);
   return source.store({
     service: 's3',
     aws_access_key_id: config.S3_ID,
     aws_secret_access_key: config.S3_SECRET,
     region: 'us-west-1',
-    path: s3Config.bucket + '/' + s3Config.directory.project + '/' + projectId + '/' + fileName
+    path: s3Config.bucket + '/' + directory + '/' + sourceIdBucket + '/' + fileName
   });
 };
+
+
+
+
+
+
+
+
+exports.getImageByImageId = (req, res) => {
+
+};
+
+
+exports.getImagesByProjectId = (req, res) => {
+
+  console.log(':::::::::::::::   getImagesByProjectId   :::::::::::::::');
+  console.log('req.params:::::::::::::::\n', req.params, '\n\n');
+
+  var awsS3Config = {
+    accessKeyId: config.S3_ID,
+    secretAccessKey: config.S3_SECRET,
+    region: 'us-west-1'
+  };
+  /** now upload document to S3 */
+  let s3 = new AWS.S3(awsS3Config);
+
+  // req.params
+  //req.params.projectId
+
+
+  // var sourceIdBucket = req.params.sourceId || req.params.userId || req.params.projectId;
+  // let directory = s3Config.directory.find(x => { return x.name === dirDestination })
+  // .then(response => {
+  //   return response.path;
+  // });
+  // console.log('s3 upload directory:::::::::::::::', directory, '\n\n');
+
+//
+//  https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/561978272356222b1ceb5a7c/thumbs/test.png
+
+  let sourceBucket = 'project-directory';
+//Bucket: s3Config.bucket + '/' + sourceBucket + '/' + req.params.projectId,
+
+  var thumbParams = {
+    Bucket: 'mapping-slc-file-upload',
+    Prefix: sourceBucket + '/' + req.params.projectId + '/thumbs',
+    EncodingType: 'url'
+  };
+
+  var imageParams = {
+    Bucket: 'mapping-slc-file-upload',
+    Prefix: sourceBucket + '/' + req.params.projectId,
+    EncodingType: 'url'
+  };
+
+  let listObjects = Promise.promisifyAll(s3);
+
+
+  listObjects.listObjectsV2Async(imageParams)
+  .then(response => {
+    console.log(':::::::::::::::response::::::::::::::::\n', response, '\n\n');
+
+
+    let root = response.Contents.Name + response.Contents.Prefix;
+    return response.Contents.map(x => {
+      let projectImage = {};
+      projectImage.image = {};
+      projectImage.image.url = root + x.Key;
+      projectImage.image.eTag = x.ETag;
+    });
+  })
+  .then(projectImages => {
+    listObjects.listObjectsV2Async(imageParams)
+    .then(response => {
+      console.log(':::::::::::::::response::::::::::::::::\n', response, '\n\n');
+
+    let projectThumbs = response.Contents.map(x => {
+      let projectImage = {};
+      projectImage.thumb = {};
+      projectImage.thumb.url = root + x.Key;
+      projectImage.thumb.eTag = x.ETag;
+    });
+  })
+  .catch(err => {
+    console.log(':::::::::::::::err:::::::::::::::::\n', err);
+    res.send(err);
+  });
+  });
+
+
+  };
+
+
+
 
 
 /**
  * get pre-signed URL from AWS S3
  *
- * req.params.id {string} - user._id
+ * req.params.id {string} - the unique ID of the requesting source - either `projectId` or `userId`
  * req.params.imageId {string} - file name with extension
  */
 exports.getS3SignedUrl = (req, res) => {
-  console.log('hereh hereh herehe her herhe rehr eh r');
-  // var params = { Bucket: 'myBucket', Key: 'myKey' };
+
+  console.log(':::::::::::::::   getS3SignedUrl   :::::::::::::::');
+  console.log('req.params:::::::::::::::\n', req.params, '\n\n');
 
   var awsS3Config = {
     accessKeyId: config.S3_ID,
@@ -438,32 +533,56 @@ exports.getS3SignedUrl = (req, res) => {
   };
   var s3 = new AWS.S3(awsS3Config);
   var fileToGet = req.params.fileId;
-  var userIdBucket = req.params.userId;
+  var sourceIdBucket = req.params.sourceId || req.params.userId || req.params.projectId;
+  let directory = s3Config.directory.find(x => { return x.name === dirDestination })
+  .then(response => {
+    return response.path;
+  });
+  console.log('s3 upload directory:::::::::::::::', directory, '\n\n');
   var fileData = {
     fileToGet: fileToGet,
-    userIdBucket: userIdBucket,
+    sourceIdBucket: sourceIdBucket,
     params: {
-      Bucket: s3Config.bucket + '/' + s3Config.directory.user + '/' + userIdBucket,
+      Bucket: s3Config.bucket + '/' + directory + '/' + sourceIdBucket,
       Key: fileToGet
     }
   };
-  // var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
-  // var userProfileImage = pathToLocalDisk + fileToGet;
 
-  s3.getSignedUrl('getObject', fileData.params,
-    (err, url) => {
-      if (err) {
-        res.status(400).send({
-          message: 'Error',
-          error: err
-        })
-      }
-      console.log('The URL is: ', url);
+  let getSignedUrl = Promise.promisify(s3.getSignedUrl(method, params));
+
+  console.log('getSignedUrl promisified:::::::::::::::\n', getSignedUrl, '\n\n');
+
+  getSignedUrl('getObject', fileData.params)
+  .then(response => {
+      console.log('The URL is: ', response);
       res.status(200).send({
-        message: 'Success: URL is availble for 15 minutes',
-        url: url
-      })
+        message: 'Success: URL is available for 15 minutes',
+        url: response
+      });
+  })
+  .catch(err => {
+    console.log('Error getting file: ', err);
+    console.log('err.statusCode: ', err.statusCode);
+    res.status(400).send({
+      message: 'Error getting file',
+      error: err
     });
+  });
+
+    // s3.getSignedUrl('getObject', fileData.params,
+    // (err, url) => {
+    //   if (err) {
+    //     res.status(400).send({
+    //       message: 'Error',
+    //       error: err
+    //     })
+    //   }
+    //   console.log('The URL is: ', url);
+    //   res.status(200).send({
+    //     message: 'Success: URL is availble for 15 minutes',
+    //     url: url
+    //   });
+    // });
 };
 
 /**
@@ -524,6 +643,13 @@ exports.getS3File = function (req, res) {
     }
   });
 };
+
+
+
+exports.deleteImageByImageId = (req, res) => {
+
+};
+
 
 
 // exports.testWysiwyg = (req, res) => {

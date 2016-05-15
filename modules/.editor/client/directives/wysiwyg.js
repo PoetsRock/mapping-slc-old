@@ -5,7 +5,7 @@ angular.module('editor').directive('wysiwyg', function () {
     restrict: 'EA',
     require: '?ngModel',
     scope: false,
-    templateUrl: '/modules/editor/client/directives/views/text-editor.html',
+    templateUrl: '/modules/editor/client/directives/views/wysiwyg-editor.html',
     controller: function ($scope, $element, localStorageService) {
 
       let projectId = '572d234048a67ec647f2741d';

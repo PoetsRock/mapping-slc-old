@@ -1,7 +1,7 @@
 web:
   restart: always
   build: .
-  container_name: mapping-slc
+  container_name: meanjs
   command: npm start
   links:
    - db
@@ -12,10 +12,10 @@ web:
   environment:
    - NODE_ENV=development
   volumes:
-   - ./:/opt/mapping-slc
-   - /opt/mapping-slc/node_modules
-   - /opt/mapping-slc/public
-   - /opt/mapping-slc/uploads
+   - ./:/opt/mean.js
+   - /opt/mean.js/node_modules
+   - /opt/mean.js/public
+   - /opt/mean.js/uploads
 db:
   image: mongo:3.2
   container_name: db_1
