@@ -16,13 +16,17 @@ let mongoose = require('mongoose'),
   moment = require('moment'),
   Promise = require('bluebird'),
   request = require('request'),
+  shortId = require('shortid'),
   sanitizeHtml = require('sanitize-html');
-
+  let count = 0;
 
 /**
  * Project middleware for getProjectById
  **/
 exports.projectById = function (req, res, next, id) {
+  count =+ count;
+  console.log('`count`: ', count);
+  console.log('here !!!!!  `id`: ', id);
   Project.findById(id)
     .populate('user')
     .exec(function (err, project) {
@@ -60,6 +64,16 @@ exports.hasAuthorization = function (req, res, next) {
   }
   next();
 };
+
+
+
+
+exports.generateShortId = (req, res) => {
+  let createShortId = shortId.generate();
+  console.log('shortId: ', createShortId);
+  return res.send(createShortId);
+};
+
 
 
 /**
@@ -397,6 +411,7 @@ let updateNewFeaturedProject = function (project) {
       }
     });
 };
+
 
 
 /**

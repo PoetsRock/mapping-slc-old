@@ -11,6 +11,7 @@ var _ = require('lodash'),
   path = require('path');
 
 module.exports = function (grunt) {
+
   // Project Configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -23,6 +24,16 @@ module.exports = function (grunt) {
       },
       prod: {
         NODE_ENV: 'production'
+      }
+    },
+    depcheck: {
+      //checks for unused dependencies -- https://github.com/depcheck/grunt-depcheck
+      options: {
+        // Task-specific options go here
+      },
+      files: {
+        // Target-specific file lists and/or options go here
+        'src': ['.']
       }
     },
     watch: {
@@ -229,6 +240,7 @@ module.exports = function (grunt) {
   // Load NPM tasks
   require('load-grunt-tasks')(grunt);
   grunt.loadNpmTasks('grunt-protractor-coverage');
+  grunt.loadNpmTasks('grunt-depcheck');
 
   // Make sure upload directory exists
   grunt.task.registerTask('mkdir:upload', 'Task that makes sure upload directory exists.', function () {
@@ -288,6 +300,9 @@ module.exports = function (grunt) {
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'less', 'eslint', 'csslint']);
 
+  //run depcheck to check for missing or unused dependencies
+  grunt.registerTask('depCheck', ['depcheck']);
+
   // Lint project files and minify them into two production files.
   grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
 
@@ -300,7 +315,7 @@ module.exports = function (grunt) {
   grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);
 
   // Run the project in development mode
-  grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
+  grunt.registerTask('default', ['env:dev', 'depCheck', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
 
   // Run the project in debug mode
   grunt.registerTask('debug', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);

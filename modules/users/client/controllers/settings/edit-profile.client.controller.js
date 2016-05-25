@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'UserData', '$stateParams', 'Authentication', 'AdminAuthService', 'UtilsService',
-  function ($scope, $http, $location, Users, UserData, $stateParams, Authentication, AdminAuthService, UtilsService) {
+angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'UserData', '$stateParams', 'Authentication', 'AdminAuthService', 'UtilsService', '$state',
+  function ($scope, $http, $location, Users, UserData, $stateParams, Authentication, AdminAuthService, UtilsService, $state) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
 
@@ -9,6 +9,27 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
     // Provides logic for the css in the forms
     UtilsService.cssLayout();
+
+
+
+
+    $scope.userToEditFn = function() {
+      if($state.current.name === 'admin.adminEditProject') {
+        console.log('$scope.project: ', $scope.project);
+        console.log('$scope.project.user._id: ', $scope.project.user._id);
+        $scope.userToEdit = UserData.get({
+          userId: $scope.project.user._id
+        });
+      } else {
+        $scope.userToEdit = UserData.get({
+          userId: $state.params.userId
+        });
+      }
+    };
+
+
+
+
 
 
     // user fn to update a user profile

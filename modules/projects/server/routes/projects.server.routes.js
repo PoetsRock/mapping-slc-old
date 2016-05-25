@@ -76,13 +76,20 @@ module.exports = function (app) {
 
   app.route('/api/v1/projects/:projectId/featured/true')
     .put(projects.updateFeaturedProjects);
-
-
-
+  
+  
+  //Generate an Id Using ShortId
+  app.route('/api/v1/shortId')
+  .get(projects.generateShortId);
+  
+  
+  
   //mount the router on the app
   app.use('/', router);
 
   // Finish by binding the Project middleware
   app.param('projectId', projects.projectById);
+  app.param('imageId', projects.imageId);
+  app.param('source', projects.source);
 
 };

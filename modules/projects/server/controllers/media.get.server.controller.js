@@ -23,9 +23,16 @@ var mongoose = require('mongoose'),
     ]
   },
   s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com',
+  awsS3Config = {
+    accessKeyId: config.S3_ID,
+    secretAccessKey: config.S3_SECRET,
+    region: 'us-west-1'
+  },
+  s3 = new AWS.S3(awsS3Config),
   crypto = require('crypto'),
   moment = require('moment'),
   tinify = require('tinify');
+
 
 
 exports.findOneVideoId = function (req, res) {
@@ -44,90 +51,179 @@ exports.findOneVideoId = function (req, res) {
 
 
 exports.getImageByImageId = (req, res) => {
+  console.log(':::::::::::::::   getImagesByProjectId  :::::::::::::::');
+  Project.findOne({
+    query: { _id: req.params.projectId },
+    fields: {
+      mainImageData: 1,
+      imageGalleryData: 1
+    }
+  }, (err, response) => {
+    if(err) {
+      console.log(':::::::::::::::   getImagesByImageId  ERROR!!!! :::::::::::::::\n', err);
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    }
+    console.log(':::::::::::::::   getImagesByImageId  RESPONSE :::::::::::::::\n', response);
 
+    let image = response.imageGalleryData.find(x => {
+      return x.response === req.params.imageId;
+    });
+
+    console.log(':::::::::::::::   getImagesByImageId  image :::::::::::::::\n', image);
+
+    return res.body = image;
+  });
+};
+
+/**
+ *
+ * Queries Mongo for Image URLs for full images and thumbs
+ *
+ * @param req
+ * @param res
+ */
+exports.getImagesByProjectId = (req, res) => {
+  Project.find({ _id: req.params.projectId }, { mainImageData: 1, imageGallery: 1 },
+    (err, response) => {
+    if(err) {
+      console.error('error :: getImagesByProjectId :: error\n', err);
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    }
+    console.log(':::::::::::::::   getImagesByProjectId  RESPONSE :::::::::::::::\n', response);
+    return res.json(response);
+  });
 };
 
 
-exports.getImagesByProjectId = (req, res) => {
+/**
+ *
+ * Queries Mongo and returns the s3 URLs for all documents associated with a project
+ *
+ * @param req
+ * @param res
+ */
+exports.getDocumentsByProjectId = (req, res) => {
+  Project.find({ _id: req.params.projectId }, { fileGallery: 1 },
+    (err, response) => {
+      if(err) {
+        console.error('error :: getImagesByProjectId :: error\n', err);
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+      }
+      console.log(':::::::::::::::   getImagesByProjectId  RESPONSE :::::::::::::::\n', response);
+      return res.json(response);
+    });
+};
 
-  console.log(':::::::::::::::   getImagesByProjectId   :::::::::::::::');
-  console.log('req.params:::::::::::::::\n', req.params, '\n\n');
-
-  var awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1'
-  };
-  /** now upload document to S3 */
-  let s3 = new AWS.S3(awsS3Config);
-
-  // req.params
-  //req.params.projectId
 
 
-  // var sourceIdBucket = req.params.sourceId || req.params.userId || req.params.projectId;
-  // let directory = s3Config.directory.find(x => { return x.name === dirDestination })
-  // .then(response => {
-  //   return response.path;
-  // });
-  // console.log('s3 upload directory:::::::::::::::', directory, '\n\n');
+/**
+ *
 
-//
-//  https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/561978272356222b1ceb5a7c/thumbs/test.png
+ {
+	"Version": "2012-10-17",
+	"Id": "Policy1458446607575",
+	"Statement": [
+		{
+			"Sid": "AllowPublicRead",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": "*"
+			},
+			"Action": [
+				"s3:PutObject",
+				"s3:PutObjectAcl",
+				"s3:GetObject"
+			],
+			"Resource": "arn:aws:s3:::mapping-slc-file-upload/*"
+		}
+	]
+}
+
+ */
+
+exports.getDefaultImageByProjectId = (req, res) => {
+  console.log(':::::::::::::::   getDefaultImageByProjectId   :::::::::::::::');
+  Project.find({
+    query: { _id: req.params.projectId },
+    fields: {
+      mainImageData: 1
+    }
+  }, (err, response) => {
+    if(err) {
+      console.log(':::::::::::::::   getDefaultImageByProjectId  ERROR!!!! :::::::::::::::\n', err);
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    }
+    console.log(':::::::::::::::   getDefaultImageByProjectId  RESPONSE :::::::::::::::\n', response);
+    return res.body = response;
+  });
+};
+
+
+exports.getS3ImageData = (req, res) => {
+  console.log(':::::::::::::::   getImagesByProjectId   get media route:::::::::::::::');
 
   let sourceBucket = 'project-directory';
-//Bucket: s3Config.bucket + '/' + sourceBucket + '/' + req.params.projectId,
 
-  var thumbParams = {
-    Bucket: 'mapping-slc-file-upload',
-    Prefix: sourceBucket + '/' + req.params.projectId + '/thumbs',
-    EncodingType: 'url'
-  };
+  // let thumbParams = {
+  //   Bucket: 'mapping-slc-file-upload',
+  //   Prefix: sourceBucket + '/' + req.params.projectId + '/thumbs',
+  //   EncodingType: 'url'
+  // };
 
-  var imageParams = {
+  let imageParams = {
     Bucket: 'mapping-slc-file-upload',
     Prefix: sourceBucket + '/' + req.params.projectId,
     EncodingType: 'url'
   };
 
-  console.log('params:::::::::::::::\n', params, '\n\n');
-
-  let listObjects = Promise.promisifyAll(s3);
-
-
-  listObjects.listObjectsV2Async(imageParams)
-  .then(response => {
-    console.log(':::::::::::::::response::::::::::::::::\n', response, '\n\n');
-
-
-    let root = response.Contents.Name + response.Contents.Prefix;
-    return response.Contents.map(x => {
-      let projectImage = {};
-      projectImage.image = {};
-      projectImage.image.url = root + x.Key;
-      projectImage.image.eTag = x.ETag;
-    });
-  })
-  .then(projectImages => {
-    listObjects.listObjectsV2Async(imageParams)
-    .then(response => {
-      console.log(':::::::::::::::response::::::::::::::::\n', response, '\n\n');
-
-      let projectThumbs = response.Contents.map(x => {
-        let projectImage = {};
-        projectImage.thumb = {};
-        projectImage.thumb.url = root + x.Key;
-        projectImage.thumb.eTag = x.ETag;
-      });
-    })
-    .catch(err => {
-      console.log(':::::::::::::::err:::::::::::::::::\n', err);
-      res.send(err);
-    });
-
-
+  s3.listObjectsV2(imageParams, (err, images) => {
+    if(err) {
+      console.log(':::::::::::::::`ERR RRRRRRR`::::::::::::::::\n', err, '\n\n');
+      res.json({ message: 'success', errorMessage: err });
+    }
+    console.log(':::::::::::::::`images`::::::::::::::::\n', images, '\n\n');
+    res.json({ message: 'success', imageData: images });
   });
+
 };
+
+
+exports.getS3BucketAcl = (req, res) => {
+  let sourceBucket = 'project-directory';
+  let bucketParams = {
+    Bucket: 'mapping-slc-file-upload'
+  };
+
+  s3.getBucketAcl(bucketParams, (err, bucketAclLevel) => {
+    if(err) {
+      console.log(':::::::::::::::`ERR RRRRRRR`::::::::::::::::\n', err, '\n\n');
+      res.json({ message: 'success', errorMessage: err });
+    }
+    console.log(':::::::::::::::`bucketAclLevel`::::::::::::::::\n', bucketAclLevel, '\n\n');
+    res.json({ message: 'success', bucketAclLevel: bucketAclLevel });
+  });
+
+};
+
+exports.getS3ObjectAcl = (req, res) => {
+
+  let objectParams = {
+    Bucket: 'mapping-slc-file-upload',
+    Key: 'project-directory/561978272356222b1ceb5a7c/Cathedral_of_the_Madeleine.png'
+  };
+
+  s3.getObjectAcl(objectParams, (err, objectAclLevel) => {
+    if(err) {
+      console.log(':::::::::::::::`ERR RRRRRRR`::::::::::::::::\n', err, '\n\n');
+      res.json({ message: 'success', errorMessage: err });
+    }
+    console.log(':::::::::::::::`objectAclLevel`::::::::::::::::\n', objectAclLevel, '\n\n');
+    res.json({ message: 'success', objectAclLevel: objectAclLevel });
+  });
+
+};
+
+
 
 
 /**
@@ -138,15 +234,6 @@ exports.getImagesByProjectId = (req, res) => {
  */
 exports.getS3SignedUrl = (req, res) => {
 
-  console.log(':::::::::::::::   getS3SignedUrl   :::::::::::::::');
-  console.log('req.params:::::::::::::::\n', req.params, '\n\n');
-
-  var awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1'
-  };
-  var s3 = new AWS.S3(awsS3Config);
   var fileToGet = req.params.fileId;
   var sourceIdBucket = req.params.sourceId || req.params.userId || req.params.projectId;
   let directory = s3Config.directory.find(x => {
@@ -155,7 +242,6 @@ exports.getS3SignedUrl = (req, res) => {
   .then(response => {
     return response.path;
   });
-  console.log('s3 upload directory:::::::::::::::', directory, '\n\n');
   var fileData = {
     fileToGet: fileToGet,
     sourceIdBucket: sourceIdBucket,
@@ -166,8 +252,6 @@ exports.getS3SignedUrl = (req, res) => {
   };
 
   let getSignedUrl = Promise.promisify(s3.getSignedUrl(method, params));
-
-  console.log('getSignedUrl promisified:::::::::::::::\n', getSignedUrl, '\n\n');
 
   getSignedUrl('getObject', fileData.params)
   .then(response => {
@@ -185,37 +269,16 @@ exports.getS3SignedUrl = (req, res) => {
       error: err
     });
   });
-
-  // s3.getSignedUrl('getObject', fileData.params,
-  // (err, url) => {
-  //   if (err) {
-  //     res.status(400).send({
-  //       message: 'Error',
-  //       error: err
-  //     })
-  //   }
-  //   console.log('The URL is: ', url);
-  //   res.status(200).send({
-  //     message: 'Success: URL is availble for 15 minutes',
-  //     url: url
-  //   });
-  // });
 };
 
 /**
- * get file from AWS S3
+ * download file from AWS S3
  *
  * req.params.id {string} - user._id
  * req.params.imageId {string} - file name with extension
  */
 
 exports.getS3File = (req, res) => {
-  var awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1'
-  };
-  var s3 = new AWS.S3(awsS3Config);
   var fileToGet = req.params.fileId;
   var userIdBucket = req.params.userId;
   var fileData = {
@@ -228,11 +291,8 @@ exports.getS3File = (req, res) => {
   };
   var pathToLocalDisk = 'modules/users/client/img/profile/uploads/';
   var userProfileImage = pathToLocalDisk + fileToGet;
-  //var fileType = '';
-
 
   s3.getObject(fileData.params, function (err, callback) {
-    //require('string_decoder');
     if (err) {
       console.log('err:\n', err);
       res.send({
