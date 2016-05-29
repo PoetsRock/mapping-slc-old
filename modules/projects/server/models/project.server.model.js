@@ -16,15 +16,21 @@ var ImageGallerySchema = new Schema({
   thumbImageType: String,
   imageSize: Number,
   imageType: String,
+  imageExt: String,
+  imageTag: Array,
   imageName: String,
   isDefaultImage: Boolean,
+  imageHash: String,
+  imageS3Key: String,
   metadata: Object
 });
 
 var DocumentGallerySchema = new Schema({
   documentName: String,
   documentSize: Number,
+  documentTag: Array,
   documentType: String,
+  documentExt: String,
   documentIcon: String,
   documentUrl: String,
   metadata: Object
@@ -188,6 +194,7 @@ var ProjectSchema = new Schema({
     thumbImageType: String,
     imageSize: Number,
     imageType: String,
+    imageExt: String,
     imageName: String,
     metadata: Object
   },
@@ -214,7 +221,7 @@ var ProjectSchema = new Schema({
 
   documentGallery: [DocumentGallerySchema],
 
-  Modified: [ModifiedSchema]
+  modified: [ModifiedSchema]
 
 });
 

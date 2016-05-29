@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Id": "Policy1458446607575",
+  "Statement": [
+    {
+      "Sid": "AllowPublicRead",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::mapping-slc-file-upload/*",
+      "Condition":{
+        "StringLike":{"aws:Referer":[
+          "http://www.mappingslc.org/*","http://mappingslc.org/*",
+          "http://www.mappingslc.com/*","http://mappingslc.com/*",
+          "http://localhost:3000/*"
+        ]}
+      }
+    }
+  ]
+}

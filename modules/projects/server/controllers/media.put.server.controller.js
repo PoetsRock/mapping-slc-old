@@ -1,27 +1,52 @@
 'use strict';
 
-let mongoose = require('mongoose'),
-  fs = require('fs'),
-  path = require('path'),
-  _ = require('lodash'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  Project = mongoose.model('Project'),
-  multiparty = require('multiparty'),
-  config = require(path.resolve('./config/config')),
-  Promise = require('bluebird'),
-  AWS = require('aws-sdk'),
-  s3Config = {
-    bucket: 'mapping-slc-file-upload', region: 'us-west-1',
-    directory: [
-      { name: 'project', path: 'project-directory' },
-      { name: 'user', path: 'user-directory' },
-      { name: 'admin', path: 'admin-directory' }
-    ]
-  },
-  shortId = require('shortid'),
-  tinify = Promise.promisifyAll(require('tinify'));
+let Promise = require('bluebird'),
+    mongoose = require('mongoose'),
+    fs = require('fs'),
+    path = require('path'),
+    _ = require('lodash'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    multiparty = require('multiparty'),
+    config = require(path.resolve('./config/config')),
+    AWS = require('aws-sdk'),
+    shortId = require('shortid'),
+    moment = require('moment'),
+    mediaUtilities = require('./utilities.js');
+
+// console.log('mongoose.connections.db:\n', mongoose.connections[0].db);
+
+let s3Config = {
+  bucket: 'mapping-slc-file-upload',
+  region: 'us-west-1',
+  directory: [
+    { name: 'admin', path: 'admin-directory' },
+    { name: 'project', path: 'project-directory' },
+    { name: 'user', path: 'user-directory' }
+  ]
+};
+/** config aws s3 config settings, file object, and create a new instance of the s3 service */
+let awsS3Config = {
+  accessKeyId: config.S3_ID,
+  secretAccessKey: config.S3_SECRET,
+  region: 'us-west-1'
+};
+
+let tinify = Promise.promisifyAll(require('tinify'));
+let s3 = new AWS.S3(awsS3Config);
+Promise.promisifyAll(s3);
+// Promise.promisifyAll(mongoose);
+mongoose.Promise = Promise;
+
+let Project = mongoose.model('Project');
 
 
+
+/**
+ *
+ * @param configObj
+ * @returns {*}
+ * @private
+ */
 let _imageOptimizationAndThumb = (configObj) => {
   return _compressImage(configObj.file)
   .then(response => {
@@ -109,45 +134,97 @@ exports.parseFileUpload = (req, res, next) => {
     };
     next();
   }));
-  // next();
 };
 
-exports.configMainObj = (req, res, next) => {
-  let file = req.body.data.files.file[0];
-  file.fileId = shortId.generate();
-  
-  if (/\s/g.test(file.originalFilename)) {
-    file.originalFilename = fileName.replace(/\s/g, '_');
+
+
+exports.configFileData = (req, res, next) => {
+  let fileData = {
+    file: req.body.data.files.file[0],
+    path: req.body.data.files.file[0].path,
+    name: req.body.data.files.file[0].originalFilename,
+    type: req.body.data.files.file[0].headers['content-type'],
+    size: req.body.data.files.file[0].size,
+    fileId: shortId.generate(),
+    isDefaultImage: req.body.default || false,
+    imageTags: req.body.data.files.file[0].tags || [],
+    aclLevel: req.body.data.fields['data[securityLevel]'] || 'read-only'
+  };
+
+  fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
+
+  //todo refactor to make immutable object
+  if (/\s/g.test(fileData.name)) {
+    fileData.name = fileData.name.replace(/\s/g, '_');
   }
-  let imageFile = fs.createReadStream(filePath);
-  let s3Obj = new Object({
-    header: { 'x-amz-decoded-content-length': file.size },
-    ACL: file.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
+  req.body.fileData = fileData;
+  next();
+};
+
+
+exports.configS3Obj = (req, res, next) => {
+  let fileData = req.body.fileData;
+
+  //todo refactor to allow this to be a variable passed in on the req obj
+  let s3Directory = s3Config.directory[1].path;
+
+  let imageFileStream = fs.createReadStream(fileData.path);
+
+  let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Directory + '/' + req.params.projectId;
+
+  fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
+  fileData.thumbImageUrl = imageUrlRoot + '/thumb_' + fileData.fileId + '.' + fileData.fileExt;
+
+  fileData.s3Obj = new Object({
+    header: { 'x-amz-decoded-content-length': fileData.size },
+    // ACL: 'read-only' || fileData.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
     region: 'us-west-1',
-    Key: 'project-directory/' + project._id + '/' + fileName,
+    Key: s3Directory + '/' + req.params.projectId + '/' + fileData.fileId + '.' + fileData.fileExt,
     Bucket: s3Config.bucket,
-    ContentLength: file.size,
-    ContentType: type,
-    Body: imageFile,
+    ContentLength: fileData.size,
+    ContentType: fileData.type,
+    Body: imageFileStream,
     Metadata: {
-      imageId: fileId,
-      linkedThumbUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + 'project-directory/' + project._id + '/' + fileName + '/thumbs'
+      imageId: fileData.fileId,
+      imageType: fileData.type,
+      imageExt: fileData.fileExt,
+      imageTag: fileData.imageTags.toString(),
+      imageName: fileData.name,
+      isDefault: fileData.isDefaultImage.toString() || 'false',
     }
   });
-  req.body.s3Obj = s3Obj;
+  req.body.fileData = fileData;
   next();
 };
 
+exports.configMongoObj = (req, res, next) => {
+  let fileData = req.body.fileData;
+  /** now configure object to update on database */
+  let currentAdminId = '5611ca9493e8d4af5022bc17';
 
-exports.configWysiwygObj = (req, res, next) => {
-  req.body.s3Obj.aclLevel = 'read-only';
-  req.body.s3Obj.Key = 'project-directory/' + project._id + '/' + fileName;
-  req.body.s3Obj.Metadata = {
-    linkedThumbUrl: 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + 'project-directory/' + project._id + '/' + fileName + '/thumbs'
+  let fieldsToUpdate = {
+    $addToSet: {
+      imageGallery: {
+        imageUrl: fileData.fullImageUrl ,
+        imageId: fileData.fileId,
+        thumbImageUrl: fileData.thumbImageUrl,
+        thumbImageId: 'thumb_' + fileData.fileId,
+        imageSize: fileData.size,
+        imageType: fileData.type,
+        imageExt: fileData.fileExt,
+        imageName: fileData.name,
+        imageTag: fileData.tags,
+        isDefaultImage: fileData.isDefaultImage
+      },
+      modified: {
+        modifiedBy: currentAdminId,
+        modifiedAt: moment.utc(Date.now())
+      }
+    }
   };
+  req.body.fieldsToUpdate = fieldsToUpdate;
   next();
 };
-
 
 /**
  *
@@ -157,181 +234,34 @@ exports.configWysiwygObj = (req, res, next) => {
  * @param res
  */
 exports.uploadProjectImages = (req, res) => {
-  let project = {};
-  if (req.project) {
-    project = req.project;
-  }
-  
-  let file = req.body.data.files.file[0],
-    filePath = file.path,
-    fileName = file.originalFilename,
-    type = file.headers['content-type'],
-    fileId = shortId.generate();
-  
-  if (req.source === 'wysiwyg') {
-    file.aclLevel = 'read-only'
-  }
-  if (/\s/g.test(fileName)) {
-    fileName = fileName.replace(/\s/g, '_');
-  }
-  
-  let fileData = {
-    file: req.body.data.files.file[0],
-    path: req.body.data.files.file[0].path,
-    name: req.body.data.files.file[0].originalFilename,
-    type: req.body.data.files.file[0].headers['content-type'],
-    size: req.body.data.files.file[0].size,
-    fileId: shortId.generate(),
-    isDefaultImage: req.body.default || false
-  };
-  
-  /** config aws s3 config settings, file object, and create a new instance of the s3 service */
-  let awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1',
-    Key: 'project-directory/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket
-  };
-  
-  let imageFile = fs.createReadStream(filePath);
+  let fileData = req.body.fileData;
+  let fieldsToUpdate = req.body.fieldsToUpdate;
 
-  let imageUrlRoot = 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/project-directory/' + project._id;
-  let fullImageUrl = imageUrlRoot + '/' + fileName;
-  let thumbImageUrl = imageUrlRoot + '/thumb_' + fileName;
-
-  let s3Obj = new Object({
-    header: { 'x-amz-decoded-content-length': file.size },
-    ACL: 'READ' || file.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
-    region: 'us-west-1',
-    Key: 'project-directory/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket,
-    ContentLength: file.size,
-    ContentType: type,
-    Body: imageFile,
-    Metadata: {
-      imageId: fileId,
-      linkedThumbUrl: thumbImageUrl
-    }
-  });
-  
-  /** create new instance of S3 */
-  let s3 = new AWS.S3(awsS3Config);
-  
   /** upload image to S3 */
-  s3.upload({ Bucket: s3Obj.Bucket, Key: s3Obj.Key, Metadata: s3Obj.Metadata, Body: s3Obj.Body })
-  .on('httpUploadProgress', evt => {
-    console.log('upload in progress: `evt`:\n', evt);
-  })
-  .send((err, uploadedImage) => {
-    if (err) {
-      console.log('s3 ERRor on UPLOAD :: `err`:\n', err);
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    }
-    return uploadedImage;
-  });
-  
-  /** now configure object to update on database */
-  // let imageUrlRoot = 'https://s3-' + awsS3Config.region + '.amazonaws.com/' + s3Config.bucket + '/project-directory/' + project._id;
-  // let fullImageUrl = imageUrlRoot + '/' + fileName;
-  // let thumbImageUrl = imageUrlRoot + '/thumb_' + fileName;
-  
-  // let s3ObjClone = Object.create(s3Obj);
-  // delete s3ObjClone.Body;
-  // delete fileData.file;
+  let s3Params = { Bucket: fileData.s3Obj.Bucket, Key: fileData.s3Obj.Key, Metadata: fileData.s3Obj.Metadata, Body: fileData.s3Obj.Body };
 
-  let currentAdminId = 'chris_456';
+  return s3.uploadAsync(s3Params)
+    .then(uploadedImage => {
+      fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
 
+      /** now save the image URLs to mongoDb */
+      let query = Project.findOneAndUpdate(
+        { _id: req.params.projectId },
+        fieldsToUpdate,
+        { new: true }
+      ).exec();
 
-  let fieldsToUpdate = {
-    $addToSet: {
-      imageGallery: {
-        imageUrl: fullImageUrl,
-        imageId: fileData.fileId,
-        thumbImageUrl: thumbImageUrl,
-        thumbImageId: 'thumb_' + fileData.fileId,
-        imageSize: fileData.size,
-        imageType: fileData.type,
-        imageName: fileData.name,
-        isDefaultImage: fileData.isDefaultImage,
-        metadata: s3Obj.Metadata
-      },
-      modified: {
-        modifiedBy: currentAdminId,
-        modifiedAt: Date.now()
-      }
-    }
-  };
-
-  if (fileData.isDefaultImage || !project.mainImageData.imageUrl) {
-    fieldsToUpdate.mainImageData = {
-      imageUrl: fullImageUrl,
-      imageId: fileData.fileId,
-      thumbImageUrl: thumbImageUrl,
-      thumbImageId: 'thumb_' + fileData.fileId,
-      imageSize: fileData.size,
-      imageType: fileData.type,
-      imageName: fileData.name,
-      metadata: s3Obj.Metadata
-    };
-    console.log('fieldsToUpdate::::::::::::::::\n', fieldsToUpdate);
-  }
-
-
-  /** now save the image URLs to mongoDb */
-  Project.findOneAndUpdate(
-    { _id: project._id },
-    fieldsToUpdate,
-    { new: true },
-    ((err, response) => {
-      if (err) {
-        console.error('\n\nERROR updating mongo:::::::::::::::::::::::::::::::::::\n', err, '\n\n');
+      query.then(response => {
+        /** now send response to front end */
+        return res.jsonp({ link: fileData.fullImageUrl });
+      })
+      .catch(err => {
+        console.error('\n\nERROR updating Mongo:\n', err);
         return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-      }
+      });
 
-      /** now send response to front end */
-      let responseObj = { link: fullImageUrl };
-      console.log('responseObj::::::::::::::::\n', responseObj);
-      return res.jsonp(responseObj);
-    }));
-  
+  });
 };
-
-
-// { $addToSet: {
-//   imageGallery: {
-//     imageUrl: fullImageUrl,
-//       imageId: fileData.fileId,
-//       thumbImageUrl: thumbImageUrl,
-//       thumbImageId: 'thumb_' + fileData.fileId,
-//       imageSize: fileData.size,
-//       imageType: fileData.type,
-//       imageName: fileData.name,
-//       isDefaultImage: fileData.isDefaultImage,
-//       metadata: s3Obj.Metadata
-//   },
-//   modified: {
-//     modifiedBy: currentAdminId,
-//       modifiedAt: Date.now()
-//   }
-// }
-//   mainImageData: {
-//     imageUrl: fullImageUrl,
-//       imageId: fileData.fileId,
-//       thumbImageUrl: thumbImageUrl,
-//       thumbImageId: 'thumb_' + fileData.fileId,
-//       imageSize: fileData.size,
-//       imageType: fileData.type,
-//       imageName: fileData.name,
-//       metadata: s3Obj.Metadata
-//   }},
-
-// "mainImageData" : {
-//   "thumbImageId" : "r1gFmQA5z_thumb",
-//     "thumbImageUrl" : "https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/561978272356222b1ceb5a7c/thumbs/222.jpg",
-//     "imageId" : "r1gFmQA5z",
-//     "imageUrl" : "https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/project-directory/561978272356222b1ceb5a7c/222.jpg"
-// },
 
 /**
  *
@@ -370,13 +300,13 @@ exports.streamProjectDocuments = (req, res) => {
   }
   
   /** config aws s3 config settings, file object, and create a new instance of the s3 service */
-  let awsS3Config = {
-    accessKeyId: config.S3_ID,
-    secretAccessKey: config.S3_SECRET,
-    region: 'us-west-1',
-    Key: 'project-directory/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket
-  };
+    // let awsS3Config = {
+    //   accessKeyId: config.S3_ID,
+    //   secretAccessKey: config.S3_SECRET,
+    //   region: 'us-west-1',
+    //   Key: 'project-directory/' + project._id + '/' + fileName,
+    //   Bucket: s3Config.bucket
+    // };
   let fileStream = fs.createReadStream(filePath);
   let s3Obj = {
     header: { 'x-amz-decoded-content-length': file.size },
@@ -389,10 +319,7 @@ exports.streamProjectDocuments = (req, res) => {
     Body: fileStream
     // ServerSideEncryption: 'AES256'
   };
-  
-  
-  /** now upload document to S3 */
-  let s3 = new AWS.S3(awsS3Config);
+
   
   s3.upload({ Bucket: s3Obj.Bucket, Key: s3Obj.Key, Metadata: {}, Body: s3Obj.Body })
   .on('httpUploadProgress', function (evt) {
@@ -412,12 +339,12 @@ exports.streamProjectDocuments = (req, res) => {
     Project.update(updatedProject);
     
     /** now respond with a success message */
-    // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
+      // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
     
     let response = {
-      message: 's3 file upload was successful',
-      s3Obj: s3Obj
-    };
+        message: 's3 file upload was successful',
+        s3Obj: s3Obj
+      };
     res.jsonp(response);
     
   });

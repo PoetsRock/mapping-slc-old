@@ -1,45 +1,35 @@
-/modules/redactor/client/redactor.js
-# General
+## General
+# ======================
 *.csv
 /.local-configs
+.idea/
+# ======================
 
-# Node and related ecosystem
+
+# NPM and Bower and related ecosystem
 # ==========================
 .nodemonignore
-/modules/projects/client/.CustomFileInputs
-.sass-cache/
 node_modules/
-public/lib/
-app/tests/coverage/
-.bower-*/
-.idea/
 coverage/
+public/lib
+# ======================
 
 
 # MEAN.js app and assets
 # ======================
+access.log
 config/env/local-*.js
 *.pem
-/ng-file-upload wiki.md
 /config/assets/development.js
-/modules/core/server/controllers/envVars.server.controller.js
-
+/uploads
 # Ignoring MEAN.JS's gh-pages branch for documenation
 _site/
+# ======================
 
-/config/env/localEnvVars.js
 
-/uploads
-/modules/projects/server/uploads
-/modules/projects/server/models/data/private
-/modules/users/server/config/.private
-/modules/chat
-/modules/.articles
-/modules/core/client/img/loaders/circle-close.png
-/modules/core/client/img/loaders/circle-close-final-50px.jpg
-/modules/core/client/img/loaders/circle-close.svg
-/modules/core/client/img/loaders/circle-close-final.jpg
-/.aws
-
-access.log
+## Mapping SLC Specific
+# ======================
 /README_internal.md
+/bucketPolicyPublicRead.json
+/.aws
+# ======================

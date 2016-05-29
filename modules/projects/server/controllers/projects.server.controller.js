@@ -18,23 +18,23 @@ let mongoose = require('mongoose'),
   request = require('request'),
   shortId = require('shortid'),
   sanitizeHtml = require('sanitize-html');
-  let count = 0;
+let count = 0;
 
 /**
  * Project middleware for getProjectById
  **/
 exports.projectById = function (req, res, next, id) {
-  count =+ count;
+  count = +count;
   console.log('`count`: ', count);
   console.log('here !!!!!  `id`: ', id);
   Project.findById(id)
-    .populate('user')
-    .exec(function (err, project) {
-      if (err) return next(err);
-      if (!project) return next(new Error('Failed to load Project ' + id));
-      req.project = project;
-      next();
-    });
+  .populate('user')
+  .exec(function (err, project) {
+    if (err) return next(err);
+    if (!project) return next(new Error('Failed to load Project ' + id));
+    req.project = project;
+    next();
+  });
 };
 
 
@@ -58,7 +58,7 @@ exports.imageId = (req, res, next, id) => {
 /**
  * Project authorization middleware
  */
-exports.hasAuthorization = function (req, res, next) {
+exports.hasAuthorization = (req, res, next) => {
   if (req.project.user.id !== req.user.id) {
     return res.status(403).send('User is not authorized');
   }
@@ -66,20 +66,16 @@ exports.hasAuthorization = function (req, res, next) {
 };
 
 
-
-
 exports.generateShortId = (req, res) => {
   let createShortId = shortId.generate();
-  console.log('shortId: ', createShortId);
-  return res.send(createShortId);
+  res.send(createShortId);
 };
-
 
 
 /**
  * Create a Project
  */
-exports.create = function (req, res) {
+exports.create = (req, res) => {
   //console.log('!!!!project create req: \n', req);
   var project = new Project(req.body);
   project.user = req.user;
@@ -106,157 +102,149 @@ exports.create = function (req, res) {
   // console.log('!!!!project create req: \n', project);
   // console.log('!!!!project.markerColor: \n', project.markerColor);
 
-  project.save(function (err) {
+  project.save(err => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.jsonp(project);
     }
+    res.jsonp(project);
   });
 };
 
-/**
- * Show the current Project
- */
-exports.read = function (req, res) {
-  res.jsonp(req.project);
-};
+  /**
+   * Show the current Project
+   */
+  exports.read = (req, res) => {
+    res.jsonp(req.project);
+  };
 
 
-/**
- * Update a Project
- */
-exports.update = function (req, res) {
-  console.log('\n\n\n:::::::1111 update `project`:::::::\n', req.body);
-  var project = _.extend(req.project, req.body);
-  project.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      console.log('\n\n\n:::::::2222 update `project`:::::::\n', project);
-      res.jsonp(project);
-    }
-  });
-
-};
-
-
-/**
- * Update Multiple Projects
- */
-exports.updateAll = function (req, res) {
-  let projects = req.project;
-  var updatedProjects = [];
-  let project = {};
-
-  for (let i = 0; i < projects.length; i++) {
-    project = _.extend(projects[i], req.body);
+  /**
+   * Update a Project
+   */
+  exports.update = (req, res) => {
+    console.log('\n\n\n:::::::1111 update `req.body`:::::::\n', req.body);
+    var project = _.extend(req.project, req.body);
     project.save(function (err) {
-      if (!err) {
-        updatedProjects.push(project);
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
       }
-    });
-  }
-  res.jsonp(updatedProjects);
-
-};
-
-
-/**
- * Delete an Project
- */
-exports.delete = function (req, res) {
-  var project = req.project;
-
-  project.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
       res.jsonp(project);
+    });
+  };
+
+
+  /**
+   * Update Multiple Projects
+   */
+  exports.updateAll = function (req, res) {
+    let projects = req.project;
+    var updatedProjects = [];
+    let project = {};
+
+    for (let i = 0; i < projects.length; i++) {
+      project = _.extend(projects[i], req.body);
+      project.save(function (err) {
+        if (!err) {
+          updatedProjects.push(project);
+        }
+      });
     }
-  });
-};
+    res.jsonp(updatedProjects);
 
-/**
- * List of Projects
- *
- * .find({ "invitees._id": req.query.invitation_id })
- * .populate('invitees.user')
- *
- */
-exports.list = function (req, res) {
-  Project.find()
+  };
+
+
+  /**
+   * Delete an Project
+   */
+  exports.delete = function (req, res) {
+    var project = req.project;
+
+    project.remove(err => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      return res.jsonp(project);
+    });
+  };
+
+  /**
+   * List of Projects
+   *
+   * .find({ "invitees._id": req.query.invitation_id })
+   * .populate('invitees.user')
+   *
+   */
+  exports.list = function (req, res) {
+    Project.find()
     .sort('-created')
     .populate('user')
-    .exec(function (err, projects) {
+    .exec((err, projects) => {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else {
-        res.jsonp(projects);
       }
+      return res.jsonp(projects);
     });
-};
+  };
 
-/**
- * List of Projects with status "published"
- *
- * .find({ "invitees._id": req.query.invitation_id })
- * .populate('invitees.user')
- *
- */
-exports.listPublished = function (req, res) {
-  //req.params
-  Project.find({
-    'status': 'published'
-  })
+  /**
+   * List of Projects with status "published"
+   *
+   * .find({ "invitees._id": req.query.invitation_id })
+   * .populate('invitees.user')
+   *
+   */
+  exports.listPublished = function (req, res) {
+    //req.params
+    Project.find({
+      'status': 'published'
+    })
     .sort('-created')
     .populate('user')
-    .exec(function (err, projects) {
+    .exec((err, projects) => {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else {
-        res.jsonp(projects);
       }
+      return res.jsonp(projects);
     });
-};
+  };
 
 
-/**
- * List of Markers for Home Page Map
- */
-exports.markerList = function (req, res) {
-  //todo filter this response to contain just what's needed for markers
-  Project.find({
-    'status': 'published'
-  })
+  /**
+   * List of Markers for Home Page Map
+   */
+  exports.markerList = function (req, res) {
+    //todo filter this response to contain just what's needed for markers
+    Project.find({
+      'status': 'published'
+    })
     .sort('-created')
-    .exec(function (err, projects) {
+    .exec((err, projects) => {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else {
-        res.jsonp(projects);
       }
+      return res.jsonp(projects);
     });
-};
+  };
 
 
-/**
- * Returns an array of objects that contains the featured projects
- */
-exports.getFeaturedProjects = function (req, res) {
-  Project.find({ featured: true })
+  /**
+   * Returns an array of objects that contains the featured projects
+   */
+  exports.getFeaturedProjects = function (req, res) {
+    Project.find({ featured: true })
     .sort('-featuredBeginDate')
     .exec(function (err, projects) {
       if (err) {
@@ -267,43 +255,43 @@ exports.getFeaturedProjects = function (req, res) {
         res.jsonp(projects);
       }
     });
-};
+  };
 
 
-/**
- * Alchemy API for NLP
- **/
+  /**
+   * Alchemy API for NLP
+   **/
 
-exports.nlpProjects = function (req, res, next) {
-  console.log(req);
-  var dirtyText = req.body.text;
-  var sentKeywords = [];
-  var sanitizedText = sanitizeHtml(dirtyText, {
-    allowedTags: [],
-    allowedAttributes: []
-  });
-  var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
-  alchemyApi.keywords(sanitizedText, { 'sentiment': 0, 'outputMode': 'json' }, function (err, keywords) {
-    if (err) {
-      throw err;
-      //} else if (req.body.useCase === 'server') {
-      //  res.json(response);
-    } else {
-      console.log('keywords.keywords l. 317:\n', keywords.keywords);
-      sentKeywords.push(keywords.keywords);
-      console.log('sentKeywords l. 319:\n', sentKeywords);
-    }
-  });
-  console.log('sentKeywords l. 322:\n', sentKeywords);
+  exports.nlpProjects = function (req, res, next) {
+    console.log(req);
+    var dirtyText = req.body.text;
+    var sentKeywords = [];
+    var sanitizedText = sanitizeHtml(dirtyText, {
+      allowedTags: [],
+      allowedAttributes: []
+    });
+    var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
+    alchemyApi.keywords(sanitizedText, { 'sentiment': 0, 'outputMode': 'json' }, function (err, keywords) {
+      if (err) {
+        throw err;
+        //} else if (req.body.useCase === 'server') {
+        //  res.json(response);
+      } else {
+        console.log('keywords.keywords l. 317:\n', keywords.keywords);
+        sentKeywords.push(keywords.keywords);
+        console.log('sentKeywords l. 319:\n', sentKeywords);
+      }
+    });
+    console.log('sentKeywords l. 322:\n', sentKeywords);
 
-  req.project.nlp = sentKeywords;
-  next();
+    req.project.nlp = sentKeywords;
+    next();
 
-};
+  };
 
 
-/**
- function nlpKeywords(sanitizedText) {
+  /**
+   function nlpKeywords(sanitizedText) {
   //return new Promise( //deleted bluebird, use native es6 promises if needed
     function (resolve, reject) {
       var alchemyApi = new AlchemyAPI(config.alchemyApi.alchemyKey);
@@ -318,10 +306,10 @@ exports.nlpProjects = function (req, res, next) {
       });
   });
 }
- **/
+   **/
 
-/**
- if (req.body.story) {
+  /**
+   if (req.body.story) {
     var sanitizedText = sanitizeHtml(req.body.story, {
       allowedTags: [],
       allowedAttributes: []
@@ -353,76 +341,75 @@ var text = {
 //});
 
 }
- **/
+   **/
 
 
-exports.markerData = function (req, res, next) {
+  exports.markerData = function (req, res, next) {
 
-  var markerColor = '';
-  if (req.category === 'video') {
-    markerColor = '#ff0011';
-    res.send(markerColor);
-  } else if (req.category === 'multimedia') {
-    markerColor = '#ff0101';
-    res.send(markerColor);
-  } else if (req.category === 'essay') {
-    markerColor = '#0015ff';
-    res.send(markerColor);
-  } else if (req.category === 'literature') {
-    markerColor = '#15ff35';
-    res.send(markerColor);
-  } else if (req.category === 'interview') {
-    markerColor = '#ff0101';
-    res.send(markerColor);
-  } else if (req.category === 'map') {
-    markerColor = '#ff0101';
-    res.send(markerColor);
-  } else if (req.category === 'audio') {
-    markerColor = '#ff0101';
-    res.send(markerColor);
-  } else {
-    markerColor = '#00ff44';
-    res.send(markerColor);
-  }
-  next();
+    var markerColor = '';
+    if (req.category === 'video') {
+      markerColor = '#ff0011';
+      res.send(markerColor);
+    } else if (req.category === 'multimedia') {
+      markerColor = '#ff0101';
+      res.send(markerColor);
+    } else if (req.category === 'essay') {
+      markerColor = '#0015ff';
+      res.send(markerColor);
+    } else if (req.category === 'literature') {
+      markerColor = '#15ff35';
+      res.send(markerColor);
+    } else if (req.category === 'interview') {
+      markerColor = '#ff0101';
+      res.send(markerColor);
+    } else if (req.category === 'map') {
+      markerColor = '#ff0101';
+      res.send(markerColor);
+    } else if (req.category === 'audio') {
+      markerColor = '#ff0101';
+      res.send(markerColor);
+    } else {
+      markerColor = '#00ff44';
+      res.send(markerColor);
+    }
+    next();
 
-};
-
-
-/**
- *
- * update project to a featured project
- *
- * @param project
- */
-let updateNewFeaturedProject = function (project) {
-  project.featured = true;
-  let featuredProjectOptions = { new: true };
-  project.featuredBeginDate = Date.now();
-  project.featuredEndDate = null;
-
-  //setup new featured project variables
-  Project.findOneAndUpdate({ _id: project._id }, project, featuredProjectOptions,
-    function (err, newProject) {
-      if (err) {
-        return { message: errorHandler.getErrorMessage(err) };
-      } else {
-        return newProject;
-      }
-    });
-};
+  };
 
 
+  /**
+   *
+   * update project to a featured project
+   *
+   * @param project
+   */
+  let updateNewFeaturedProject = function (project) {
+    project.featured = true;
+    let featuredProjectOptions = { new: true };
+    project.featuredBeginDate = Date.now();
+    project.featuredEndDate = null;
 
-/**
- * update project to no longer be a featured project
- *
- */
-let updateOldFeaturedProject = () => {
+    //setup new featured project variables
+    Project.findOneAndUpdate({ _id: project._id }, project, featuredProjectOptions,
+      function (err, newProject) {
+        if (err) {
+          return { message: errorHandler.getErrorMessage(err) };
+        } else {
+          return newProject;
+        }
+      });
+  };
 
-  let featuredProjects = [];
 
-  Project.find({ featured: true })
+  /**
+   * update project to no longer be a featured project
+   *
+   */
+  let updateOldFeaturedProject = () => {
+
+    let featuredProjects = [];
+
+    Project.find({ featured: true })
     .sort('-featuredBeginDate')
     .exec(function (err, projects) {
       if (err) {
@@ -450,18 +437,16 @@ let updateOldFeaturedProject = () => {
         return { message: 'ALERT: More than 3 Featured Projects before adding current project. NO PROJECTS WERE UPDATED' };
       }
     });
-};
+  };
 
 
-exports.updateFeaturedProjects = function (req, res) {
-  updateOldFeaturedProject();
-  updateNewFeaturedProject(req.body);
-};
+  exports.updateFeaturedProjects = function (req, res) {
+    updateOldFeaturedProject();
+    updateNewFeaturedProject(req.body);
+  };
 
 
-
-
-exports.googlePlacesData = (req, res) => {
+  exports.googlePlacesData = (req, res) => {
     var results = {};
     var tempResults = [];
     var query = 'https://maps.googleapis.com/maps/api/v1/place/nearbysearch/json?key=AIzaSyBZ63pS3QFjYlXuaNwPUTvcYdM-SGRmeJ0&location=40.773,-111.902&radius=1000';
@@ -481,26 +466,26 @@ exports.googlePlacesData = (req, res) => {
         console.log('final results: ', results);
       });
     });
-};
-
-
-exports.getApiKeys = (req, res) => {
-
-  var environment = null;
-  if (process.env.NODE_ENV === 'production') {
-    environment = process.env;
-  } else {
-    environment = require('../../../../config/env/local-development.js').FRONT_END;
-  }
-  var publicKeys = {
-    MAPBOX_KEY: environment.MAPBOX_KEY,
-    MAPBOX_SECRET: environment.MAPBOX_SECRET,
-
-    HERE_KEY: environment.HERE_KEY,
-    HERE_SECRET: environment.HERE_SECRET,
-
-    CENSUS_KEY: environment.CENSUS_KEY
   };
-  res.jsonp(publicKeys);
-  
-};
+
+
+  exports.getApiKeys = (req, res) => {
+
+    var environment = null;
+    if (process.env.NODE_ENV === 'production') {
+      environment = process.env;
+    } else {
+      environment = require('../../../../config/env/local-development.js').FRONT_END;
+    }
+    var publicKeys = {
+      MAPBOX_KEY: environment.MAPBOX_KEY,
+      MAPBOX_SECRET: environment.MAPBOX_SECRET,
+
+      HERE_KEY: environment.HERE_KEY,
+      HERE_SECRET: environment.HERE_SECRET,
+
+      CENSUS_KEY: environment.CENSUS_KEY
+    };
+    res.jsonp(publicKeys);
+
+  };

@@ -33,16 +33,14 @@
             </div>
 
           <div>
-            <h3>{{project.title}}</h3>
+            <h1>{{project.title}}</h1>
           </div>
-
-            Toggle Edit = {{toggleEdit}}
 
             <div class="row projects-profile">
               <div class="col-xs-12">
                 <form class="form-horizontal" data-ng-submit="update(project.$valid, toggleId)" novalidate>
                   <fieldset>
-                    <project-view-form></project-view-form>
+                    <project-tabs></project-tabs>
                   </fieldset>
                 </form>
 

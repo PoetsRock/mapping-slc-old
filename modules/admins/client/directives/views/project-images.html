@@ -1,16 +1,5 @@
 <section class="project-images">
-  <div class="row project-main-image">
-    <div data-ng-show="project.mainImageUrl && project.mainImageThumbnailUrl">
-      <h4>Main Image</h4>
-      <div class="project-image">
-        <a data-ng-href="{{project.mainImageUrl}}" target="_blank">
-          <img data-ng-src="{{project.mainImageThumbnailUrl}}" class="img-responsive">
-        </a>
-      </div>
-      <div class="btn btn-main btn-footer-overlay grow" data-ng-click="">Download</div>
-      <div class="btn btn-main btn-footer-overlay grow" data-ng-click="">Upload</div>
-    </div>
-  </div>
+  <!--todo -- find better way to display main/default image and to remove one or more images-->
 
   <div class="row">
     <div data-ng-show="project.imageGallery.length > 1">
@@ -19,10 +8,10 @@
       <div class="row">
         <div class="col-md-3 project-image-gallery" data-ng-repeat="image in project.imageGallery track by $index">
           <!--<a data-ng-href="{{image.imageUrl}}" target="_blank">-->
-          <a data-ng-href="{{image.url}}" target="_blank">
+          <a data-ng-href="{{image.imageUrl}}" target="_blank">
             <img data-ng-src="{{image.thumbImageUrl}}" class="img-responsive">
           </a>
-          <div class="btn btn-main btn-footer-overlay grow" data-ng-click="">Remove</div>
+          <div class="btn btn-main btn-footer-overlay grow" data-ng-click="deleteImageById(image)">Remove</div>
         </div>
       </div>
 
