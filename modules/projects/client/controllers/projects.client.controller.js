@@ -1,6 +1,7 @@
 'use strict';
 
 // Projects controller
+//noinspection JSAnnotator
 angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'Upload',
   function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, Upload) {
     $scope.user = Authentication.user;
@@ -21,8 +22,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.trustAsHtml = $sce.trustAsHtml;
     $scope.project = {};
     $scope.previewImages = [];
-
-    $scope.showWysiwyg1 = false;
+    $scope.uploading = false;
 
     $scope.init = function () {
       $scope.publishedProjectsFn();
@@ -31,6 +31,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.initSubmissionStatus = function () {
       $scope.findOne();
     };
+
 
     //provides logic for the css in the forms
     UtilsService.cssLayout();
@@ -45,6 +46,60 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.showSubmit = true;
       }
     };
+
+
+
+
+    var imagesUploader = function (bucket, bucketId, files) {
+      $scope.uploading = true;
+      // files.forEach(function(file) {
+      //   var query = { filename: files[0].name, type: files[0].type, bucket: bucket };
+      //   if (bucket === 'projects') { query.user = $scope.user; }
+      //   $http.post('api/v1/' + bucket + '/' + bucketId + '/images', query)
+      //   .then(function (result) {
+      //     console.log('result v1\n', result);
+      //     $scope.uploading = false;
+      //     // need to set image on front end
+      //     if (result && result.s3Url) {
+      //       console.log('result v2\n', result);
+      //       $scope.user.profileImageURL = result.s3Url;
+      //       $scope.imageURL = result.s3Url;
+      //     }
+      //   })
+      //   .catch(function(err) {
+      //     console.log('error on upload:\n', err);
+      //     $scope.uploading = false;
+      //   });
+      // });
+      var query = { file: files[0], filename: files[0].name, type: files[0].type, bucket: bucket };
+      if (bucket === 'projects') { query.user = $scope.user; }
+      console.log('query\n', query);
+      $http.post('api/v1/' + bucket + '/' + bucketId + '/images', query)
+      .then(function (result) {
+        console.log('result v1\n', result);
+        $scope.uploading = false;
+        // need to set image on front end
+        // if (result && result.s3Url) {
+        //   console.log('result v2\n', result);
+        //   $scope.user.profileImageURL = result.s3Url;
+        //   $scope.imageURL = result.s3Url;
+        // }
+        return result;
+      })
+      .catch(function(err) {
+        console.log('error on upload:\n', err);
+        $scope.uploading = false;
+      });
+    };
+
+
+
+
+
+
+
+
+
 
     /**
      * called when $scope.project.status updates
@@ -141,13 +196,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         state: 'UT',
         zip: this.project.zip,
         story: '',
-        title: this.project.title
+        title: this.project.title,
+        // files: this.project.files
       });
 
       saveProject = function () {
         project.$save(function (response) {
-          var files = $scope.project.files;
-          $scope.uploadPic(response, files);
+          console.log('response\n', response);
+          console.log('$scope.project.files\n', $scope.project.files);
+          // $scope.imagesUploader(response, files);
+          imagesUploader('projects', response._id, $scope.project.files);
           //uploadFilesService(response, files,
           // //service returns value as callback
           // function(fileInfo)
@@ -165,6 +223,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           $scope.zip = '';
           $scope.story = '';
           $scope.title = '';
+          $scope.files = '';
           // publishUser(response);
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
@@ -656,63 +715,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 // Project Uploader Service logic
 
-$scope.uploadPic = function (project, files) {
+$scope.uploadPic = function () {
   $scope.previewImages = $scope.project.files;
 
-  var url = '/api/v1/projects/' + project._id + '/s3/upload';
-  var acl = 'public-read';
-  var fileAndDataObj = {
-    url: url,
-    data: {
-      file: files[0],
-      data: {
-        // width: dimensions.width,
-        // height: dimensions.height,
-        securityLevel: acl || 'private',
-        fileSize: files[0].size,
-        fileName: files[0].name,
-        fileType: files[0].type
-        // project: project
-      }
-    },
-    method: 'POST',
-    headers: {
-      'Content-Type': files[0].type
-      // },
-      // transformRequest: function(data, headersGetter) {
-      //   var headers = headersGetter();
-      //   delete headers.Authorization;
-      //   return data;
-    }
-  };
-  console.log('\n\n`fileAndDataObj`:\n', fileAndDataObj, '\n\n');
-
-  // Upload.imageDimensions(file)
-  //   .then(function (dimensions) {
-  Upload.upload({
-      url: url,
-      data: {
-        file: files[0],
-        data: {
-          // width: dimensions.width,
-          // height: dimensions.height,
-          securityLevel: acl || 'private',
-          fileSize: files[0].size,
-          fileName: files[0].name,
-          fileType: files[0].type
-          // project: project
-        }
-      },
-      method: 'POST',
-      headers: {
-        'Content-Type': files[0].type
-        // },
-        // transformRequest: function(data, headersGetter) {
-        //   var headers = headersGetter();
-        //   delete headers.Authorization;
-        //   return data;
-      }
-    })
+  $http.post('/api/v1/projects/' + $scope.project._id + '/s3/upload', $scope.project.files)  
     .then(function (response) {
       console.log('Success ' + response.config.data.file.name + 'uploaded. Response: ' + response.data);
     }, function (response) {
@@ -736,13 +742,15 @@ $scope.uploadPic = function (project, files) {
  *
  */
 $scope.fileReaderNg = function (fileArray) {
-
+  
+  $scope.previewImagesArray = fileArray;
+  $scope.previewImages = $scope.project.files;
   var fileReader = new FileReader();
 
   var files = fileArray;
   var file = fileArray[0];
-  // console.log('files:\n', files);
-  // console.log('file:\n', file);
+  console.log('files:\n', files);
+  console.log('file:\n', file);
   // console.log('file.type:\n', file.type);
 
   // var dataURL = fileReader.readAsDataURL(files[0]);

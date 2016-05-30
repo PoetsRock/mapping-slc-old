@@ -24,9 +24,7 @@ let count = 0;
  * Project middleware for getProjectById
  **/
 exports.projectById = function (req, res, next, id) {
-  count = +count;
-  console.log('`count`: ', count);
-  console.log('here !!!!!  `id`: ', id);
+  console.log('exports.projectById()  `id`: ', id);
   Project.findById(id)
   .populate('user')
   .exec(function (err, project) {
@@ -108,6 +106,7 @@ exports.create = (req, res) => {
         message: errorHandler.getErrorMessage(err)
       });
     }
+
     res.jsonp(project);
   });
 };

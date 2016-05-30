@@ -1,4 +1,6 @@
-<secondary-menu-directive></secondary-menu-directive>
+<div id="main-menu" class="main-menu">
+  <google-menu></google-menu>
+</div>
 
 <section class="content background" data-ng-controller="RandomMapController"
   ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
@@ -18,8 +20,7 @@
         <div class="row">
           <div class="col-md-12">
 
-            Please include an address for <span>the location of a your essay or project</span>. (Feel free to
-            approximate if there's not an exact address.)
+            Please include an address for <span>the location of a your essay or project</span>. (Feel free to approximate if there's not an exact address.) {{project._id}}
 
             <form name="project" class="form-horizontal" data-ng-submit="create(project.$valid)" novalidate>
             <!--<form name="project" class="form-horizontal" data-ng-submit="create(project.$valid, project.files)" novalidate>-->
@@ -101,62 +102,19 @@
 
 
                   <div class="row project-uploader">
-
                     <div class="col-md-6">
-
-                      <project-uploader-directive data-ng-show="showUpload"></project-uploader-directive>
-
+                      <project-uploader></project-uploader>
                     </div>
-
-
-
-
-                    <div>
-                      <img ngf-src="file" ngf-resize="{width: 20, height: 20, quality: 0.9}">
-                    </div>
-
-                    <div ngf-thumbnail="file" ngf-size="{width: 20, height: 20, quality: 0.9}"></div>
-
-
-
-
-                    <span class="progress" ng-show="picFile.progress >= 0">
-                      <div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>
-                    </span>
-
-                    <span ng-show="picFile.result">Upload Successful</span>
-                    <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-
-                    <div ng-show="success" class="text-center text-success">
-                      <strong>Profile Picture Changed Successfully</strong>
-                    </div>
-
-
-
-
-                    <!--abort upload-->
-                    <button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow">Cancel</button>
-
-
-                    <div ngf-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">
-                      File Drag/Drop is not supported for this browser
-                    </div>
-
-
-                    <div ng-show="error" class="text-center text-danger">
-                      <strong ng-bind="error"></strong>
-                    </div>
-
-
-
                   </div>
 
                   <div class="row">
                     <div class="col-md-offset-8 col-md-2">
-
+                      {{project.title}}
+                      {{project._id}}
                       <!--submit button-->
                       <div class="form-group pull-right submit-project">
-                        <input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid" data-ng-click="onFileSelect($files)">
+                        <input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid">
+                        <!--<input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid" data-ng-click="onFileSelect($files)">-->
                       </div>
 
 

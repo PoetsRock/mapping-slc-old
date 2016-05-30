@@ -119,6 +119,7 @@ let _createThumbnail = (projectId, fileName, filePath, file) => {
  * @param next
  */
 exports.parseFileUpload = (req, res, next) => {
+  console.log('req:::::::::::\n', req)
   // parse a file upload
   var form = new multiparty.Form();
   form.parse(req, ((err, fieldsObject, filesObject) => {

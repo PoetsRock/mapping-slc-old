@@ -2,19 +2,18 @@
 
 // retrieve user's profile image
 
-angular.module('users').service('ProfileImageService', ['$http', 'Authentication',
-  function ($http, Authentication) {
+angular.module('users').service('ProfileImageService', ['$http',
+  function ($http) {
 
     this.getUploadedProfilePic = function (data, callback) {
       var user = data.user;
       var configObj = { cache: true };
-      console.log('ProfileImageService\nuser.profileImageFileName: ', user.profileImageFileName, '\n\n');
-
+      // console.log('ProfileImageService\nuser.profileImageFileName: ', user.profileImageFileName, '\n\n');
       // $http.get('api/v1/users/' + user._id + '/images/' + user.profileImageFileName, configObj)
       $http.get('api/v1/users/' + user._id + '/images/uploaded-profile-image.jpg', configObj)
         .then(function successCallback(successCallback) {
-          console.log('\nProfileImageService\successCallback:::::\n', successCallback, '\n\n');
-          console.log('user:::::\n', user, '\n\n');
+          // console.log('\nProfileImageService\successCallback:::::\n', successCallback, '\n\n');
+          // console.log('user:::::\n', user, '\n\n');
           // return user.profileImage = successCallback.data.url;
           return callback (successCallback.data.url);
         }, function errorCallback(errorCallback) {

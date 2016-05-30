@@ -5,10 +5,12 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
 
     $scope.init = function () {
       console.log('init me baby!');
+      if(!$scope.user.profileImageURL) {
+        $scope.uploadButtonText = 'Upload Photo'
+      }
+      $scope.uploadButtonText = 'Update Photo';
       ProfileImageService.getUploadedProfilePic(Authentication,
         function(image, err) {
-          console.log('image\n', image);
-          console.log('err\n', err);
           $scope.user.profileImageURL = image;
         });
     };
@@ -21,24 +23,38 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
     $scope.imageURL = $scope.user.profileImageURL;
     var upload = null;
 
-    
+
+
+    /**
+     *
+     * @param params
+       * @param params.bucket
+       * @param params.bucketId
+     * @param files
+     */
     $scope.onFileSelect = function (files) {
       //todo (1) change server function to default images to generic file names -- for user: `uploaded-profile-image.jpg` ... for projects: something like `uploaded-main-project-image.jpg`
       //todo (2) set public read permissions on images
       ///todo (3) file optimization
+      console.log('hereeee');
+      let params = {
+        bucket: 'users',
+        bucketId: $scope.user._id
+      };
 
       if (files.length === 1) {
         $scope.uploading = true;
         var filename = files[0].name;
         var type = files[0].type;
         var query = {
-          user: $scope.user,
+          bucketId: params.bucketId,
           filename: filename,
           type: type
         };
         console.log('files:::\n', files);
         console.log('query:::\n', query);
-        $http.post('api/v1/user/'+ query.user._id +'/s3/upload', query)
+        // $http.post('api/v1/user/'+ query.user._id +'/s3/upload', query)
+        $http.post('api/v1/' + params.bucket + '/'+ query.bucketId +'/s3/upload', query)
           .success(function (result) {
             console.log('result v1\n', result);
             Upload.upload({
@@ -70,6 +86,7 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
             });
           })
           .error(function (data, status, headers, config) {
+            console.log('error!!!\n', data);
             // called asynchronously if an error occurs
             // or server returns response with an error status.
             $scope.uploading = false;
@@ -78,7 +95,6 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       }
     };
 
-    // $scope.image;
     /**
      * hits back end route that calls `getS3File()`
      *
