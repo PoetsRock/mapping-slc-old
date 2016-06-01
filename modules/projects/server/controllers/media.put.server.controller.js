@@ -1,17 +1,17 @@
 'use strict';
 
 let Promise = require('bluebird'),
-    mongoose = require('mongoose'),
-    fs = require('fs'),
-    path = require('path'),
-    _ = require('lodash'),
-    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-    multiparty = require('multiparty'),
-    config = require(path.resolve('./config/config')),
-    AWS = require('aws-sdk'),
-    shortId = require('shortid'),
-    moment = require('moment'),
-    mediaUtilities = require('./projects.server.utilities.js');
+  mongoose = require('mongoose'),
+  fs = require('fs'),
+  path = require('path'),
+  _ = require('lodash'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  multiparty = require('multiparty'),
+  config = require(path.resolve('./config/config')),
+  AWS = require('aws-sdk'),
+  shortId = require('shortid'),
+  moment = require('moment'),
+  mediaUtilities = require('./projects.server.utilities.js');
 
 // console.log('mongoose.connections.db:\n', mongoose.connections[0].db);
 
@@ -105,295 +105,123 @@ let _createThumbnail = (projectId, fileName, filePath, file) => {
   });
 };
 
-let configFileData = (fileInput, projectId) => {
-  console.log('\nconfigFileData ::::  fileInput\n', fileInput, '\n\n');
-  let fileData = {
-    file: fileInput.data.files.file[0],
-    path: fileInput.data.files.file[0].path,
-    name: fileInput.data.files.file[0].originalFilename,
-    type: fileInput.data.files.file[0].headers['content-type'],
-    size: fileInput.data.files.file[0].size,
-    fileId: shortId.generate(),
-    isDefaultImage: fileInput.default || false,
-    imageTags: fileInput.data.files.file[0].tags || [],
-    aclLevel: fileInput.data.fields['data[securityLevel]'] || 'read-only'
-  };
-
-  fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
-
-  //todo refactor to make immutable object
-  if (/\s/g.test(fileData.name)) {
-    fileData.name = fileData.name.replace(/\s/g, '_');
-  }
-//   return fileData;
-// };
-//
-//
-// let configS3Obj = (fileData, projectId) => {
-  console.log('\nconfigS3Obj ::::  s3Input\n', fileData, '\n\n');
-
-  //todo refactor to allow this to be a variable passed in on the req obj
-  let s3Directory = s3Config.directory[1].path;
-
-  let imageFileStream = fs.createReadStream(fileData.path);
-
-  let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Directory + '/' + projectId;
-
-  fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
-  fileData.thumbImageUrl = imageUrlRoot + '/thumb_' + fileData.fileId + '.' + fileData.fileExt;
-
-  fileData.s3Obj = new Object({
-    header: { 'x-amz-decoded-content-length': fileData.size },
-    // ACL: 'read-only' || fileData.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
-    region: 'us-west-1',
-    Key: s3Directory + '/' + projectId + '/' + fileData.fileId + '.' + fileData.fileExt,
-    Bucket: s3Config.bucket,
-    ContentLength: fileData.size,
-    ContentType: fileData.type,
-    Body: imageFileStream,
-    Metadata: {
-      imageId: fileData.fileId,
-      imageType: fileData.type,
-      imageExt: fileData.fileExt,
-      imageTag: fileData.imageTags.toString(),
-      imageName: fileData.name,
-      isDefault: fileData.isDefaultImage.toString() || 'false',
-    }
-  });
-  return fileData;
-};
-
-
-let configMongoObj = (fileData) => {
-  /** now configure object to update on database */
-  let currentAdminId = '5611ca9493e8d4af5022bc17';
-
-  let fieldsToUpdate = {
-    $addToSet: {
-      imageGallery: {
-        imageUrl: fileData.fullImageUrl ,
-        imageId: fileData.fileId,
-        thumbImageUrl: fileData.thumbImageUrl,
-        thumbImageId: 'thumb_' + fileData.fileId,
-        imageSize: fileData.size,
-        imageType: fileData.type,
-        imageExt: fileData.fileExt,
-        imageName: fileData.name,
-        imageTag: fileData.tags,
-        isDefaultImage: fileData.isDefaultImage
-      },
-      modified: {
-        modifiedBy: currentAdminId,
-        modifiedAt: moment.utc(Date.now())
-      }
-    }
-  };
-  return fieldsToUpdate;
-};
-
-
-
-
-exports.configReqObj = (req, res, next) => {
-  console.log('req.body v1:\n', req.body);
-  console.log('req.body.files[0] v1:\n', req.body.files[0]);
-  req.body = {
-    data: {
-      files: {
-        file: req.body.files[0],
-        // path: req.body.files.file[0].path,
-        // name: req.body.files.file[0].originalFilename,
-        // type: req.body.files.file[0].content-type,
-        // size: req.body.files.file[0].size,
-        fileId: shortId.generate(),
-        isDefaultImage: req.body.default || false,
-        imageTags: req.body.files[0].file[0].tags || [],
-      }
-    }
-  };
-  console.log('req.body v2:\n', req.body);
-  console.log('req.body.data.files v2:\n', req.body.data.files);
-  next();
-};
-
 
 
 /**
  *
- * Multiparty Middleware for Handling Multipart Form Data
+ * NOT WORKING !!!
+ * in progress!!!
+ * 
+ * 1) Uploads images to a temp bucket in s3
+ * 2) returns link to wysiwyg for displaying image
+ * 3) sends image to TinyPng to optimize main image
+ * 4) sends optimized image to TingPng to create a thumbnail
+ * 5) Uploads main optimized image to s3 `mapping-slc-file-upload/project-directory/<project-id>/<imageId>`
+ * 6) Uploads thumbnail to s3 `mapping-slc-file-upload/project-directory/<project-id>/thumb_<imageId>`
+ * 7) stores file URLs and data in Mongo
  *
  * @param req
  * @param res
- * @param next
  */
-exports.parseFileUpload = (req, res, next) => {
-  console.log('req:::::::::::\n', req)
-  // parse a file upload
-  // console.log('\nparseFileUpload ::::  req\n', req, '\n\n');
-  console.log('\nparseFileUpload ::::  req.body\n', req.body, '\n\n');
-  var form = new multiparty.Form();
-  form.parse(req, ((err, fieldsObject, filesObject) => {
-    if (err) {
-      console.log('parseFileUpload callback `err`:\n', err, '\n\n');
-    }
-    if (!req.body) {
-      return req.body = {};
-    }
-    req.body.data = {
-      fields: fieldsObject,
-      files: filesObject
+exports.uploadProjectImagesV2 = (req, res) => {
+  let fileData = req.body.fileData;
+  let fieldsToUpdate = req.body.fieldsToUpdate;
+  
+  /** upload image to temp bucket in S3 */
+  let s3Params = {
+    Bucket: 'mslc-temp-projects-images',
+    Key: fileData.s3Obj.Key,
+    Metadata: fileData.s3Obj.Metadata,
+    Body: fileData.s3Obj.Body
+  };
+  
+  return s3.uploadAsync(s3Params)
+  .then(uploadedImage => {
+    res.jsonp({ link: fileData.fullImageUrl });
+    fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
+  })
+  .then(() => {
+    /** upload image to projects bucket S3 */
+    s3Params = {
+      Bucket: fileData.s3Obj.Bucket,
+      Key: fileData.s3Obj.Key,
+      Metadata: fileData.s3Obj.Metadata,
+      Body: fileData.s3Obj.Body
     };
-    // console.log('\nparseFileUpload ::::  req.body\n', req.body, '\n\n');
-    // console.log('\nparseFileUpload ::::  req.body.data\n', req.body.data, '\n\n');
-    next();
-  }));
-};
-
-
-
-
-exports.configFileData = (req, res, next) => {
-  console.log('\nconfigFileData ::::  req.body\n', req.body, '\n\n');
-  let fileData = {
-    file: req.body.data.files.file[0],
-    path: req.body.data.files.file[0].path,
-    name: req.body.data.files.file[0].originalFilename,
-    type: req.body.data.files.file[0].headers['content-type'],
-    size: req.body.data.files.file[0].size,
-    fileId: shortId.generate(),
-    isDefaultImage: req.body.default || false,
-    imageTags: req.body.data.files.file[0].tags || [],
-    aclLevel: req.body.data.fields['data[securityLevel]'] || 'read-only'
-  };
-
-  fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
-
-  //todo refactor to make immutable object
-  if (/\s/g.test(fileData.name)) {
-    fileData.name = fileData.name.replace(/\s/g, '_');
-  }
-  req.body.fileData = fileData;
-  next();
-};
-
-
-exports.configS3Obj = (req, res, next) => {
-  // console.log('\nconfigS3Obj ::::  req\n', req, '\n\n');
-  // console.log('\nconfigS3Obj ::::  req.body\n', req.body, '\n\n');
-  let fileData = req.body.fileData;
-
-  //todo refactor to allow this to be a variable passed in on the req obj
-  let s3Directory = s3Config.directory[1].path;
-
-  let imageFileStream = fs.createReadStream(fileData.path);
-
-  let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Directory + '/' + req.params.projectId;
-
-  fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
-  fileData.thumbImageUrl = imageUrlRoot + '/thumb_' + fileData.fileId + '.' + fileData.fileExt;
-
-  fileData.s3Obj = new Object({
-    header: { 'x-amz-decoded-content-length': fileData.size },
-    // ACL: 'read-only' || fileData.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
-    region: 'us-west-1',
-    Key: s3Directory + '/' + req.params.projectId + '/' + fileData.fileId + '.' + fileData.fileExt,
-    Bucket: s3Config.bucket,
-    ContentLength: fileData.size,
-    ContentType: fileData.type,
-    Body: imageFileStream,
-    Metadata: {
-      imageId: fileData.fileId,
-      imageType: fileData.type,
-      imageExt: fileData.fileExt,
-      imageTag: fileData.imageTags.toString(),
-      imageName: fileData.name,
-      isDefault: fileData.isDefaultImage.toString() || 'false',
-    }
+    return s3.uploadAsync(s3Params);
+  })
+  .finally(() => {
+    /** now save the image URLs to mongoDb */
+    let query = Project.findOneAndUpdate(
+      { _id: req.params.projectId },
+      fieldsToUpdate,
+      { new: true }
+    ).exec();
+    
+    query.then(response => {
+      /** now send response to front end */
+      // res.jsonp({ link: fileData.fullImageUrl });
+    })
+    .catch(err => {
+      console.error('\n\nERROR updating Mongo:\n', err);
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    })
+  })
+  .catch(err => {
+    
   });
-  req.body.fileData = fileData;
-  next();
+  
 };
 
-exports.configMongoObj = (req, res, next) => {
-  let fileData = req.body.fileData;
-  /** now configure object to update on database */
-  let currentAdminId = '5611ca9493e8d4af5022bc17';
 
-  let fieldsToUpdate = {
-    $addToSet: {
-      imageGallery: {
-        imageUrl: fileData.fullImageUrl ,
-        imageId: fileData.fileId,
-        thumbImageUrl: fileData.thumbImageUrl,
-        thumbImageId: 'thumb_' + fileData.fileId,
-        imageSize: fileData.size,
-        imageType: fileData.type,
-        imageExt: fileData.fileExt,
-        imageName: fileData.name,
-        imageTag: fileData.tags,
-        isDefaultImage: fileData.isDefaultImage
-      },
-      modified: {
-        modifiedBy: currentAdminId,
-        modifiedAt: moment.utc(Date.now())
-      }
-    }
-  };
-  req.body.fieldsToUpdate = fieldsToUpdate;
-  next();
-};
+
+
+
+
+
+
+
 
 /**
  *
- * Uploads images to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/`
+ * WORKING!!!
+ *
+ * Uploads images to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/` and saves image data in Mongo
  *
  * @param req
  * @param res
  */
 exports.uploadProjectImages = (req, res) => {
-  // let fileData = configFileData(req.body, req.params.projectId);
-  let fieldsToUpdate = configMongoObj(fileData);
-
   let fileData = req.body.fileData;
-  // let fieldsToUpdate = req.body.fieldsToUpdate;
+  let fieldsToUpdate = req.body.fieldsToUpdate;
 
   /** upload image to S3 */
   let s3Params = { Bucket: fileData.s3Obj.Bucket, Key: fileData.s3Obj.Key, Metadata: fileData.s3Obj.Metadata, Body: fileData.s3Obj.Body };
 
   return s3.uploadAsync(s3Params)
-    .then(uploadedImage => {
-      fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
+  .then(uploadedImage => {
+    fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
 
-      /** now save the image URLs to mongoDb */
-      let query = Project.findOneAndUpdate(
-        { _id: req.params.projectId },
-        fieldsToUpdate,
-        { new: true }
-      ).exec();
+    /** now save the image URLs to mongoDb */
+    let query = Project.findOneAndUpdate(
+      { _id: req.params.projectId },
+      fieldsToUpdate,
+      { new: true }
+    ).exec();
 
-      query.then(response => {
-        /** now send response to front end */
+    query.then(response => {
+      /** now send response to front end */
         return res.jsonp({ link: fileData.fullImageUrl });
-      })
-      .catch(err => {
-        console.error('\n\nERROR updating Mongo:\n', err);
-        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    })
+    .catch(err => {
+      console.error('\n\nERROR updating Mongo:\n', err);
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
       });
 
   });
+
 };
 
-/**
- *
- * @param s3ObjClone
- * @param fileData
- * @param projectId
- */
-
-let updateDb = (s3ObjClone, fileData, projectId) => {
-
-  
-};
 
 /**
  *
@@ -418,15 +246,7 @@ exports.streamProjectDocuments = (req, res) => {
   if (/\s/g.test(fileName)) {
     fileName = fileName.replace(/\s/g, '_');
   }
-  
-  /** config aws s3 config settings, file object, and create a new instance of the s3 service */
-    // let awsS3Config = {
-    //   accessKeyId: config.S3_ID,
-    //   secretAccessKey: config.S3_SECRET,
-    //   region: 'us-west-1',
-    //   Key: 'project-directory/' + project._id + '/' + fileName,
-    //   Bucket: s3Config.bucket
-    // };
+
   let fileStream = fs.createReadStream(filePath);
   let s3Obj = {
     header: { 'x-amz-decoded-content-length': file.size },
@@ -440,7 +260,6 @@ exports.streamProjectDocuments = (req, res) => {
     // ServerSideEncryption: 'AES256'
   };
 
-  
   s3.upload({ Bucket: s3Obj.Bucket, Key: s3Obj.Key, Metadata: {}, Body: s3Obj.Body })
   .on('httpUploadProgress', function (evt) {
     console.log(evt);

@@ -9,12 +9,15 @@ module.exports = function (app) {
       deleteMedia = require('../controllers/media.delete.server.controller.js'),
       projects = require('../controllers/projects.server.controller.js'),
       mongoose = require('mongoose'),
+      middleware = require('../controllers/projects.server.middleware.js'),
       Project = mongoose.model('Project'),
       vimeo = require('../controllers/vimeo.server.controller');
 
 
   let baseUrl = '/api/v1/projects';
+  let baseUrlV2 = '/api/v2/projects';
   let imagesApi = baseUrl + '/:projectId/images';
+  let imagesApiV2 = baseUrlV2 + '/:projectId/images';
   let videosApi = baseUrl + '/:projectId/videos';
   let filesApi = baseUrl + '/:projectId/files';
 
@@ -30,12 +33,11 @@ module.exports = function (app) {
 
   app.route(filesApi)
     // .post(createMedia.parseFileUpload, createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages);
-    .post(createMedia.configReqObj, createMedia.configFileData, createMedia.configS3Obj, createMedia.uploadProjectImages);
+    .post(middleware.configFileData, middleware.configS3Obj, createMedia.uploadProjectImages);
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)
-    .post(createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages)
-    .post(createMedia.parseFileUpload, createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages)
+    .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages)
     .put(deleteMedia.deleteImagesByBucket);
 
   app.route(imagesApi + '/:imageId')
@@ -46,6 +48,9 @@ module.exports = function (app) {
     .get(getMedia.getDefaultImageByProjectId);
 
 
+  app.route(imagesApiV2)
+    .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImagesV2);
+  
 
 
 

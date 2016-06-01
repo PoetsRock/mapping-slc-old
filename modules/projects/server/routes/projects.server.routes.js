@@ -79,12 +79,6 @@ module.exports = function (app) {
     .put(projects.updateFeaturedProjects);
   
   
-  //Generate an Id Using ShortId
-  app.route('/api/v1/shortId')
-  .get(projects.generateShortId);
-  
-  
-  
   //mount the router on the app
   app.use('/', router);
 

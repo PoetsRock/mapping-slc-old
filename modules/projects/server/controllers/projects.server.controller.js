@@ -17,56 +17,7 @@ let mongoose = require('mongoose'),
   request = require('request'),
   shortId = require('shortid'),
   sanitizeHtml = require('sanitize-html');
-let count = 0;
-//
-// /**
-//  * Project middleware for getProjectById
-//  **/
-// exports.projectById = function (req, res, next, id) {
-  console.log('exports.projectById()  `id`: ', id);
-  Project.findById(id)
-  .populate('user')
-  .exec(function (err, project) {
-    if (err) return next(err);
-    if (!project) return next(new Error('Failed to load Project ' + id));
-    req.project = project;
-    next();
-  });
-};
 
-
-/**
- * Middleware that return sourceId from url params
- */
-exports.source = (req, res, next, id) => {
-  req.source = id;
-  next();
-};
-
-/**
- * Middleware that return an imageId from the url params
- */
-exports.imageId = (req, res, next, id) => {
-  req.imageId = id;
-  next();
-};
-
-
-/**
- * Project authorization middleware
- */
-exports.hasAuthorization = (req, res, next) => {
-  if (req.project.user.id !== req.user.id) {
-    return res.status(403).send('User is not authorized');
-  }
-  next();
-};
-
-
-exports.generateShortId = (req, res) => {
-  let createShortId = shortId.generate();
-  res.send(createShortId);
-};
 
 
 /**
