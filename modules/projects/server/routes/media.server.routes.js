@@ -7,6 +7,7 @@ module.exports = function (app) {
       getMedia = require('../controllers/media.get.server.controller.js'),
       createCredentialsMedia = require('../controllers/media.credentials.server.controller.js'),
       deleteMedia = require('../controllers/media.delete.server.controller.js'),
+      projects = require('../controllers/projects.server.controller.js'),
       mongoose = require('mongoose'),
       Project = mongoose.model('Project'),
       vimeo = require('../controllers/vimeo.server.controller');
@@ -33,6 +34,7 @@ module.exports = function (app) {
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)
+    .post(createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages)
     .post(createMedia.parseFileUpload, createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages)
     .put(deleteMedia.deleteImagesByBucket);
 

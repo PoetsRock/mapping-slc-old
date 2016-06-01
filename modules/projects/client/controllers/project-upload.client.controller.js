@@ -8,6 +8,8 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
 
     // $scope.onFileSelect = function (files) {
     //
+    // $scope.onFileSelect = function (bucket, bucketId, files) {
+    //   console.log('hereeeeee\n', files);
     //   if (files.length > 0) {
     //     $scope.uploading = true;
     //     var filename = files[0].name;
@@ -16,10 +18,10 @@ angular.module('projects').controller('ProjectsUploadController', ['$scope', '$t
     //       filename: filename,
     //       type: type,
     //       user: $scope.user,
-    //       project: $scope.project
+    //       bucket: bucket
     //     };
-    //     var configObj = { cache: true };
-    //     $http.post('api/v1/s3/upload/project', query, configObj)
+    //    
+    //     $http.post('api/v1/' + bucket + '/' + bucketId + '/images', query)
     //       .success(function (result) {
     //         console.log('result v1\n', result);
     //         Upload.upload({

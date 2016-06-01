@@ -227,6 +227,7 @@ exports.configReqObj = (req, res, next) => {
  * @param next
  */
 exports.parseFileUpload = (req, res, next) => {
+  console.log('req:::::::::::\n', req)
   // parse a file upload
   // console.log('\nparseFileUpload ::::  req\n', req, '\n\n');
   console.log('\nparseFileUpload ::::  req.body\n', req.body, '\n\n');

@@ -1,6 +1,7 @@
 'use strict';
 
 // Projects controller
+//noinspection JSAnnotator
 angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'Upload',
   function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, Upload) {
     $scope.user = Authentication.user;
@@ -23,7 +24,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.previewImages = [];
     $scope.projectFiles = [];
     $scope.uploading = false;
-    $scope.showWysiwyg1 = false;
 
     $scope.init = function () {
       $scope.publishedProjectsFn();
@@ -46,6 +46,60 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.showSubmit = true;
       }
     };
+
+
+
+
+    var imagesUploader = function (bucket, bucketId, files) {
+      $scope.uploading = true;
+      // files.forEach(function(file) {
+      //   var query = { filename: files[0].name, type: files[0].type, bucket: bucket };
+      //   if (bucket === 'projects') { query.user = $scope.user; }
+      //   $http.post('api/v1/' + bucket + '/' + bucketId + '/images', query)
+      //   .then(function (result) {
+      //     console.log('result v1\n', result);
+      //     $scope.uploading = false;
+      //     // need to set image on front end
+      //     if (result && result.s3Url) {
+      //       console.log('result v2\n', result);
+      //       $scope.user.profileImageURL = result.s3Url;
+      //       $scope.imageURL = result.s3Url;
+      //     }
+      //   })
+      //   .catch(function(err) {
+      //     console.log('error on upload:\n', err);
+      //     $scope.uploading = false;
+      //   });
+      // });
+      var query = { file: files[0], filename: files[0].name, type: files[0].type, bucket: bucket };
+      if (bucket === 'projects') { query.user = $scope.user; }
+      console.log('query\n', query);
+      $http.post('api/v1/' + bucket + '/' + bucketId + '/images', query)
+      .then(function (result) {
+        console.log('result v1\n', result);
+        $scope.uploading = false;
+        // need to set image on front end
+        // if (result && result.s3Url) {
+        //   console.log('result v2\n', result);
+        //   $scope.user.profileImageURL = result.s3Url;
+        //   $scope.imageURL = result.s3Url;
+        // }
+        return result;
+      })
+      .catch(function(err) {
+        console.log('error on upload:\n', err);
+        $scope.uploading = false;
+      });
+    };
+
+
+
+
+
+
+
+
+
 
     /**
      * called when $scope.project.status updates
@@ -148,8 +202,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       saveProject = function () {
         project.$save(function (response) {
-          console.log('response', response);
-          console.log('$scope.project v3', $scope.project);
+          console.log('response\n', response);
+          console.log('$scope.project.files\n', $scope.project.files);
           console.log('$scope.project.files', $scope.project.files);
           $scope.uploadProjectFiles(response, $scope.project.files);
           $scope.override = true;
@@ -162,6 +216,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           $scope.zip = '';
           $scope.story = '';
           $scope.title = '';
+          $scope.files = '';
           // publishUser(response);
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
@@ -493,13 +548,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.toggleId = 0;
 
     $scope.toggleEditFn = function (editNum, isEdit, originalData) {
-      if (isEdit === 'edit') {
+      if(isEdit === 'edit') {
         //originalData.value = $scope.project.storySummary;
         console.log('isEdit: ', isEdit);
         console.log('originalData: ', originalData);
         console.log('$scope.project.storySummary: ', $scope.project.storySummary);
       }
-      if (isEdit === 'cancel') {
+      if(isEdit === 'cancel') {
         $scope.project.story = originalData;
         console.log('isEdit: ', isEdit);
         console.log('originalData: ', originalData);

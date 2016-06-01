@@ -15,9 +15,19 @@
 
       <!--upload single file-->
       <div>
-        <button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select ngf-change="onFileSelect($files)" ngf-fix-orientation="true" ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}">
-          New Profile Photo
-        </button>
+        <!--<button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select ngf-change="onFileSelect($files)" ngf-fix-orientation="true" ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}">-->
+        <!--New Profile Photo-->
+        <!--</button>-->
+        <md-button type="file" class="md-raised" data-ng-hide="uploading" ngf-select data-ng-click="onFileSelect($files)">
+          {{uploadButtonText}}
+        </md-button>
+
+        <!--ngf-fix-orientation="true" ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}"-->
+
+
+        <!--<button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select data-ng-click="onFileSelect($files)" ngf-fix-orientation="true" ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}">-->
+          <!--New Profile Photo-->
+        <!--</button>-->
       </div>
 
 

@@ -1,4 +1,6 @@
-<secondary-menu-directive></secondary-menu-directive>
+<div id="main-menu" class="main-menu">
+  <google-menu></google-menu>
+</div>
 
 <section class="content background" data-ng-controller="RandomMapController"
   ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
@@ -18,8 +20,7 @@
         <div class="row">
           <div class="col-md-12">
 
-            Please include an address for <span>the location of a your essay or project</span>. (Feel free to
-            approximate if there's not an exact address.)
+            Please include an address for <span>the location of a your essay or project</span>. (Feel free to approximate if there's not an exact address.) {{project._id}}
 
             <form name="project" class="form-horizontal" data-ng-submit="create(project.$valid)" novalidate>
             <!--<form name="project" class="form-horizontal" data-ng-submit="create(project.$valid, project.files)" novalidate>-->
@@ -101,9 +102,8 @@
 
 
                   <div class="row project-uploader">
-
                     <div class="col-md-6">
-
+                      <project-uploader></project-uploader>
                       <project-uploader-directive data-ng-show="showUpload"></project-uploader-directive>
 
                     </div>
@@ -157,6 +157,7 @@
                       <!--submit button-->
                       <div class="form-group pull-right submit-project">
                         <input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid">
+                        <!--<input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid" data-ng-click="onFileSelect($files)">-->
                       </div>
 
 
