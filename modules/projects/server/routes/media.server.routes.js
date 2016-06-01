@@ -15,6 +15,7 @@ module.exports = function (app) {
   let baseUrl = '/api/v1/projects';
   let imagesApi = baseUrl + '/:projectId/images';
   let videosApi = baseUrl + '/:projectId/videos';
+  let filesApi = baseUrl + '/:projectId/files';
 
 
   // Single project routes for different genres
@@ -25,6 +26,10 @@ module.exports = function (app) {
     .get(vimeo.getOneVideo);
 
 
+
+  app.route(filesApi)
+    // .post(createMedia.parseFileUpload, createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages);
+    .post(createMedia.configReqObj, createMedia.configFileData, createMedia.configS3Obj, createMedia.uploadProjectImages);
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)
@@ -47,35 +52,36 @@ module.exports = function (app) {
   // `/projects/:projectId/images[/:imageId]`
       // if i need anything else (e.g., "source"), add as a query param
       // `/projects/:projectId/images?source=sourceName`
-  app.route(baseUrl + '/:projectId/upload/:imageId')
-    .get(getMedia.getS3SignedUrl);
 
-  app.route(baseUrl + '/:projectId/upload')
-    .get(getMedia.getImagesByProjectId);
-
-
-  app.route(baseUrl + '/:projectId/:source/upload')
-    .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
-
-  app.route(baseUrl + '/:projectId/s3/upload')
-    .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
-
-  app.route(baseUrl + '/:projectId/s3/upload/documents')
-    .post(createCredentialsMedia.createUploadCredentials);
-
-
-
-  // Get S3 File
-  app.route(baseUrl + '/:projectId/files/:fileId')
-    .get(getMedia.getS3File);
-  
-  // Get Permissions for a Bucket or File
-  app.route(baseUrl + '/acl')
-    .get(getMedia.getS3BucketAcl);
-  
-  app.route(baseUrl + '/acl/object')
-  // app.route(imagesApi + '/:imageId/acl')
-    .get(getMedia.getS3ObjectAcl);
+  // app.route(baseUrl + '/:projectId/upload/:imageId')
+  //   .get(getMedia.getS3SignedUrl);
+  //
+  // app.route(baseUrl + '/:projectId/upload')
+  //   .get(getMedia.getImagesByProjectId);
+  //
+  //
+  // app.route(baseUrl + '/:projectId/:source/upload')
+  //   .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
+  //
+  // app.route(baseUrl + '/:projectId/s3/upload')
+  //   .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
+  //
+  // app.route(baseUrl + '/:projectId/s3/upload/documents')
+  //   .post(createCredentialsMedia.createUploadCredentials);
+  //
+  //
+  //
+  // // Get S3 File
+  // app.route(baseUrl + '/:projectId/files/:fileId')
+  //   .get(getMedia.getS3File);
+  //
+  // // Get Permissions for a Bucket or File
+  // app.route(baseUrl + '/acl')
+  //   .get(getMedia.getS3BucketAcl);
+  //
+  // app.route(baseUrl + '/acl/object')
+  // // app.route(imagesApi + '/:imageId/acl')
+  //   .get(getMedia.getS3ObjectAcl);
 
 
 
