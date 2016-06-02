@@ -98,8 +98,10 @@ exports.addNewsletter = function (req, res, next) {
           body: userData
         };
         updateUserObject.body.newsletter = true;
-        updateUserObject.body.ModifiedOn = Date.now();
-        updateUserObject.body.ModifiedBy = userData.id;
+        updateUserObject.body.modified = {
+          modifiedBy: userData.id,
+          modifiedAt: Date.now()
+        };
 
 
         admin.update(updateUserObject,

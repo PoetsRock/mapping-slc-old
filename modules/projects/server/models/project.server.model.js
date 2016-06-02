@@ -7,6 +7,45 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   mongoosastic = require('mongoosastic');
 
+var ImageGallerySchema = new Schema({
+  imageUrl: String,
+  imageId: String,
+  thumbImageUrl: String,
+  thumbImageId: String,
+  thumbImageSize: Number,
+  thumbImageType: String,
+  imageSize: Number,
+  imageType: String,
+  imageExt: String,
+  imageTag: Array,
+  imageName: String,
+  isDefaultImage: Boolean,
+  imageHash: String,
+  imageS3Key: String,
+  metadata: Object
+});
+
+var DocumentGallerySchema = new Schema({
+  documentName: String,
+  documentSize: Number,
+  documentTag: Array,
+  documentType: String,
+  documentExt: String,
+  documentIcon: String,
+  documentUrl: String,
+  metadata: Object
+});
+
+/**
+ * `ModifiedSchema` is a subCollection that consists of an array of objects. each object has two fields:
+ * @prop modifiedBy {string}: userId of user who edited document
+ * @prop modifiedAt {date}: timestamp that records when document was modified
+ */
+let ModifiedSchema = new Schema({
+  modifiedBy: String,
+  modifiedAt: Date
+});
+
 /**
  *
  * Project Schema
@@ -32,17 +71,6 @@ var ProjectSchema = new Schema({
   },
   publishedOn: {
     type: Date
-  },
-  /**
-   * `ModifiedBy` is an array of objects
-   * @prop {string}: userId of user who edited document
-   * @prop {string}: timestamp that records when document was modified
-   */
-  ModifiedBy: {
-    type: [{
-      type: String
-    }],
-    default: []
   },
   firstName: {
     type: String,
@@ -157,85 +185,18 @@ var ProjectSchema = new Schema({
   featuredEndDate: {
     type: Date
   },
-  // mainImage: {
-  //   type: String,
-  //   trim: true
-  // },
-  //mainImage: {
-  //  type: Buffer
-  //},
-  //mainImgThumbnail: {
-  //  type: Buffer
-  //},
-  // mainImgThumbnail: {
-  //   type: String
-  // },
-  //path to image file hosted on s3
-  mainImageUrl: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  //ETag ID for image file hosted on s3
-  mainImageEtag: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  //path to image file hosted on s3
-  mainImageThumbnailUrl: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  //ETag ID for image file hosted on s3
-  mainImageThumbnailEtag: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  //array of url paths to image files hosted on s3
-  imageGallery: {
-    type: [{
-      type: String
-    }],
-    trim: true
-  },
-  //array of ETag for image files hosted on s3
-  imageGalleryEtags: {
-    type: [{
-      type: String
-    }],
-    trim: true
-  },
-  //array of url paths to image files hosted on s3
-  imageGalleryThumbnailUrls: {
-    type: [{
-      type: String
-    }],
-    trim: true
-  },
-  fileUrls: [
-    {
-      fileName: String,
-      fileSize: Number,
-      fileType: String,
-      fileUrl: String
-    }
-  ],
-  // commentsReaders: [{
-  //   fileName: String,
-  //   fileSize: Number,
-  //   fileType: String,
-  //   fileUrl: String,
-  //   trim: true
-  // }],
-  //array of ETag for document files hosted on s3
-  fileEtags: {
-    type: [{
-      type: String
-    }],
-    trim: true
+  mainImageData: {
+    imageUrl: String,
+    imageId: String,
+    thumbImageUrl: String,
+    thumbImageId: String,
+    thumbImageSize: Number,
+    thumbImageType: String,
+    imageSize: Number,
+    imageType: String,
+    imageExt: String,
+    imageName: String,
+    metadata: Object
   },
   vimeoId: {
     type: String,
@@ -247,19 +208,6 @@ var ProjectSchema = new Schema({
     es_indexed: true,
     trim: true
   },
-  url: {
-    type: String,
-    set: function (url) {
-      if (!url) {
-        return null;
-      } else {
-        if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
-          url = 'http://' + url;
-        }
-        return url;
-      }
-    }
-  },
   markerColor: {
     type: String,
     default: ''
@@ -267,10 +215,15 @@ var ProjectSchema = new Schema({
   markerSymbol: {
     type: String,
     default: ''
-  }
+  },
+
+  imageGallery: [ImageGallerySchema],
+
+  documentGallery: [DocumentGallerySchema],
+
+  modified: [ModifiedSchema]
+
 });
-
-
 
 
 //create virtual attribute for full address
@@ -303,3 +256,6 @@ ProjectSchema.set('toJSON', {
 });
 
 mongoose.model('Project', ProjectSchema);
+mongoose.model('ImageGallery', ImageGallerySchema);
+mongoose.model('DocumentGallery', DocumentGallerySchema);
+mongoose.model('Modified', ModifiedSchema);

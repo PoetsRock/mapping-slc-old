@@ -39,13 +39,15 @@ md-tabs.md-default-theme .md-tab, md-tabs .md-tab:hover{
 /* buttons */
 
 a.md-button.md-default-theme.md-raised:not([disabled]):hover, a.md-button.md-raised:not([disabled]):hover, .md-button.md-default-theme.md-raised:not([disabled]):hover, .md-button.md-raised:not([disabled]):hover {
-    color: #023A31;
-    background-color: rgba(0, 45, 0, 0.4);
-    border-color: #000000;
+    /*color: #023A31;*/
+    background-color: rgba(0, 45, 0, 1.0);
+    border: solid 3px #04321a;
+    /*border-color: #000000;*/
 }
 
 a.md-button.md-default-theme.md-raised:not([disabled]), a.md-button.md-raised:not([disabled]), .md-button.md-default-theme.md-raised:not([disabled]), .md-button.md-raised:not([disabled]) {
     color: #ffffff;
     background-color: #023A31;
+    border: solid 3px #0b8043;
     text-transform: capitalize;
 }

@@ -7,6 +7,7 @@ module.exports = function (app) {
     users = require('../../../users/server/controllers/users.server.controller.js'),
     projectsPolicy = require('../policies/projects.server.policy'),
     projects = require('../controllers/projects.server.controller.js'),
+    middleware = require('../controllers/projects.server.middleware.js'),
     mongoose = require('mongoose'),
     Project = mongoose.model('Project'),
     markerData = require('../models/project.server.model.js');
@@ -76,13 +77,14 @@ module.exports = function (app) {
 
   app.route('/api/v1/projects/:projectId/featured/true')
     .put(projects.updateFeaturedProjects);
-
-
-
+  
+  
   //mount the router on the app
   app.use('/', router);
 
   // Finish by binding the Project middleware
-  app.param('projectId', projects.projectById);
+  app.param('projectId', middleware.projectById);
+  app.param('imageId', middleware.imageId);
+  app.param('source', middleware.source);
 
 };
