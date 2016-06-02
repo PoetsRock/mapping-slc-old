@@ -676,7 +676,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.uploadProjectFiles = function (project, files) {
       console.log('project\n', project);
       console.log('files\n', files);
-      if (files.length === 1) {
+      // if (files.length === 1) {
         $scope.uploading = true;
         var query = {
           files: files[0],
@@ -690,7 +690,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         .catch(function(err) {
           console.log('ERROR uploading files: `err`:\n', err);
         });
-      }
+      // }
     };
 
     /**

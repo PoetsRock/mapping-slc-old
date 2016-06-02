@@ -6,7 +6,7 @@ angular.module('projects').directive('projectUploader', function () {
     restrict: 'AE',
     // scope: true,
     templateUrl: '/modules/projects/client/directives/views/project-uploader.html',
-    controller: function ($scope, $timeout, $window, Authentication, Upload, $http) {
+    controller: function ($scope, $http, Authentication, $window) {
       $scope.user = Authentication.user;
       $scope.uploading = false;
       console.log('$scope.project:\n', $scope.project);

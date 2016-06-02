@@ -109,7 +109,7 @@ exports.hasAuthorization = (req, res, next) => {
 //     }
 //   };
 //   console.log('req.body v2:\n', req.body);
-//   console.log('req.body.data.files v2:\n', req.body.data.files);
+//   console.log('req.body.files v2:\n', req.body.files);
 //   next();
 // };
 
@@ -128,11 +128,13 @@ exports.hasAuthorization = (req, res, next) => {
  * @ returns {object} - req.body.
  */
 exports.parseFileUpload = (req, res, next) => {
+  console.log('\n\nparseFileUpload:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n');
+  console.log('\n\nreq.body:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n', req.body, '\n\n');
   var form = new multiparty.Form();
   form.parse(req, ((err, fieldsObject, filesObject) => {
     if (err) { console.log('parseFileUpload callback `err`:\n', err, '\n\n'); }
     if (!req.body) { return req.body = {}; }
-    req.body.data = {
+    req.body = {
       fields: fieldsObject,
       files: filesObject
     };
@@ -149,16 +151,19 @@ exports.parseFileUpload = (req, res, next) => {
  * @param next
  */
 exports.configFileData = (req, res, next) => {
+// console.log('\n\nreq:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n', req);
+// console.log('\n\nreq.body:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n', req.body, '\n\n');
+// console.log('\n\nreq.body.files:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n', req.body.files, '\n\n');
   let fileData = {
-    file: req.body.data.files.file[0],
-    path: req.body.data.files.file[0].path,
-    name: req.body.data.files.file[0].originalFilename,
-    type: req.body.data.files.file[0].headers['content-type'],
-    size: req.body.data.files.file[0].size,
+    file: req.body.files.file[0],
+    path: req.body.files.file[0].path,
+    name: req.body.files.file[0].originalFilename,
+    type: req.body.files.file[0].headers['content-type'],
+    size: req.body.files.file[0].size,
     fileId: shortId.generate(),
     isDefaultImage: req.body.default || false,
-    imageTags: req.body.data.files.file[0].tags || [],
-    aclLevel: req.body.data.fields['data[securityLevel]'] || 'read-only'
+    imageTags: req.body.files.file[0].tags || [],
+    aclLevel: req.body.fields['data[securityLevel]'] || 'read-only'
   };
   fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
   
@@ -186,7 +191,7 @@ exports.configS3Obj = (req, res, next) => {
   
   fileData.s3Obj = new Object({
     header: { 'x-amz-decoded-content-length': fileData.size },
-    // ACL: 'read-only' || fileData.aclLevel || req.body.data.fields['data[securityLevel]'] || 'private',
+    // ACL: 'read-only' || fileData.aclLevel || req.body.fields['data[securityLevel]'] || 'private',
     region: 'us-west-1',
     Key: s3Directory + '/' + req.params.projectId + '/' + fileData.fileId + '.' + fileData.fileExt,
     Bucket: s3Config.bucket,
