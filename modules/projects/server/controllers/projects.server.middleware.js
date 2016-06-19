@@ -3,6 +3,8 @@
 let Promise = require('bluebird'),
     mongoose = require('mongoose'),
     fs = require('fs'),
+    stream = require('stream'),
+    EventEmitter = require('events'),
     path = require('path'),
     config = require(path.resolve('./config/config')),
     projects = require('./projects.server.controller'),
@@ -83,7 +85,7 @@ exports.imageId = (req, res, next, id) => {
 /**
  * Project authorization middleware
  */
-exports.hasAuthorization = (req, res, next) => {
+exports.hasAdminAuthorization = (req, res, next) => {
   if (req.project.user.id !== req.user.id) {
     return res.status(403).send('User is not authorized');
   }
@@ -91,28 +93,87 @@ exports.hasAuthorization = (req, res, next) => {
 };
 
 
-// exports.configReqObj = (req, res, next) => {
-//   console.log('req.body v1:\n', req.body);
-//   console.log('req.body.files[0] v1:\n', req.body.files[0]);
-//   req.body = {
-//     data: {
-//       files: {
-//         file: req.body.files[0],
-//         // path: req.body.files.file[0].path,
-//         // name: req.body.files.file[0].originalFilename,
-//         // type: req.body.files.file[0].content-type,
-//         // size: req.body.files.file[0].size,
-//         fileId: shortId.generate(),
-//         isDefaultImage: req.body.default || false,
-//         imageTags: req.body.files[0].file[0].tags || [],
-//       }
-//     }
-//   };
-//   console.log('req.body v2:\n', req.body);
-//   console.log('req.body.files v2:\n', req.body.files);
-//   next();
-// };
 
+/**
+ * Middleware that validates current session user's userId against all admin and superAdmin userIds
+ */
+exports.hasAdminAuthorization = (req, res, next) => {
+  console.log('req.session: ', req.session);
+
+  console.log('req.session.passport: ', req.session.passport);
+  console.log('req.session.passport.user: ', req.session.passport.user);
+
+  // hard code to dummy data for now
+  // refactor to return an array userIds of all users with a role of either admin or superAdmin
+  let authorizedAdmins = req.session.passport.user || '5611ca9493e8d4af5022bc17';
+
+  req.admin = {
+    isAdmin: true,
+    userId: '5611ca9493e8d4af5022bc17'
+  };
+  if (req.session.passport.user !== authorizedAdmins) {
+    req.admin.isAdmin = false;
+    // return res.status(403).send('User is not an admin and is not authorized');
+  }
+  console.log('::::  req.isAdmin::::::: ', req.isAdmin);
+  next();
+};
+
+
+/**
+ *
+ * Middleware that prepares req obj from front end streamed file uploads
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.transformHeaders = (req, res, next) => {
+  let isDefaultImage = (req.headers['default-image'] === 'true');
+  let imageTags = req.headers['tags'].split(',%,%,%'); //split with a symbol that won't be used in any tag so that i can parse back into an array later
+  let body = '';
+
+  // req.on('readable', () => {
+  //   body += req.read();
+  //   console.log('\n\n` inside da body`:\n', body);
+  // });
+  // req.on('open', () => {
+  //   body += req.read();
+  //   console.log('\n\n` inside da body`:\n', body);
+  //    fs.createReadStream(body);
+  // });
+
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
+
+  req.on('end', () => {
+    req.body.file = body;
+  // let imageFile = new Buffer(body, 'base64');
+  // let imageFileStreamBody = fs.createReadStream(body);
+  // let imageFileStreamBuf = fs.createReadStream(imageFile);
+
+
+
+  let preConfigObj = {
+    files: {
+      file: [{
+        file: req.body.file,
+        path: null,
+        name: req.headers['file-name'] || req.body.file.originalFilename,
+        type: req.headers['content-type'] || req.body.file['content-type'],
+        size: req.headers['size'],
+        isDefaultImage: isDefaultImage || false,
+        imageTags: imageTags || [],
+        aclLevel: req.headers['aclLevel'] || 'read-only',
+        bucket: req.headers['bucket']
+      }]
+    }
+  };
+  _.extend(req.body, preConfigObj);
+  next();
+  });  // close `end` event
+};
 
 
 /**
@@ -128,12 +189,10 @@ exports.hasAuthorization = (req, res, next) => {
  * @ returns {object} - req.body.
  */
 exports.parseFileUpload = (req, res, next) => {
-  console.log('\n\nparseFileUpload:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n');
-  console.log('\n\nreq.body:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n', req.body, '\n\n');
   var form = new multiparty.Form();
   form.parse(req, ((err, fieldsObject, filesObject) => {
     if (err) { console.log('parseFileUpload callback `err`:\n', err, '\n\n'); }
-    if (!req.body) { return req.body = {}; }
+    if (!req.body) { req.body = {}; }
     req.body = {
       fields: fieldsObject,
       files: filesObject
@@ -144,26 +203,24 @@ exports.parseFileUpload = (req, res, next) => {
 
 
 /**
- * Middleware 
- * 
+ * Middleware
+ *
  * @param req
  * @param res
  * @param next
  */
 exports.configFileData = (req, res, next) => {
-// console.log('\n\nreq:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n', req);
-// console.log('\n\nreq.body:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n', req.body, '\n\n');
-// console.log('\n\nreq.body.files:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n', req.body.files, '\n\n');
+  let file = req.body.files.file[0];
   let fileData = {
-    file: req.body.files.file[0],
-    path: req.body.files.file[0].path,
-    name: req.body.files.file[0].originalFilename,
-    type: req.body.files.file[0].headers['content-type'],
-    size: req.body.files.file[0].size,
+    file: file,
+    path: file.path || null,
+    name: file.name || file.originalFilename,
+    type: file.type || file.headers['content-type'],
+    size: file.size,
     fileId: shortId.generate(),
-    isDefaultImage: req.body.default || false,
-    imageTags: req.body.files.file[0].tags || [],
-    aclLevel: req.body.fields['data[securityLevel]'] || 'read-only'
+    isDefaultImage: file.isDefaultImage || req.body.default || false,
+    imageTags: file.tags || file.imageTags || [],
+    aclLevel:  file.aclLevel || req.body.fields['data[securityLevel]']
   };
   fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
   
@@ -178,16 +235,32 @@ exports.configFileData = (req, res, next) => {
 
 exports.configS3Obj = (req, res, next) => {
   let fileData = req.body.fileData;
-  
+
   //todo refactor to allow this to be a variable passed in on the req obj
   let s3Directory = s3Config.directory[1].path;
-  
-  let imageFileStream = fs.createReadStream(fileData.path);
-  
   let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Directory + '/' + req.params.projectId;
-  
   fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
   fileData.thumbImageUrl = imageUrlRoot + '/thumb_' + fileData.fileId + '.' + fileData.fileExt;
+
+  if(fileData.path) {
+    fileData.imageFileStream = fs.createReadStream(fileData.path);
+  }
+  if(fileData.imageFileStream) {
+    fileData.body = fileData.imageFileStream
+  } else if(fileData.file) {
+    // fileData.body = fileData.file
+    fileData.body = fileData.file.file
+  }
+  
+  // file stream is on `fileData.s3Obj.Body.file` for direct uploads;for multipart form data, stream is on `fileData.s3Obj.Body`
+
+  // if(fileData.s3Obj.Body.file) {
+  //   fileData.body.stream = fileData.s3Obj.Body.file
+  // } else if (fileData.s3Obj.Body) {
+  //   fileData.body.stream = fileData.s3Obj.Body
+  // }
+
+  // console.log('\nfileData:\n', fileData, '\n');
   
   fileData.s3Obj = new Object({
     header: { 'x-amz-decoded-content-length': fileData.size },
@@ -197,25 +270,38 @@ exports.configS3Obj = (req, res, next) => {
     Bucket: s3Config.bucket,
     ContentLength: fileData.size,
     ContentType: fileData.type,
-    Body: imageFileStream,
+    Body: fileData.body,
     Metadata: {
       imageId: fileData.fileId,
       imageType: fileData.type,
       imageExt: fileData.fileExt,
-      imageTag: fileData.imageTags.toString(),
-      imageName: fileData.name,
+      imageTags: fileData.imageTags.toString(),
+      imageName: fileData.name || fileData.body.name,
       isDefault: fileData.isDefaultImage.toString() || 'false',
     }
   });
+  // let newObj = _.omit(req.body, ['fileData.Body', 'files.fileData.file.file', 'files.fileData.file.body', 'files.fileData.file.s3Obj.Body',  'file', 'fileData.file.file']);
+  // console.log('newObj:\n', newObj, '\n\n');
+
   req.body.fileData = fileData;
   next();
 };
 
+
+/**
+ *  Creates and configures an object to update the associated database document
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.configMongoObj = (req, res, next) => {
+
   let fileData = req.body.fileData;
-  /** now configure object to update on database */
+
+
+  // todo make dynamic !!
   let currentAdminId = '5611ca9493e8d4af5022bc17';
-  
+
   let fieldsToUpdate = {
     $addToSet: {
       imageGallery: {
@@ -227,7 +313,7 @@ exports.configMongoObj = (req, res, next) => {
         imageType: fileData.type,
         imageExt: fileData.fileExt,
         imageName: fileData.name,
-        imageTag: fileData.tags,
+        imageTags: fileData.imageTags,
         isDefaultImage: fileData.isDefaultImage
       },
       modified: {
@@ -236,6 +322,7 @@ exports.configMongoObj = (req, res, next) => {
       }
     }
   };
+  req.body.fileData = fileData;
   req.body.fieldsToUpdate = fieldsToUpdate;
   next();
 };

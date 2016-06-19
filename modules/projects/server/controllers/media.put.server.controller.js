@@ -11,7 +11,7 @@ let Promise = require('bluebird'),
   AWS = require('aws-sdk'),
   shortId = require('shortid'),
   moment = require('moment'),
-  mediaUtilities = require('./projects.server.utilities.js');
+  projectUtilities = require('./projects.server.utilities.js');
 
 // console.log('mongoose.connections.db:\n', mongoose.connections[0].db);
 
@@ -106,12 +106,11 @@ let _createThumbnail = (projectId, fileName, filePath, file) => {
 };
 
 
-
 /**
  *
  * NOT WORKING !!!
  * in progress!!!
- * 
+ *
  * 1) Uploads images to a temp bucket in s3
  * 2) returns link to wysiwyg for displaying image
  * 3) sends image to TinyPng to optimize main image
@@ -175,16 +174,7 @@ exports.uploadProjectImagesV2 = (req, res) => {
 
 
 
-
-
-
-
-
-
-
 /**
- *
- * WORKING!!!
  *
  * Uploads images to s3 - stores files in `mapping-slc-file-upload/project-directory/<project-id>/` and saves image data in Mongo
  *
@@ -195,8 +185,24 @@ exports.uploadProjectImages = (req, res) => {
   let fileData = req.body.fileData;
   let fieldsToUpdate = req.body.fieldsToUpdate;
 
+  /* for direct uploads, file stream is on `fileData.s3Obj.Body.file`; for multipart form data, stream is on `fileData.s3Obj.Body`  */
+  if(fileData.s3Obj.Body.file) {
+    fileData.body.stream = fileData.s3Obj.Body.file;
+  // } else if (fileData.s3Obj.Body) {
+  //   fileData.body.stream = fileData.s3Obj.Body
+  }
+
+// todo -- current issue is that `fieldsToUpdate` is undefined, so i'm getting an error: "'$addToSet' of undefined"
+  //todo - workaround; need to refactor
+  fileData.s3Obj.Metadata.imageName = req.headers['file-name'] || req.body.fileData.file.originalFilename;
+
   /** upload image to S3 */
-  let s3Params = { Bucket: fileData.s3Obj.Bucket, Key: fileData.s3Obj.Key, Metadata: fileData.s3Obj.Metadata, Body: fileData.s3Obj.Body };
+  let s3Params = {
+    Bucket: fileData.s3Obj.Bucket,
+    Key: fileData.s3Obj.Key,
+    Metadata: fileData.s3Obj.Metadata,
+    Body: fileData.s3Obj.Body || fileData.body.stream //refactor
+  };
 
   return s3.uploadAsync(s3Params)
   .then(uploadedImage => {
@@ -208,84 +214,82 @@ exports.uploadProjectImages = (req, res) => {
       fieldsToUpdate,
       { new: true }
     ).exec();
-
+    
     query.then(response => {
       /** now send response to front end */
-        return res.jsonp({ link: fileData.fullImageUrl });
+      return res.jsonp({ link: fileData.fullImageUrl });
     })
     .catch(err => {
       console.error('\n\nERROR updating Mongo:\n', err);
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-      });
-
+    });
   });
-
 };
+
+
 
 
 /**
  *
- * Uploads documents to s3:
- * * stores files path bucket: `mapping-slc-file-upload/project-directory/<project-id>/`
- * * url to access documents: ``
+ * Streams files (docs or media) to s3:
  *
- * @param req
+ * @param req - file should already be a stream
  * @param res
  *
  */
-exports.streamProjectDocuments = (req, res) => {
-  
-  var project = req.project;
-  
-  var file = req.body.data.files.file[0];
-  var filePath = req.body.data.files.file[0].path;
-  var fileName = req.body.data.files.file[0].originalFilename;
-  var type = req.body.data.files.file[0].headers['content-type'];
-  var aclLevel = req.body.data.fields['data[securityLevel]'];
-  
-  if (/\s/g.test(fileName)) {
-    fileName = fileName.replace(/\s/g, '_');
-  }
 
-  let fileStream = fs.createReadStream(filePath);
-  let s3Obj = {
-    header: { 'x-amz-decoded-content-length': file.size },
-    ACL: aclLevel || 'private',
-    region: 'us-west-1',
-    Key: 'project-directory/' + project._id + '/' + fileName,
-    Bucket: s3Config.bucket,
-    ContentLength: file.size,
-    ContentType: type,
-    Body: fileStream
-    // ServerSideEncryption: 'AES256'
+exports.streamProjectFiles = (req, res) => {
+
+  let fileData = req.body.fileData;
+  let fieldsToUpdate = req.body.fieldsToUpdate;
+
+  /** upload image to S3 */
+  let s3Params = {
+    Bucket: fileData.s3Obj.Bucket,
+    Key: fileData.s3Obj.Key,
+    Metadata: fileData.s3Obj.Metadata,
+    Body: fileData.s3Obj.Body
   };
 
-  s3.upload({ Bucket: s3Obj.Bucket, Key: s3Obj.Key, Metadata: {}, Body: s3Obj.Body })
-  .on('httpUploadProgress', function (evt) {
-    console.log(evt);
-  })
-  .send(function (err, data) {
-    if (err) {
-      console.log('s3 upload error message:\n', err);
-    }
-    console.log('s3 upload project files :: SUCCESSFUL UPLOAD :: Response var `data`:\n', data);
-    
-    /** now save main document url and ETag to mongoDb */
-    let updatedProject = {
-      fileUrls: data.Location,
-      fileEtags: data.ETag
+  return s3.uploadAsync(s3Params)
+  .then(uploadedImage => {
+    fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
+
+    /** update mongoDb */
+    let mongoData = {
+      collection: 'Project',
+      queryId: req.params.projectId,
+      fieldsToUpdate: fieldsToUpdate,
+      options: { new: true }
     };
-    Project.update(updatedProject);
-    
-    /** now respond with a success message */
-      // res.jsonp({ message: 's3 file upload was successful', mainImageUrl: data.Location });
-    
-    let response = {
-        message: 's3 file upload was successful',
-        s3Obj: s3Obj
-      };
-    res.jsonp(response);
-    
-  });
+    let mongoResponse = projectUtilities.updateDb(mongoData);  // <-- do/can I to promisify this call????  
   
+    /** send response (success or error) to front end */
+    let statusCode = mongoResponse.statusCode || 205;
+    let response = {
+      message: 's3 file upload was successful',
+      s3Obj: s3Obj,
+      response: mongoResponse
+    };
+    res.statusCode(statusCode).jsonp(response);
+    
+    
+    // projectUtilities.updateDb(mongoData, (response => {     // <-- do/can I to promisify this call????
+    //   let statusCode = response.statusCode || 205;
+    //   let response = {
+    //     message: 's3 file upload was successful',
+    //     s3Obj: s3Obj
+    //   };
+    //   res.statusCode(statusCode).jsonp(response);
+    // }));
+  
+  
+    // projectUtilities.updateDb(mongoData);  // <-- do i need to promisify this call????
+    // let statusCode = response.statusCode || 205;
+    // let response = {
+    //   message: 's3 file upload was successful',
+    //   s3Obj: s3Obj
+    // };
+    // res.statusCode(statusCode).jsonp(response);
+  });
 };

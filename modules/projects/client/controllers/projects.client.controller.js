@@ -538,8 +538,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.animationsEnabled = !$scope.animationsEnabled;
       };
     };
-
-
+  
+  
+  
+    $scope.toggleEdit = false;
+    $scope.toggleId = 0;
+  
+    $scope.toggleEditAdminPanel = function (editNum, isEdit, originalData) {
+      
+    };
     /**
      * admin panel editing
      */

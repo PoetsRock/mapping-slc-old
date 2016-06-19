@@ -2,117 +2,74 @@
 
   <div class="file-upload">
 
+    <div>
+      {{arrayBufferCheck}}
+    </div>
+
     <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8">
 
       <div class="row">
-        <md-button class="md-raised" data-ng-model="projects.files" ngf-select
+        <md-button class="md-raised" data-ng-model="files" ngf-select
                    ngf-multiple="true" ngf-fix-orientation="true"
                    accept=".jpeg,.jpg,.png,image/*" ngf-max-size="3MB"
                    ngf-keep="'distinct'"
                    ngf-model-invalid="errorFile"
-                   data-ng-change="fileReaderNg(files)" data-ng-click="adminFileReaderNg(project.files)">
-          Select Files
+                   data-ng-show="!uploading"
+                   data-ng-change="adminFileReaderNg(files)">
+          {{uploadBtnText}} 1
         </md-button>
 
-        <md-button class="md-raised" data-ng-click="files = null" data-ng-show="projects.files">
-          Remove All
-        </md-button>
+      <md-button class="md-raised" data-ng-click="files = null" data-ng-show="files.length > 0 && !uploading">
+        Remove All
+      </md-button>
 
-        <md-button class="md-raised" data-ng-click="uploadAdminImagesV2(projects.files)" data-ng-show="projects.files">
-          Upload
-        </md-button>
-
-      </div>
-
-
-      <div class="row">
-        <div class="preview">
-          <div data-ng-repeat="previewImage in previewImages">
-            <div><img ngf-thumbnail="previewImage" class="image-preview"></div>
-            <div>{{previewImage.name}}</div>
-          </div>
-        </div>
-      </div>
-
-
-      <!--------------------------------------------------------------->
-
-
-      <!--&lt;!&ndash;upload multiple images&ndash;&gt;-->
-      <!--<md-button class="md-raised" type="file" multiple ngf-select="uploadAdminImages($file, $invalidFiles)" data-ng-hide="uploading" ngf-fix-orientation="true" name="files" accept="image/*" ngf-max-size="3MB">-->
-      <!--&lt;!&ndash;ng-model="files"   ngf-change="" &ndash;&gt;-->
-      <!--Upload Image-->
-      <!--</md-button>-->
-      <!---->
-      <!--<br><br>-->
-      <!---->
-      <!---->
-      <!--<div>-->
-      <!--<ul>-->
-      <!--<li ng-repeat="file in files">-->
-      <!--<img ngf-src="file" ngf-resize="{width: 150, height: auto, quality: 0.7}">-->
-      <!--<div ngf-thumbnail="file" ngf-size="{width: 150, height: auto, quality: 0.7}"></div>-->
-      <!---->
-      <!--<div style="font:smaller">-->
-      <!--{{file.name}}-->
-      <!--<br>-->
-      <!--<div data-ng-show="errFile" style="font-size:1.8rem; color:#8b0000">-->
-      <!--Error uploading {{errFile.name}}:-->
-      <!--</br>{{errFile.$error}} {{errFile.$errorParam}}-->
-      <!--</div>-->
-      <!--<span class="progress" ng-show="file.progress >= 0">-->
-      <!--<div style="width:{{file.progress}}%" ng-bind="file.progress + '%'"></div>-->
-      <!--</span>-->
-      <!--</div>-->
-      <!---->
-      <!--<br>-->
-      <!--<div data-ng-show="errorMsg">-->
-      <!--Error: {{errorMsg}}-->
-      <!--</div>-->
-      <!---->
-      <!--</li>-->
-      <!--</ul>-->
-      <!--</div>-->
-      <!---->
-      <!---->
-      <!--<div>-->
-      <!--<img ngf-src="file" ngf-resize="{width: 20, height: 20, quality: 0.9}">-->
-      <!--</div>-->
-      <!---->
-      <!--<div ngf-thumbnail="file" ngf-size="{width: 20, height: 20, quality: 0.9}"></div>-->
-      <!---->
-
-
-      <div>
-      <span class="progress" ng-show="projects.files.progress > 0">
-        <div style="width:{{projects.files.progress}}%" ng-bind="projects.files.progress + '%'"></div>
-      </span>
-
-        <span ng-show="projects.files.result">Upload Successful</span>
-        <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-
-        <div ng-show="success" class="text-center text-success">
-          <strong>Images Successfully Uploaded</strong>
-        </div>
-
+      <md-button class="md-raised" data-ng-click="uploadAdminImagesV2('projects', files)" data-ng-show="files.length > 0 && !uploading">
+        Upload
+      </md-button>
 
         <!--abort upload-->
-        <button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow">Cancel
-        </button>
-
-
-        <div ngf-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">
-          File Drag/Drop is not supported for this browser
-        </div>
-
-
-        <div ng-show="error" class="text-center text-danger">
-          <strong ng-bind="error"></strong>
-        </div>
-
-
-      </div>
+        <md-button data-ng-click="abort();" data-ng-show="uploading" class="md-raised" data-ng-show="uploading">
+          Cancel
+        </md-button>
 
     </div>
+
+
+    <div class="row">
+      <div class="col-md-12 preview">
+        <div data-ng-repeat="previewFile in previewFiles">
+          <div>
+            <img ngf-src="previewFile" class="image-preview">
+            <span data-ng-click="removePreviewImage(previewFile.$$hashKey)">x</span>
+          </div>
+          {{previewFile.name}}
+        </div>
+      </div>
+    </div>
+
+    <div>
+
+      <span class="progress" ng-show="files.progress > 0">
+        <div style="width:{{files.progress}}%" ng-bind="files.progress + '%'"></div>
+      </span>
+      <span ng-show="files.result">
+        Upload Successful
+      </span>
+      <span class="err" ng-show="errorMsg">
+        {{errorMsg}}
+      </span>
+
+      <div ng-show="success" class="text-center text-success">
+        <strong>Images Successfully Uploaded</strong>
+      </div>
+
+      <div ng-show="errorFile" class="text-center text-danger">
+        <strong ng-bind="errorFile"></strong>
+        <strong ng-bind="error"></strong>
+      </div>
+
+
+    </div>
+
   </div>
 </section>
