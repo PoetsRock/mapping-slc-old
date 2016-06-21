@@ -1,8 +1,8 @@
 'use strict';
 
 // Admins controller
-angular.module('admins').controller('AdminsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', 'UserData', 'Contacts', 'AdminAuthService',
-  function ($scope, $stateParams, $location, Authentication, Projects, UserData, Contacts, AdminAuthService) {
+angular.module('admins').controller('AdminsController', ['$scope', '$http', '$stateParams', '$location', 'Authentication', 'Projects', 'UserData', 'Contacts', 'AdminAuthService',
+  function ($scope, $http, $stateParams, $location, Authentication, Projects, UserData, Contacts, AdminAuthService) {
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
 

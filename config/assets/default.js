@@ -60,6 +60,7 @@ module.exports = {
         'public/lib/xmlToJSON.js/lib/xmlToJSON.js',
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
         'public/lib/ng-file-upload/ng-file-upload.js',
+        'public/lib/lodash/lodash.js',
 
         //load plugins for Froala text editor
         'public/lib/mslc/angular-froala/src/js/plugins/align.min.js',

@@ -6,82 +6,157 @@
 var _ = require('lodash'),
   fs = require('fs'),
   mongoose = require('mongoose'),
+  Promise = require('bluebird'),
   path = require('path'),
   bodyParser = require('body-parser'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   config = require(path.resolve('./config/config')),
-  User = mongoose.model('User'),
   Users = require('./users.profile.server.controller.js'),
-  Project = mongoose.model('Project'),
   AWS = require('aws-sdk'),
-  s3Config = {
-    keys: require('../../../../../config/env/production.js'),
-    bucket: 'mapping-slc-file-upload',
-    region: 'us-west-1',
-    directory: {
-      project: 'project-directory',
-      user: 'user-directory',
-      admin: 'admin-directory'
-    }
-  },
   crypto = require('crypto'),
-  moment = require('moment'),
-  tinify = require('tinify'),
-  s3Url = 'https://' + s3Config.bucket + '.s3-' + s3Config.region + '.amazonaws.com';
+  moment = require('moment');
+
+let s3Config = {
+  bucket: 'mapping-slc-file-upload',
+  region: 'us-west-1',
+  directory: [
+    { name: 'admin', path: 'admin-directory' },
+    { name: 'project', path: 'project-directory' },
+    { name: 'user', path: 'user-directory' }
+  ]
+};
+
+/** config aws s3 config settings, file object, and create a new instance of the s3 service */
+let awsS3Config = {
+  accessKeyId: config.S3_ID,
+  secretAccessKey: config.S3_SECRET,
+  region: 'us-west-1'
+};
+
+let tinify = Promise.promisifyAll(require('tinify'));
+let s3 = new AWS.S3(awsS3Config);
+Promise.promisifyAll(s3);
+mongoose.Promise = Promise;
+let Project = mongoose.model('Project');
+let User = mongoose.model('User');
 
 
 /**
- * upload user profile image to Amazon S3
+ *
+ * Uploads user profile image to Amazon S3 - stores files in `mapping-slc-file-upload/user-directory/<user-id>/` and saves image data in Mongo
+ *
+ * @param req
+ * @param res
  */
-
 exports.uploadUserProfileImage = function (req, res) {
-  var user = req.body.user;
-  var fileName = 'uploaded-profile-image.jpg';
-  if(1 !== 1) {
-    fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
-  }
-  var path = s3Config.directory.user + '/' + user._id + '/' + fileName;
-  // var readType = 'private';
-  var readType = 'public-read';
-  var expiration = moment().add(5, 'm').toDate(); //15 minutes
-  var s3Policy = {
-    'expiration': expiration,
-    'conditions': [{
-      'bucket': s3Config.bucket
-    },
-      ['starts-with', '$key', path],
-      {
-        'acl': readType
-      },
-      {
-        'success_action_status': '201'
-      },
-      ['starts-with', '$Content-Type', req.body.type],
-      ['content-length-range', 2048, 10485760], //min and max
-    ]
-  };
-
-  var stringPolicy = JSON.stringify(s3Policy);
-  var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
-
-  // sign policy
-  var signature = crypto.createHmac('sha1', config.S3_SECRET)
-    .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
-
-  var credentials = {
-    url: s3Url,
-    fields: {
-      key: path,
-      AWSAccessKeyId: config.S3_ID,
-      acl: readType,
-      policy: base64Policy,
-      signature: signature,
-      'Content-Type': req.body.type,
-      success_action_status: 201
+    let fileData = req.body.fileData;
+    let fieldsToUpdate = req.body.fieldsToUpdate;
+    
+    /* for direct uploads, file stream is on `fileData.s3Obj.Body.file`; for multipart form data, stream is on `fileData.s3Obj.Body`  */
+    if(fileData.s3Obj.Body.file) {
+      fileData.body.stream = fileData.s3Obj.Body.file;
+      // } else if (fileData.s3Obj.Body) {
+      //   fileData.body.stream = fileData.s3Obj.Body
     }
-  };
-  console.log('credentials:\n', credentials, '\n\n');
-  res.jsonp(credentials);
+
+// todo -- current issue is that `fieldsToUpdate` is undefined, so i'm getting an error: "'$addToSet' of undefined"
+    //todo - workaround; need to refactor
+    fileData.s3Obj.Metadata.imageName = req.headers['file-name'] || req.body.fileData.file.originalFilename;
+    
+    /** upload image to S3 */
+    let s3Params = {
+      Bucket: fileData.s3Obj.Bucket,
+      Key: fileData.s3Obj.Key,
+      Metadata: fileData.s3Obj.Metadata,
+      Body: fileData.s3Obj.Body || fileData.body.stream //refactor
+    };
+    console.log('s3Params.Body:\n', s3Params.Body);
+
+
+    return s3.uploadAsync(s3Params)
+    .then(uploadedImage => {
+
+
+
+      console.log('fieldsToUpdate:\n', fieldsToUpdate);
+      console.log('uploadedImage:\n', uploadedImage);
+      console.log('uploadedImage.Key: ', uploadedImage.Key);
+
+      // fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
+      
+      /** now save the image URLs to mongoDb */
+      let query = User.findOneAndUpdate(
+        { _id: req.params.userId },
+        fieldsToUpdate,
+        { new: true }
+      ).exec();
+      
+      query.then(response => {
+        /** now send response to front end */
+        return res.jsonp({ message: 'profile photo updated', data: response });
+      })
+      .catch(err => {
+        console.error('\n\nERROR updating Mongo:\n', err);
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+      });
+    });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // var user = req.body.user;
+  // var fileName = 'uploaded-profile-image.jpg';
+  // if(1 !== 1) {
+  //   fileName = req.body.filename.replace(/\s/g, '_'); //substitute all whitespace with underscores
+  // }
+  // var path = s3Config.directory.user + '/' + user._id + '/' + fileName;
+  // // var readType = 'private';
+  // var readType = 'public-read';
+  // var expiration = moment().add(5, 'm').toDate(); //15 minutes
+  // var s3Policy = {
+  //   'expiration': expiration,
+  //   'conditions': [{
+  //     'bucket': s3Config.bucket
+  //   },
+  //     ['starts-with', '$key', path],
+  //     {
+  //       'acl': readType
+  //     },
+  //     {
+  //       'success_action_status': '201'
+  //     },
+  //     ['starts-with', '$Content-Type', req.body.type],
+  //     ['content-length-range', 2048, 10485760], //min and max
+  //   ]
+  // };
+  //
+  // var stringPolicy = JSON.stringify(s3Policy);
+  // var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+  //
+  // // sign policy
+  // var signature = crypto.createHmac('sha1', config.S3_SECRET)
+  //   .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+  //
+  // var credentials = {
+  //   url: s3Url,
+  //   fields: {
+  //     key: path,
+  //     AWSAccessKeyId: config.S3_ID,
+  //     acl: readType,
+  //     policy: base64Policy,
+  //     signature: signature,
+  //     'Content-Type': req.body.type,
+  //     success_action_status: 201
+  //   }
+  // };
+  // console.log('credentials:\n', credentials, '\n\n');
+  // res.jsonp(credentials);
 
 
   ////now save url to mongoDb
@@ -174,7 +249,7 @@ exports.getS3File = function (req, res) {
   s3.getObject(imageData.params, function (err, callback) {
     //require('string_decoder');
     if (err) {
-      console.log('err:\n', err);
+      console.log('getObject ERROR `err`:\n', err);
       res.send({
         message: 'ERROR, yo: ' + err
       })

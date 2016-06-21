@@ -244,6 +244,48 @@ gulp.task('nodemon-debug', function () {
   });
 });
 
+// wiredep task to default
+gulp.task('wiredep', function () {
+  return gulp.src('config/assets/default.js')
+  .pipe(plugins.wiredep({
+    ignorePath: '../../'
+  }))
+  .pipe(gulp.dest('config/assets/'));
+});
+
+// wiredep task to production
+gulp.task('wiredep:prod', function () {
+  return gulp.src('config/assets/production.js')
+  .pipe(plugins.wiredep({
+    ignorePath: '../../',
+    fileTypes: {
+      js: {
+        replace: {
+          css: function (filePath) {
+            var minFilePath = filePath.replace('.css', '.min.css');
+            var fullPath = path.join(process.cwd(), minFilePath);
+            if (!fs.existsSync(fullPath)) {
+              return '\'' + filePath + '\',';
+            } else {
+              return '\'' + minFilePath + '\',';
+            }
+          },
+          js: function (filePath) {
+            var minFilePath = filePath.replace('.js', '.min.js');
+            var fullPath = path.join(process.cwd(), minFilePath);
+            if (!fs.existsSync(fullPath)) {
+              return '\'' + filePath + '\',';
+            } else {
+              return '\'' + minFilePath + '\',';
+            }
+          }
+        }
+      }
+    }
+  }))
+  .pipe(gulp.dest('config/assets/'));
+});
+
 // Copy local development environment config example
 gulp.task('copyLocalEnvConfig', function () {
   var src = [];
@@ -414,7 +456,7 @@ gulp.task('build-with-lint', function (done) {
 
 // Minify project files into two production files.
 gulp.task('build', function (done) {
-  runSequence('env:dev', ['uglify', 'cssmin'], done);
+  runSequence('env:dev', 'wiredep:prod', ['uglify', 'cssmin'], done);
 });
 
 // Watch all server files for changes & run server tests (test:server) task on changes
@@ -440,16 +482,9 @@ gulp.task('prod', function (done) {
 });
 
 // Run the project in production mode
-gulp.task('heroku', function (done) {
-  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', ['nodemon', 'watch'], done);
+gulp.task('prod-test', function (done) {
+  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', done);
 });
-
-
-// Run the project in production mode
-gulp.task('modulus', function (done) {
-  runSequence('env:prod', 'templatecache', ['uglify', 'cssmin'], ['nodemon', 'watch'], done);
-});
-
 
 
 

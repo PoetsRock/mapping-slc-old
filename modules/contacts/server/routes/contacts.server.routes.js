@@ -15,8 +15,21 @@ module.exports = function (app) {
     .get(contacts.read)
     .put(contacts.update)
     .delete(contacts.delete);
+  
+  
+  app.route('/api/v1/users/:userId/email')
+    .put(contacts.emailNewUser);
 
-
+  app.route('/api/v1/emails/admins')
+    .put(contacts.emailAdmins);
+  
+  app.route('/api/v1/emails/email/test')
+    .put(contacts.emailTest);
+  
+  
+    
+  
+  
   // Finish by binding the Contact middleware
   app.param('contactId', contacts.contactByID);
 };

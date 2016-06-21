@@ -8,12 +8,11 @@ module.exports = function (app) {
       createCredentialsMedia = require('../controllers/media.credentials.server.controller.js'),
       deleteMedia = require('../controllers/media.delete.server.controller.js'),
       projects = require('../controllers/projects.server.controller.js'),
-      mongoose = require('mongoose'),
       middleware = require('../controllers/projects.server.middleware.js'),
-      Project = mongoose.model('Project'),
       vimeo = require('../controllers/vimeo.server.controller');
-
-
+  // let mongoose = require('mongoose');
+  // let Project = mongoose.model('Project');  
+  
   let baseUrl = '/api/v1/projects';
   let baseUrlV2 = '/api/v2/projects';
   let imagesApi = baseUrl + '/:projectId/images';
@@ -28,12 +27,10 @@ module.exports = function (app) {
     .get(getMedia.findOneVideoId);
   app.route(videosApi + '/:videoId')
     .get(vimeo.getOneVideo);
-
-
-
+  
+  
   app.route(filesApi)
-    // .post(createMedia.parseFileUpload, createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages);
-    .post(middleware.configFileData, middleware.configS3Obj, createMedia.uploadProjectImages);
+    .post(middleware.transformHeaders, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)
