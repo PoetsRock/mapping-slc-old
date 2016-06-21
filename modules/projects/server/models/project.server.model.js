@@ -17,7 +17,7 @@ var ImageGallerySchema = new Schema({
   imageSize: Number,
   imageType: String,
   imageExt: String,
-  imageTag: Array,
+  imageTags: Array,
   imageName: String,
   isDefaultImage: Boolean,
   imageHash: String,
@@ -28,7 +28,7 @@ var ImageGallerySchema = new Schema({
 var DocumentGallerySchema = new Schema({
   documentName: String,
   documentSize: Number,
-  documentTag: Array,
+  documentTags: Array,
   documentType: String,
   documentExt: String,
   documentIcon: String,

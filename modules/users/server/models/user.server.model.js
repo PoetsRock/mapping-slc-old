@@ -10,6 +10,17 @@ var mongoose = require('mongoose'),
   generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
 
+
+/**
+ * `UserModifiedSchema` is a subCollection that consists of an array of objects. each object has two fields:
+ * @prop modifiedBy {string}: userId of user who edited document
+ * @prop modifiedAt {date}: timestamp that records when document was modified
+ */
+let UserModifiedSchema = new Schema({
+  modifiedBy: String,
+  modifiedAt: Date
+});
+
 /**
  * A Validation function for local strategy properties
  */
@@ -32,12 +43,12 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  ModifiedBy: {
-    type: String
-  },
-  ModifiedOn: {
-    type: Date
-  },
+  // ModifiedBy: {
+  //   type: String
+  // },
+  // ModifiedOn: {
+  //   type: Date
+  // },
   namePrefix: {
     type: String,
     trim: true,
@@ -105,13 +116,14 @@ var UserSchema = new Schema({
   salt: {
     type: String
   },
-  profileImageURL: {
+  profileImageUrl: {
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
-  profileImageThumbURL: {
+  profileImageThumbUrl: {
     type: String,
-    trim: true
+    trim: true,
+    default: 'modules/users/client/img/profile/thumb_default.png'
   },
   profileImageFileName: {
     type: String,
@@ -186,7 +198,10 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
-  }
+  },
+  
+  modified: [UserModifiedSchema]
+  
 });
 
 /**
@@ -297,3 +312,4 @@ UserSchema.statics.generateRandomPassphrase = function () {
 };
 
 mongoose.model('User', UserSchema);
+mongoose.model('UserModified', UserModifiedSchema);

@@ -7,14 +7,18 @@ module.exports = function (app) {
       getMedia = require('../controllers/media.get.server.controller.js'),
       createCredentialsMedia = require('../controllers/media.credentials.server.controller.js'),
       deleteMedia = require('../controllers/media.delete.server.controller.js'),
-      mongoose = require('mongoose'),
-      Project = mongoose.model('Project'),
+      projects = require('../controllers/projects.server.controller.js'),
+      middleware = require('../controllers/projects.server.middleware.js'),
       vimeo = require('../controllers/vimeo.server.controller');
-
-
+  // let mongoose = require('mongoose');
+  // let Project = mongoose.model('Project');  
+  
   let baseUrl = '/api/v1/projects';
+  let baseUrlV2 = '/api/v2/projects';
   let imagesApi = baseUrl + '/:projectId/images';
+  let imagesApiV2 = baseUrlV2 + '/:projectId/images';
   let videosApi = baseUrl + '/:projectId/videos';
+  let filesApi = baseUrl + '/:projectId/files';
 
 
   // Single project routes for different genres
@@ -23,12 +27,14 @@ module.exports = function (app) {
     .get(getMedia.findOneVideoId);
   app.route(videosApi + '/:videoId')
     .get(vimeo.getOneVideo);
-
-
+  
+  
+  app.route(filesApi)
+    .post(middleware.transformHeaders, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)
-    .post(createMedia.parseFileUpload, createMedia.configFileData, createMedia.configS3Obj, createMedia.configMongoObj, createMedia.uploadProjectImages)
+    .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages)
     .put(deleteMedia.deleteImagesByBucket);
 
   app.route(imagesApi + '/:imageId')
@@ -39,6 +45,9 @@ module.exports = function (app) {
     .get(getMedia.getDefaultImageByProjectId);
 
 
+  app.route(imagesApiV2)
+    .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImagesV2);
+  
 
 
 
@@ -47,35 +56,36 @@ module.exports = function (app) {
   // `/projects/:projectId/images[/:imageId]`
       // if i need anything else (e.g., "source"), add as a query param
       // `/projects/:projectId/images?source=sourceName`
-  app.route(baseUrl + '/:projectId/upload/:imageId')
-    .get(getMedia.getS3SignedUrl);
 
-  app.route(baseUrl + '/:projectId/upload')
-    .get(getMedia.getImagesByProjectId);
-
-
-  app.route(baseUrl + '/:projectId/:source/upload')
-    .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
-
-  app.route(baseUrl + '/:projectId/s3/upload')
-    .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
-
-  app.route(baseUrl + '/:projectId/s3/upload/documents')
-    .post(createCredentialsMedia.createUploadCredentials);
-
-
-
-  // Get S3 File
-  app.route(baseUrl + '/:projectId/files/:fileId')
-    .get(getMedia.getS3File);
-  
-  // Get Permissions for a Bucket or File
-  app.route(baseUrl + '/acl')
-    .get(getMedia.getS3BucketAcl);
-  
-  app.route(baseUrl + '/acl/object')
-  // app.route(imagesApi + '/:imageId/acl')
-    .get(getMedia.getS3ObjectAcl);
+  // app.route(baseUrl + '/:projectId/upload/:imageId')
+  //   .get(getMedia.getS3SignedUrl);
+  //
+  // app.route(baseUrl + '/:projectId/upload')
+  //   .get(getMedia.getImagesByProjectId);
+  //
+  //
+  // app.route(baseUrl + '/:projectId/:source/upload')
+  //   .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
+  //
+  // app.route(baseUrl + '/:projectId/s3/upload')
+  //   .post(createMedia.parseFileUpload, createMedia.uploadProjectImages);
+  //
+  // app.route(baseUrl + '/:projectId/s3/upload/documents')
+  //   .post(createCredentialsMedia.createUploadCredentials);
+  //
+  //
+  //
+  // // Get S3 File
+  // app.route(baseUrl + '/:projectId/files/:fileId')
+  //   .get(getMedia.getS3File);
+  //
+  // // Get Permissions for a Bucket or File
+  // app.route(baseUrl + '/acl')
+  //   .get(getMedia.getS3BucketAcl);
+  //
+  // app.route(baseUrl + '/acl/object')
+  // // app.route(imagesApi + '/:imageId/acl')
+  //   .get(getMedia.getS3ObjectAcl);
 
 
 

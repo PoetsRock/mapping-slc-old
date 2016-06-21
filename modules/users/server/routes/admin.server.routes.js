@@ -11,7 +11,7 @@ module.exports = function (app) {
   require('./users.server.routes.js')(app);
 
   // Users collection routes
-  app.route('/api/v1/users')
+  app.route('/api/v1/admin/users')
     .get(admin.list);
 
   //app.route('/api/v1/users/newsletter').put(admin.addNewsletter);
