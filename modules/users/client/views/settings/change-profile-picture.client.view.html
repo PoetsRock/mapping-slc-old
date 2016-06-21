@@ -1,35 +1,58 @@
-<section class="row" ng-controller="ChangeProfilePictureController" data-ng-init="init();">
+<section class="row" ng-controller="ProfilePictureController" data-ng-init="init();">
   <div class="file-upload">
     <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8">
 
       <!--display current image-->
-      <img data-ng-src="{{user.profileImageURL}}" class="img-thumbnail user-profile-picture"/>
-
-      <div>
-        <md-button class="md-raised" data-ng-model="files" ngf-select
-                   ngf-multiple="true"  ngf-fix-orientation="true"
-                   accept=".jpeg,.jpg,.png,image/*" ngf-max-size=1MB"
-                   ngf-model-invalid="errorFile"
-                   data-ng-show="!uploading"
-                   data-ng-change="profileImageFileReader(files)">
-          {{uploadBtnText}}
-        </md-button>
-
-        <md-button class="md-raised" data-ng-click="uploadUserProfileImage('users', files)" data-ng-show="!uploading && files.length > 0">Upload</md-button>
-
-        <!--abort upload-->
-        <md-button data-ng-click="abort();" data-ng-show="uploading" class="md-raised">Cancel</md-button>
+      <div class="row">
+        <div class="col-md-10">
+            <img data-ng-src="{{user.profileImageThumbUrl}}" class="img-thumbnail user-profile-picture img-responsive">
+            <img src="https://s3-us-west-1.amazonaws.com/mapping-slc-file-upload/user-directory/5611ca9493e8d4af5022bc17/chrisImg.jpg" class="img-thumbnail user-profile-picture img-responsive">
+        </div>
       </div>
 
-      <div><img ngf-src="files" ngf-resize="{width: 20, height: 20, quality: 0.9}"></div>
-      <div ngf-thumbnail="files" ngf-size="{width: 20, height: 20, quality: 0.9}"></div>
+      <div class="row">
+        <div class="col-md-10">
+          <md-button class="md-raised" data-ng-model="files" ngf-select
+                     ngf-multiple="true" ngf-fix-orientation="true"
+                     accept=".jpeg,.jpg,.png,image/*" ngf-max-size="1MB"
+                     ngf-keep="'distinct'"
+                     ngf-model-invalid="errorFile"
+                     data-ng-show="!uploading"
+                     data-ng-change="profileImageFileReader(files)">
+            {{uploadBtnText}}
+          </md-button>
+
+          <!--<md-button class="md-raised" data-ng-click="uploadUserProfileImage('users', files)" data-ng-show="files.length > 0 && !uploading">-->
+            <!--Upload-->
+          <!--</md-button>-->
+
+          <!--  <!--abort upload  -->
+          <!--<md-button data-ng-click="abort();" data-ng-show="uploading" class="md-raised" data-ng-show="uploading">-->
+            <!--Cancel-->
+          <!--</md-button>-->
+
+        </div>
+      </div>
+
+      <div class="row" data-ng-show="files.length > 0 && !uploading">
+        <div class="col-md-12 preview">
+          <!--<div data-ng-repeat="previewFile in previewFiles">-->
+            <div>
+              <img ngf-src
+                       ="previewFile" class="image-preview">
+              <span data-ng-click="files = null">x</span>
+            </div>
+            {{previewFile.name}}
+          <!--</div>-->
+        </div>
+      </div>
 
 
-      <span class="progress" ng-show="files.progress >= 0">
-        <div style="width:{{files.progress}}%" ng-bind="files.progress + '%'"></div>
+      <span class="progress" ng-show="previewFile.progress >= 0">
+        <div style="width:{{previewFile.progress}}%" ng-bind="previewFile.progress + '%'"></div>
       </span>
 
-      <span ng-show="files.result">Upload Successful</span>
+      <span ng-show="previewFile.result">Upload Successful</span>
       <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
 
       <div ng-show="success" class="text-center text-success">

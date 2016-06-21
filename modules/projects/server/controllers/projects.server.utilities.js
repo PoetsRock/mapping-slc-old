@@ -55,3 +55,18 @@ exports.updateDb = mongoData => {
     return err;
   });
 };
+
+exports.setSourceId = () => {
+  let source = {};
+  if(req.headers['bucket'] === 'projects') {
+    source.s3Directory = s3Config.directory[1].path;
+    source.sourceId = req.params.projectId;
+  } else if(req.headers['bucket'] === 'users') {
+    source.s3Directory = s3Config.directory[2].path;
+    source.sourceId = req.params.userId;
+  } else if(req.headers['bucket'] === 'admins') {
+    source.s3Directory = s3Config.directory[0].path;
+    source.sourceId = req.params.adminId;
+  }
+  return source;
+};

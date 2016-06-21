@@ -1,11 +1,5 @@
 <section class="row" ng-controller="ProjectsController">
-
   <div class="file-upload">
-
-    <div>
-      {{arrayBufferCheck}}
-    </div>
-
     <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8">
 
       <div class="row">
@@ -47,7 +41,6 @@
       </div>
     </div>
 
-    <div>
 
       <span class="progress" ng-show="files.progress > 0">
         <div style="width:{{files.progress}}%" ng-bind="files.progress + '%'"></div>
@@ -71,5 +64,6 @@
 
     </div>
 
+  </div>
   </div>
 </section>

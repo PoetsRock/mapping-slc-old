@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "gulp",
-    "postinstall": "bower install --config.interactive=false && grunt"
+    "postinstall": "bower install --config.interactive=false && grunt prod"
   },
   "dependencies": {
     "acl": "~0.4.9",

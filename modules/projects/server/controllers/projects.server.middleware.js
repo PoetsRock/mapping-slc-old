@@ -3,8 +3,8 @@
 let Promise = require('bluebird'),
     mongoose = require('mongoose'),
     fs = require('fs'),
+    http = require('http'),
     stream = require('stream'),
-    EventEmitter = require('events'),
     path = require('path'),
     config = require(path.resolve('./config/config')),
     projects = require('./projects.server.controller'),
@@ -40,6 +40,8 @@ let Project = mongoose.model('Project');
 
 let s3 = new AWS.S3(awsS3Config);
 Promise.promisifyAll(s3);
+
+
 
 
 
@@ -98,15 +100,10 @@ exports.hasAdminAuthorization = (req, res, next) => {
  * Middleware that validates current session user's userId against all admin and superAdmin userIds
  */
 exports.hasAdminAuthorization = (req, res, next) => {
-  console.log('req.session: ', req.session);
+  console.log('req.session: ', req.session, '\n', req.session.passport, '\n', req.session.passport.user, '\n\n');
 
-  console.log('req.session.passport: ', req.session.passport);
-  console.log('req.session.passport.user: ', req.session.passport.user);
-
-  // hard code to dummy data for now
   // refactor to return an array userIds of all users with a role of either admin or superAdmin
   let authorizedAdmins = req.session.passport.user || '5611ca9493e8d4af5022bc17';
-
   req.admin = {
     isAdmin: true,
     userId: '5611ca9493e8d4af5022bc17'
@@ -120,6 +117,34 @@ exports.hasAdminAuthorization = (req, res, next) => {
 };
 
 
+exports.createImageStream = (req, res, next) => {
+
+  // The filename is simple the local directory and tacks on the requested url
+  let imageUrl = __dirname+req.url;
+
+  // This line opens the file as a readable stream
+  let readStreamImage = fs.createReadStream(imageUrl);
+
+  // This will wait until we know the readable stream is actually valid before piping
+  readStreamImage.on('open', function () {
+    // This just pipes the read stream to the response object (which goes to the client)
+  // readStreamImage.pipe(res);
+  });
+
+  readStreamImage.on('error', function(err) {
+    res.end(err);
+  });
+
+  // let body = '';
+  // req.on('data', (chunk) => {
+  //   body += chunk;
+  // });
+  // req.on('end', () => {
+  //   req.body.file = body;
+  // });
+
+};
+
 /**
  *
  * Middleware that prepares req obj from front end streamed file uploads
@@ -131,27 +156,18 @@ exports.hasAdminAuthorization = (req, res, next) => {
 exports.transformHeaders = (req, res, next) => {
   let isDefaultImage = (req.headers['default-image'] === 'true');
   let imageTags = req.headers['tags'].split(',%,%,%'); //split with a symbol that won't be used in any tag so that i can parse back into an array later
-  let body = '';
 
-  // req.on('readable', () => {
-  //   body += req.read();
-  //   console.log('\n\n` inside da body`:\n', body);
-  // });
-  // req.on('open', () => {
-  //   body += req.read();
-  //   console.log('\n\n` inside da body`:\n', body);
-  //    fs.createReadStream(body);
-  // });
 
-  req.on('data', (chunk) => {
-    body += chunk;
-  });
+  // The filename is simple the local directory and tacks on the requested url
+  let imageUrl = __dirname+req.url;
 
-  req.on('end', () => {
-    req.body.file = body;
-  // let imageFile = new Buffer(body, 'base64');
-  // let imageFileStreamBody = fs.createReadStream(body);
-  // let imageFileStreamBuf = fs.createReadStream(imageFile);
+  // This line opens the file as a readable stream
+  let readStreamImage = fs.createReadStream(imageUrl);
+
+  // This will wait until we know the readable stream is actually valid before piping
+  readStreamImage.on('open', function () {
+    // This just pipes the read stream to the response object (which goes to the client)
+    // readStreamImage.pipe(res);
 
 
 
@@ -171,8 +187,17 @@ exports.transformHeaders = (req, res, next) => {
     }
   };
   _.extend(req.body, preConfigObj);
-  next();
+
   });  // close `end` event
+
+  readStreamImage.on('error', err => {
+    console.log('\n\n\n\n!!  !!  !!  !!streaming ERROR:\n', err);
+    res.end(err);
+  });
+
+  console.log('req.body:::::::::::\n', req.body, '\n\n\n');
+
+  next();
 };
 
 
@@ -236,9 +261,10 @@ exports.configFileData = (req, res, next) => {
 exports.configS3Obj = (req, res, next) => {
   let fileData = req.body.fileData;
 
-  //todo refactor to allow this to be a variable passed in on the req obj
-  let s3Directory = s3Config.directory[1].path;
-  let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Directory + '/' + req.params.projectId;
+  let source = mediaUtilities.setSourceId();
+  console.log('from mediaUtilities.setSourceId `source`:\n', source);
+
+  let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + source.s3Directory + '/' + source.sourceId;
   fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
   fileData.thumbImageUrl = imageUrlRoot + '/thumb_' + fileData.fileId + '.' + fileData.fileExt;
 
@@ -248,25 +274,13 @@ exports.configS3Obj = (req, res, next) => {
   if(fileData.imageFileStream) {
     fileData.body = fileData.imageFileStream
   } else if(fileData.file) {
-    // fileData.body = fileData.file
-    fileData.body = fileData.file.file
+    fileData.body = fileData.file.file;
   }
-  
-  // file stream is on `fileData.s3Obj.Body.file` for direct uploads;for multipart form data, stream is on `fileData.s3Obj.Body`
 
-  // if(fileData.s3Obj.Body.file) {
-  //   fileData.body.stream = fileData.s3Obj.Body.file
-  // } else if (fileData.s3Obj.Body) {
-  //   fileData.body.stream = fileData.s3Obj.Body
-  // }
-
-  // console.log('\nfileData:\n', fileData, '\n');
-  
   fileData.s3Obj = new Object({
     header: { 'x-amz-decoded-content-length': fileData.size },
-    // ACL: 'read-only' || fileData.aclLevel || req.body.fields['data[securityLevel]'] || 'private',
     region: 'us-west-1',
-    Key: s3Directory + '/' + req.params.projectId + '/' + fileData.fileId + '.' + fileData.fileExt,
+    Key: source.s3Directory + '/' + source.sourceId + '/' + fileData.fileId + '.' + fileData.fileExt,
     Bucket: s3Config.bucket,
     ContentLength: fileData.size,
     ContentType: fileData.type,
@@ -280,9 +294,6 @@ exports.configS3Obj = (req, res, next) => {
       isDefault: fileData.isDefaultImage.toString() || 'false',
     }
   });
-  // let newObj = _.omit(req.body, ['fileData.Body', 'files.fileData.file.file', 'files.fileData.file.body', 'files.fileData.file.s3Obj.Body',  'file', 'fileData.file.file']);
-  // console.log('newObj:\n', newObj, '\n\n');
-
   req.body.fileData = fileData;
   next();
 };
@@ -295,14 +306,12 @@ exports.configS3Obj = (req, res, next) => {
  * @param next
  */
 exports.configMongoObj = (req, res, next) => {
-
   let fileData = req.body.fileData;
-
 
   // todo make dynamic !!
   let currentAdminId = '5611ca9493e8d4af5022bc17';
 
-  let fieldsToUpdate = {
+  req.body.fieldsToUpdate = {
     $addToSet: {
       imageGallery: {
         imageUrl: fileData.fullImageUrl ,
@@ -322,7 +331,6 @@ exports.configMongoObj = (req, res, next) => {
       }
     }
   };
-  req.body.fileData = fileData;
-  req.body.fieldsToUpdate = fieldsToUpdate;
+
   next();
 };

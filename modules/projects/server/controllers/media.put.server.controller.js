@@ -188,8 +188,8 @@ exports.uploadProjectImages = (req, res) => {
   /* for direct uploads, file stream is on `fileData.s3Obj.Body.file`; for multipart form data, stream is on `fileData.s3Obj.Body`  */
   if(fileData.s3Obj.Body.file) {
     fileData.body.stream = fileData.s3Obj.Body.file;
-  // } else if (fileData.s3Obj.Body) {
-  //   fileData.body.stream = fileData.s3Obj.Body
+  } else if (fileData.s3Obj.Body) {
+    fileData.body.stream = fileData.s3Obj.Body
   }
 
 // todo -- current issue is that `fieldsToUpdate` is undefined, so i'm getting an error: "'$addToSet' of undefined"
@@ -203,6 +203,8 @@ exports.uploadProjectImages = (req, res) => {
     Metadata: fileData.s3Obj.Metadata,
     Body: fileData.s3Obj.Body || fileData.body.stream //refactor
   };
+  console.log('does the image begin with data:image/jpeg;base64,/9j ... ???\n\n\n\n\n');
+  console.log('s3Params.Body for upload Project Image:\n', s3Params.Body);
 
   return s3.uploadAsync(s3Params)
   .then(uploadedImage => {
