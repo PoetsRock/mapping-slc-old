@@ -117,32 +117,82 @@ exports.hasAdminAuthorization = (req, res, next) => {
 };
 
 
-exports.createImageStream = (req, res, next) => {
-
-  // The filename is simple the local directory and tacks on the requested url
-  let imageUrl = __dirname+req.url;
-
-  // This line opens the file as a readable stream
-  let readStreamImage = fs.createReadStream(imageUrl);
-
-  // This will wait until we know the readable stream is actually valid before piping
-  readStreamImage.on('open', function () {
-    // This just pipes the read stream to the response object (which goes to the client)
-  // readStreamImage.pipe(res);
+// exports.configImageStream = (req, res, next) => {
+exports.configImageStream = (req, res) => {
+  console.log('req:\n', req, '\n\n\n');
+  
+  let isDefaultImage = (req.headers['default-image'] === 'true');
+  let imageTags = req.headers['tags'].split(',%,%,%'); //split with a symbol that won't be used in any tag so that i can parse back into an array later
+  let fileName;
+  //todo refactor to make immutable object
+  if (/\s/g.test(req.headers['file-name'])) {
+    fileName = req.headers['file-name'].replace(/\s/g, '_');
+  }
+  
+  let fileData = {
+    name: fileName || req.headers['file-name'],
+    type: req.headers['content-type'],
+    size: req.headers['size'],
+    fileId: shortId.generate(),
+    isDefaultImage: isDefaultImage,
+    imageTags: imageTags || [],
+    bucket: req.headers['bucket']
+  };
+  fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
+  
+  // let source = mediaUtilities.setSourceId();
+  // let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + source.s3Directory + '/' + source.sourceId;
+  let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + s3Config.directory[1].path + '/' + req.params.projectId;
+  fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
+  fileData.thumbImageUrl = imageUrlRoot + '/thumb_' + fileData.fileId + '.' + fileData.fileExt;
+  
+  fileData.s3Obj = new Object({
+    header: { 'x-amz-decoded-content-length': fileData.size },
+    region: 'us-west-1',
+    Key: s3Config.directory[1].path + '/' + req.params.projectId + '/' + fileData.fileId + '.' + fileData.fileExt,
+    Bucket: s3Config.bucket,
+    ContentLength: fileData.size,
+    ContentType: fileData.type,
+    Metadata: {
+      imageId: fileData.fileId,
+      imageType: fileData.type,
+      imageExt: fileData.fileExt,
+      imageTags: fileData.imageTags.toString(),
+      imageName: fileData.name || fileData.body.name,
+      isDefault: fileData.isDefaultImage.toString() || 'false',
+    }
+  });
+  
+  // req.body.fileData = fileData;
+  // next();
+  let awsFileName = fileData.fileId + '.' + fileData.fileExt;
+  console.log('awsFileName:\n', awsFileName);
+  let writeFile = fs.createWriteStream(awsFileName);
+  fileData.s3Obj.Body = req.pipe(writeFile);
+  
+  console.log('hereeeeeeeee!');
+  console.log('fileData.s3Obj.Key: ', fileData.s3Obj.Key);
+  console.log('\n\n\nfileData.s3Obj.Body: ', fileData.s3Obj.Body);
+  
+  s3.uploadAsync(fileData.s3Obj)
+  .then(response => {
+    console.log('response:\n', response);
+    res.jsonp(response);
   });
 
-  readStreamImage.on('error', function(err) {
-    res.end(err);
+};
+
+
+exports.putImageStream = (req, res, next) => {
+  let writeFile = fs.createWriteStream(req);
+  let file = req.pipe(writeFile);
+  
+  s3.uploadAsync(file)
+  .then(response => {
+    console.log('response:\n', response);
+    res.jsonp(response);
   });
-
-  // let body = '';
-  // req.on('data', (chunk) => {
-  //   body += chunk;
-  // });
-  // req.on('end', () => {
-  //   req.body.file = body;
-  // });
-
+  // next(); //now save data to mongo
 };
 
 /**
@@ -156,25 +206,11 @@ exports.createImageStream = (req, res, next) => {
 exports.transformHeaders = (req, res, next) => {
   let isDefaultImage = (req.headers['default-image'] === 'true');
   let imageTags = req.headers['tags'].split(',%,%,%'); //split with a symbol that won't be used in any tag so that i can parse back into an array later
-
-
-  // The filename is simple the local directory and tacks on the requested url
-  let imageUrl = __dirname+req.url;
-
-  // This line opens the file as a readable stream
-  let readStreamImage = fs.createReadStream(imageUrl);
-
-  // This will wait until we know the readable stream is actually valid before piping
-  readStreamImage.on('open', function () {
-    // This just pipes the read stream to the response object (which goes to the client)
-    // readStreamImage.pipe(res);
-
-
-
+  
   let preConfigObj = {
     files: {
       file: [{
-        file: req.body.file,
+        file: data,
         path: null,
         name: req.headers['file-name'] || req.body.file.originalFilename,
         type: req.headers['content-type'] || req.body.file['content-type'],
@@ -187,13 +223,6 @@ exports.transformHeaders = (req, res, next) => {
     }
   };
   _.extend(req.body, preConfigObj);
-
-  });  // close `end` event
-
-  readStreamImage.on('error', err => {
-    console.log('\n\n\n\n!!  !!  !!  !!streaming ERROR:\n', err);
-    res.end(err);
-  });
 
   console.log('req.body:::::::::::\n', req.body, '\n\n\n');
 

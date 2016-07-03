@@ -306,7 +306,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         console.log('resolved:\n', resolved);
       });
     };
-
+  
 
     /**
      * Find a list of Projects
@@ -354,6 +354,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     };
 
+    $scope.goToProject = function(projectId) {
+      console.log('here! | projectId: ', projectId);
+    };
 
     // /**
     //  * Find existing User
