@@ -9,29 +9,23 @@ angular.module('admins').directive('projectImagesAdminUpload', function () {
       $scope.uploading = false;
       $scope.uploadBtnText = 'Select Files';
 
-      // fileReader.onload = function (event) { }; // event listener options for future use
-      // fileReader.onprogress = function(event) { }; // event listener options for future use
 
-      var fileReader = new FileReader();
+
+      
       $scope.adminFileReaderNg = function (fileArray) {
+        var fileReader = new FileReader();
         $scope.previewFiles = fileArray;
         if($scope.previewFiles.length > 0) { $scope.uploadBtnText = 'Select More Files'; }
-
         console.log('fileArray[0]:\n', fileArray[0]);
-
-        // var imageAsText = fileReader.readAsText(fileArray[0]);
-
-        /// var imageDataUrl = fileReader.readAsDataURL(fileArray[0]);
-        // console.log('imageDataUrl:\n', imageDataUrl);
-
-        fileReader.readAsArrayBuffer(fileArray[0]);
-
-        fileReader.onloadend = function (event) {
-
-          var fileAsArrayBuffer = event.target.result;
-          console.log('fileAsArrayBuffer:\n', fileAsArrayBuffer);
-          // $scope.uploadAdminImagesV2('projects', fileArray[0], event.target.result);
-          $scope.uploadAdminImagesV2('projects', fileArray[0], fileAsArrayBuffer);
+        
+        fileReader.readAsDataURL(fileArray[0]);
+        fileReader.onprogress = function(event) {
+          console.log('progress event:\n', event);
+        };
+  
+        fileReader.onload = function (evt) {
+          console.log('event onload:\n', evt);
+          $scope.uploadAdminImagesV2('projects', fileArray[0], evt.target.result);
         };
       };
 

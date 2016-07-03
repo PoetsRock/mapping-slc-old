@@ -3,6 +3,7 @@
 let Promise = require('bluebird'),
   mongoose = require('mongoose'),
   fs = require('fs'),
+  os = require('os'),
   path = require('path'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -24,6 +25,7 @@ let s3Config = {
     { name: 'user', path: 'user-directory' }
   ]
 };
+
 /** config aws s3 config settings, file object, and create a new instance of the s3 service */
 let awsS3Config = {
   accessKeyId: config.S3_ID,
@@ -172,7 +174,70 @@ exports.uploadProjectImagesV2 = (req, res) => {
   
 };
 
+/*
+ As context, the image on req stream is being generated on the front end using the File API.
+ After initializing an instance of the fileReader and passing in a file array, I'm calling:
+ `fileReader.readAsDataURL(fileArray[0]);`
+ Then I send that data to the server:
+ ```
+ fileReader.onload = function (evt) {
+ myUploadFn('/projects/{projectId}/images/', fileMetaData, evt.target.result);
+ };
+ ```
+ And `myUploadFn` configures some info about the file and then sends the file to the back end
+ */
 
+// this works; however, it uploads the binary data itself (vs. the image file).
+// I need to actual image to reside on s3, bc the front end will be displaying images based on their s3 urls.
+exports.testUpload = (req, res) => {
+  
+  // console.log('req:\n', req);
+  
+  let fileId = shortId.generate();
+  let fileExt = projectUtilities.getFileExt(req.headers['content-type'], req.headers['file-name']).extension;
+  let body = '';
+  
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
+  
+  req.on('end', () => {
+    try {
+      console.log('body:\n', body, '\n\n\n');
+      let s3Params = {
+        header: { 'x-amz-decoded-content-length': req.headers['size'] },
+        region: 'us-west-1',
+        ContentLength: req.headers['size'],
+        ContentType: req.headers['content-type'],
+        Bucket: s3Config.bucket,
+        Key: `${s3Config.directory[1].path}/${req.params.projectId}/${fileId}.${fileExt}`,
+        Body: body
+      };
+      console.log('s3Params:\n', s3Params);
+      
+      return s3.uploadAsync(s3Params)
+      .then(s3Response => {
+        console.log('s3Response:\n', s3Response);
+        res.jsonp(s3Response);
+      })
+      .catch(err => {
+        console.log('ERROR: s3 response error:\n', err);
+      });
+      
+    } catch (err) {
+      console.log('s3 ERROR:\n', err);
+      res.statusCode = 400;
+      return res.end(`error: ${err.message}`);
+    }
+  });
+  
+};
+
+
+//req.setEncoding('base64'); //does this i need this?
+// let fileId = shortId.generate();
+// let fileExt = projectUtilities.getFileExt(req.headers['content-type'], req.headers['file-name']).extension;
+// let writeStream = fs.createWriteStream(os.homedir() + '/Downloads/' + fileId + '.' + fileExt);
 
 /**
  *
@@ -184,9 +249,9 @@ exports.uploadProjectImagesV2 = (req, res) => {
 exports.uploadProjectImages = (req, res) => {
   let fileData = req.body.fileData;
   let fieldsToUpdate = req.body.fieldsToUpdate;
-
+  
   /* for direct uploads, file stream is on `fileData.s3Obj.Body.file`; for multipart form data, stream is on `fileData.s3Obj.Body`  */
-  if(fileData.s3Obj.Body.file) {
+  if (fileData.s3Obj.Body.file) {
     fileData.body.stream = fileData.s3Obj.Body.file;
   } else if (fileData.s3Obj.Body) {
     fileData.body.stream = fileData.s3Obj.Body
@@ -195,7 +260,7 @@ exports.uploadProjectImages = (req, res) => {
 // todo -- current issue is that `fieldsToUpdate` is undefined, so i'm getting an error: "'$addToSet' of undefined"
   //todo - workaround; need to refactor
   fileData.s3Obj.Metadata.imageName = req.headers['file-name'] || req.body.fileData.file.originalFilename;
-
+  
   /** upload image to S3 */
   let s3Params = {
     Bucket: fileData.s3Obj.Bucket,
@@ -205,11 +270,11 @@ exports.uploadProjectImages = (req, res) => {
   };
   console.log('does the image begin with data:image/jpeg;base64,/9j ... ???\n\n\n\n\n');
   console.log('s3Params.Body for upload Project Image:\n', s3Params.Body);
-
+  
   return s3.uploadAsync(s3Params)
   .then(uploadedImage => {
     fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
-
+    
     /** now save the image URLs to mongoDb */
     let query = Project.findOneAndUpdate(
       { _id: req.params.projectId },
@@ -229,8 +294,6 @@ exports.uploadProjectImages = (req, res) => {
 };
 
 
-
-
 /**
  *
  * Streams files (docs or media) to s3:
@@ -241,10 +304,10 @@ exports.uploadProjectImages = (req, res) => {
  */
 
 exports.streamProjectFiles = (req, res) => {
-
+  
   let fileData = req.body.fileData;
   let fieldsToUpdate = req.body.fieldsToUpdate;
-
+  
   /** upload image to S3 */
   let s3Params = {
     Bucket: fileData.s3Obj.Bucket,
@@ -252,11 +315,11 @@ exports.streamProjectFiles = (req, res) => {
     Metadata: fileData.s3Obj.Metadata,
     Body: fileData.s3Obj.Body
   };
-
+  
   return s3.uploadAsync(s3Params)
   .then(uploadedImage => {
     fieldsToUpdate.$addToSet.imageGallery.imageS3Key = uploadedImage.Key;
-
+    
     /** update mongoDb */
     let mongoData = {
       collection: 'Project',
@@ -265,7 +328,7 @@ exports.streamProjectFiles = (req, res) => {
       options: { new: true }
     };
     let mongoResponse = projectUtilities.updateDb(mongoData);  // <-- do/can I to promisify this call????  
-  
+    
     /** send response (success or error) to front end */
     let statusCode = mongoResponse.statusCode || 205;
     let response = {
@@ -284,8 +347,8 @@ exports.streamProjectFiles = (req, res) => {
     //   };
     //   res.statusCode(statusCode).jsonp(response);
     // }));
-  
-  
+    
+    
     // projectUtilities.updateDb(mongoData);  // <-- do i need to promisify this call????
     // let statusCode = response.statusCode || 205;
     // let response = {

@@ -30,7 +30,10 @@ module.exports = function (app) {
   
   
   app.route(filesApi)
-    .post(middleware.transformHeaders, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
+    // .post(createMedia.testS3Upload);
+    .post(createMedia.testUpload);
+    // .post(middleware.transformHeaders, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
+    // .post(middleware.configImageStream);
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)

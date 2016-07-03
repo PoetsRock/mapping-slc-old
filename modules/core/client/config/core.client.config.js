@@ -12,7 +12,7 @@ angular.module('core').config(['$compileProvider', 'localStorageServiceProvider'
 
   }
 ]);
-//.run(function($rootScope) {
+// .run(function($rootScope) {
 //  angular.element(document).on('click', function(e) {
 //    $rootScope.$broadcast('documentClicked', angular.element(e.target));
 //  });
@@ -22,7 +22,7 @@ angular.module('core').config(['$compileProvider', 'localStorageServiceProvider'
 //    $scope.isCollapsed = false;
 //  });
 //
-//});
+// });
 
 
 

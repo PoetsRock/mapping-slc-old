@@ -319,30 +319,6 @@ a:hover .header-profile-image {
     margin-top: 6%;
 }
 
-/* mapping slc small logo */
-.small-main-logo {
-    content: url(../img/brand/mapping.png);
-    width: 150px;
-    height: 47px;
-    position: absolute;
-    display: block;
-    z-index: 999;
-    left: 2.75%;
-    top: 0.75%;
-}
-
-.logo-on-page {
-    top: 1.25%;
-    left: 5%;
-}
-
-.logo-in-menu {
-    top: 3%;
-    left: 15%;
-    width: 18.5rem;
-    height: auto;
-}
-
 .menu-toggle-backdrop {
     background-color: transparent;
     width: 3%;
@@ -556,10 +532,34 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
     display: none;
 }
 
+/* mapping slc small logo */
+.small-main-logo {
+    /*background-image: url(../img/brand/mapping.png);*/
+    width: 12%;
+    height: auto;
+    position: absolute;
+    display: block;
+    z-index: 999;
+    left: 2.75%;
+    top: 0.75%;
+}
+
+.logo-on-page {
+    top: 1.25%;
+    left: 5%;
+}
+
+.logo-in-menu {
+    top: 3%;
+    left: 15%;
+    width: 18.5rem;
+    height: auto;
+}
+
 .medium-main-logo {
-    content: url(../img/brand/logo-75.png);
-    width: 225px;
-    height: 71px;
+    /*background-image: url(../img/brand/logo-75.png);*/
+    width: 50%;
+    height: auto;
     position: relative;
     display: block;
     z-index: 2;
@@ -569,9 +569,9 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
 
 /* mapping slc small logo */
 .small-main-logo2 {
-    content: url(../img/brand/mapping_150w.png);
-    width: 150px;
-    height: 47px;
+    /*background-image: url(../img/brand/mapping_150w.png);*/
+    width: 100%;
+    height: auto;
     position: absolute;
     display: block;
     z-index: 999;
