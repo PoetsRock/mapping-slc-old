@@ -1,123 +1,124 @@
-<li class="my-trigger" ng-mouseenter="showAll || mouseenter()" ng-mouseleave="showAll || mouseleave()" data-ng-click="menuToggle($event)">
-  
-  
-  
-  <a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}"></a>
-  <!--data-ng-click="toggleOverlayFunction('overlay')"-->
+<!--&lt;!&ndash;<li class="my-trigger" ng-mouseenter="showAll || mouseenter()" ng-mouseleave="showAll || mouseleave()" data-ng-click="menuToggle($event)">&ndash;&gt;-->
+<!--<li class="my-trigger" ng-click="menuToggle($event)" ng-mouseenter="showAll || mouseenter()" ng-mouseleave="showAll || mouseleave()">-->
+  <!---->
+  <!---->
+  <!--&lt;!&ndash;<a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}" data-ng-click="toggleOverlayFunction('overlay')"></a>&ndash;&gt;-->
+  <!--<a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}"></a>-->
+  <!--&lt;!&ndash;data-ng-click="toggleOverlayFunction('overlay')"&ndash;&gt;-->
 
-  <nav ng-mouseenter="showAll|| menuHover($event)" class="my-menu-wrapper" ng-class="{'my-open-part' : showPart,'my-open-all' : showAll, 'my-open-none': showNone}">
-    
-    
-    <div class="my-scroller">
+  <!--<nav ng-mouseenter="showAll|| menuHover($event)" class="my-menu-wrapper" ng-class="{'my-open-part' : showPart,'my-open-all' : showAll, 'my-open-none': showNone}">-->
+    <!---->
+    <!---->
+    <!--<div class="my-scroller">-->
 
-      <ul class="my-menu">
-
-
-        <div class="content-style-sidebar">
-          <ul>
-            <div class="row">
-              <li class="col-sm-12">
-                <a ui-sref="home" data-ng-click="toggleOverlayFunction('home')">
-                  <i class="fa fa-home"></i>
-                  Home
-                </a>
-              </li>
-            </div>
-
-            <div class="row">
-              <li class="col-sm-12">
-                <a ui-sref="listProjects">
-                  <i class="fa fa-map-marker"></i>
-                  Projects
-                </a>
-              </li>
-            </div>
-
-            <div class="row">
-              <li class="col-sm-12">
-                <a ui-sref="contributors">
-                  <i class="fa fa-users"></i>
-                  Contributors
-                </a>
-              </li>
-            </div>
-
-            <div class="row">
-              <li class="col-sm-12">
-                <a ui-sref="createProject">
-                  <i class="fa fa-file"></i>
-                  Submit a Project
-                </a>
-              </li>
-            </div>
-
-            <div class="row">
-              <li class="col-sm-12">
-                <a ui-sref="aboutMappingSlc">
-                  <i class="fa fa-map-signs"></i>
-                  About Mapping SLC
-                </a>
-              </li>
-            </div>
-
-            <div class="row">
-              <li class="col-sm-12">
-                <a ui-sref="createContact">
-                  <i class="fa fa-envelope"></i>
-                  Contact Us
-                </a>
-              </li>
-            </div>
-
-            <div class="row" data-ng-show="user.roles[0] !== undefined">
-              <li class="col-sm-12">
-                <a ui-sref="settings.profile">
-                  <i class="fa fa-cog"></i>
-                  Account Settings
-                </a>
-              </li>
-            </div>
-
-            <div class="row" data-ng-show="user.roles[0] === undefined">
-              <li class="col-sm-12">
-                <a ui-sref="authentication.signin">
-                  <i class="fa fa-sign-in"></i>
-                  Sign In
-                </a>
-              </li>
-            </div>
-
-            <div class="row" data-ng-show="user.roles[0] === undefined">
-              <li class="col-sm-12">
-                <a ui-sref="authentication.signup">
-                  <i class="fa fa-user-plus"></i>
-                  Sign Up
-                </a>
-              </li>
-            </div>
-
-            <div class="row" data-ng-show="user.roles[0] === 'admin'">
-              <li class="col-sm-12">
-                <a ui-sref="admin.dashboard">
-                  <i class="fa fa-star"></i>
-                  Admin Panel
-                </a>
-              </li>
-            </div>
-      <div
-        class="fb-like"
-        data-share="true"
-        data-width="450"
-        data-show-faces="true"><li></li>
-      </div>
-
-          </ul>
-        </div>
+      <!--<ul class="my-menu">-->
 
 
+        <!--<div class="content-style-sidebar">-->
+          <!--<ul>-->
+            <!--<div class="row">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="home" data-ng-click="toggleOverlayFunction('home')">-->
+                  <!--<i class="fa fa-home"></i>-->
+                  <!--Home1-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
 
-      </ul>
-    </div>
+            <!--<div class="row">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="listProjects">-->
+                  <!--<i class="fa fa-map-marker"></i>-->
+                  <!--Projects-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
 
-  </nav>
-</li>
+            <!--<div class="row">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="contributors">-->
+                  <!--<i class="fa fa-users"></i>-->
+                  <!--Contributors-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="createProject">-->
+                  <!--<i class="fa fa-file"></i>-->
+                  <!--Submit a Project-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="aboutMappingSlc">-->
+                  <!--<i class="fa fa-map-signs"></i>-->
+                  <!--About Mapping SLC-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="createContact">-->
+                  <!--<i class="fa fa-envelope"></i>-->
+                  <!--Contact Us-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row" data-ng-show="user.roles[0] !== undefined">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="settings.profile">-->
+                  <!--<i class="fa fa-cog"></i>-->
+                  <!--Account Settings-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row" data-ng-show="user.roles[0] === undefined">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="authentication.signin">-->
+                  <!--<i class="fa fa-sign-in"></i>-->
+                  <!--Sign In-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row" data-ng-show="user.roles[0] === undefined">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="authentication.signup">-->
+                  <!--<i class="fa fa-user-plus"></i>-->
+                  <!--Sign Up-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+
+            <!--<div class="row" data-ng-show="user.roles[0] === 'admin'">-->
+              <!--<li class="col-sm-12">-->
+                <!--<a ui-sref="admin.dashboard">-->
+                  <!--<i class="fa fa-star"></i>-->
+                  <!--Admin Panel-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</div>-->
+      <!--<div-->
+        <!--class="fb-like"-->
+        <!--data-share="true"-->
+        <!--data-width="450"-->
+        <!--data-show-faces="true"><li></li>-->
+      <!--</div>-->
+
+          <!--</ul>-->
+        <!--</div>-->
+
+
+
+      <!--</ul>-->
+    <!--</div>-->
+
+  <!--</nav>-->
+<!--</li>-->

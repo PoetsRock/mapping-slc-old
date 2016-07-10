@@ -139,6 +139,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
           console.log('map click!::::: if ($scope.showAll)  :::: `event`\n', event);
           $scope.menuToggle(event, $scope.showAll);
         }
+        // if ($scope.showAll) {
+        //   console.log('map click!::::: if ($scope.showAll)  :::: `event`\n', event);
+        //   MenuService.setShowAll(false);
+        //   $scope.showAll = false;
+        // } else {
+        //   console.log('`$scope.showAll = false` map click!  `event`\n', event);
+        // }
       });
 
       //todo refactor into directive -- and use it
