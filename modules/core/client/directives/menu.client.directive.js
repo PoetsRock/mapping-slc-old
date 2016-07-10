@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').directive('leftMenu', function (MenuService) {
+angular.module('core').directive('leftMenu', function (MenuService, $rootScope) {
   return {
     restrict: 'EA',
     templateUrl: 'modules/core/client/directives/views/google-left-menu.client.view.html',
@@ -8,17 +8,16 @@ angular.module('core').directive('leftMenu', function (MenuService) {
       $scope.user = Authentication.user;
     },
     replace: true,
-    link: function (scope, elm, attrs) {
+    link: function (scope, element, attrs) {
 
       scope.itemsMenu = MenuService.itemsMenu;
       scope.showAll = MenuService.open.all;
       scope.showPart = MenuService.open.part;
       scope.showNone = MenuService.open.none;
 
-      scope.$on('$stateChangeStart',
-        function () {
-          MenuService.setShowAll(false);
-        });
+      scope.$on('$stateChangeStart', function (event) {
+        MenuService.setShowAll(false);
+      });
 
       scope.mouseenter = function () {
         MenuService.setShowPart(true);
@@ -34,17 +33,14 @@ angular.module('core').directive('leftMenu', function (MenuService) {
         scope.toggleOverlayFunction('overlay');
         //}
       };
-      scope.menuToggle = function (event) {
-        if (event.target.id !== "triggerMenu") {
-          return;
-        }
-        event.stopPropagation();
+      
+      scope.menuToggle = function (event, close) {
+        if (!close && event.target.id !== "triggerMenu" && event.target.className !== 'my-scroller') { return; }
+        // event.stopPropagation();
         MenuService.setShowAll(!scope.showAll);
       };
-
+  
       scope.$on('MenuService.update', function (event, open) {
-        console.log('MenuService.update... open:\n', open);
-
         scope.showAll = open.all;
         scope.showPart = open.part;
         scope.showNone = open.none;

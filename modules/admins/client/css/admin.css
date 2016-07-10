@@ -254,9 +254,8 @@ td i .selected {
 .admin-user .header-profile-image {
     height: 75px;
     width: 75px;
-    top: -2rem;
     position: relative;
-    opacity: 0.9;
+    opacity: 1;
     border: solid 2px transparent;
     -webkit-transition: all 0.25s ease;
     -moz-transition: all 0.25s ease;
@@ -265,12 +264,18 @@ td i .selected {
 }
 
 .admin-user .header-profile-image:hover {
-    opacity: 1;
-    border: solid 2px #006600;
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    transition: all 1s ease;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.admin-user user-view-form-wrapper .header-profile-image {
+    top: -2rem;
+}
+
+.admin-user user-view-form-wrapper .header-profile-image:hover {
+    opacity: 0.7;
 }
 
 .admin-user .page-header {
@@ -295,30 +300,31 @@ td i .selected {
     float: right;
 }
 
-.admin-list {
-    /*background-color: rgba(255, 255, 255, 0.8);*/
-    /*border: solid 4px #023a31;*/
-    /*margin: 0;*/
-    /*padding: 0;*/
-    /*width: 46%;*/
-    /*color: #000;*/
-    /*border-radius: 3px;*/
-    /*font-size: 1.75rem;*/
-    /*-webkit-transition: all ease 0.5s;*/
-    /*-moz-transition: all ease 0.5s;*/
-    /*-o-transition: all ease 0.5s;*/
-    /*transition: all ease 0.5s;*/
+.admin .admin-projects a.admin-list {
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+}
+
+.admin .admin-user .admin-list {
+    text-decoration: none;
+    color: #000;
+}
+
+.admin .admin-user .admin-list:hover {
+    background-color: hsla(100,100,100,0.9);
+}
+
+.admin .admin-user .admin-list img {
+    top: 0;
 }
 
 .admin-list:hover {
-    /*background-color: rgba(255, 255, 255, 0.4);*/
-    /*border: solid 4px #0b8043;*/
-    /*text-decoration: none;*/
-    /*color: #000;*/
-    /*-webkit-transition: all ease 0.5s;*/
-    /*-moz-transition: all ease 0.5s;*/
-    /*-o-transition: all ease 0.5s;*/
-    /*transition: all ease 0.5s;*/
+}
+
+.admin .admin-projects a.admin-list .md-headline {
+    font-size: 2.1rem;
+    line-height: 135%;
 }
 
 .user-submissions .admin-list {
@@ -360,7 +366,8 @@ md-select-menu .md-overflow {
 }
 
 md-content {
-    background-color: #FAEBD7;
+    /*background-color: #FAEBD7;*/
+    background-color: transparent;
 }
 
 md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md-select-value.md-select-placeholder {
@@ -390,3 +397,4 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .project-files div div div {
     display: inline-flex;
 }
+

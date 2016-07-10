@@ -13,19 +13,24 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
 
 
-    $scope.userToEditFn = function() {
-      if($state.current.name === 'admin.adminEditProject') {
-        console.log('$scope.project: ', $scope.project);
-        console.log('$scope.project.user._id: ', $scope.project.user._id);
-        $scope.userToEdit = UserData.get({
-          userId: $scope.project.user._id
-        });
-      } else {
-        $scope.userToEdit = UserData.get({
-          userId: $state.params.userId
-        });
-      }
-    };
+    // $scope.userToEditFn = function() {
+    //   console.log('here here here');
+    //   if($state.current.name === 'admin.adminEditProject') {
+    //     $scope.userToEdit = UserData.get({
+    //       userId: $scope.project.user._id
+    //     });
+    //     console.log('here here here   :::::::::  if');
+    //     console.log('$scope.project: ', $scope.project);
+    //     console.log('$scope.project.user._id: ', $scope.project.user._id);
+    //   } else {
+    //     $scope.userToEdit = UserData.get({
+    //       userId: $state.params.userId
+    //     });
+    //     console.log('here here here   :::::::::  else');
+    //     console.log('$scope.project: ', $scope.project);
+    //     console.log('$scope.project.user._id: ', $scope.project.user._id);
+    //   }
+    // };
 
 
 
@@ -72,26 +77,6 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
       });
     };
 
-
-    $scope.toggleEdit = false;
-    $scope.toggleId = 0;
-
-    $scope.toggleEditFn = function (editNum) {
-      //todo console logs are to evaluate a possible bug - the same code (that's currenlty commented out) caused a bug in the `ProjectsController`  `$scope.toggle` in the line `$scope.toggleEdit = !$scope.toggle;` was undefined in projects controller ::  `$scope.toggleEdit = !$scope.toggleEdit;` solved the issue in the projects controller
-      console.log('$scope.toggleEditFn - ');
-      console.log('`editNum`:', editNum);
-      console.log('`$scope.toggle`:', $scope.toggle);
-      console.log('`$scope.toggleEdit`:', $scope.toggleEdit);
-      // $scope.toggleEdit = !$scope.toggle;
-      $scope.toggleEdit = !$scope.toggleEdit;
-      $scope.toggleId = editNum;
-    };
-
-    $scope.toggleEditAllFn = function () {
-      // $scope.toggleEdit = !$scope.toggle;
-      $scope.toggleEdit = !$scope.toggleEdit;
-      $scope.toggleId = editNum;
-    };
 
     //runs a query to return user ID for admin panel editing
     $scope.find = function () {

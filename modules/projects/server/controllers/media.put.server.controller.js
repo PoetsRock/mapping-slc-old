@@ -174,63 +174,46 @@ exports.uploadProjectImagesV2 = (req, res) => {
   
 };
 
-/*
- As context, the image on req stream is being generated on the front end using the File API.
- After initializing an instance of the fileReader and passing in a file array, I'm calling:
- `fileReader.readAsDataURL(fileArray[0]);`
- Then I send that data to the server:
- ```
- fileReader.onload = function (evt) {
- myUploadFn('/projects/{projectId}/images/', fileMetaData, evt.target.result);
- };
- ```
- And `myUploadFn` configures some info about the file and then sends the file to the back end
- */
-
-// this works; however, it uploads the binary data itself (vs. the image file).
-// I need to actual image to reside on s3, bc the front end will be displaying images based on their s3 urls.
 exports.testUpload = (req, res) => {
   
-  // console.log('req:\n', req);
   
+  
+};
+
+exports.testUpload = (req, res) => {
+  console.log('req:\n', req, '\n\n\n');
   let fileId = shortId.generate();
   let fileExt = projectUtilities.getFileExt(req.headers['content-type'], req.headers['file-name']).extension;
-  let body = '';
+  // let body = '';
   
-  req.on('data', (chunk) => {
-    body += chunk;
-  });
+  // req.on('data', (chunk) => {
+  //   body += chunk;
+  // });
   
-  req.on('end', () => {
-    try {
-      console.log('body:\n', body, '\n\n\n');
-      let s3Params = {
-        header: { 'x-amz-decoded-content-length': req.headers['size'] },
-        region: 'us-west-1',
-        ContentLength: req.headers['size'],
-        ContentType: req.headers['content-type'],
-        Bucket: s3Config.bucket,
-        Key: `${s3Config.directory[1].path}/${req.params.projectId}/${fileId}.${fileExt}`,
-        Body: body
-      };
-      console.log('s3Params:\n', s3Params);
-      
-      return s3.uploadAsync(s3Params)
-      .then(s3Response => {
-        console.log('s3Response:\n', s3Response);
-        res.jsonp(s3Response);
-      })
-      .catch(err => {
-        console.log('ERROR: s3 response error:\n', err);
-      });
-      
-    } catch (err) {
-      console.log('s3 ERROR:\n', err);
-      res.statusCode = 400;
-      return res.end(`error: ${err.message}`);
-    }
-  });
-  
+  // req.on('end', () => {
+    // console.log('body:\n', body, '\n\n\n');
+    console.log('typeof req.body: ', typeof req.body, '\n\n\n');
+    // const imageBuffer = Buffer.from(body);
+    let s3Params = {
+      header: { 'x-amz-decoded-content-length': req.headers['size'] },
+      region: 'us-west-1',
+      ContentLength: req.headers['size'],
+      ContentType: req.headers['content-type'],
+      Bucket: s3Config.bucket,
+      Key: `${s3Config.directory[1].path}/${req.params.projectId}/${fileId}.${fileExt}`,
+      Body: req.body
+    };
+    console.log('s3Params:\n', s3Params);
+    
+    return s3.uploadAsync(s3Params)
+    .then(s3Response => {
+      console.log('s3Response:\n', s3Response);
+      res.jsonp(s3Response);
+    })
+    .catch(err => {
+      console.log('ERROR: s3 response error:\n', err);
+    });
+  // });
 };
 
 

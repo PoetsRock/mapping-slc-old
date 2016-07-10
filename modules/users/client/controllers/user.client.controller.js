@@ -28,10 +28,10 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     
     //delete user
     $scope.remove = function (user) {
+      console.log('user:  ', user);
       if (confirm('Are you sure you want to delete this user?')) {
-        if (user) {
+        if(user) {
           user.$remove();
-          
           $scope.users.splice($scope.users.indexOf(user), 1);
         } else {
           $scope.user.$remove(function () {
@@ -43,8 +43,8 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     
     // Find a list of Users
     $scope.find = function () {
+      console.log('here here!');
       $scope.users = Users.query($scope.query);
-      ProfileImageService.getUploadedProfilePic();
     };
     
     // Find existing User

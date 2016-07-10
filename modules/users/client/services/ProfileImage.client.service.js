@@ -5,8 +5,9 @@
 angular.module('users').service('ProfileImageService', ['$http',
   function ($http) {
 
-    this.getUploadedProfilePic = function (data, callback) {
-      var user = data.user;
+    this.getUploadedProfilePic = function (user, callback) {
+      console.log('user:\n', user);
+      // var user = data.user;
       var configObj = { cache: true };
       $http.get('api/v1/users/' + user._id + '/images/uploaded-profile-image.jpg', configObj)
       .then(function (successCallback) {

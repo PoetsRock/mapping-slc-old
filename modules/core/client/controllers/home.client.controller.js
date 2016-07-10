@@ -24,26 +24,26 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     UtilsService.cssLayout();
 
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
-      console.log('::::::toggleOverlayFunction::::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo, '$scope.overlayActive:\n', $scope.overlayActive);
+      // console.log('::::::toggleOverlayFunction::::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo, '$scope.overlayActive:\n', $scope.overlayActive);
       $scope.sourceFrom = sourceFrom;
       $scope.sourceTo = sourceTo;
       if ($scope.overlayActive && sourceFrom === 'overlay') {
-        //console.log('toggle the shade! v1\n', $scope.overlayActive, '\n', sourceFrom);
+        console.log('toggle the shade! v1\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = !$scope.overlayActive;
         $scope.shadeMap = true;
       } else if ($scope.overlayActive && sourceFrom === 'menu-closed') {
-        //console.log('toggle the shade! v2\n', $scope.overlayActive, '\n', sourceFrom);
+        console.log('toggle the shade! v2\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.overlayActive = false;
         $scope.menuOpen = true;
         $scope.shadeMap = true;
       } else if (!$scope.overlayActive && sourceFrom === 'menu-closed' && !$scope.menuOpen) {
-        //console.log('toggle the shade! v3\n', $scope.overlayActive, '\n', sourceFrom);
+        console.log('toggle the shade! v3\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = !$scope.menuOpen;
         $scope.shadeMap = false;
         MenuService.setShowAll(false);
         MenuService.setShowPart(false);
       } else if (!$scope.overlayActive && sourceFrom === 'home') {
-        //console.log('toggle the shade! v4\n', $scope.overlayActive, '\n', sourceFrom);
+        console.log('toggle the shade! v4\n', $scope.overlayActive, '\n', sourceFrom);
         $scope.menuOpen = false;
         $scope.overlayActive = true;
         $scope.shadeMap = false;
@@ -137,10 +137,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       map.on('click', function (event) {
         if ($scope.showAll) {
           console.log('map click!::::: if ($scope.showAll)  :::: `event`\n', event);
-          MenuService.setShowAll(false);
-          $scope.showAll = false;
-        } else {
-          console.log('`$scope.showAll = false` map click!  `event`\n', event);
+          $scope.menuToggle(event, $scope.showAll);
         }
       });
 

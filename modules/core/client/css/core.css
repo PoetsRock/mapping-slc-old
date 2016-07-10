@@ -124,7 +124,8 @@ a:hover .header-profile-image {
 /*applies to all pages that have a static map as background image, so most views other than home page*/
 .main-content-inner {
     height: 100%;
-    background-color: rgba(255, 248, 231, 0.9);
+    /*background-color: rgba(255, 248, 231, 0.9);*/
+    background-color: rgba(255, 250, 250, 0.9);;
     margin: 5% 2%;
     padding: 5%;
     border-radius: 10px;
@@ -534,7 +535,6 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
 
 /* mapping slc small logo */
 .small-main-logo {
-    /*background-image: url(../img/brand/mapping.png);*/
     width: 12%;
     height: auto;
     position: absolute;
@@ -542,6 +542,7 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
     z-index: 999;
     left: 2.75%;
     top: 0.75%;
+    cursor: pointer;
 }
 
 .logo-on-page {
@@ -565,6 +566,13 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
     z-index: 2;
     left: -10px;
     margin-top: 2%;
+}
+
+.logo-second-page {
+    top: 2.25%;
+    width: auto;
+    height: 2.8em;
+    position: absolute;
 }
 
 /* mapping slc small logo */

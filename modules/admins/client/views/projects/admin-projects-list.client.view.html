@@ -7,25 +7,18 @@
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
   <section class="container">
-    <a href="/" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
-
+  <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
+    
     <div class="main-content-outer">
 
       <section data-ng-controller="ProjectsController" data-ng-init="find()" class="main-content-inner">
         
         <div class="admin">
-
           <div class="admin-projects">
-
-            <div class="admin-nav">
-              <a class="btn btn-main grow" ui-sref="admin.dashboard">
-                Admin Home Page
-              </a>
+            <div class="admin-nav"><a class="btn btn-main grow" ui-sref="admin.dashboard">Admin Home Page</a>
             </div>
-
-            <div class="page-header">
-              <h1>Admin Panel</h1>
-            </div>
+            
+            <div class="page-header"><h1>Admin Panel</h1></div>
             
             <div layout="row">
               <md-input-container>
@@ -39,58 +32,24 @@
               </md-input-container>
             </div>
   
-            <div class="flexbox-container">
-              <div flex-xs="" flex-gt-xs="50" layout="column">
-                <md-card data-ng-repeat="project in projects | orderBy:sorts" data-ng-href="/admin/edit-project/{{project._id}}">
-                  <img ng-src="{{project.mainImageData.thumbImageUrl}}" class="md-card-image" alt="{{project.title}}">
-                  <md-card-title>
-                    <md-card-title-text>
-                      <span class="md-headline">Icon action buttons</span>
-                      <span class="md-subhead" data-ng-bind="project.user.displayName"></span>
-                    </md-card-title-text>
-                  </md-card-title>
-                  <!--<md-card-content>-->
-                    <!--Submitted:-->
-                    <!--<span data-ng-bind="project.createdOn | date:'medium'"></span>-->
-                  <!--</md-card-content>-->
-                  <md-card-actions layout="row" layout-align="end center">
-                    <md-button class="md-icon-button" aria-label="Favorite">
-                      <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button" aria-label="Settings">
-                      <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button" aria-label="Share">
-                      <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
-                    </md-button>
-                  </md-card-actions>
-                </md-card>
-              </div>
-            </div>
-  
-            <!--ng-class-even="'even'"-->
-            
-  
-            <!--<div class="row">-->
-                 <!--<md-card data-ng-repeat="project in projects | orderBy:sorts" class="col-md-5 col-sm-12" data-ng-click="goToProject(project._id)">-->
-                  <!--<md-card-title>-->
-                    <!--<md-card-title-text>-->
-                      <!--<span class="md-headline" data-ng-bind="project.title"></span>-->
-                      <!--<span class="md-subhead" data-ng-bind="project.user.displayName"></span>-->
-                    <!--</md-card-title-text>-->
-                    <!--<md-card-title-media>-->
-                      <!--<div class="md-media-lg card-media">-->
-                        <!--<small>-->
-                          <!--Submitted:-->
-                          <!--<span data-ng-bind="project.createdOn | date:'medium'"></span>-->
-                        <!--</small>-->
-                      <!--</div>-->
-                    <!--</md-card-title-media>-->
-                  <!--</md-card-title>-->
-                <!--</md-card>-->
-              <!--</div>-->
-              <!---->
-
+            <md-grid-list md-cols="2" md-row-height="4:3" md-gutter="1em">
+              <md-grid-tile data-ng-repeat="project in projects | orderBy:sorts" class="admin-list md-whiteframe-1dp" flex-gt-xs="40" ui-sref="admin.adminEditProject({ 'projectId' : project._id })">
+                <img ng-src="{{project.mainImageData.thumbImageUrl}}" class="project-tile-image" alt="{{project.title}}">
+                <md-grid-tile-footer data-ng-bind="project.title"></md-grid-tile-footer>
+                    <!--<md-card-actions layout="row" layout-align="end center">-->
+                      <!--<md-button class="md-icon-button" aria-label="Favorite">-->
+                        <!--<md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>-->
+                      <!--</md-button>-->
+                      <!--<md-button class="md-icon-button" aria-label="Settings">-->
+                        <!--<md-icon md-svg-icon="menu"></md-icon>-->
+                      <!--</md-button>-->
+                      <!--<md-button class="md-icon-button" aria-label="Share">-->
+                        <!--<md-icon md-svg-icon="share-arrow.svg"></md-icon>-->
+                      <!--</md-button>-->
+                    <!--</md-card-actions>-->
+              </md-grid-tile>
+            </md-grid-list>
+                
             <div class="alert alert-warning text-center" data-ng-hide="!projects.$resolved || projects.length">
               No projects are currently waiting for approval. Check <a href="#">blah blah</a> for blah blah.
             </div>

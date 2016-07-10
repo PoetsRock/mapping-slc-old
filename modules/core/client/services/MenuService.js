@@ -16,13 +16,14 @@ angular.module('core').service('MenuService', ['$rootScope',
     };
 
     this.setShowAll = function (val) {
-      console.log('this.setShowAll\nval\n', val, '\n\n');
       this.open.all = val;
       if (val) {
         this.open.part = false;
         this.open.none = false;
-        //} else if(!val && !this.open.part) {
-        //  $rootScope.toggleOverlayFunction('overlay');
+      // } else if(!val && !this.open.part) {
+      //  $rootScope.toggleOverlayFunction('overlay');
+      } else {
+        // scope.toggleOverlayFunction('overlay');
       }
       $rootScope.$broadcast('MenuService.update', this.open);
     };

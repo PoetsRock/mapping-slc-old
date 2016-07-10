@@ -43,12 +43,6 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  // ModifiedBy: {
-  //   type: String
-  // },
-  // ModifiedOn: {
-  //   type: Date
-  // },
   namePrefix: {
     type: String,
     trim: true,
@@ -85,6 +79,10 @@ var UserSchema = new Schema({
   userStreet: {
     type: String,
     default: '',
+    trim: true
+  },
+  userStreet2: {
+    type: String,
     trim: true
   },
   userCity: {
@@ -129,7 +127,10 @@ var UserSchema = new Schema({
     type: String,
     default: 'default.png'
   },
-  profileImageETag: {
+  profileImageId: {
+    type: String
+  },
+  profileImageExt: {
     type: String
   },
   provider: {

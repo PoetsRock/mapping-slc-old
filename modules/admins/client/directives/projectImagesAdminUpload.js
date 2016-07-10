@@ -18,7 +18,11 @@ angular.module('admins').directive('projectImagesAdminUpload', function () {
         if($scope.previewFiles.length > 0) { $scope.uploadBtnText = 'Select More Files'; }
         console.log('fileArray[0]:\n', fileArray[0]);
         
-        fileReader.readAsDataURL(fileArray[0]);
+        // fileReader.readAsDataURL(fileArray[0]);
+
+        fileReader.readAsArrayBuffer(fileArray[0]);
+
+
         fileReader.onprogress = function(event) {
           console.log('progress event:\n', event);
         };

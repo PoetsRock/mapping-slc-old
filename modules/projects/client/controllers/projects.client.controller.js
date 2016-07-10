@@ -2,8 +2,8 @@
 
 // Projects controller
 //noinspection JSAnnotator
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'Upload',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, Upload) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'Upload', 'getUserForAdmin',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, Upload, getUserForAdmin) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -323,6 +323,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       Projects.get({ projectId: $stateParams.projectId },
         function (project) {
           $scope.project = project;
+          $scope.userToEdit = getUserForAdmin($scope.project);
           // $scope.images = project.imageGallery;
           console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
           if (project.vimeoId) {
@@ -345,7 +346,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             }
           }
           if (project.fileUrls) {
-            for (var i = 0; i < project.fileUrls.length; i++) {
+            for (i = 0; i < project.fileUrls.length; i++) {
               $scope.files.push(project.fileUrls[i]);
             }
           }
@@ -358,19 +359,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       console.log('here! | projectId: ', projectId);
     };
 
-    // /**
-    //  * Find existing User
-    //  *
-    //  * @param userIdToEdit {string} [optional] - if param exists, then function will use this as the userId for request
-    //  */
-    // $scope.adminFindOneUser = function(userIdToEdit) {
-    //   console.log(':::: userIdToEdit :::: ', userIdToEdit);
-    //   $scope.userToEdit = UserData.get({
-    //     userId: userIdToEdit
-    //   });
-    // };
-
-
+    
     $scope.completed = function () {
       var formField;
       for (formField in $scope.createProject) {
@@ -381,14 +370,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       }
     };
-
-
-    //CKEDITOR.replace('story');
-    //$scope.editorOptions = {
-    //  language: 'en',
-    //  uiColor: '#02211D'
-    //};
-    //CKEDITOR.replaceClass = 'ck-crazy';
 
     /**
      * Checks to see if a user is logged in before allowing a user to create a project
@@ -434,17 +415,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      * Favorite project function
      */
 
-    $scope.$watchCollection('user.favorites',
-      function (newVal, oldVal) {
+    // $scope.$watchCollection('user.favorites',
+    //   function (newVal, oldVal) {
         // console.log('PROJECTS CTRL :::::$scope.user.favorites BEFORE $watch\n', $scope.user.favorites, '\n');
         // console.log('PROJECTS CTRL watchUpdateFavorites newVal.length::::::\n', newVal.length, '\n\n');
         // console.log('PROJECTS CTRL watchUpdateFavorites::::::oldVal.length\n', oldVal.length);
-        if ($scope.user.favorites && newVal.length !== oldVal.length) {
-          $scope.user.favorites = newVal;
+        // if ($scope.user.favorites && newVal.length !== oldVal.length) {
+        //   $scope.user.favorites = newVal;
           // console.log('PROJECTS CTRL :::::$scope.user.favorites AFTER $watch\n', $scope.user.favorites, '\n');
-        }
-      }
-    );
+        // }
+      // }
+    // );
 
 
     //var removeItemFromArray = function(item) {

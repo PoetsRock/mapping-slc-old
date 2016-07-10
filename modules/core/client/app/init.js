@@ -9,14 +9,16 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
     $locationProvider.html5Mode(true).hashPrefix('!');
 
     $mdThemingProvider.theme('default')
-    .primaryPalette('blue')
-    .accentPalette('yellow');
-
+    .primaryPalette('green')
+    .accentPalette('green');
+    
     // Register the user `avatar` icons
     $mdIconProvider
-    .defaultIconSet('./assets/svg/avatars.svg', 128)
+    .defaultIconSet('modules/core/client/img/md-icons/mdi.svg', 128)
     .icon('menu'       , './assets/svg/menu.svg'        , 24)
     .icon('share'      , './assets/svg/share.svg'       , 24)
+    .icon('share-arrow'      , './assets/svg/share-arrow.svg'       , 24)
+    .icon('favorite'      , './assets/svg/favorite.svg'       , 24)
     .icon('google_plus', './assets/svg/google_plus.svg' , 512)
     .icon('hangouts'   , './assets/svg/hangouts.svg'    , 512)
     .icon('twitter'    , './assets/svg/twitter.svg'     , 512)
