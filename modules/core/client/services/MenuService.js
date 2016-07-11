@@ -12,6 +12,7 @@ angular.module('core').service('MenuService', ['$rootScope',
 
     this.setShowPart = function (val) {
       this.open.part = val;
+      console.log('###ShowPart this.open:\n', this.open);
       $rootScope.$broadcast('MenuService.update', this.open);
     };
 
@@ -25,17 +26,20 @@ angular.module('core').service('MenuService', ['$rootScope',
       } else {
         // scope.toggleOverlayFunction('overlay');
       }
+      console.log('###ShowAll this.open:\n', this.open);
       $rootScope.$broadcast('MenuService.update', this.open);
     };
 
-    this.setShowNone = function (val) {
-      console.log('setShowNone\nval\n', val, '\n\n');
-      this.open.none = val;
-      if (val) {
-        //this.open.part = false;
-        this.open.all = false;
-      }
-      $rootScope.$broadcast('MenuService.update', this.open);
+    this.setShowNone = function () {
+      this.open.none = true;
+      this.open.part = false;
+      this.open.all = false;
+      // if (val) {
+      //   this.open.part = false;
+      //   this.open.all = false;
+      // }
+      console.log('MenuSERVICE :::  this.setShowNone() :: `this.open`:\n', this.open);
+      $rootScope.$broadcast('MenuService.close', this.open);
     };
 
   }

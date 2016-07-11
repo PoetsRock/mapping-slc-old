@@ -1,17 +1,12 @@
 <header>
   <ul id="my-menu" class="my-menu-main">
-    <!--<li left-menu></li>-->
-  
-    <!--<li class="my-trigger" ng-mouseenter="showAll || mouseenter()" ng-mouseleave="showAll || mouseleave()" data-ng-click="menuToggle($event)">-->
     <li class="my-trigger" ng-click="menuToggle($event)" ng-mouseenter="showAll || mouseenter()" ng-mouseleave="showAll || mouseleave()">
-    
-    
-      <!--<a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}" data-ng-click="toggleOverlayFunction('overlay')"></a>-->
-      <a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'active':showAll}"></a>
-      <!--data-ng-click="toggleOverlayFunction('overlay')"-->
-    
-      <nav ng-mouseenter="showAll|| menuHover($event)" class="my-menu-wrapper" ng-class="{'my-open-part' : showPart,'my-open-all' : showAll, 'my-open-none': showNone}">
+      <!--<a id="triggerMenu" class="fa fa-3x fa-bars" ng-class="{'my-open-part' : showPart,'my-open-all' : showAll, 'my-open-none': showNone}"></a>-->
+      <a id="triggerMenu" class="fa fa-3x fa-bars"></a>
       
+      
+      <nav ng-mouseenter="showAll|| menuHover($event)" id="main-menu-nav" class="my-menu-wrapper" ng-class="{'my-open-part' : showPart, 'my-open-all' : showAll, '': showNone}">
+        showNone: {{showNone}}
       
         <div class="my-scroller">
         
@@ -109,11 +104,19 @@
                     </a>
                   </li>
                 </div>
+                
                 <div
                     class="fb-like"
                     data-share="true"
                     data-width="450"
-                    data-show-faces="true"><li></li>
+                    data-show-faces="true">
+                  <li>Facebook? // {{showNone}}</li>
+                </div>
+                
+                <div class="row">
+                  <li class="col-sm-12">
+                    <button data-ng-click="killClass();">close menu</button>
+                  </li>
                 </div>
             
               </ul>
