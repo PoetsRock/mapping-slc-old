@@ -21,26 +21,17 @@ angular.module('core').service('MenuService', ['$rootScope',
       if (val) {
         this.open.part = false;
         this.open.none = false;
-      // } else if(!val && !this.open.part) {
-      //  $rootScope.toggleOverlayFunction('overlay');
-      } else {
-        // scope.toggleOverlayFunction('overlay');
       }
-      console.log('###ShowAll this.open:\n', this.open);
       $rootScope.$broadcast('MenuService.update', this.open);
     };
-
-    this.setShowNone = function () {
-      this.open.none = true;
-      this.open.part = false;
-      this.open.all = false;
-      // if (val) {
-      //   this.open.part = false;
-      //   this.open.all = false;
-      // }
-      console.log('MenuSERVICE :::  this.setShowNone() :: `this.open`:\n', this.open);
-      $rootScope.$broadcast('MenuService.close', this.open);
+   
+    
+    this.killClass = function () {
+      var mainMenuNav = angular.element( document.querySelector( '#main-menu-nav' ) );
+      mainMenuNav.removeClass('my-open-all');
+      this.setShowAll(false);
+      
     };
-
+    
   }
 ]);

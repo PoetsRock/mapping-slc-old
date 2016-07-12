@@ -16,10 +16,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.menuOpen = false;
     $scope.shadeMap = false;
 
-    $scope.closeMenuTest = function() {
-      
-    };
-    
     // $scope.goToProject = function (id) {
     //   $location.path('projects/' + id);
     // };
@@ -136,34 +132,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
         return false;
       };
-  
-  
-  
-      $scope.$on('MenuService.close', function (event, open) {
-        console.log('CONTROLLER ::: MenuService.close :: open #1:\n', open);
-  
-        $scope.showAll = false;
-        $scope.showPart = false;
-        $scope.showNone = true;
-        console.log('CONTROLLER ::: MenuService.close :: open #2:\n', open);
-      });
       
+      /** adds event listener for click on main map **/
       map.on('click', function (event) {
+        // console.log('map click!::::: `event`\n', event);
+        /** if $scope.showAll is true, then main menu is open; MenuService.killClass() removes class "my-open-all", which closes menu  **/
         if ($scope.showAll) {
-          console.log('map click!::::: if ($scope.showAll)  :::: `event`\n', event);
-          // $scope.menuToggle(event, $scope.showAll);
-          
-          $scope.menuToggleOff(event, $scope.showAll);
-
-          // $scope.killClass();
+          MenuService.killClass();
         }
-        // if ($scope.showAll) {
-        //   console.log('map click!::::: if ($scope.showAll)  :::: `event`\n', event);
-        //   MenuService.setShowAll(false);
-        //   $scope.showAll = false;
-        // } else {
-        //   console.log('`$scope.showAll = false` map click!  `event`\n', event);
-        // }
       });
 
       //todo refactor into directive -- and use it
