@@ -1,0 +1,17 @@
+<div class="map-view-controls-right" ng-class="{'toggle-menu-icons-right': toggleSidebar}">
+  
+  <div class="main-info">
+    <a href="#" id="legend">
+      <nav class="menu-ui">L</nav>
+    </a>
+
+    <a href="#" id="help">
+      <nav class="menu-ui"><i class="fa fa-question"></i></nav>
+    </a>
+  </div>
+  
+  <div >
+  <i class="fa fa-info-circle" data-ng-click="attributionToggle()" data-ng-show="!attributionFull" data-ng-class="{'toggle-attr-icons-right': toggleSidebar}"></i>
+  <div class="attrib" data-ng-show="attributionFull" data-ng-click="attributionToggle()" data-ng-bind-html="attributionText" data-ng-class="{'toggle-attr-icons-right': toggleSidebar}"></div>
+  </div>
+</div>
