@@ -10,20 +10,20 @@
     right: 0;
     position: absolute;
     /*min-width: 300px;*/
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    transition: all 1s ease;
+    /*-webkit-transition: all 1s ease;*/
+    /*-moz-transition: all 1s ease;*/
+    /*-o-transition: all 1s ease;*/
+    /*transition: all 1s ease;*/
 }
 
 .sidebar-right.ng-show {
     width: 25%;
     /*min-width: 300px;*/
     height: 100%;
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    transition: all 1s ease;
+    /*-webkit-transition: all 1s ease;*/
+    /*-moz-transition: all 1s ease;*/
+    /*-o-transition: all 1s ease;*/
+    /*transition: all 1s ease;*/
 }
 
 .sidebar-right.ng-hide {
@@ -50,10 +50,10 @@
 .project-sidebar div {
     color: #cdcdcd;
     padding: 5%;
-    -webkit-transition: all 0.15s ease;
-    -moz-transition: all 0.15s ease;
-    -o-transition: all 0.15s ease;
-    transition: all 0.15s ease;
+    /*-webkit-transition: all 0.15s ease;*/
+    /*-moz-transition: all 0.15s ease;*/
+    /*-o-transition: all 0.15s ease;*/
+    /*transition: all 0.15s ease;*/
 }
 
 .fa-chevron-right.project-close {
@@ -71,4 +71,13 @@
     -moz-transition: all 0.15s ease;
     -o-transition: all 0.15s ease;
     transition: all 0.15s ease;
+}
+
+.sidebar-right > .row {
+    border: #00A000 1px solid;
+}
+
+.sidebar-right > .row:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
 }

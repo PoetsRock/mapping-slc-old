@@ -13,7 +13,9 @@ angular.module('users').factory('Users', ['$resource',
 
 angular.module('users').factory('User', ['$resource', 'AdminAuthService',
   function ($resource, AdminAuthService) {
+    console.log('User ::::');
     if (AdminAuthService.user === 'admin') {
+      console.log('ADMIN ::::  $resource:\n', $resource);
       return $resource('api/v1/user/:userId', { userId: '@_id' }, {
         update: {
           method: 'PUT'
@@ -28,6 +30,7 @@ angular.module('users').factory('User', ['$resource', 'AdminAuthService',
         }
       });
     } else {
+      console.log('NOOOOPe ::::  $resource:\n', $resource);
       return $resource('api/v1/users/:userId', { userId: '@_id' }, {
         update: {
           method: 'GET'

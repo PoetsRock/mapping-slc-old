@@ -12,7 +12,6 @@ angular.module('core').service('MenuService', ['$rootScope',
 
     this.setShowPart = function (val) {
       this.open.part = val;
-      console.log('###ShowPart this.open:\n', this.open);
       $rootScope.$broadcast('MenuService.update', this.open);
     };
 
@@ -23,6 +22,10 @@ angular.module('core').service('MenuService', ['$rootScope',
         this.open.none = false;
       }
       $rootScope.$broadcast('MenuService.update', this.open);
+      // if(!val) {
+      //   console.log('in if');
+      //   $rootScope.$broadcast('MenuService.close.sidebar', this.open);
+      // }
     };
    
     
@@ -30,8 +33,11 @@ angular.module('core').service('MenuService', ['$rootScope',
       var mainMenuNav = angular.element( document.querySelector( '#main-menu-nav' ) );
       mainMenuNav.removeClass('my-open-all');
       this.setShowAll(false);
-      
     };
-    
+
+    // this.toggleSidebarService = function(markerId, projectData, toggleSidebar) {
+    //   toggleSidebar = !toggleSidebar;
+    //   $rootScope.$broadcast('MenuService.toggleSidebar', markerId, projectData, toggleSidebar);
+    // }
   }
 ]);

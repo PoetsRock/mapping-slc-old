@@ -15,7 +15,7 @@
               <ul>
                 <div class="row">
                   <li class="col-sm-12">
-                    <a ui-sref="home" data-ng-click="toggleOverlayFunction('home')">
+                    <a ui-sref="home" data-ng-click="toggleOverlayFunction('home', 'home')">
                       <i class="fa fa-home"></i>
                       Home
                     </a>
@@ -104,6 +104,7 @@
                 </div>
                 
                 <div
+                    data-ng-show="showAll"
                     class="fb-like"
                     data-share="true"
                     data-width="450"

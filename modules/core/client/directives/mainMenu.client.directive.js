@@ -31,8 +31,14 @@ angular.module('core').directive('mainMenu', function (MenuService) {
       };
     
       $scope.menuToggle = function (event, close) {
-        console.log('$scope.menuToggle `event`:\n', event);
-        if (!close && event.target.id !== "triggerMenu" && event.target.className !== 'my-scroller') { return; }
+        if (!close && event.target.id !== "triggerMenu" && event.target.className !== 'my-scroller' && !$scope.overlayActive) {
+          return;
+        }
+        if($scope.overlayActive) {
+          $scope.overlayActive = false;
+          $scope.shadeMap = true;
+          // $scope.toggleOverlayFunction(sourceFrom, sourceTo);
+        }
         MenuService.setShowAll(!$scope.showAll);
       };
       

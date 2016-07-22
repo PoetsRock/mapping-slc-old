@@ -30,7 +30,7 @@ module.exports = function (app) {
 
   // Single contributor routes
   app.route('/api/v1/contributors/:userId')
-    .get(admin.getContributorByID);
+    .get(admin.getContributorByUserId);
 
   //var myFunction = function myFunction () {
   //  //this will show up in a stack trace

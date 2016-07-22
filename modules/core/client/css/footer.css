@@ -50,6 +50,21 @@
     font-size: 1.7rem;
 }
 
+.footer-links {
+    top: 1rem;
+    left: 5rem;
+    position: relative;
+}
+
+.footer-links div div {
+    padding: 0;
+}
+
+/* modification for fb like icon */
+.footer-links div div:first-child {
+    top: 2rem;
+}
+
 @media (max-width: 992px) {
     .footer-overlay .form-inline {
         padding-top: 10px;

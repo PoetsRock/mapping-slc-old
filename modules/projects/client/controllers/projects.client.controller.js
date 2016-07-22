@@ -2,8 +2,8 @@
 
 // Projects controller
 //noinspection JSAnnotator
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'Upload', 'getUserForAdmin',
-  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, Upload, getUserForAdmin) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$http', '$sce', 'ApiKeys', 'GeoCodeApi', '$rootScope', 'AdminAuthService', 'User', 'UserData', 'AdminUpdateUser', '$state', 'UtilsService', '$uibModal', '$window', '$log', 'notify', '$document', 'publishedProjectsService', 'userFavoritesService', 'Upload',
+  function ($scope, $stateParams, $location, Authentication, Projects, $http, $sce, ApiKeys, GeoCodeApi, $rootScope, AdminAuthService, User, UserData, AdminUpdateUser, $state, UtilsService, $uibModal, $window, $log, notify, $document, publishedProjectsService, userFavoritesService, Upload) {
     $scope.user = Authentication.user;
     $scope.isAdmin = AdminAuthService;
     $scope.logo = '../../../modules/core/img/brand/mapping_150w.png';
@@ -323,9 +323,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       Projects.get({ projectId: $stateParams.projectId },
         function (project) {
           $scope.project = project;
-          $scope.userToEdit = getUserForAdmin($scope.project);
+          // todo refactor to call this in the various directives that need this data, e.g., in userViewFormWrapper.directive.js in admins directive dir
+          $scope.userToEdit = UserData.get({ userId: $scope.project.user._id });
+
           // $scope.images = project.imageGallery;
-          console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
+          // console.log(' ::: $scope.findOne()  :::  var `$scope.project`:', $scope.project);
           if (project.vimeoId) {
             $scope.vimeo = {
               video: $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + project.vimeoId),

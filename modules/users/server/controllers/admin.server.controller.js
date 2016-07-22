@@ -159,7 +159,7 @@ exports.list = function (req, res) {
  */
 
 exports.getContributors = function (req, res) {
-  var query = User.find(req.query);
+  var query = User.find(req.uery);
   query.or([{ roles: 'contributor' }, { roles: 'admin' }])
     .sort('-lastName')
     .exec(function (err, users) {
@@ -170,6 +170,16 @@ exports.getContributors = function (req, res) {
       }
       res.jsonp(users);
     });
+};
+
+
+/**
+ * Get a Contributor
+ */
+exports.getContributorByUserId = (req, res) => {
+  console.log('req:\n', req);
+  console.log('req.body:\n', req.body);
+  // User.findOne({ _id: req.body.})
 };
 
 /**
@@ -216,13 +226,6 @@ exports.findUsersBySource = function (req, res) {
 
 };
 
-/**
- *
- */
-
-exports.getContributorByID = function (req, res) {
-
-};
 
 
 /**

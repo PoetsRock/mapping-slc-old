@@ -143,7 +143,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
 ]);
 
 
-//$scope.watchUpdate = function(nameToWatch) {
+// $scope.watchUpdate = function(nameToWatch) {
 //  $scope.$watch('userFavorites',
 //  //$scope.$watch('nameToWatch',
 //    function(newVal, oldVal) {
@@ -152,7 +152,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
 //      $scope.userFavorites = newVal;
 //      //$scope.nameToWatch = newVal;
 //    });
-//};
+// };
 
 
 //"favorites" : [

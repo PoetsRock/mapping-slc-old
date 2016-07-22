@@ -1,8 +1,15 @@
-<div data-ng-show="toggleSidebar" class="sidebar-right" data-ng-class="{'project-sidebar':  toggleSidebar}">
+<div id="sidebar" data-ng-show="toggleSidebar" class="sidebar-right" data-ng-class="{'project-sidebar':  toggleSidebar}">
   <div class="row">
-    <i class="fa fa-chevron-right project-close" ng-click="hideSidebar()"></i>
-    <h3>{{project.title}}</h3>
+    <i class="fa fa-chevron-right project-close" data-ng-click="showSidebar(0, null, true);"></i>
+    <h3>{{project.projectTitle}}</h3>
     <img data-ng-src="{{project.mainImgThumbnail}}"/>
     <p>{{project.summary}}</p>
   </div>
+  
+  <div class="row">
+    <div class="col-sm-12">
+      toggle sidebar: {{toggleSidebar}}
+    </div>
+  </div>
+  
 </div>

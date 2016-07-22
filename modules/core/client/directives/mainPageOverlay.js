@@ -2,8 +2,7 @@
 
 angular.module('core').directive('mainPageOverlay', function () {
   return {
-    restrict: 'AE',
-    priority: 10,
+    restrict: 'EA',
     templateUrl: '/modules/core/client/directives/views/main-page-overlay.html'
   };
 });

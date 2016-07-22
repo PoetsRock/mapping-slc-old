@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('users').controller('ContributorController', ['$scope', '$animate', '$location', 'Authentication', 'GetContributors', '$stateParams', '$http', '$uibModal', '$window', 'Lightbox', 'UtilsService', 'User', 'Projects',
-  function ($scope, $animate, $location, Authentication, GetContributors, $stateParams, $http, $uibModal, $window, Lightbox, UtilsService, User, Projects) {
+angular.module('users').controller('ContributorController', ['$scope', '$animate', '$location', 'Authentication', 'GetContributors', '$stateParams', '$http', '$uibModal', '$window', 'Lightbox', 'UtilsService', 'Users', 'Projects',
+  function ($scope, $animate, $location, Authentication, GetContributors, $stateParams, $http, $uibModal, $window, Lightbox, UtilsService, Users, Projects) {
 
     $scope.contributors = null;
     $scope.contributor = {};
@@ -47,11 +47,16 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
     };
 
     $scope.findContributor = function () {
-      User.get({ userId: $stateParams.userId },
-        function (userData) {
-          getAssociatedProjects(userData);
-          $scope.contributor = userData;
-        });
+      console.log('$scope.findContributor() invoked');
+      console.log('$stateParams:\n', $stateParams);
+      console.log('$stateParams.userId: ', $stateParams.userId);
+      $http.get(`/api/v1/contributors/${$stateParams.userId}`);
+      // Users.query({ userId: $stateParams.userId },
+      //   function (userData) {
+      //     console.log('userData:\n', userData);
+      //     getAssociatedProjects(userData);
+      //     $scope.contributor = userData;
+      //   });
     };
 
     var getAssociatedProjects = function (userObj) {
