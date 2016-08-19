@@ -19,19 +19,19 @@
                 <a ui-sref="settings.profile">Edit Profile</a>
               </li>
               <li ui-sref-active="active">
-                <a ui-sref="settings.picture">Change Profile Picture</a>
-              </li>
-              <li ui-sref-active="active" ng-show="user.provider === 'local'">
-                <a ui-sref="settings.password">Change Password</a>
+                <a ui-sref="settings.picture">Profile Picture</a>
               </li>
               <li ui-sref-active="active">
                 <a ui-sref="settings.accounts">Manage Social Accounts</a>
               </li>
               <li ui-sref-active="active">
-                <a ui-sref="settings.favorites">Favorite Projects</a>
+                <a ui-sref="settings.favorites">Favorites</a>
               </li>
               <li ui-sref-active="active">
-                <a ui-sref="settings.submissions">Current Submissions</a>
+                <a ui-sref="settings.submissions">Submissions</a>
+              </li>
+              <li ui-sref-active="active" ng-show="user.provider === 'local'">
+                <a ui-sref="settings.password">Change Password</a>
               </li>
             </ul>
           </nav>

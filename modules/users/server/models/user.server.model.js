@@ -97,7 +97,6 @@ var UserSchema = new Schema({
   },
   userZip: {
     type: Number,
-    default: '',
     trim: true
   },
   username: {
@@ -114,24 +113,25 @@ var UserSchema = new Schema({
   salt: {
     type: String
   },
-  profileImageUrl: {
-    type: String,
-    default: 'modules/users/client/img/profile/default.png'
-  },
-  profileImageThumbUrl: {
-    type: String,
-    trim: true,
-    default: 'modules/users/client/img/profile/thumb_default.png'
-  },
-  profileImageFileName: {
-    type: String,
-    default: 'default.png'
-  },
-  profileImageId: {
-    type: String
-  },
-  profileImageExt: {
-    type: String
+  profileImage: {
+    imageUrl: {
+      type: String,
+      default: 'modules/users/client/img/profile/default.png'
+    },
+    imageId: String,
+    thumbImageUrl: {
+      type: String,
+      trim: true,
+      default: 'modules/users/client/img/profile/thumb_default.png'
+    },
+    thumbImageId: String,
+    imageSize: Number,
+    imageType: String,
+    imageExt: String,
+    imageName: {
+      type: String,
+      default: 'default.png'
+    }
   },
   provider: {
     type: String,
@@ -142,7 +142,7 @@ var UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
+      enum: ['user', 'blocked', 'verificationRequired', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
     }],
     default: ['registered'],
     required: 'Please provide at least one role'
@@ -150,11 +150,7 @@ var UserSchema = new Schema({
   updated: {
     type: Date
   },
-  created: {
-    type: Date,
-    default: Date.now
-  },
-  lastVisit: {
+  lastVisitOn: {
     type: Date,
     default: Date.now
   },

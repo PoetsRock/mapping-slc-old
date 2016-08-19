@@ -1,104 +1,57 @@
-<section class="row" ng-controller="ChangeProfilePictureController" data-ng-init="init();">
+<section class="row">
+    <div class="col-xs-offset-1 col-md-11">
 
-  <div class="file-upload">
+      <div class="file-upload">
 
-    <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-8">
+      <!-- current image -->
+        <div class="row">
+          <div class="col-md-5 profile-image-box">
+            <img data-ng-src="{{user.profileImage.thumbImageUrl}}" class="img-responsive">
+          </div>
 
-      <!--<h4>Upload on file select</h4>-->
-      <!--<button type="file" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/*" ngf-max-height="3000" ngf-max-size="5MB">-->
-      <!--Select File</button>-->
-      <!--<br><br>-->
-      <!--File:-->
-      <!--<div>{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}-->
-      <!--<span class="progress" ng-show="f.progress >= 0">-->
-      <!--<div style="width:{{f.progress}}%" ng-bind="f.progress + '%'"></div>-->
-      <!--</span>-->
-      <!--</div>-->
-      <!--{{errorMsg}}-->
+          <!-- preview image -->
+            <div class="col-md-5 preview-box" data-ng-show="files && !uploading">
+              <h3>Image Preview</h3>
+              <div class="">
+                <img ngf-src="files[0]" class="preview-img" ngf-resize="{width: 200, height: 200, quality: 0.9}">
+                <span data-ng-click="files = null">x</span>
+              </div>
+            </div>
 
-
-      <!--<a data-ng-repeat="file in listOfImages" data-ng-href="{{file.imagepath}}{{file.imagename}}" class="list-group-item">-->
-      <!--<img data-ng-src="{{imageURL}}" />-->
-      <!--</a>-->
-
-      <!--<img data-ng-src="{{user.profileImage}}" class="img-thumbnail user-profile-picture"/>-->
-
-      <!--<div>-->
-        <!--<button type="file" class="btn btn-main btn-footer-overlay grow" data-ng-hide="uploading" ngf-select-->
-                <!--ngf-change="onFileSelect($files)">Choose File-->
-        <!--</button>-->
-      <!--</div>-->
-
-      <!--<button class="button" ng-file-select ngf-select ngf-change="onFileSelect($files)">Upload on file change</button>-->
-
-      <!--<button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow">Cancel-->
-      <!--</button>-->
-
-      <!--Drop File:-->
-      <!--<div ngf-file-drop ng-model="files" class="drop-box" ngf-select ngf-change="onFileSelect($files)"-->
-           <!--drag-over-class="dragover" ngf-multiple="true" allow-dir="true" accept=".jpg,.png,.pdf"-->
-           <!--data-ng-hide="uploading">-->
-        <!--Drop Images or PDFs Files Here-->
-      <!--</div>-->
-
-      <!--<div ngf-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">File Drag/Drop is not supported for this-->
-        <!--browser-->
-      <!--</div>-->
+          </div>
 
 
-      <!--<form name="profileImg" class="signin form-horizontal">-->
-      <!--<fieldset>-->
+          <div class="row profile-image-buttons">
+          <div class="col-md-10">
+            <md-button class="md-raised" data-ng-model="files" ngf-select
+                       ngf-multiple="true" ngf-fix-orientation="true"
+                       accept=".jpeg,.jpg,.png,image/*" ngf-max-size="3MB"
+                       ngf-model-invalid="errorFile"
+                       data-ng-change="filesChanged(files)"
+                       data-ng-show="files || !uploading">
+              Select New Photo
+            </md-button>
+
+            <md-button class="md-raised pull-right" data-ng-click="imageUpload('users', user._id, files)" data-ng-show="files && !uploading">Upload</md-button>
+          </div>
+        </div>
 
 
-      <!--<div class="form-group text-center">-->
-      <!--<img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">-->
-      <!--Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">-->
-      <!--</div>-->
+      <span class="progress" ng-show="files.progress >= 0">
+        <div style="width:{{files.progress}}%" ng-bind="files.progress + '%'"></div>
+      </span>
 
-      <!--<legend>Upload on form submit</legend>-->
-      <!--Username:-->
-      <!---->
-      <!--<input type="text" name="userName" ng-model="username" size="31" required>-->
+      <span ng-show="files.result">Upload Successful</span>
+      <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
 
-      <!--<i ng-show="profileImg.userName.$error.required">*required</i>-->
+      <div ng-show="success" class="text-center text-success">
+        <strong>Profile Picture Updated</strong>
+      </div>
 
-      <!--<br>-->
+      <div ng-show="error" class="text-center text-danger">
+        <strong ng-bind="error"></strong>
+      </div>
 
-      <!--Photo:-->
-      <!--<input type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required>-->
-
-      <!--<i ng-show="profileImg.file.$error.required">*required</i>-->
-
-      <!--<br>-->
-
-      <!--<i ng-show="profileImg.file.$error.maxSize">File too large {{picFile.size / 1000000|number:1}}MB: max 2M</i>-->
-
-      <!--<img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb">-->
-      <!--<button ng-click="picFile = null" ng-show="picFile">Remove</button>-->
-
-      <!--<br>-->
-
-      <!--<button ng-disabled="!myForm.$valid" data-ng-click="uploadPic(picFile)">Submit</button>-->
-
-        <!--<span class="progress" ng-show="picFile.progress >= 0">-->
-          <!--<div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>-->
-        <!--</span>-->
-
-      <!--<span ng-show="picFile.result">Upload Successful</span>-->
-      <!--<span class="err" ng-show="errorMsg">{{errorMsg}}</span>-->
-
-      <!--<div ng-show="success" class="text-center text-success">-->
-      <!--<strong>Profile Picture Changed Successfully</strong>-->
-      <!--</div>-->
-
-      <!--<div ng-show="error" class="text-center text-danger">-->
-      <!--<strong ng-bind="error"></strong>-->
-      <!--</div>-->
-
-
-      <!--</fieldset>-->
-      <!--</form>-->
     </div>
-
   </div>
 </section>

@@ -1,0 +1,33 @@
+<section class="project-images">
+
+
+    <div data-ng-if="project.imageGallery.length > 0">
+      <h3>Image Gallery</h3>
+
+      <div class="row">
+        <div class="col-md-3 project-image-gallery" data-ng-repeat="image in project.imageGallery track by $index">
+          <a data-ng-href="{{image.imageUrl}}" target="_blank">
+            <img data-ng-src="{{image.thumbImageUrl}}" class="img-responsive">
+          </a>
+          <div class="btn btn-main btn-footer-overlay grow" data-ng-click="deleteImageById(image, $index)">Remove</div>
+        </div>
+      </div>
+    </div>
+
+    <div data-ng-if="project.documentGallery.length > 0">
+      <h3>Files</h3>
+      <div class="row">
+        <!--<div class="col-md-3 project-image-gallery">-->
+        <div class="project-files" data-ng-repeat="file in project.documentGallery track by $index">
+          <a data-ng-href="{{project.documentGallery.documentUrl}}" target="_blank">
+
+            <div class="btn btn-main btn-footer-overlay grow" data-ng-click="deleteImageById(image, $index)">X</div>
+
+            <img data-ng-src="/modules/core/client/img/icons/{{project.documentGallery.documentIcon}}.png" class="img-responsive">
+            <div>{{project.documentGallery.documentName}}</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+</section>

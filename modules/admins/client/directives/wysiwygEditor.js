@@ -25,7 +25,9 @@ angular.module('admins').directive('wysiwygEditor', function () {
       };
 
       var uploadImage = function() {
-        return '/api/v1/projects/' + $scope.project._id + '/images';
+        var url = '/api/v1/projects/' + $scope.project._id + '/images/wysiwyg';
+        console.log('url: ', url);
+        return url;
       };
       var getProjectImages = function() {
         return '/api/v1/projects/' + $scope.project._id + '/images';

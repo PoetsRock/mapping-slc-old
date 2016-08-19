@@ -22,6 +22,8 @@ var ImageGallerySchema = new Schema({
   isDefaultImage: Boolean,
   imageHash: String,
   imageS3Key: String,
+  Location: String,
+  ETag: String,
   metadata: Object
 });
 
@@ -148,10 +150,14 @@ var ProjectSchema = new Schema({
     type: String,
     trim: true
   },
+  mapImageThumb: {
+    type: String,
+    trim: true
+  },
   category: {
     type: [{
       type: String,
-      enum: ['multimedia', 'essay', 'literature', 'interview', 'map', 'video', 'audio', 'this-was-here']
+      enum: ['multimedia', 'essay', 'literature', 'interview', 'map', 'video', 'audio', 'photography', 'this-was-here']
     }],
     trim: true
   },
@@ -185,18 +191,21 @@ var ProjectSchema = new Schema({
   featuredEndDate: {
     type: Date
   },
-  mainImageData: {
+  mainImage: {
     imageUrl: String,
     imageId: String,
     thumbImageUrl: String,
     thumbImageId: String,
-    thumbImageSize: Number,
-    thumbImageType: String,
     imageSize: Number,
     imageType: String,
     imageExt: String,
     imageName: String,
-    metadata: Object
+    imageTags: {
+      type: [{
+        type: String
+      }]
+    },
+    default: {}
   },
   vimeoId: {
     type: String,

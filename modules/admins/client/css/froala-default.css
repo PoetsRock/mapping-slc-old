@@ -1,0 +1,8 @@
+.fr-popup.fr-desktop.fr-active {
+    left: 5px;
+    top: 70px;
+}
+
+.fr-popup.fr-desktop.fr-active > .fr-arrow {
+    margin-left: -105px;
+}

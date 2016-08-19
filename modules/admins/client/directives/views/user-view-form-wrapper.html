@@ -1,20 +1,12 @@
 <div class="page-header">
-  
   <h1>
-    <span class="col-xs-1" data-ng-click="toggleEditAllFn()"><i class="fa fa-pencil"></i></span>
-    {{userToEdit.firstName}} {{userToEdit.lastName}}'s Profile
-    <a ui-sref="admin.adminViewUser({userId: user._id})" data-ng-show="userToEdit.profileImageURL">
-      <span><img data-ng-src="{{userToEdit.profileImageURL}}" class="header-profile-image pull-right"/></span>
+    {{userToEdit.displayName}}
+    <a data-ng-show="userToEdit.profileImage.thumbImageUrl">
+      <span><img data-ng-src="{{userToEdit.profileImage.thumbImageUrl}}" class="header-profile-image pull-right"/></span>
     </a>
   </h1>
-
-  <user-view-form></user-view-form>
-  <hr>
-  
-  <div class="pull-right">
-    <a class="btn btn-main grow btn-warning" data-ng-click="remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  
 </div>
+
+<user-view-form></user-view-form>
+
+

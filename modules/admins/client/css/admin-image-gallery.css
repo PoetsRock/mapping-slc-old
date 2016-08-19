@@ -1,0 +1,47 @@
+/*** FILES TAB  ***/
+
+.project-files {
+    display: inline-flex;
+    margin: 2%;
+}
+
+.project-files div div div {
+    display: inline-flex;
+}
+
+
+/*** IMAGES TAB  ***/
+
+section.project-images {
+    padding: .25vw;
+    font-size: 0;
+    display: -ms-flexbox;
+    -ms-flex-wrap: wrap;
+    -ms-flex-direction: column;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    display: -webkit-box;
+    display: flex;
+}
+
+section.project-images div.project-image-gallery {
+    -webkit-box-flex: auto;
+    -ms-flex: auto;
+    flex: auto;
+    width: 200px;
+    margin: .5vw;
+}
+
+section.project-images div.project-image-gallery a img {
+    width: 175px;
+    height: 250px;
+    object-fit: cover;
+}
+
+
+@media screen and (max-width: 400px) {
+
+    section.project-images div.project-image-gallery { margin: 0; }
+    section.project-images { padding: 0; }
+
+}

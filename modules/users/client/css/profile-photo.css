@@ -1,0 +1,15 @@
+div.file-upload div.col-md-5.preview-box {
+    /*bottom: 5rem;*/
+}
+
+div.file-upload div.row div.col-md-5.profile-image-box {
+    top: 5rem;
+}
+
+div.file-upload div.row div.col-md-5.profile-image-box img {
+    height: 200px;
+}
+
+div.file-upload div.row.profile-image-buttons {
+    margin-top: 6rem;
+}

@@ -5,23 +5,21 @@ angular.module('users').directive('userSubmissionsList', function () {
     restrict: 'EA',
     templateUrl: 'modules/users/client/directives/views/user-submissions-list.html',
     controller: function ($scope, Projects) {
-      // Find existing project submissions by UserId
-      $scope.findCurrentUserSubmissions = function () {
-        var associatedProjects = $scope.user.associatedProjects;
+
+      $scope.subStatuses = ['received', 'pending', 'rejected', 'soft_rejection', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published', 'edit'];
+
+      // todo shift work to back end -- create a route that returns all projects by userId and returns an array of projects
         var userProjects = [];
-        $scope.getProjects = function (associatedProjects) {
-          associatedProjects.forEach(function (associatedProject) {
+        return function getProjects() {
+          $scope.user.associatedProjects.map(function (associatedProject) {
             userProjects.push(Projects.get({
-                projectId: associatedProject
-              })
-            );
+              projectId: associatedProject
+            }));
           });
           console.log('userProjects:\n', userProjects);
-          return userProjects;
-        };
-        $scope.userProjects = $scope.user.projects = $scope.getProjects(associatedProjects);
+          $scope.userProjects = userProjects;
+        }();
 
-      };
     }
   };
 });

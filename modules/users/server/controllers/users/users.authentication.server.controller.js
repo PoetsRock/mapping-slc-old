@@ -3,17 +3,48 @@
 /**
  * Module dependencies
  */
-var path = require('path'),
+
+/**
+ *
+
+ // path = require('path'),
+
+ // import path from 'path';
+ // import errorHandler from (path.resolve('./modules/core/server/controllers/errors.server.controller'));
+ import Promise from 'bluebird';
+ import mongoose from 'mongoose';
+ import passport from 'passport';
+
+ mongoose.Promise = Promise;
+ const User = mongoose.model('User');
+ const TempUser = mongoose.model('TempUser');
+
+ // URLs for which user can't be redirected on signin
+ const noReturnUrls = [
+ '/authentication/signin',
+ '/authentication/signup'
+ ];
+ export { tempUserSignup };
+
+ * **/
+
+const path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  Promise = require('bluebird'),
   mongoose = require('mongoose'),
-  passport = require('passport'),
-  User = mongoose.model('User');
+  passport = require('passport');
+
+mongoose.Promise = Promise;
+const User = mongoose.model('User');
+const TempUser = mongoose.model('TempUser');
 
 // URLs for which user can't be redirected on signin
-var noReturnUrls = [
+const noReturnUrls = [
   '/authentication/signin',
   '/authentication/signup'
 ];
+
+
 
 /**
  * Signup
@@ -56,6 +87,7 @@ exports.signup = function (req, res) {
   });
 };
 
+
 /**
  * Signin after passport authentication
  */
@@ -67,8 +99,6 @@ exports.signin = function (req, res, next) {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
-
-      console.log('\n\nreq.login:::::::::::::::::::::::::::::::::::::::\n', req.login, '\n\n\n');
 
       req.login(user, function (err) {
         if (err) {

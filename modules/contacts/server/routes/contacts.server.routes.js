@@ -25,11 +25,13 @@ module.exports = function (app) {
   
   app.route('/api/v1/emails/email/test')
     .put(contacts.emailTest);
-  
-  
-    
-  
+
+
+  app.route('/api/v1/emails/:fileName')
+  .get(contacts.getSignupEmail, contacts.tempUserSignup);
+
   
   // Finish by binding the Contact middleware
   app.param('contactId', contacts.contactByID);
+  app.param('fileName', contacts.fileName);
 };

@@ -1,22 +1,51 @@
 'use strict';
 
-let mongoose = require('mongoose'),
+const Promise = require('bluebird'),
+  mongoose = require('mongoose'),
   fs = require('fs'),
   path = require('path'),
   util = require('util'),
   _ = require('lodash'),
-  Project = mongoose.model('Project'),
   config = require(path.resolve('./config/config')),
   projects = require('./projects.server.controller'),
+  users = require('../../../users/server/controllers/admin.server.controller.js'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   AlchemyAPI = require('alchemy-api'),
-  apiKeys = require('../../../../config/env/production.js'),
   crypto = require('crypto'),
   moment = require('moment'),
-  Promise = require('bluebird'),
   request = require('request'),
-  shortId = require('shortid'),
   sanitizeHtml = require('sanitize-html');
+
+// mongoose.Promise = Promise;
+// let Project = mongoose.model('Project');
+let Project = mongoose.model('Project');
+
+const projectMarkers = [
+  {category: 'video', markerColor: '#ff0011' },
+  {category: 'multimedia', markerColor: '#ff0101' },
+  {category: 'literature', markerColor: '#ff0011' },
+  {category: 'essay', markerColor: '#0015ff' },
+  {category: 'map', markerColor: '#ff0101' },
+  {category: 'audio', markerColor: '#ff0011' },
+  {category: 'this-was-here', markerColor: '#ff0011' },
+  {category: 'photography', markerColor: '#ff0011' },
+  {category: 'other', markerColor: '#00ff44' }
+];
+
+const getMarkerDetails = category => {
+  return new Promise((resolve, reject) => {
+    const projectMarkerData = projectMarkers.find(projectMarker => {
+      console.log('getMarkerDetails `category`: ', category, '\n');
+      return projectMarker.category === category;
+    });
+    if(projectMarkerData === 'undefined') {
+      console.log('reject `projectMarkerData`: ', projectMarkerData, '\n');
+      return reject(projectMarkerData);
+    }
+    console.log('resolve`projectMarkerData`: ', projectMarkerData, '\n');
+    return resolve(projectMarkerData);
+  });
+};
 
 
 
@@ -24,9 +53,10 @@ let mongoose = require('mongoose'),
  * Create a Project
  */
 exports.create = (req, res) => {
-  //console.log('!!!!project create req: \n', req);
-  var project = new Project(req.body);
+  const project = new Project(req.body);
   project.user = req.user;
+
+  // project.markerColor = getMarkerDetails(req.body.category);
 
   //todo refactor into separate function and use in the update method as well
   if (req.category === 'video') {
@@ -47,17 +77,16 @@ exports.create = (req, res) => {
     project.markerColor = '#00ff44';
   }
 
-  // console.log('!!!!project create req: \n', project);
-  // console.log('!!!!project.markerColor: \n', project.markerColor);
-
   project.save(err => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     }
+    console.log('project:\n', project, '\n\n');
     res.jsonp(project);
   });
+
 };
 
   /**
@@ -72,15 +101,18 @@ exports.create = (req, res) => {
    * Update a Project
    */
   exports.update = (req, res) => {
-    console.log('\n\n\n:::::::1111 update `req.body`:::::::\n', req.body);
-    var project = _.extend(req.project, req.body);
-    project.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      }
-      res.jsonp(project);
+    const query = Project.findOneAndUpdate(
+      { _id: req.params.projectId },
+      req.body,
+      { new: true, overwrite: true }
+    ).exec();
+
+    query.then(response => {
+      return res.jsonp(response);
+    })
+    .catch(err => {
+      console.error('\nERROR updating Mongo:\n', err);
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     });
   };
 
@@ -118,6 +150,8 @@ exports.create = (req, res) => {
           message: errorHandler.getErrorMessage(err)
         });
       }
+      // remove deleted project from user's associated projects
+      users.updateUser(req.project);
       return res.jsonp(project);
     });
   };

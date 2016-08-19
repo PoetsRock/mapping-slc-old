@@ -330,6 +330,7 @@ td i .selected {
 .user-submissions .admin-list {
     width: 100%;
     left: 6%;
+    margin: 1rem 0;
 }
 
 .user-submissions .admin-list .col-md-8 {
@@ -351,22 +352,18 @@ td i .selected {
 }
 
 
-#admin-projects-list {
-    /*height: 225px;*/
-    /*-webkit-transition: all 1s ease;*/
-    /*-moz-transition: all 1s ease;*/
-    /*-o-transition: all 1s ease;*/
-    /*transition: all 1s ease;*/
-}
-
 md-select-menu .md-overflow {
     left: 30px;
     bottom: 50px;
     position: relative;
 }
 
+md-select-menu md-content {
+    top: 5rem;
+    background-color: #FAEBD7;
+}
+
 md-content {
-    /*background-color: #FAEBD7;*/
     background-color: transparent;
 }
 
@@ -388,13 +385,3 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     color: #000000;
     transform: translate3d(0, -6px, 0) scale(1.05)
 }
-
-.project-files {
-    display: inline-flex;
-    margin: 2%;
-}
-
-.project-files div div div {
-    display: inline-flex;
-}
-

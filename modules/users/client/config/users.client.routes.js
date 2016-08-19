@@ -18,43 +18,49 @@ angular.module('users').config(['$stateProvider',
         url: '/profile',
         templateUrl: 'modules/users/client/views/settings/edit-profile.client.view.html',
         data: {
-          pageTitle: 'Settings'
+          pageTitle: 'Profile'
         }
       })
       .state('settings.password', {
         url: '/password',
         templateUrl: 'modules/users/client/views/settings/change-password.client.view.html',
         data: {
-          pageTitle: 'Settings password'
+          pageTitle: 'Password'
         }
       })
       .state('settings.accounts', {
         url: '/accounts',
         templateUrl: 'modules/users/client/views/settings/manage-social-accounts.client.view.html',
         data: {
-          pageTitle: 'Settings accounts'
+          pageTitle: 'Social Media'
         }
       })
       .state('settings.favorites', {
         url: '/favorites',
-        templateUrl: 'modules/users/client/views/settings/favorites.client.view.html'
+        templateUrl: 'modules/users/client/views/settings/favorites.client.view.html',
+        data: {
+          pageTitle: 'Favorites'
+        }
       })
       .state('settings.submissions', {
         url: '/submissions',
-        //abstract: true,
-        templateUrl: 'modules/users/client/views/settings/submissions-list.client.view.html'
-        //templateUrl: 'modules/users/client/directives/views/user-submissions-list.html'
+        templateUrl: 'modules/users/client/views/settings/submissions-list.client.view.html',
+        data: {
+          pageTitle: 'Submissions'
+        }
       })
       .state('settings.submissionsView', {
         url: '/:projectId/status/',
-        templateUrl: 'modules/users/client/views/settings/submissions-view.client.view.html'
-        //templateUrl: 'modules/users/client/directives/views/user-submissions-view.html'
+        templateUrl: 'modules/users/client/views/settings/submissions-view.client.view.html',
+        data: {
+          pageTitle: 'Submission'
+        }
       })
       .state('settings.picture', {
         url: '/picture',
         templateUrl: 'modules/users/client/views/settings/change-profile-picture.client.view.html',
         data: {
-          pageTitle: 'Settings picture'
+          pageTitle: 'Profile Image'
         }
       })
       .state('authentication', {
@@ -67,6 +73,24 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
         data: {
           pageTitle: 'Signup'
+        }
+      })
+    .state('authentication.completeRegister', {
+      url: '/complete-signup',
+      templateUrl : 'modules/users/client/views/authentication/complete-user-register.client.view.html',
+      controller: 'AuthenticationController',
+      controllerAs: 'vm',
+      data: {
+        pageTitle: 'New User Registration'
+      }
+    })
+      .state('authentication.completeSignup', {
+        url: '/complete-signup',
+        templateUrl : 'modules/users/client/directives/views/complete-user-signup.client.view.html',
+        // controller: 'AuthenticationController',
+        // controllerAs: 'vm',
+        data: {
+          pageTitle: 'New User Registration'
         }
       })
       .state('authentication.signin', {

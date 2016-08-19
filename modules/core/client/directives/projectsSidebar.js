@@ -10,6 +10,8 @@ angular.module('core').directive('projectsSideBar', function () {
 
       $scope.toggleSidebar = false;
 
+
+
       // work around, bc it appears that leaflet elements are not loaded in the DOM immediately
       setTimeout(function() {
       zoomElement = angular.element( document.querySelector('#map div.leaflet-control-container div.leaflet-top.leaflet-right div.leaflet-control-zoom.leaflet-bar.leaflet-control'));
@@ -22,6 +24,8 @@ angular.module('core').directive('projectsSideBar', function () {
        * @param closeSidebar {boolean}
        */
       $scope.showSidebar = function (markerId, projectData, closeSidebar) {
+        console.log('project data:\n', projectData);
+        $scope.displaySummary = projectData.storySummary || projectData.story.substring(0, 75);
         //todo refactor bc this big of a conditional check seems ugly
         if (currentMarkerId === markerId && !$scope.toggleSidebar) {
           $scope.project = projectData;

@@ -1,0 +1,125 @@
+<section class="auth-form">
+  <h1 class="page-header text-center">Sign Up</h1>
+
+  <md-button class="md-raised" data-ng-click="testUserSignupEmail()">Send Email</md-button>
+  <!--<md-button class="md-raised" data-ng-click="vm.testUserSignupEmail()">Send Email.VM</md-button>-->
+
+
+  <input class="input_field input_field-secondary" type="text" id="firstName" data-ng-model="credentials.firstName"/>
+
+  <input class="input_field input_field-secondary" type="text" id="lastName" data-ng-model="credentials.lastName"/>
+
+  <input class="input_field input_field-secondary" type="text" id="email" data-ng-model="credentials.email"/>
+
+  <input class="input_field input_field-secondary" type="password" id="password" data-ng-model="credentials.password" popover="{{popoverMsg}}" popover-trigger="focus" password-validator/>
+
+  <input class="input_field input_field-secondary" type="password" id="passwordVerify" data-ng-model="credentials.passwordVerify"/>
+
+  <input type="checkbox" name="filters" id="newsletter" value="newsletter" data-ng-model="credentials.newsletter" />
+
+  <div class="row">
+
+    <div class="col-md-12">
+
+
+      <md-content layout-padding="">
+        <div>
+          <form name="completeUserForm" data-ng-submit="completeSignup(completeUserForm.$valid)"
+                class="signin form-horizontal" novalidate autocomplete="off">
+
+
+            <div layout-gt-sm="row">
+              <md-input-container class="md-block" flex-gt-sm="">
+                <label>First name</label>
+                <input ng-model="user.firstName">
+              </md-input-container>
+
+              <md-input-container class="md-block" flex-gt-sm="">
+                <label>Last Name</label>
+                <input ng-model="user.lastName">
+              </md-input-container>
+            </div>
+
+            <md-input-container class="md-block">
+              <label>Street</label>
+              <input ng-model="user.address">
+            </md-input-container>
+
+            <md-input-container class="md-block">
+              <label>Street 2/Apt/Ste</label>
+              <input ng-model="user.address2">
+            </md-input-container>
+
+            <md-input-container md-no-float="" class="md-block">
+              <input ng-model="user.address2" placeholder="Address 2">
+            </md-input-container>
+
+            <div layout-gt-sm="row">
+              <md-input-container class="md-block" flex-gt-sm="">
+                <label>City</label>
+                <input ng-model="user.city">
+              </md-input-container>
+
+              <!--<md-input-container class="md-block" flex-gt-sm="">-->
+              <!--<label>State</label>-->
+              <!--<md-select ng-model="user.state">-->
+              <!--<md-option ng-repeat="state in states" value="{{state.abbrev}}">-->
+              <!--{{state.abbrev}}-->
+              <!--</md-option>-->
+              <!--</md-select>-->
+              <!--</md-input-container>-->
+
+              <md-input-container class="md-block" flex-gt-sm="">
+                <label>Postal Code</label>
+                <input name="postalCode" ng-model="user.postalCode" placeholder="12345" required=""
+                       ng-pattern="/^[0-9]{5}$/" md-maxlength="5">
+
+                <div ng-messages="userForm.postalCode.$error" role="alert" multiple="">
+                  <div ng-message="required" class="my-message">You must supply a postal code.</div>
+                  <div ng-message="pattern" class="my-message">That doesn't look like a valid postal
+                    code.
+                  </div>
+                  <div ng-message="md-maxlength" class="my-message">
+                    Don't use the long version silly...we don't need to be that specific...
+                  </div>
+                </div>
+              </md-input-container>
+            </div>
+
+
+          </form>
+        </div>
+      </md-content>
+
+      <div class="row">
+        <div class="col-xs-offset-4 col-xs-6 col-md-offset-4 col-md-8">
+          <div class="form-group">
+            <div>
+              <md-button type="submit" class="md-raised">Sign up</md-button>
+              &nbsp; or&nbsp;
+              <a ui-sref="authentication.signin" class="show-signup">Sign in</a>
+            </div>
+            <div class="forgot-password">
+              <a ui-sref="authentication.signin">Forgot your password?</a>
+            </div>
+
+            <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="error" class="text-center text-danger">
+        <strong ng-bind="error"></strong>
+      </div>
+
+
+      <!--</fieldset>-->
+
+    </div>
+  </div>
+
+  <!--</form>-->
+</section>

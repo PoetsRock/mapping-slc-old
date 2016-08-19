@@ -9,7 +9,10 @@ var _ = require('lodash'),
   testAssets = require('./config/assets/test'),
   glob = require('glob'),
   gulp = require('gulp'),
+  sourcemaps = require('gulp-sourcemaps'),
+  concat = require('gulp-concat'),
   eslint = require('gulp-eslint'),
+  babel = require('gulp-babel'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
   gutil = require('gulp-util'),
@@ -232,6 +235,21 @@ gulp.task('imagemin', function () {
     .pipe(gulp.dest('public/dist/img'));
 });
 
+gulp.task('babel', function () {
+  return gulp.src('src/app.js')
+  .pipe(babel())
+  .pipe(gulp.dest('build'));
+});
+
+gulp.task('babel-sourcemaps', function () {
+  return gulp.src('src/**/*.js')
+  .pipe(sourcemaps.init())
+  .pipe(babel())
+  .pipe(concat('all.js'))
+  .pipe(sourcemaps.write('.'))
+  .pipe(gulp.dest('build'));
+});
+
 // Nodemon debug task
 gulp.task('nodemon-debug', function () {
   return plugins.nodemon({
@@ -411,7 +429,7 @@ gulp.task('protractor', ['webdriver_update'], function () {
 
 // Run the project in development mode
 gulp.task('default', function (done) {
-  runSequence('env:dev', ['copyLocalEnvConfig', 'makeUploadsDir'], ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['copyLocalEnvConfig', 'makeUploadsDir'], 'babel', 'babel-sourcemaps', ['nodemon', 'watch'], done);
 });
 
 // Lint CSS and JavaScript files.

@@ -1,3 +1,31 @@
+<section>
+
+  <div class="flexslider">
+    <ul class="slides">
+      <li>
+        <img ng-src="{{slides[0].image}}" />
+      </li>
+      <li>
+        <img ng-src="{{slides[1].image}}" />
+      </li>
+      <li>
+        <img ng-src="{{slides[2].image}}" />
+      </li>
+      <li>
+        <img ng-src="{{slides[3].image}}" />
+      </li>
+    </ul>
+  </div>
+  <script>
+    $(window).load(function() {
+      $('.flexslider').flexslider({
+        animation: "slide"
+      });
+    });
+  </script>
+</section>
+
+
 <!--<section class="project-files">-->
   <!--<div class="row">-->
     <!--<div data-ng-show="project.fileUrls">-->

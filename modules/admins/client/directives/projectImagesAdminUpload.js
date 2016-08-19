@@ -4,92 +4,59 @@ angular.module('admins').directive('projectImagesAdminUpload', function () {
   return {
     restrict: 'EA',
     templateUrl: '/modules/admins/client/directives/views/project-images-admin-upload.html',
-    controller: function ($scope, $http, Authentication) {
+    controller: function ($scope, $http, Authentication, Upload) {
       $scope.user = Authentication.user;
       $scope.uploading = false;
       $scope.uploadBtnText = 'Select Files';
 
+      $scope.imageUpload = function (bucket, bucketId, files) {
+        bucketId = bucketId || $scope.project._id;
+        if ($scope.project.imageGallery.length === 0) {
+          files[0].isDefaultImage = true
+        }
 
-
-      
-      $scope.adminFileReaderNg = function (fileArray) {
-        var fileReader = new FileReader();
-        $scope.previewFiles = fileArray;
-        if($scope.previewFiles.length > 0) { $scope.uploadBtnText = 'Select More Files'; }
-        console.log('fileArray[0]:\n', fileArray[0]);
-        
-        // fileReader.readAsDataURL(fileArray[0]);
-
-        fileReader.readAsArrayBuffer(fileArray[0]);
-
-
-        fileReader.onprogress = function(event) {
-          console.log('progress event:\n', event);
-        };
-  
-        fileReader.onload = function (evt) {
-          console.log('event onload:\n', evt);
-          $scope.uploadAdminImagesV2('projects', fileArray[0], evt.target.result);
-        };
-      };
-
-      $scope.uploadAdminImagesV2 = function (bucket, fileData, files) {
         $scope.uploading = true;
-        var fileTags = [$scope.project.title, $scope.project.user.firstName + ' ' + $scope.project.user.lastName, $scope.project.keywords];
-        fileData.tags = [];
-        fileData.tags.push(fileTags);
-
-        var headersData = {
-          file: fileData,
-          size: fileData.size,
-          originalFilename: fileData.name,
-          type: fileData.type,
+        var data = {
+          filename: files[0].name,
+          size: files[0].size,
+          type: files[0].type,
+          aclLevel: 'public-read',
+          isDefaultImage: files[0].isDefaultImage || false,
+          tags: files[0].tags || [],
           user: $scope.user,
-          isDefaultImage: fileData.isDefaultImage || false,
-          tags: fileData.tags || [],
           bucket: bucket,
+          bucketId: bucketId
         };
-        var url = `api/v1/${bucket}/${$scope.project._id}/files`;
-        var configObj = {
+
+        Upload.upload({
+          url: 'api/v1/' + bucket + '/' + bucketId + '/images',
           method: 'POST',
-          url: url,
-          headers: {
-            'Content-Type': headersData.type,
-            'Size': headersData.size,
-            'File-Name': headersData.originalFilename,
-            'Default-Image': headersData.isDefaultImage,
-            'Tags': headersData.tags,
-            'Bucket': headersData.bucket
-          },
-          data: files,
-          transformRequest: []
-        };
-
-        $http(configObj)
-        .then(function successCallback(result) {
+          data: data, // (meta-)data to be sent along with files
+          file: files[0]
+        })
+        .then(function (resp) {
+          delete $scope.files;
           $scope.uploading = false;
-          $scope.uploadBtnText = 'Select Files';
-          $scope.files = [];
-
-          //todo need to set image on front end  !!  !!
-          // call watch?  add to scope?
-          console.log('result v1\n', result);
-        }, function errorCallback(rejected) {
+          var index = resp.data.response.imageGallery.length - 1;
+          $scope.project.imageGallery.push(resp.data.response.imageGallery[index]);
+        }, function (resp) {
           $scope.uploading = false;
-          $scope.files = [];
-          $scope.uploadBtnText = 'Select Files';
-          console.log('error on upload:\n', rejected);
-          console.log('error ``$scope.files`:\n', $scope.files);
+          console.log('Error status: ' + resp.status);
+        }, function (evt) {
+          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+          console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
         });
       };
 
-      $scope.removePreviewImage = function(hashKey) {
+      $scope.removePreviewImage = function (hashKey) {
         console.log('hashKey: ', hashKey);
 
         function indexLookUp(element, index, array) {
-          array.find(function(image) {
+          array.find(function (image) {
             console.log('find image: ', image);
-            if(image.$$hashKey === hashKey) { return index }
+            if (image.$$hashKey === hashKey) {
+              return index
+            }
           });
         }
 

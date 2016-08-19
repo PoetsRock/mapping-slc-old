@@ -3,17 +3,17 @@
   <div class="view-project">
 
     <div class="page-header">
-      <h1 data-ng-show="project.status[0]==='received'">Thank You for Your Submission</h1>
-      <h3 data-ng-show="project.status[0]==='pending'">Hi {{project.user.firstName}}, we're reading your submission and
+      <h1 data-ng-if="project.status[0]==='received'">Thank You for Your Submission</h1>
+      <h3 data-ng-if="project.status[0]==='pending'">Hi {{project.user.firstName}}, we're reading your submission and
         will be in touch soon.</h3>
-      <h3 data-ng-show="project.status[0]==='accepted'">{{project.title}}</h3>
-      <h3 data-ng-show="project.status[0]==='published'">{{project.title}} has been published.</h3>
-      <h3 data-ng-show="project.status[0]==='pulled'">Our records indicate... </h3>
+      <h3 data-ng-if="project.status[0]==='accepted'">{{project.title}}</h3>
+      <h3 data-ng-if="project.status[0]==='published'">{{project.title}} has been published.</h3>
+      <h3 data-ng-if="project.status[0]==='pulled'">Our records indicate... </h3>
     </div>
 
     <section class="overview">
 
-      <div data-ng-show="project.status[0]==='received'">
+      <div data-ng-if="project.status[0]==='received'">
         <p>We have received your submission, and will begin reviewing it shortly.</p>
         <p>You are welcome to edit your submission for a short period, until we begin reviewing it. After we have
           begun our review, you may still edit your contact information on this page.</p>
@@ -23,10 +23,10 @@
           page</a> and clicking on the Submitted
           Projects tab.</p>
       </div>
-      <p data-ng-show="project.status[0]==='pending'">We have begun reading your submission. So, currently, you
+      <p data-ng-if="project.status[0]==='pending'">We have begun reading your submission. So, currently, you
         are not able to edit your submission. You can still edit your contact information.</p>
 
-      <div data-ng-show="project.status[0]==='accepted'">
+      <div data-ng-if="project.status[0]==='accepted'">
         <p>{{project.title}} has been accepted for publication. We thank you again for your submission and feel
           fortunate to be able to publish it.</p>
         <p>Please make sure the information below is correct. Additionally, we ask that you submit a bio and an author
@@ -41,35 +41,50 @@
 
     <section class="submission-info">
 
-      <uib-tabset justified="true">
+      <md-content>
+        <md-tabs md-dynamic-height="" md-border-bottom="">
 
+          <md-tab label="Project Information">
+            <md-content class="md-padding">
+              <project-status-project-info></project-status-project-info>
+            </md-content>
+          </md-tab>
 
-        <uib-tab heading="Project Information">
-          <project-status-project-info></project-status-project-info>
-        </uib-tab>
+          <md-tab label="Project Files">
+            <md-content class="md-padding">
+              <project-status-files-list></project-status-files-list>
+            </md-content>
+          </md-tab>
 
-        <uib-tab heading="Contact Information">
-          <project-status-user-info></project-status-user-info>
-        </uib-tab>
+          <md-tab label="Contact Information">
+            <md-content class="md-padding">
+              <!--<project-status-user-info></project-status-user-info>-->
+              <user-view-form></user-view-form>
+            </md-content>
+          </md-tab>
 
-        <uib-tab heading="Bio" data-ng-show="project.status[0]==='accepted'">
-          <project-status-user-bio></project-status-user-bio>
-        </uib-tab>
+          <md-tab label="Bio" data-ng-if="project.status[0]==='accepted'">
+            <md-content class="md-padding">
+              <project-status-user-bio></project-status-user-bio>
+            </md-content>
+          </md-tab>
 
-        <uib-tab heading="Author Photo" data-ng-show="project.status[0]==='accepted'">
-          <change-profile-picture></change-profile-picture>
-        </uib-tab>
+          <md-tab label="Author Photo" data-ng-if="project.status[0]==='accepted'">
+            <md-content class="md-padding">
+              <change-profile-picture></change-profile-picture>
+            </md-content>
+          </md-tab>
 
-      </uib-tabset>
+          <md-tab label="Files">
+            <md-content class="md-padding">
+              <project-files></project-files>
+            </md-content>
+          </md-tab>
+
+        </md-tabs>
+      </md-content>
 
     </section>
-
-    <div class="pull-right" data-ng-show="project.status[0] ==='received'">
-      <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
-        <i class="glyphicon glyphicon-edit"></i>
-      </a>
-    </div>
-
 
   </div>
 

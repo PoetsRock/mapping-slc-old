@@ -43,18 +43,50 @@ let customConfigSecure = {
   }
 };
 
-let transporter = nodemailer.createTransport(customConfigOpen);
+// transporter.templateSender({
+//
+// });
+
+
+// .then(response => {
+//   console.log('email success `response`:\n', response);
+//   return res.status(201).send({
+//     message: 'email sent',
+//     data: response
+//   });
+// })
+// .catch(err => {
+//   console.log('email ERROR:\n', err);
+//   return res.status(400).send({
+//     message: 'Email ERROR:',
+//     data: response
+//   });
+// });
+
+
+// const options = {
+//   html: 'Embedded image: <img src="cid:unique@kreata.ee"/>',
+//   from: `Mapping SLC <maps@mappingslc.org>`,
+//   attachments: [{
+//     filename: 'image.png',
+//     path: '/path/to/file',
+//     cid: 'unique@kreata.ee' //same cid value as in the html img src
+//   }]
+// };
+
+
+const transporter = nodemailer.createTransport(customConfigOpen);
 
 exports.emailTest = (req, res) => {
-  let messageFields = {
+  const messageFields = {
     from: `Mapping SLC <maps@mappingslc.org>`,
     to: 'christanseer@hotmail.com',
     subject: 'Test Email!',
     text: 'This is just a test, yo.',
-    html: '<p>This is just a test, yo.</p>'
+    html: ({ path: 'http://localhost:3000/api/v1/emails/html-email.html' })
   };
 
-  //create template builder
+  // // create template builder
   let templates = new EmailTemplates();
 
   let sendHtmlEmail = transporter.templateSender({
@@ -71,27 +103,6 @@ exports.emailTest = (req, res) => {
     }
   });
 
-  // transporter.templateSender({
-  //
-  // });
-
-
-  // .then(response => {
-  //   console.log('email success `response`:\n', response);
-  //   return res.status(201).send({
-  //     message: 'email sent',
-  //     data: response
-  //   });
-  // })
-  // .catch(err => {
-  //   console.log('email ERROR:\n', err);
-  //   return res.status(400).send({
-  //     message: 'Email ERROR:',
-  //     data: response
-  //   });
-  // });
-
-
   transporter.sendMail(messageFields)
   .then(response => {
     console.log('email response:\n', response);
@@ -102,6 +113,37 @@ exports.emailTest = (req, res) => {
     return res.send({ message: 'email error', error: err });
   });
 
+};
+
+
+/**
+ * Serve static files
+ *
+ * @param req
+ * @param res
+ */
+exports.getSignupEmail = (req, res) => {
+  const fileName = req.params.fileName;
+  res.sendFile(path.join(__dirname + '/../static/' + fileName));
+};
+
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+exports.tempUserSignup = (req, res) => {
+//   console.log('\n\n\n\n\n\nreq:\n', req, '\n\n\n\n\n\n');
+//   const fileName = req.params.fileName;
+//   console.log('\n\nSent:\n', fileName);
+//   console.log('\n\nreq.fileName:\n', req.fileName);
+//   console.log('\n\nreq.file:\n', req.file);
+//
+  res.send({
+    email: req.fileName
+  });
+//
 };
 
 
@@ -251,6 +293,13 @@ exports.contactByID = function (req, res, next, id) {
     req.contact = contact;
     next();
   });
+};
+
+exports.fileName = (req, res, next, id) => {
+  req.params[id] = id;
+  console.log('id: ', id);
+  console.log('req.params[id]: ', req.params[id]);
+  next()
 };
 
 /**

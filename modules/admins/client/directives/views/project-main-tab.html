@@ -109,6 +109,25 @@
 </div>
 
 
+
+
+<div class="row" data-ng-show="toggleEdit">
+  <div class="col-xs-8 col-xs-offset-1">
+  <span class="input input-secondary" data-ng-class="{'input-filled': project.storySummary !== ''}">
+  <input class="input_field input_field-secondary" type="text" id="storySummary"
+         data-ng-model="project.storySummary"/>
+  <label class="input_label input_label-secondary" for="storySummary">
+    <span class="input_label-content input_label-content-secondary">Story Summary</span>
+  </label>
+  </span>
+  </div>
+</div>
+<div class="row" data-ng-show="!toggleEdit">
+  <div class="col-xs-3">Story Summary</div>
+  <div class="col-xs-9" data-ng-bind="project.storySummary"></div>
+</div>
+
+
 <div class="row" data-ng-show="toggleEdit">
   <div class="col-xs-8 col-xs-offset-1">
     <span class="input input-secondary" data-ng-class="{'input-filled': project.lat !== ''}">

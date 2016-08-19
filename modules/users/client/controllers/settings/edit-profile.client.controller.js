@@ -67,9 +67,7 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
         $scope.$broadcast('show-errors-check-validity', 'userAdminForm');
         return false;
       }
-
       var userToEdit = $scope.userToEdit;
-
       userToEdit.$update(function () {
         $location.path('users/' + user._id);
       }, function (errorResponse) {
@@ -88,20 +86,22 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
       $scope.users = Users.query($scope.query);
     };
 
-    // Find existing User
-    $scope.findOne = function (userIdToEdit) {
-      // if (userIdToEdit) {
-        console.log('here, here  :::: var `userIdToEdit`: ', userIdToEdit);
-      //   $scope.userToEdit = UserData.get({
-      //     userId: userIdToEdit
-      //   });
-      // } else {
-        $scope.userToEdit = UserData.get({
-          userId: $stateParams.userId
-        });
-      // }
-      console.log('$scope.userToEdit:\n', $scope.userToEdit);
-    };
+    // // Find existing User
+    // $scope.findOne = function (userIdToEdit) {
+    //   if (userIdToEdit) {
+    //     console.log('userIdToEdit === true');
+    //     $scope.userToEdit = UserData.get({
+    //       userId: userIdToEdit
+    //     });
+    //     console.log('$scope.userToEdit:\n', $scope.userToEdit);
+    //     return $scope.userToEdit;
+    //   }
+    //   $scope.userToEdit = UserData.get({
+    //     userId: $stateParams.userId
+    //   });
+    //   console.log('$scope.userToEdit:\n', $scope.userToEdit);
+    //   return $scope.userToEdit;
+    // };
 
 
   }

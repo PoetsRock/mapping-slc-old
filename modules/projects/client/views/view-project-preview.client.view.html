@@ -31,7 +31,6 @@
 
             </div>
 
-            <!--<br /><p>{{isFavorite}}</p>-->
             <em class="text-muted">
               <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
               by
@@ -42,9 +41,7 @@
           <div class="row">
             <div class="col-xs-12">
               <div class="videoWrapper" data-ng-show="project.vimeoId">
-                <iframe data-ng-show="!videoSizeSelect()" width="{{vimeo.width}}" height="{{vimeo.height}}"
-                        data-ng-src="{{vimeo.video}}" frameborder="0" webkitallowfullscreen mozallowfullscreen
-                        allowfullscreen>
+                <iframe data-ng-show="!videoSizeSelect()" width="{{vimeo.width}}" height="{{vimeo.height}}" data-ng-src="{{vimeo.video}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
                 </iframe>
               </div>
 
@@ -68,7 +65,9 @@
                 <div data-ng-show="project.story !== ''">
                   <p data-ng-bind-html="trustAsHtml(project.story)"></p>
                 </div>
+
                 <hr>
+
                 <div>
                   <img ng-src="{{project.mapImage}}" class="img-responsive">
                 </div>
@@ -78,12 +77,15 @@
 
                 <div class="pull-right"
                      data-ng-show="((authentication.user) && (authentication.user._id == project.user._id)) || isAdmin.user === 'admin'">
+
                   <a class="btn btn-main grow" href="/projects/{{project._id}}/edit">
                     <i class="glyphicon glyphicon-edit"></i>
                   </a>
+
                   <a class="btn btn-primary btn-warning" data-ng-click="remove();">
                     <i class="glyphicon glyphicon-trash"></i>
                   </a>
+
                 </div>
 
                 <!--facebook comments plugin - see the SDK code in `modules/core/server/views/layout.server.view.html` -->

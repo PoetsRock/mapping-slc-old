@@ -23,11 +23,8 @@ module.exports = function (app) {
   app.route('/api/v1/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/v1/users/password').post(users.changePassword);
   
-  app.route('/api/v1/users/:userId/images')
-    .post(users.uploadUserProfileImage);
-
-  app.route('/api/v1/users/:userId/images/profileImage')
-  .post(middleware.transformHeaders, middleware.configFileData, middleware.configS3Obj, users.configMongoObj, users.uploadUserProfileImage);
+  //   '/api/v1/users/:userId/images' is located in media.server.routes.js
+  // .post(users.uploadUserProfileImage);
 
   // Finish by binding the user middleware
   app.param('userId', users.userByID);

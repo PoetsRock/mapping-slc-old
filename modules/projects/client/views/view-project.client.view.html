@@ -33,9 +33,9 @@
             </div>
 
             <h3>
-              <a data-ng-href="/contributors/{{project.user._id}}"><span data-ng-bind="project.user.displayName"></span></a>
+              <a ui-sref="contributor({userId: project.user._id})"><span data-ng-bind="project.user.displayName"></span></a>
             </h3>
-            
+
             <!--<br /><p>{{isFavorite}}</p>-->
             <em class="text-muted">
               published <span data-ng-bind="project.createdOn | date:'mediumDate'"></span>
@@ -56,13 +56,13 @@
                 <iframe width="100%" height="450" scrolling="no" frameborder="no" data-ng-src="{{soundCloud.audio}}">
                 </iframe>
               </div>
-              
-              
-                <div class="row" data-ng-show="project.mainImageData">
+
+
+                <div class="row" data-ng-show="project.mainImage">
                   <ul id="grid-view-default-image">
                     <a ng-click="openLightboxModal($index)" class="col-md-3">
-                        <img ng-src="{{project.mainImageData.imageUrl}}" class="img-responsive">
-                        <p>{{project.mainImageData.imageName}}</p>
+                        <img ng-src="{{project.mainImage.thumbImageUrl}}" class="img-responsive">
+                        <p>{{project.mainImage.thumbImageUrl}}</p>
                     </a>
                   </ul>
                 </div>
@@ -79,8 +79,8 @@
                 <div>
                   <img ng-src="{{project.mapImage}}" class="img-responsive">
                 </div>
-  
-  
+
+
               <div class="row" data-ng-show="project.imageGallery">
                 <ul id="grid-view">
                   <a ng-click="openLightboxModal($index)" data-ng-repeat="image in project.imageGallery" class="col-md-3">
@@ -89,13 +89,13 @@
                   </a>
                 </ul>
               </div>
-  
-  
-  
+
+
+
               <hr/>
                 <h3>Related Stories</h3>
                 <p>coming soon</p>
-  
+
                 <hr/>
                 <h3>Comments</h3>
 

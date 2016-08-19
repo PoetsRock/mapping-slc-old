@@ -66,3 +66,10 @@ form .progress {
     transform: scale(1.2);
     transition: all 0.3s ease 0s;
 }
+
+.settings-subtitle {
+    position: relative;
+    left: 5rem;
+    margin-bottom: 4rem;
+
+}

@@ -13,6 +13,7 @@ module.exports = {
         'public/lib/font-awesome/css/font-awesome.css',
         'public/lib/angular-notify/dist/angular-notify.css',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css',
+        'public/lib/flexslider/flexslider.css',
         'public/lib/mslc/angular-froala/src/css/froala_editor.min.css',
         'public/lib/mslc/angular-froala/src/css/froala_style.min.css',
 
@@ -61,6 +62,7 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload-shim.js',
         'public/lib/ng-file-upload/ng-file-upload.js',
         'public/lib/lodash/lodash.js',
+        'public/lib/flexslider/jquery.flexslider-min.js',
 
         //load plugins for Froala text editor
         'public/lib/mslc/angular-froala/src/js/plugins/align.min.js',

@@ -1,178 +1,136 @@
-<div id="main-menu" class="main-menu"><main-menu></main-menu></div>
+<div id="main-menu" class="main-menu">
+  <main-menu></main-menu>
+</div>
 
 <section class="content background" data-ng-controller="RandomMapController"
-  ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
-  data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
+         ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
+         data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
   <section class="container">
-    <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
+    <img src="../../../../modules/core/client/img/brand/mapping.png"
+         class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home"/>
 
     <div class="main-content-outer">
       <section data-ng-controller="ProjectsController" class="main-content-inner">
 
         <div class="project-create">
 
-        <div class="page-header">
-          <h1>Project Submission Form</h1>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
+          <div class="page-header">
+            <h1>Project Submission Form</h1>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
 
-            Please include an address for <span>the location of a your essay or project</span>. (Feel free to approximate if there's not an exact address.) {{project._id}}
+              Please include an address for <span>the location of a your essay or project</span>. (Feel free to
+              approximate if there's not an exact address.) {{project._id}}
 
-            <form name="project" class="form-horizontal" data-ng-submit="create(project.$valid)" novalidate>
-            <!--<form name="project" class="form-horizontal" data-ng-submit="create(project.$valid, project.files)" novalidate>-->
+              <form name="project" class="form-horizontal" data-ng-submit="create(project.$valid)" novalidate>
+                <!--<form name="project" class="form-horizontal" data-ng-submit="create(project.$valid, project.files)" novalidate>-->
 
-              <fieldset>
-                <div class="form-group">
+                <fieldset>
+                  <div class="form-group">
 
 
-                  <div class="row">
+                    <div class="row">
 
-                    <div class="col-md-6">
+                      <div class="col-md-6">
                       <span class="input input-secondary">
                         <input class="input_field input_field-secondary" type="text" id="street"
-                          data-ng-model="project.street" required ng-change="showUploadFunction()"/>
+                               data-ng-model="project.street" required ng-change="showUploadFunction()"/>
                         <label class="input_label input_label-secondary" for="street">
                           <span
                             class="input_label-content input_label-content-secondary">Street Address for Project</span>
                         </label>
                       </span>
-                    </div>
+                      </div>
 
-                    <div class="col-md-6">
+                      <div class="col-md-6">
                       <span class="input input-secondary">
                         <input class="input_field input_field-secondary" type="text" id="city"
-                          data-ng-model="project.city" required/>
+                               data-ng-model="project.city" required/>
                         <label class="input_label input_label-secondary" for="city">
                           <span class="input_label-content input_label-content-secondary">City</span>
                         </label>
                       </span>
+                      </div>
+
                     </div>
 
-                  </div>
+                    <div class="row">
 
-                  <div class="row">
-
-                    <div class="col-md-6">
+                      <div class="col-md-6">
 
 
                       <span class="input input-secondary">
                         <input class="input_field input_field-secondary" type="zip" id="zip"
-                          data-ng-model="project.zip" required/>
+                               data-ng-model="project.zip" required/>
                         <label class="input_label input_label-secondary" for="zip">
                           <span
                             class="input_label-content input_label-content-secondary">Zip Code</span>
                         </label>
                       </span>
+                      </div>
+
+
+                      <div class="col-md-6">
+                        <md-input-container>
+                          <label>Select Category</label>
+                          <md-select id="status" data-ng-model="project.category">
+                            <md-optgroup label="Submission Category">
+                              <md-option ng-value="categorySort.value" ng-repeat="categorySort in categorySorts">
+                                {{categorySort.name}}
+                              </md-option>
+                            </md-optgroup>
+                          </md-select>
+                        </md-input-container>
+                        <a href="#" tooltip-placement="top"
+                           uib-tooltip="If you're unsure, select what you feel is closest.">
+                          <i class="fa fa-question-circle"></i>
+                        </a>
+                      </div>
                     </div>
 
-
-                    <div class="col-md-6">
-                      <md-input-container>
-                        <label>Select Category</label>
-                        <md-select id="status" data-ng-model="project.category">
-                          <md-optgroup label="Submission Category">
-                            <md-option ng-value="categorySort.value" ng-repeat="categorySort in categorySorts">
-                              {{categorySort.name}}
-                            </md-option>
-                          </md-optgroup>
-                        </md-select>
-                      </md-input-container>
-                      <a href="#" tooltip-placement="top" uib-tooltip="If you're unsure, select what you feel is closest.">
-                        <i class="fa fa-question-circle"></i>
-                      </a>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12">
                       <span class="input input-secondary title">
                         <input class="input_field input_field-secondary" type="text" id="title"
-                          data-ng-model="project.title" required/>
+                               data-ng-model="project.title" required/>
                         <label class="input_label input_label-secondary title" for="title">
                           <span
                             class="input_label-content input_label-content-secondary">Title</span>
                         </label>
                       </span>
-                    </div>
-                  </div>
-
-
-                  <div class="row project-uploader">
-                    <div class="col-md-6">
-                      <project-uploader></project-uploader>
-                      <project-uploader-directive data-ng-show="showUpload"></project-uploader-directive>
-
-                    </div>
-
-
-
-
-                    <div>
-                      <img ngf-src="file" ngf-resize="{width: 20, height: 20, quality: 0.9}">
-                    </div>
-
-                    <div ngf-thumbnail="file" ngf-size="{width: 20, height: 20, quality: 0.9}"></div>
-
-
-
-
-                    <span class="progress" ng-show="picFile.progress >= 0">
-                      <div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>
-                    </span>
-
-                    <span ng-show="picFile.result">Upload Successful</span>
-                    <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-
-                    <div ng-show="success" class="text-center text-success">
-                      <strong>Profile Picture Changed Successfully</strong>
-                    </div>
-
-
-
-
-                    <!--abort upload-->
-                    <button data-ng-click="abort();" data-ng-hide="!uploading" class="btn btn-main btn-footer-overlay grow">Cancel</button>
-
-
-                    <div ngf-no-file-drop data-ng-hide="uploading" class="drag-drop-alert">
-                      File Drag/Drop is not supported for this browser
-                    </div>
-
-
-                    <div ng-show="error" class="text-center text-danger">
-                      <strong ng-bind="error"></strong>
-                    </div>
-
-
-
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-offset-8 col-md-2">
-
-                      <!--submit button-->
-                      <div class="form-group pull-right submit-project">
-                        <input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid">
-                        <!--<input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid" data-ng-click="onFileSelect($files)">-->
                       </div>
-
-
-                      <div data-ng-show="error" class="text-danger">
-                        <strong data-ng-bind="error"></strong>
-                      </div>
-
                     </div>
+
+
+                    <project-uploader></project-uploader>
+
+
+                    <div class="row">
+                      <div class="col-md-offset-8 col-md-2">
+
+                        <!--submit button-->
+                        <div class="form-group pull-right submit-project">
+                          <input type="submit" class="btn btn-primary btn-lg btn-main grow" ng-disabled="!project.$valid">
+                          <!--<input type="submit" class="btn btn-primary btn-lg btn-main grow"   ng-disabled="!project.$valid" data-ng-click="imageUpload('', $files)">-->
+                        </div>
+
+
+                        <div data-ng-show="error" class="text-danger">
+                          <strong data-ng-bind="error"></strong>
+                        </div>
+
+                      </div>
+                    </div>
+
+
                   </div>
 
-
-                </div>
-
-              </fieldset>
-            </form>
+                </fieldset>
+              </form>
+            </div>
           </div>
-        </div>
         </div>
       </section>
     </div>

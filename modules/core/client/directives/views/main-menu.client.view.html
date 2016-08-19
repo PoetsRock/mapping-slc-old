@@ -1,16 +1,16 @@
 <header>
   <ul id="my-menu" class="my-menu-main">
     <li class="my-trigger" ng-click="menuToggle($event)" ng-mouseenter="showAll || mouseenter()" ng-mouseleave="showAll || mouseleave()">
-      
+
       <a id="triggerMenu" class="fa fa-3x fa-bars"></a>
-      
+
       <nav ng-mouseenter="showAll|| menuHover($event)" id="main-menu-nav" class="my-menu-wrapper" ng-class="{'my-open-part' : showPart, 'my-open-all' : showAll, '': showNone}">
-      
+
         <div class="my-scroller">
-        
+
           <ul class="my-menu">
-          
-          
+
+
             <div class="content-style-sidebar">
               <ul>
                 <div class="row">
@@ -21,7 +21,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row">
                   <li class="col-sm-12">
                     <a ui-sref="listProjects">
@@ -30,7 +30,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row">
                   <li class="col-sm-12">
                     <a ui-sref="contributors">
@@ -39,7 +39,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row">
                   <li class="col-sm-12">
                     <a ui-sref="createProject">
@@ -48,7 +48,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row">
                   <li class="col-sm-12">
                     <a ui-sref="aboutMappingSlc">
@@ -57,7 +57,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row">
                   <li class="col-sm-12">
                     <a ui-sref="createContact">
@@ -66,7 +66,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row" data-ng-show="user.roles[0] !== undefined">
                   <li class="col-sm-12">
                     <a ui-sref="settings.profile">
@@ -75,7 +75,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row" data-ng-show="user.roles[0] === undefined">
                   <li class="col-sm-12">
                     <a ui-sref="authentication.signin">
@@ -84,7 +84,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row" data-ng-show="user.roles[0] === undefined">
                   <li class="col-sm-12">
                     <a ui-sref="authentication.signup">
@@ -93,7 +93,7 @@
                     </a>
                   </li>
                 </div>
-              
+
                 <div class="row" data-ng-show="user.roles[0] === 'admin'">
                   <li class="col-sm-12">
                     <a ui-sref="admin.dashboard">
@@ -102,24 +102,26 @@
                     </a>
                   </li>
                 </div>
-                
-                <div
-                    data-ng-show="showAll"
-                    class="fb-like"
-                    data-share="true"
-                    data-width="450"
-                    data-show-faces="true">
+
+                <div class="row" data-ng-show="user.roles[0] !== undefined">
+                  <li class="col-sm-12">
+                    <!--<a href="#" data-ng-click="signOut();">-->
+                    <a href="/api/v1/auth/signout" target="_self">
+                      <i class="fa fa-sign-out"></i>
+                      Sign Out
+                    </a>
+                  </li>
                 </div>
-                
-            
+
+
               </ul>
             </div>
-        
-        
-        
+
+
+
           </ul>
         </div>
-    
+
       </nav>
     </li>
 

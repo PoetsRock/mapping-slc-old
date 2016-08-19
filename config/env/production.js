@@ -115,6 +115,8 @@ module.exports = {
   ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
 
   TINY_PNG_KEY: process.env.TINY_PNG_KEY,
+  KRAKEN_KEY: process.env.KRAKEN_KEY,
+  KRAKEN_SECRET: process.env.KRAKEN_SECRET,
   
   S3_ID: process.env.S3_ID,
   S3_SECRET: process.env.S3_SECRET,

@@ -1,7 +1,5 @@
 'use strict';
 
-<<<<<<<
-HEAD
 /**
  * Module dependencies.
  */
@@ -73,8 +71,7 @@ describe('#get featured projects', () => {
     done();
 
   });
-  ======
-  =
+
   var chai = require('chai'),
     mongoose = require('mongoose'),
     projects = require('../../server/controllers/projects.server.controller'),
@@ -128,10 +125,5 @@ describe('#get featured projects', () => {
       done();
 
     });
-    >>>>>>>
-    upstream / master
-
   });
-
-
-
+});

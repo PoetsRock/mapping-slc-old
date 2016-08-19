@@ -15,9 +15,17 @@ module.exports = function (app) {
   app.route('/api/v1/auth/reset/:token').post(users.reset);
 
   // Setting up the users authentication api
+
   app.route('/api/v1/auth/signup').post(users.signup);
   app.route('/api/v1/auth/signin').post(users.signin);
   app.route('/api/v1/auth/signout').get(users.signout);
+
+
+
+
+  // app.route('/api/v1/auth/verify')
+  //   .get(users.getSignupEmail, users.tempUserSignup);
+
 
   // Setting the facebook oauth routes
   app.route('/api/v1/auth/facebook').get(users.oauthCall('facebook', {

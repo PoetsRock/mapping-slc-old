@@ -21,6 +21,10 @@ access.log
 config/env/local-*.js
 *.pem
 /config/assets/development.js
+
+config/env/local-development.js
+config/env/development.js
+
 /uploads
 # Ignoring MEAN.JS's gh-pages branch for documenation
 _site/
@@ -32,4 +36,7 @@ _site/
 /README_internal.md
 /bucketPolicyPublicRead.json
 /.aws
+build
+public
+
 # ======================

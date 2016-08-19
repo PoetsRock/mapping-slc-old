@@ -15,26 +15,22 @@ var path = require('path'),
 /**
  * Show the current user
  */
-exports.read = function (req, res) {
+exports.getUser = function (req, res) {
   res.json(req.model);
 };
 
 /**
  * Update a User
  */
-exports.update = function (req, res) {
+exports.updateUser = function (req, res) {
+  console.log('UPDATE USER var `req.model`:\n', req.model, '\n\n');
   console.log('UPDATE USER var `req.body`:\n', req.body, '\n\n');
   var user = null;
   if (req.model) {
     user = req.model;
     user = _.extend(user, req.body);
 
-    ////For security purposes only merge these parameters
-    //user.firstName = req.body.firstName;
-    //user.lastName = req.body.lastName;
-    //user.displayName = user.firstName + ' ' + user.lastName;
-    //user.roles = req.body.roles;
-
+    // todo create a patch user function to handle this type of functionality
     // if true, then user has just added project as a favorite
     // so, projectId needs to be pushed into favorites array.
     // if false, projectId should be popped from favorites array.
@@ -54,10 +50,16 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
-    console.log('update user, `res.jsonp(user)`:\n', user, '\n\n');
+    console.log('updateUser, `user`:\n', user, '\n\n');
     res.jsonp(user);
   });
 };
+
+
+/**
+ * Patch Update a User Fields - see admin.v2.server.controller.js
+ */
+
 
 /**
  * middleware
@@ -124,7 +126,7 @@ exports.addNewsletter = function (req, res, next) {
 /**
  * Delete a user
  */
-exports.delete = function (req, res) {
+exports.deleteUser = function (req, res) {
   var user = req.model;
 
   user.remove(function (err) {
@@ -177,9 +179,7 @@ exports.getContributors = function (req, res) {
  * Get a Contributor
  */
 exports.getContributorByUserId = (req, res) => {
-  console.log('req:\n', req);
-  console.log('req.body:\n', req.body);
-  // User.findOne({ _id: req.body.})
+  res.jsonp(req.model);
 };
 
 /**

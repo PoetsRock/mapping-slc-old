@@ -7,7 +7,7 @@
     <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
 
     <div class="main-content-outer">
-      <section data-ng-controller="ContributorController" data-ng-init="init()" class="contributors">
+      <section data-ng-controller="ContributorController" data-ng-init="getContributors()" class="contributors">
         <div class="contrib">
           <div class="row">
             <div class="col-md-12">
@@ -27,22 +27,27 @@
                   </div>
                 </div>
 
-                <div class="row">
+                <!--<div class="row">-->
+                  <md-grid-list md-cols="2" md-row-height="4:3" md-gutter="1em" class="contrib-list">
+                    <md-grid-tile data-ng-repeat="contributor in contributors | filter:searchContributors" class="contrib-view md-whiteframe-1dp" flex-gt-xs="40" ui-sref="contributor({ 'userId' : contributor._id })">
+                      <img ng-src="{{contributor.profileImageThumbUrl}}" class="contrib-tile-image img-responsive" alt="contributor profile image"/>
+                      <md-grid-tile-footer data-ng-bind="contributor.displayName"></md-grid-tile-footer>
+                    </md-grid-tile>
+                  </md-grid-list>
 
-                  <ul id="grid-view">
-                    <a ng-click="openLightboxModal($index)"
-                       data-ng-repeat="contributor in contributors | filter:searchContributors" class="col-md-3">
-                      <li>
-                        <div>
-                          <img ng-src="{{contributor.profileImageURL}}" class="img-thumbnail">
-                          <p>{{contributor.firstName}} {{contributor.lastName}}</p>
-                        </div>
-                      </li>
-                    </a>
-                  </ul>
+                  <!--<ul id="grid-view">-->
+                    <!--<a ng-click="openLightboxModal($index)"-->
+                       <!--data-ng-repeat="contributor in contributors | filter:searchContributors" class="col-md-3">-->
+                      <!--<li>-->
+                        <!--<div>-->
+                          <!--<img ng-src="{{contributor.profileImageURL}}" class="img-thumbnail">-->
+                          <!--<p>{{contributor.firstName}} {{contributor.lastName}}</p>-->
+                        <!--</div>-->
+                      <!--</li>-->
+                    <!--</a>-->
+                  <!--</ul>-->
+                <!--</div>-->
 
-
-                </div>
               </div>
 
             </div>

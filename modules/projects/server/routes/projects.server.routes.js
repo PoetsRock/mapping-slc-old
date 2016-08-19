@@ -39,7 +39,7 @@ module.exports = function (app) {
   app.route('/api/v1/markerData')
     .get(projects.markerList);
 
-  // This is the search route, make a GET request on this endpoitn to return search results
+  // This is the search route, make a GET request on this endpoint to return search results
   app.route('/api/v1/search').all(projectsPolicy.isAllowed)
     .post(function (req, res) {
       Project.search({ query: req.body.q }, function (err, results) {

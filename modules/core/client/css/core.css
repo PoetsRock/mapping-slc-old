@@ -1,3 +1,29 @@
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+:after, ::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* use `optimizeLegibility` on desktop only - mobile performance issues */
+/*source: https://css-tricks.com/almanac/properties/t/text-rendering/*/
+@media screen and (max-width: 1024px) {
+    * {
+        text-rendering: optimizeLegibility;
+    }
+}
+
+hr {
+    border-color: #233930;
+}
+
 .content {
     margin-top: 0;
 }
@@ -535,19 +561,18 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
 
 /* mapping slc small logo */
 .small-main-logo {
-    width: 12%;
-    height: auto;
-    position: absolute;
+    width: auto;
+    max-height: 5rem;
+    /*position: absolute;*/
+    position: fixed;
     display: block;
     z-index: 999;
-    left: 2.75%;
-    top: 0.75%;
     cursor: pointer;
 }
 
 .logo-on-page {
-    top: 1.25%;
-    left: 5%;
+    top: 1.5rem;
+    left: 5em;
 }
 
 .logo-in-menu {
@@ -569,10 +594,10 @@ div.col-md-5.pull-left .btn.btn-primary.btn-lg.btn-main.grow.pull-right {
 }
 
 .logo-second-page {
-    top: 2.25%;
-    width: auto;
-    height: 2.8em;
-    position: absolute;
+    /*top: 1.5rem;*/
+    /*width: auto;*/
+    /*max-height: 5rem;*/
+    /*position: fixed;*/
 }
 
 /* mapping slc small logo */

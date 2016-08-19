@@ -1,9 +1,3 @@
-*, :after, ::before {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box
-}
-
 .my-menu-main, .my-menu-main ul {
     margin: 0;
     padding: 0;
@@ -13,7 +7,6 @@
     text-transform: none;
     font-weight: 300;
     font-family: Lato, Arial, sans-serif;
-    line-height: 60px
 }
 
 .my-menu-main {
@@ -81,9 +74,9 @@
     content: ""
 }
 
-.my-scroller li a {
-    border-bottom: 1px solid #e1e4e6;
-}
+/*.my-scroller li a {*/
+    /*border-bottom: 1px solid #e1e4e6;*/
+/*}*/
 
 .my-menu-wrapper {
     position: fixed;
@@ -103,11 +96,18 @@
     transition: transform .3s, width .3s
 }
 
+
+/*.my-open-part > .my-scroller {*/
+    /*width: 370px;*/
+/*}*/
+
 .my-scroller {
     position: absolute;
     overflow-y: scroll;
+    overflow-x: hidden;
+    /*width: 100%;*/
     width: 370px;
-    height: 100%
+    height: auto;
 }
 
 .my-menu {

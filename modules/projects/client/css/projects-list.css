@@ -1,0 +1,39 @@
+div.admin-projects {
+}
+
+div.admin-projects div.list-group {
+    padding: .25vw;
+    font-size: 0;
+    display: -ms-flexbox;
+    -ms-flex-wrap: wrap;
+    -ms-flex-direction: column;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: space-between;
+    display: -webkit-box;
+    display: flex;
+}
+
+div.admin-projects div.list-group a md-card {
+    -webkit-box-flex: auto;
+    -ms-flex: auto;
+    flex: auto;
+    margin: .5vw;
+    width: 400px;
+    height: 300px;
+    justify-content: space-around;
+}
+
+div.admin-projects div.list-group a md-card-title-media div img {
+    width: 300px;
+    height: 225px;
+    object-fit: cover;
+}
+
+/*@media screen and (max-width: 400px) {*/
+
+/*section.project-images div.project-image-gallery { margin: 0; }*/
+/*section.project-images { padding: 0; }*/
+
+/*}*/

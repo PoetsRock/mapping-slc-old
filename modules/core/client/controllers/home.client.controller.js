@@ -192,6 +192,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         var index = 0;
         /** loop through markers array and return values for each property */
         markerData.forEach(function (markerDatum) {
+          console.log('markerDatum:\n', markerDatum);
           $scope.projectMarker = L.mapbox.featureLayer({
             type: 'Feature',
             geometry: {
@@ -204,12 +205,16 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
               'marker-color': markerDatum.markerColor,
               'marker-symbol': 'marker-stroked',
               projectId: markerDatum._id,
-              summary: markerDatum.storySummary,
+              storySummary: markerDatum.storySummary,
+              story: markerDatum.story,
               projectTitle: markerDatum.title,
-              mainImage: markerDatum.mainImage,
+              shortTitle: markerDatum.shortTitle,
+              tags: markerDatum.tags,
+              keywords: markerDatum.keywords,
+              relatedContent: markerDatum.relatedContent,
               category: markerDatum.category,
-              mapImage: markerDatum.mapImage,
-              mainImgThumbnail: markerDatum.mainImgThumbnail,
+              mapImageThumb: markerDatum.mapImageThumb,
+              thumbImageUrl: markerDatum.mainImage.thumbImageUrl,
               lat: markerDatum.lat,
               lng: markerDatum.lng,
               published: markerDatum.createdOn,

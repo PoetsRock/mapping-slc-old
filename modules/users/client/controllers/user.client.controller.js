@@ -4,7 +4,6 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
   function ($scope, $state, $stateParams, Authentication, UserData, Users, ProfileImageService, Projects, $http, $resource, Newsletter) {
     $scope.user = Authentication.user;
     $scope.favoriteProjects = $scope.user.favorites;
-    var associatedProjects = $scope.user.associatedProjects;
     var userProjects = [];
     var userFavorites = [];
     
@@ -106,24 +105,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
           });
         });
     };
-    
-    
-    //Find existing project submissions by UserId
-    $scope.findCurrentUserSubmissions = function () {
-      $scope.getProjects = function (associatedProjects) {
-        associatedProjects.forEach(function (associatedProject) {
-          userProjects.push(Projects.get({
-              projectId: associatedProject
-            })
-          );
-        });
-        $scope.userProjects = userProjects;
-        return userProjects;
-      };
-      $scope.getProjects(associatedProjects);
-      
-    };
-    
+
     /**
      * newsletter subscription form
      */

@@ -174,9 +174,12 @@ ul.sidebar-tabs.collapsed {
     text-decoration: none;
 }
 
+.content-style-sidebar ul li a i:hover::before {
+    color: #023A31;
+}
+
 .content-style-sidebar ul li:hover {
-    background: #023A31;
-    opacity: 0.75;
+    background: rgba(0, 0, 0, 0.3);
     transition: all 0.5s ease-out;
 }
 

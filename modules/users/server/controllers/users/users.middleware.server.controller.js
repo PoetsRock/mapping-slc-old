@@ -1,6 +1,8 @@
 'use strict';
 
-let moment = require('moment');
+const path = require('path'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+moment = require('moment');
 
 /**
  *  Creates and configures an object to update the associated database document

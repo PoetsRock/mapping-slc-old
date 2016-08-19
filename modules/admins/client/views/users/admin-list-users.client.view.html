@@ -5,11 +5,11 @@
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
   <section class="container">
-    
+
     <a href="/">
       <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive"/>
     </a>
-    
+
     <div class="main-content-outer">
 
       <section data-ng-controller="UserController" data-ng-init="find()" class="main-content-inner">
@@ -35,7 +35,7 @@
                 <a data-ng-repeat="user in users" ui-sref="admin.adminViewUser({userId: user._id})" class="col-md-6 col-sm-12 admin-list">
                   <div class="row">
                     <div class="col-md-4">
-                      <img data-ng-src="{{user.profileImageThumbUrl}}" class="header-profile-image">
+                      <img data-ng-src="{{user.profileImage.thumbImageUrl}}" class="header-profile-image">
                     </div>
                     <div class="col-md-8">
                       <h3 class="list-group-item-heading" data-ng-bind="user.displayName">{{user._id}}></h3>

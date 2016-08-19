@@ -43,31 +43,51 @@ exports.deleteImageByImageId = (req, res) => {
   let bucket = 'mapping-slc-file-upload';
   let key = imageData.key || 'project-directory/' + req.params.projectId + '/' + imageData.imageId + '.' + imageData.imageExt;
 
+  console.log('req.params:\n', req.params);
+  console.log('imageData:\n', imageData);
+
   let objectParams = { Bucket: bucket, Key: key };
   return s3.deleteObjectAsync(objectParams)
   .then(deleteImageResponse => {
+    console.log('deleteImageResponse:\n', deleteImageResponse);
     return deleteImageResponse;
   })
-  .then(() => {
+  .then(deleteMainImgRes => {
+    console.log('deleteMainImgRes:\n', deleteMainImgRes);
     /** on success, delete image thumbnail */
     objectParams.Key = 'project-directory/' + req.params.projectId + '/thumb_' + req.params.fileId;
     return s3.deleteObjectAsync(objectParams);
   })
-  .then(() => {
+  .then(deleteThumbImgRes => {
+    console.log('deleteMainImgRes:\n', deleteThumbImgRes);
     // on successful deletion of thumbnail, remove image from imageGallery in Mongo
-    let arrayItemToUpdate = { $pull: {
+    let fieldsToUpdate = { $pull: {
       imageGallery: { imageId: req.params.imageId }
     }};
+
+    // set new default image if any images are still associated with the project
+    if(imageData.isDefaultImage && req.project.imageGallery[0]) {
+      const newMainImg = _.extend({}, req.project.imageGallery[0]);
+      delete newMainImg._id;
+      delete newMainImg.isDefaultImage;
+      delete newMainImg.imageS3Key;
+      delete newMainImg.Location;
+      fieldsToUpdate.mainImage = newMainImg;
+    } else if (imageData.isDefaultImage) {  // otherwise, set main image to empty object
+      fieldsToUpdate.mainImage = {};
+    }
+
     return Project.findOneAndUpdate(
       { _id: req.params.projectId },
-      arrayItemToUpdate,
+      fieldsToUpdate,
       { new: true },
       ((err, response) => {
         if (err) {
           console.error('\n\nERROR updating mongo:::::::::::::::::::::::::::::::::::\n', err, '\n\n');
           res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         }
-        return response;
+        console.log('response from mongo after successfully deleting an image `response`:\n', response);
+        return res.jsonp(response);
       }));
   })
   .catch(err => {

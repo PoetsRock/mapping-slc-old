@@ -6,9 +6,10 @@
 
   <section class="container">
     <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
-    
+
     <div class="main-content-outer">
 
+      <!--<section data-ng-controller="ProjectsController" class="main-content-inner">-->
       <section data-ng-controller="ProjectsController" data-ng-init="findOne()" class="main-content-inner">
 
         <div class="admin">
@@ -40,11 +41,8 @@
                     <project-tabs></project-tabs>
                   </fieldset>
                 </form>
-
               </div>
             </div>
-
-            <hr>
 
             <div class="pull-right">
               <a class="btn btn-main grow btn-warning" data-ng-click="remove();">

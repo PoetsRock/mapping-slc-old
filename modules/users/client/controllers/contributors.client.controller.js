@@ -8,7 +8,6 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
     $scope.contributor = {};
     $scope.contributorProjects = [];
     $scope.contribData = {};
-    $scope.images = [];
 
     //provides logic for the css in the forms
     UtilsService.cssLayout();
@@ -20,22 +19,9 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
       Lightbox.openModal($scope.images, index);
     };
 
-    $scope.init = function () {
-      getContribData();
-    };
-
-    var getContribData = function () {
-      GetContributors.contributors()
-        .success(function (contributorsData) {
-          getImages(contributorsData);
-          $scope.contributors = contributorsData;
-          return $scope.images;
-        }).error(function (errorData) {
-        console.log('errorData: ', errorData);
-      });
-    };
-
+    $scope.images = [];
     var getImages = function (contribData) {
+      console.log('getImages Function `contribData`:\n', contribData);
       for (var i = 0; i < contribData.length; i++) {
         var tempData = {};
         tempData.url = contribData[i].profileImageURL;
@@ -43,28 +29,35 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
         tempData.caption = contribData[i].bio;
         $scope.images.push(tempData);
       }
-
+      console.log('getImages Function `$scope.images`:\n', $scope.images);
     };
 
+    $scope.getContributors = function () {
+      GetContributors.contributors()
+      .then(function (contributorsData) {
+        $scope.contributors = contributorsData.data;
+        getImages($scope.contributors);
+        console.log('getContributors Fn `$scope.contributors`:\n', $scope.contributors);
+      }).catch(function (errorData) {
+        console.log('errorData: ', errorData);
+      });
+    };
+
+
     $scope.findContributor = function () {
-      console.log('$scope.findContributor() invoked');
-      console.log('$stateParams:\n', $stateParams);
-      console.log('$stateParams.userId: ', $stateParams.userId);
-      $http.get(`/api/v1/contributors/${$stateParams.userId}`);
-      // Users.query({ userId: $stateParams.userId },
-      //   function (userData) {
-      //     console.log('userData:\n', userData);
-      //     getAssociatedProjects(userData);
-      //     $scope.contributor = userData;
-      //   });
+      $http.get(`/api/v1/contributors/${$stateParams.userId}`)
+      .then(function (userData) {
+        $scope.contributor = userData.data;
+        getAssociatedProjects(userData.data);
+      });
     };
 
     var getAssociatedProjects = function (userObj) {
       for (var i = 0; i < userObj.associatedProjects.length; i++) {
-        Projects.get({ projectId: userObj.associatedProjects[i] },
+        Projects.get({projectId: userObj.associatedProjects[i]},
           function (projectObj) {
             $scope.contributorProjects.push(projectObj);
-          })
+          });
       }
     };
 

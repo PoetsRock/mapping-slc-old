@@ -1,33 +1,3 @@
-<section data-ng-controller="UserController" class="row" style="height: 600px;"
-         data-ng-init="findCurrentUserSubmissions()">
-
-  <div class="user-submissions">
-
-    <div class="list-group">
-      <div class="row">
-
-        <a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProject.id})" class="col-md-12 md-whiteframe-8dp admin-list">
-
-          <div class="row">
-
-            <div class="col-md-3">
-              <img data-ng-src="{{userProject.mainImgThumbnail}}"/>
-            </div>
-
-            <div class="col-md-8">
-              <h4 class="list-group-item-heading" data-ng-bind="userProject.title"></h4>
-              <small>
-                Submitted on <span data-ng-bind="userProject.createdOn | date:'short'"></span>
-              </small>
-
-            </div>
-
-          </div>
-        </a>
-
-      </div>
-    </div>
-
-  </div>
-
+<section data-ng-controller="UserController" class="row" style="height: 600px;">
+  <user-submissions-list></user-submissions-list>
 </section>

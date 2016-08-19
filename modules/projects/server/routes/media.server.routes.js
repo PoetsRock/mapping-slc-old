@@ -3,16 +3,15 @@
 module.exports = function (app) {
   let express = require('express'),
       router = express.Router(),
-      createMedia = require('../controllers/media.put.server.controller.js'),
+      createMedia = require('../controllers/media.post.server.controller.js'),
+      updateMedia = require('../controllers/media.put.server.controller.js'),
       getMedia = require('../controllers/media.get.server.controller.js'),
-      createCredentialsMedia = require('../controllers/media.credentials.server.controller.js'),
       deleteMedia = require('../controllers/media.delete.server.controller.js'),
       projects = require('../controllers/projects.server.controller.js'),
       middleware = require('../controllers/projects.server.middleware.js'),
+      wysiwyg = require('../controllers/wysiwygUploader.server.middleware.js'),
       vimeo = require('../controllers/vimeo.server.controller');
-  // let mongoose = require('mongoose');
-  // let Project = mongoose.model('Project');  
-  
+
   let baseUrl = '/api/v1/projects';
   let baseUrlV2 = '/api/v2/projects';
   let imagesApi = baseUrl + '/:projectId/images';
@@ -28,30 +27,33 @@ module.exports = function (app) {
   app.route(videosApi + '/:videoId')
     .get(vimeo.getOneVideo);
   
-  
-  app.route(filesApi)
-    // .post(createMedia.testS3Upload);
-    .post(createMedia.testUpload);
-    // .post(middleware.transformHeaders, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
-    // .post(middleware.configImageStream);
 
   app.route(imagesApi)
     .get(getMedia.getImagesByProjectId)
     .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages)
-    .put(deleteMedia.deleteImagesByBucket);
+    .patch(updateMedia.setDefaultImage)
+    .delete(deleteMedia.deleteImagesByBucket);
+
+  app.route('/api/v1/users/:userId/images')
+    .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.mongoObjUserImg, createMedia.uploadProjectImages);
+
+  app.route('/api/v1/projects/:projectId/images/wysiwyg')
+  // .post(middleware.transformHeaders, middleware.parseFileUpload, middleware.configFileData, wysiwyg.wysiwygS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
+    .post(middleware.parseFileUpload, middleware.configFileData, wysiwyg.wysiwygS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
 
   app.route(imagesApi + '/:imageId')
     .get(getMedia.getImageByImageId)
-    .put(deleteMedia.deleteImageByImageId);
+    .delete(deleteMedia.deleteImageByImageId);
 
   app.route(imagesApi + '/default')
     .get(getMedia.getDefaultImageByProjectId);
 
 
-  app.route(imagesApiV2)
-    .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImagesV2);
-  
+  // app.route(imagesApiV2)
+  //   .post(middleware.parseFileUpload, middleware.configFileData, middleware.configS3Obj, middleware.configMongoObj, createMedia.uploadProjectImages);
 
+  //mount the router on the app
+  app.use('/', router);
 
 
 
@@ -92,7 +94,5 @@ module.exports = function (app) {
 
 
 
-  //mount the router on the app
-  app.use('/', router);
 
 };

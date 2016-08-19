@@ -4,7 +4,8 @@
  * Module dependencies
  */
 var adminPolicy = require('../policies/admin.server.policy'),
-  admin = require('../controllers/admin.server.controller');
+  admin = require('../controllers/admin.server.controller'),
+  adminV2 = require('../controllers/admin.v2.server.controller');
 
 module.exports = function (app) {
   // User route registration first. Ref: #713
@@ -20,9 +21,10 @@ module.exports = function (app) {
   //
   // Single user routes
   app.route('/api/v1/users/:userId')
-    .get(admin.read)
-    .delete(adminPolicy.isAllowed, admin.delete)
-    .put(admin.update);
+    .get(admin.getUser)
+    .delete(adminPolicy.isAllowed, admin.deleteUser)
+    .put(admin.updateUser)
+    .patch(adminV2.patchUser);
 
   // Contributors collection routes
   app.route('/api/v1/contributors')

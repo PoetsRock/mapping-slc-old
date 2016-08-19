@@ -1,5 +1,9 @@
 'use strict';
 
+// import multiparty from 'multiparty';
+// import Promise from 'bluebird';
+// import errorHandler from '../../../core/server/controllers/errors.server.controller';
+
 let Promise = require('bluebird'),
     mongoose = require('mongoose'),
     fs = require('fs'),
@@ -224,7 +228,7 @@ exports.transformHeaders = (req, res, next) => {
   };
   _.extend(req.body, preConfigObj);
 
-  console.log('req.body:::::::::::\n', req.body, '\n\n\n');
+  console.log('transformHeaders() middleware  `req.body`:::::::::::\n', req.body, '\n\n\n');
 
   next();
 };
@@ -233,6 +237,11 @@ exports.transformHeaders = (req, res, next) => {
 /**
  *
  * Multiparty Middleware for Parsing Multipart Form Data
+
+ console.log('configFileData `req.body #2`:\n', req.body, '\n\n');
+ console.log('configFileData `req.body #2`:\n', req.fields, '\n\n');
+ console.log('configFileData `req.body #2`:\n', req.files, '\n\n');
+
  *
  * `req`
  *
@@ -264,6 +273,9 @@ exports.parseFileUpload = (req, res, next) => {
  * @param next
  */
 exports.configFileData = (req, res, next) => {
+  console.log('configFileData `req.body #2`:\n', req.body, '\n\n');
+  console.log('configFileData `req.body #2`:\n', req.fields, '\n\n');
+  console.log('configFileData `req.body #2`:\n', req.files, '\n\n');
   let file = req.body.files.file[0];
   let fileData = {
     file: file,
@@ -277,7 +289,7 @@ exports.configFileData = (req, res, next) => {
     aclLevel:  file.aclLevel || req.body.fields['data[securityLevel]']
   };
   fileData.fileExt = mediaUtilities.getFileExt(fileData.type, fileData.name).extension;
-  
+
   //todo refactor to make immutable object
   if (/\s/g.test(fileData.name)) {
     fileData.name = fileData.name.replace(/\s/g, '_');
@@ -287,11 +299,17 @@ exports.configFileData = (req, res, next) => {
 };
 
 
-exports.configS3Obj = (req, res, next) => {
+
+/**
+ *
+ * current
+ *
+ **/
+ exports.configS3Obj = (req, res, next) => {
+  console.log('configS3Obj `req.body` #3:\n', req.body, '\n\n');
   let fileData = req.body.fileData;
 
-  let source = mediaUtilities.setSourceId();
-  console.log('from mediaUtilities.setSourceId `source`:\n', source);
+  let source = mediaUtilities.setSourceId(req.body.fields.bucket[0], req.body.fields.bucketId[0]);
 
   let imageUrlRoot = 'https://s3-' + s3Config.region + '.amazonaws.com/' + s3Config.bucket + '/' + source.s3Directory + '/' + source.sourceId;
   fileData.fullImageUrl = imageUrlRoot + '/' + fileData.fileId + '.' + fileData.fileExt;
@@ -306,11 +324,13 @@ exports.configS3Obj = (req, res, next) => {
     fileData.body = fileData.file.file;
   }
 
-  fileData.s3Obj = new Object({
+  fileData.s3Obj = _.extend({}, {
     header: { 'x-amz-decoded-content-length': fileData.size },
     region: 'us-west-1',
     Key: source.s3Directory + '/' + source.sourceId + '/' + fileData.fileId + '.' + fileData.fileExt,
+    ThumbKey: source.s3Directory + '/' + source.sourceId + '/thumb_' + fileData.fileId + '.' + fileData.fileExt,
     Bucket: s3Config.bucket,
+    ACL: fileData.aclLevel,
     ContentLength: fileData.size,
     ContentType: fileData.type,
     Body: fileData.body,
@@ -360,6 +380,46 @@ exports.configMongoObj = (req, res, next) => {
       }
     }
   };
+
+  next();
+};
+
+/**
+ *  Creates and configures an object to update the associated database document
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.mongoObjUserImg = (req, res, next) => {
+  let fileData = req.body.fileData;
+
+  console.log('fileData:\n', fileData);
+
+  // todo make dynamic !!
+  let currentAdminId = '5611ca9493e8d4af5022bc17';
+
+  req.body.fieldsToUpdate = {
+    profileImage: {
+      imageUrl: fileData.fullImageUrl ,
+      imageId: fileData.fileId,
+      thumbImageUrl: fileData.thumbImageUrl,
+      thumbImageId: 'thumb_' + fileData.fileId,
+      imageSize: fileData.size,
+      imageType: fileData.type,
+      imageExt: fileData.fileExt,
+      imageName: fileData.name,
+      imageTags: fileData.imageTags,
+      isDefaultImage: fileData.isDefaultImage
+    },
+    $addToSet: {
+      modified: {
+        modifiedBy: currentAdminId,
+        modifiedAt: moment.utc(Date.now())
+      }
+    }
+  };
+
+  console.log('req.body.fieldsToUpdate:\n', req.body.fieldsToUpdate);
 
   next();
 };

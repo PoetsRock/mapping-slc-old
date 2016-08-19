@@ -2,79 +2,79 @@
   <div flex-sm="100" flex-gt-sm="100" flex-gt-md="100" flex-gt-lg="100">
     <md-content class="layout-padding">
       <!--<div>-->
-      
+
       <!--<form name="userAdminForm" data-ng-submit="update(userToEdit.$valid)">-->
       <form name="editUser" data-ng-submit="updateUserAdmin(userToEdit.$valid)">
-        
+
         <!--Row #1-->
         <div layout-gt-xs="row">
           <md-input-container flex="10">
             <label>Prefix</label>
-            <input type="text" data-ng-model="user.namePrefix">
+            <input type="text" data-ng-model="userToEdit.namePrefix">
           </md-input-container>
-          
+
           <md-input-container flex="35">
             <label>First Name</label>
-            <input type="text" data-ng-model="user.firstName">
+            <input type="text" data-ng-model="userToEdit.firstName">
           </md-input-container>
-          
+
           <md-input-container flex="35">
             <label>Last Name</label>
-            <input type="text" data-ng-model="user.lastName">
+            <input type="text" data-ng-model="userToEdit.lastName">
           </md-input-container>
-        
+
         </div>
-        
-        
+
+
         <!--Row #2-->
         <div layout-gt-xs="row">
           <md-input-container flex="40">
             <label>Email</label>
-            <input type="email" data-ng-model="user.email">
+            <input type="email" data-ng-model="userToEdit.email">
           </md-input-container>
-          
+
           <md-input-container flex="40">
             <label>Title</label>
-            <input type="text" data-ng-model="user.title">
+            <input type="text" data-ng-model="userToEdit.title">
           </md-input-container>
-        
+
         </div>
-        
+
         <!-- Row #3 -->
         <div layout-gt-xs="row">
           <md-input-container flex="60">
             <label>Street</label>
-            <input type="text" data-ng-model="user.userStreet">
+            <input type="text" data-ng-model="userToEdit.userStreet">
           </md-input-container>
-          
+
           <md-input-container flex="20">
             <label>Apt/Ste</label>
-            <input type="text" data-ng-model="user.userStreet2">
+            <input type="text" data-ng-model="userToEdit.userStreet2">
           </md-input-container>
-        
+
         </div>
-        
-        
+
+
         <!-- Row #4 -->
         <div layout-gt-xs="row">
-          
+
           <md-input-container flex="40">
             <label>City</label>
-            <input type="text" data-ng-model="user.userCity">
+            <input type="text" data-ng-model="userToEdit.userCity">
           </md-input-container>
-          
+
           <md-input-container flex="20">
             <label>State</label>
-            <md-select ng-model="user.userState">
+            <md-select ng-model="userToEdit.userState">
               <md-option ng-repeat="state in states" value="{{state.abbrev}}">
                 {{state.abbrev}}
               </md-option>
             </md-select>
           </md-input-container>
-          
+
           <md-input-container flex="40">
             <label>Zip</label>
-            <input name="postalCode" ng-model="user.userZip" required ng-pattern="/^[0-9]{5}$/" md-maxlength="5">
+            <input name="postalCode" ng-model="userToEdit.userZip" required ng-pattern="/^[0-9]{5}$/" md-maxlength="5">
             <div ng-messages="userForm.postalCode.$error" role="alert" multiple>
               <div ng-message="required" class="my-message">You must supply a postal code</div>
               <div ng-message="pattern" class="my-message">That doesn't look like a valid postal code</div>
@@ -82,52 +82,51 @@
             </div>
           </md-input-container>
         </div>
-        
-        
+
+
         <!-- Row #5 -->
         <div layout-gt-xs="row">
           <md-input-container flex="60">
-            <label>Newsletter</label>
-            <md-checkbox ng-model="user.newsletter" aria-label="Newsletter" class="pull-right"></md-checkbox>
+            <label style="margin-left: 5%;">Newsletter</label>
+            <md-checkbox ng-model="userToEdit.newsletter" aria-label="Newsletter"></md-checkbox>
           </md-input-container>
         </div>
-        
-        
+
+
         <!-- Row #6 -->
         <div layout-gt-xs="row">
           <md-input-container flex="90">
             <label>Bio</label>
-            <textarea data-ng-model="user.bio" md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
+            <textarea data-ng-model="userToEdit.bio" md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
           </md-input-container>
         </div>
-        
-        
+
+
         <!-- Row #7 -->
-        <div layout-gt-xs="row" ng-if="user.roles[0] !== 'user' && isAdminPanel">
+        <div layout-gt-xs="row" ng-if="userToEdit.roles[0] !== 'userToEdit' && isAdminPanel">
           <md-input-container flex="40">
             <label>Username</label>
-            <input type="text" data-ng-model="user.username">
+            <input type="text" data-ng-model="userToEdit.username">
           </md-input-container>
-          
-          
-          <md-input-container flex="40">
-            <label>Roles</label>
-            <md-select ng-model="user.roles">
-              <md-option ng-repeat="role in roles" value="{{role.role}}">
-                {{role.role}}
+
+          <md-input-container class="md-block" flex-gt-sm="">
+            <label>Role</label>
+            <md-select ng-model="userToEdit.state">
+              <md-option ng-repeat="role in roles" value="{{role.userRole}}">
+                {{role.userRole}}
               </md-option>
             </md-select>
           </md-input-container>
         </div>
-        
-        
+
+
         <md-button type="submit" class="md-primary pull-right" data-ng-class="{'md-raised md-hue-1': (editUser.$dirty && editUser.$valid)}">
           Submit
         </md-button>
-      
+
       </form>
-    
-    
+
+
     </md-content>
   </div>
 </div>
