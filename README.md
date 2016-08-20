@@ -7,6 +7,12 @@ Mapping Salt Lake City is a community-created archive of Salt Lake City’s neig
 This repo is the code base for a new site for Mapping Salt Lake City, which will launch in the summer of 2016.
 
 
+##Sponsors
+Mapping Salt Lake City would like to thank and recognize [BrowserStack](browserstack.com), which has been very generous in its support.
+[![BrowserStack logo](http://www.mappingslc.org/images/site_img/browserstack2.svg)](browserstack.com)
+BrowserStack. Get unrestricted access to 1000+ real mobile and desktop browsers
+
+
 ## About Us
 [Paisley Rekdal](http://www.paisleyrekdal.com/)) is the creator and Editor for Mapping Salt Lake City.
 
