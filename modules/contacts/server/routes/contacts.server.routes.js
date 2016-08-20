@@ -27,8 +27,8 @@ module.exports = function (app) {
     .put(contacts.emailTest);
 
 
-  app.route('/api/v1/emails/:fileName')
-  .get(contacts.getSignupEmail, contacts.tempUserSignup);
+  // app.route('/api/v1/emails/:fileName')
+  // .get(contacts.getSignupEmail, contacts.tempUserSignup);
 
   
   // Finish by binding the Contact middleware

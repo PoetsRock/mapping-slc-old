@@ -122,10 +122,10 @@ exports.emailTest = (req, res) => {
  * @param req
  * @param res
  */
-exports.getSignupEmail = (req, res) => {
-  const fileName = req.params.fileName;
-  res.sendFile(path.join(__dirname + '/../static/' + fileName));
-};
+// exports.getSignupEmail = (req, res) => {
+//   const fileName = req.params.fileName;
+//   res.sendFile(path.join(__dirname + '/../static/' + fileName));
+// };
 
 
 /**
@@ -133,18 +133,18 @@ exports.getSignupEmail = (req, res) => {
  * @param req
  * @param res
  */
-exports.tempUserSignup = (req, res) => {
+// exports.tempUserSignup = (req, res) => {
 //   console.log('\n\n\n\n\n\nreq:\n', req, '\n\n\n\n\n\n');
 //   const fileName = req.params.fileName;
 //   console.log('\n\nSent:\n', fileName);
 //   console.log('\n\nreq.fileName:\n', req.fileName);
 //   console.log('\n\nreq.file:\n', req.file);
 //
-  res.send({
-    email: req.fileName
-  });
+//   res.send({
+//     email: req.fileName
+//   });
 //
-};
+// };
 
 
 /**

@@ -43,6 +43,10 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  created: {
+    type: Date,
+    default: Date.now
+  },
   namePrefix: {
     type: String,
     trim: true,

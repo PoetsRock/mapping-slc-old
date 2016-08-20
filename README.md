@@ -9,7 +9,7 @@ This repo is the code base for a new site for Mapping Salt Lake City, which will
 
 ##Sponsors
 Mapping Salt Lake City would like to thank and recognize [BrowserStack](browserstack.com), which has been very generous in its support.
-<img src="http://www.mappingslc.org/images/site_img/browserstack.svg" alt="BrowserStack logo" style="width: 200px;"/>
+<img src="http://www.mappingslc.org/images/site_img/browserstack.svg" alt="BrowserStack logo" style="width: 200"/>
 BrowserStack. Get unrestricted access to 1000+ real mobile and desktop browsers
 
 Previous funding has been provided by [The Utah Humanities Council](http://www.utahhumanities.org/), [The University of Utah](http://www.utah.edu/), The Richard B. Siegel Foundation, and [Westminster College](http://www.westminstercollege.edu/).
