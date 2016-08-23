@@ -1,5 +1,5 @@
 <md-button data-ng-show="toggleEdit" data-ng-click="toggleEditFn(0)" class="md-raised btn-warning">Cancel</md-button>
-<md-button data-ng-show="toggleEdit" data-ng-click="updateFeatured()" class="md-raised">Update Featured</md-button >
+
 <md-button data-ng-show="toggleEdit" type="submit" data-ng-click="toggleEditFn(0)" class="md-raised">Save</md-button>
 
 <div data-ng-show="!toggleEdit" data-ng-click="toggleEdit = !toggleEdit"><i class="fa fa-pencil"></i></div>
@@ -25,23 +25,36 @@
 </div>
 
 
+<!--<md-button data-ng-show="toggleEdit" data-ng-click="updateFeatured()" class="md-raised">Update Featured</md-button >-->
 <div class="row" data-ng-show="toggleEdit">
   <div class="col-md-12">
     <md-input-container>
       <label>Featured Project</label>
-      <md-select id="featured" data-ng-model="project.featured">
-        <md-optgroup label="Featured Project">
-          <md-option ng-value="featuredProject.value" ng-repeat="featuredProject in featuredProjects">
-            {{featuredProject.name}}
-          </md-option>
-        </md-optgroup>
-      </md-select>
+        <md-switch ng-model="project.featured" aria-label="Featured Project" ng-true-value="'Featured'" ng-false-value="'Not Featured'" data-ng-change="updateFeatured()">
+          {{ project.featured }}
+      </md-switch>
     </md-input-container>
-    <a href="#" tooltip-placement="top" uib-tooltip="If you're unsure, select what you feel is closest.">
-      <i class="fa fa-question-circle"></i>
-    </a>
   </div>
 </div>
+
+<!--<div class="row" data-ng-show="toggleEdit">-->
+  <!--<div class="col-md-12">-->
+    <!--<md-input-container>-->
+      <!--<label>Featured Project</label>-->
+
+      <!--<md-select id="featured" data-ng-model="project.featured">-->
+        <!--<md-optgroup label="Featured Project">-->
+          <!--<md-option ng-value="featuredProject.value" ng-repeat="featuredProject in featuredProjects">-->
+            <!--{{featuredProject.name}}-->
+          <!--</md-option>-->
+        <!--</md-optgroup>-->
+      <!--</md-select>-->
+    <!--</md-input-container>-->
+    <!--<a href="#" tooltip-placement="top" uib-tooltip="If you're unsure, select what you feel is closest.">-->
+      <!--<i class="fa fa-question-circle"></i>-->
+    <!--</a>-->
+  <!--</div>-->
+<!--</div>-->
 <div class="row" data-ng-show="!toggleEdit">
   <div class="col-xs-4">Featured Project</div>
   <div class="col-xs-8" data-ng-bind="project.featured"></div>

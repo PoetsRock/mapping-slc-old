@@ -37,11 +37,14 @@
     "angular-local-storage": "^0.2.7",
     "lodash": "^4.13.1",
     "angular-ui-utils": "bower",
-    "flexslider": "^2.6.1"
+    "flexslider": "^2.6.1",
+    "ng-password-strength": "git@github.com:PoetsRock/ng-password-strength.git#master",
+    "angular-recaptcha": "^3.0.4"
   },
   "resolutions": {
     "angular": "^1.5.x",
-    "angular-bootstrap": "^0.14.3"
+    "angular-bootstrap": "^0.14.3",
+    "lodash": "^4.13.1"
   },
   "overrides": {
     "bootstrap": {

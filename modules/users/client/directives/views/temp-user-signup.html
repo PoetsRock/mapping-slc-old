@@ -1,0 +1,93 @@
+<div flex layout="row">
+  <div flex-sm="100" flex-gt-sm="100" flex-gt-md="100" flex-gt-lg="100">
+    <md-content class="layout-padding">
+
+      <form name="tempUserSignup" data-ng-submit="createTempUser(tempUser.$valid)">
+
+        <!--Row #1-->
+        <div layout-gt-xs="row">
+          <md-input-container flex="40">
+            <label>First Name</label>
+            <input type="text" data-ng-model="tempUser.firstName">
+          </md-input-container>
+
+          <md-input-container flex="40">
+            <label>Last Name</label>
+            <input type="text" data-ng-model="tempUser.lastName">
+          </md-input-container>
+        </div>
+
+        <!--Row #2-->
+        <div layout-gt-xs="row">
+          <md-input-container flex="80">
+            <label>Email</label>
+            <input type="email" data-ng-model="tempUser.email" name="email" ng-pattern="/^.+@.+\..+$/" required="">
+          </md-input-container>
+        </div>
+
+
+        <!--Row #3-->
+        <div layout-gt-xs="row">
+          <md-input-container flex="35">
+            <label>Password</label>
+            <!--<md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>-->
+            <input type="{{inputType}}" data-ng-model="tempUser.password" name="password" minlength="10" required="" autocomplete="off">
+          </md-input-container>
+
+          <md-input-container flex="5">
+            <i class="fa fa-eye" aria-hidden="true" data-ng-show="hidePassword"
+               data-ng-click="togglePassword(false)"></i>
+            <i class="fa fa-eye-slash" aria-hidden="true" data-ng-show="!hidePassword"
+               data-ng-click="togglePassword(true)"></i>
+          </md-input-container>
+
+          <md-input-container flex="40">
+            <label>Confirm Password</label>
+            <input type="{{inputType}}" data-ng-model="tempUser.confirmPassword" name="confirm" minlength="10" autocomplete="off" required="" ng-pattern="tempUser.password">
+          </md-input-container>
+
+        </div>
+
+
+        <div layout-gt-xs="row">
+          <md-input-container flex="80">
+
+            <span ng-messages="tempUserSignup.email.$error" multiple="" md-auto-hide="false">
+              <span ng-message="pattern">
+                Make sure you're entering a valid email
+              </span>
+            </span>
+
+            <span ng-messages="tempUserSignup.password.$error" multiple="" md-auto-hide="false">
+              <span ng-message="pattern">
+                Make sure your password has as at least ten characters, and includes at least one lowercase, uppercase & special character, and at least one number
+              </span>
+            </span>
+
+            <span ng-messages="tempUserSignup.confirm.$error" role="alert" multiple="" md-auto-hide="false">
+              <span ng-message="pattern">
+                Make sure the passwords match
+              </span>
+            </span>
+
+          </md-input-container>
+        </div>
+
+
+        <div
+          vc-recaptcha
+          theme="'light'"
+          key="model.key"
+          on-create="setWidgetId(widgetId)"
+          on-success="setResponse(response)"
+          on-expire="cbExpiration()"
+        ></div>
+
+        <md-button type="submit" class="md-primary pull-right" data-ng-class="{'md-raised md-hue-1': (tempUser.$dirty && tempUser.$valid)}">Submit
+        </md-button>
+
+      </form>
+
+    </md-content>
+  </div>
+</div>

@@ -14,6 +14,7 @@ module.exports = {
         'public/lib/angular-notify/dist/angular-notify.css',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css',
         'public/lib/flexslider/flexslider.css',
+        'public/lib/ng-password-strength/dist/styles/main.css',
         'public/lib/mslc/angular-froala/src/css/froala_editor.min.css',
         'public/lib/mslc/angular-froala/src/css/froala_style.min.css',
 
@@ -43,6 +44,7 @@ module.exports = {
         'public/lib/angular-route/angular-route.min.js',
         'public/lib/angular-ui-router/release/angular-ui-router.js',
         'public/lib/angular-aria/angular-aria.js',
+        'public/lib/angular-recaptcha/release/angular-recaptcha.min.js',
         'public/lib/angular-sanitize/angular-sanitize.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
         'public/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js',
@@ -55,6 +57,8 @@ module.exports = {
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/rangy/rangy-core.js',
         'public/lib/angular-local-storage/dist/angular-local-storage.min.js',
+        // '//cdnjs.cloudflare.com/ajax/libs/froala-editor/2.3.4/js/froala_editor.min.js',
+        // 'public/lib/froala-editor/js/froala_editor.min.js',
         'public/lib/mslc/angular-froala/src/js/froala_editor.min.js',
         'public/lib/classie/classie.js',
         'public/lib/moment/min/moment.js',
@@ -63,6 +67,7 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload.js',
         'public/lib/lodash/lodash.js',
         'public/lib/flexslider/jquery.flexslider-min.js',
+        'public/lib/ng-password-strength/dist/scripts/ng-password-strength.min.js',
 
         //load plugins for Froala text editor
         'public/lib/mslc/angular-froala/src/js/plugins/align.min.js',

@@ -1,38 +1,22 @@
 'use strict';
 
 /**
- * Module dependencies
- */
-
-/**
- *
-
- // path = require('path'),
-
- // import path from 'path';
- // import errorHandler from (path.resolve('./modules/core/server/controllers/errors.server.controller'));
+ import path from 'path';
+ import errorHandler from (path.resolve('./modules/core/server/controllers/errors.server.controller'));
  import Promise from 'bluebird';
  import mongoose from 'mongoose';
  import passport from 'passport';
 
- mongoose.Promise = Promise;
- const User = mongoose.model('User');
- const TempUser = mongoose.model('TempUser');
-
- // URLs for which user can't be redirected on signin
- const noReturnUrls = [
- '/authentication/signin',
- '/authentication/signup'
- ];
  export { tempUserSignup };
 
- * **/
+ */
 
 const path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   Promise = require('bluebird'),
   mongoose = require('mongoose'),
   passport = require('passport');
+const _ = require('lodash');
 
 mongoose.Promise = Promise;
 const User = mongoose.model('User');
@@ -45,11 +29,98 @@ const noReturnUrls = [
 ];
 
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.tempUserSignup = (req, res, next) => {
+  // For security measurement we remove the roles from the req.body object
+  delete req.body.roles;
+
+  // Init user and add missing fields
+  const tempUser = new TempUser(req.body);
+  tempUser.provider = 'local';
+  tempUser.username = req.body.email;
+
+  // Then save the user
+  tempUser.save((err, success) => {
+    if (err) {
+      console.error('\n\nerr #1::::::::::::::::::::\n', err);
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+      if (req.login) {
+        req.login(tempUser, err => {
+          if (err) {
+            console.error('\n\nerr #2::::::::::::::::::::\n', err);
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          }
+
+          /** transform req object for next middleware function, `exports.formatEmail()` **/
+          req.email = {
+            to: req.body.email,
+            subjectLine: req.body.subjectLine || 'Mapping SLC | Please confirm your email address'
+          };
+          req.tempUser = success;
+          next();
+        });
+      }
+    }
+  });
+};
 
 /**
- * Signup
+ * Signup Test
  */
-exports.signup = function (req, res) {
+exports.signupTest = (req, res) => {
+  console.log('hi you hit the test sign up!!');
+  console.log('req.query:\n', req.query);
+  console.log('req.query.tempUserId: ', req.query.tempUserId);
+  console.log('req.query.tempToken: ', req.query.tempToken);
+
+  const query = TempUser.findOne({ _id: req.query.tempUserId })
+  .exec()
+  .then(tempUser => {
+    if(req.query.tempToken !== tempUser.tempToken) {
+      tempUser.error = 'We are not able to confirm your email address';
+      throw tempUser;
+    }
+    console.log('and you\'re confirmed');
+    console.log('tempUser:\n', tempUser);
+    // delete certain fields on tempUser before saving to User Db
+    // delete tempUser.
+    // save tempUser as a new user to User Db
+    return User.save(tempUser);
+  })
+  .then(newUser => {
+    console.log('newUser:\n', newUser);
+    return res.jsonp(newUser);
+  })
+  .catch(err => {
+    console.error('err:\n', err);
+    console.error('tempUser:\n', tempUser);
+    return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+  });
+
+
+
+  if(req.query.tempToken === '456') {
+    console.log('and you\'re confirmed');
+    const newUser = TempUser.findOne({ _id: req.query.tempUserId });
+    console.log('newUser:\n', newUser);
+    res.jsonp(newUser);
+  } else {
+    console.log('nada!!!!!!!!!!!!!!!!!!!!!!!!!!!1');
+  }
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+exports.signup = (req, res) => {
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;

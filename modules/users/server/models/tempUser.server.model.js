@@ -3,14 +3,18 @@
 /**
  * Module dependencies
  */
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
   Schema = mongoose.Schema,
+  uuid = require('node-uuid'),
   crypto = require('crypto'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
 
 
+const cleanDb = () => {
+  
+};
 
 /**
  * A Validation function for local strategy properties
@@ -26,6 +30,43 @@ var validateLocalStrategyEmail = function (email) {
   return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email, { require_tld: false }));
 };
 
+const generateRandomPassphrase = () => {
+  return new Promise(function (resolve, reject) {
+    var password = '';
+    var repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
+
+    // iterate until the we have a valid passphrase
+    // NOTE: Should rarely iterate more than once, but we need this to ensure no repeating characters are present
+    while (password.length < 20 || repeatingCharacters.test(password)) {
+      // build the random password
+      password = generatePassword.generate({
+        length: Math.floor(Math.random() * (20)) + 20, // randomize length between 20 and 40 characters
+        numbers: true,
+        symbols: false,
+        uppercase: true,
+        excludeSimilarCharacters: true,
+      });
+
+      // check if we need to remove any repeating characters
+      password = password.replace(repeatingCharacters, '');
+    }
+
+    // Send the rejection back if the passphrase fails to pass the strength test
+    if (owasp.test(password).errors.length) {
+      reject(new Error('An unexpected problem occured while generating the random passphrase'));
+    } else {
+      // resolve with the validated passphrase
+      resolve(password);
+    }
+  });
+};
+
+const generateAuthToken = () => {
+  const authToken = uuid.v4() + '.' + new Date().getTime();
+  console.log('authToken: ', authToken);
+  return authToken;
+};
+
 /**
  * TempUser Schema - for verifying new user accounts
  **/
@@ -37,17 +78,13 @@ const TempUserSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
-    default: ''
-    //validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    default: '',
+    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
   },
   lastName: {
     type: String,
     default: '',
-    //validate: [validateLocalStrategyProperty, 'Please fill in your last name']
-    trim: true,
-  },
-  displayName: {
-    type: String,
+    validate: [validateLocalStrategyProperty, 'Please fill in your last name'],
     trim: true
   },
   email: {
@@ -56,6 +93,12 @@ const TempUserSchema = new Schema({
     //required: 'This email already exists',
     validate: [validateLocalStrategyEmail, 'Please use a valid email address'],
     trim: true
+  },
+  authToken: {
+    type: String,
+    trim: true,
+    unique: true,
+    default: generateAuthToken(),
   },
   username: {
     type: String,
@@ -80,10 +123,6 @@ const TempUserSchema = new Schema({
       enum: ['user', 'verificationRequired', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser']
     }],
     default: ['verificationRequired'],
-  },
-  newsletter: {
-    type: Boolean,
-    default: false
   },
   /* For reset password */
   resetPasswordToken: {
@@ -142,32 +181,6 @@ TempUserSchema.methods.hashPassword = function (password) {
 TempUserSchema.methods.authenticate = function (password) {
   return this.password === this.hashPassword(password);
 };
-
-/**
- * Find possible not used username
- */
-// TempUserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
-//   var _this = this;
-//   var possibleUsername = username.toLowerCase() + (suffix || '');
-//
-//   _this.findOne({
-//     username: possibleUsername
-//   }, function (err, user) {
-//     if (!err) {
-//       if (!user) {
-//         callback(possibleUsername);
-//       } else {
-//         return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
-//       }
-//     } else {
-//       callback(null);
-//     }
-//   });
-// };
-
-
-
-
 
 
 /**

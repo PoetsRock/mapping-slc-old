@@ -54,6 +54,7 @@ module.exports = {
   GOOGLE_SERVER_KEY: process.env.GOOGLE_SERVER_KEY || 'SERVER_KEY',
   GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE_SECRET',
   GOOGLE_CALLBACK_URL: '/api/v1/auth/google/callback',
+  GOOGLE_RECAPTCHA_SECRET: process.env.GOOGLE_RECAPTCHA_SECRET,
 
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
@@ -107,6 +108,10 @@ module.exports = {
       }
     }
   },
+
+  MEMCACHIER_PASSWORD: process.env.MEMCACHIER_PASSWORD,
+  MEMCACHIER_SERVERS: process.env.MEMCACHIER_SERVERS,
+  MEMCACHIER_USERNAME: process.env.MEMCACHIER_USERNAME,
 
 
   NEW_RELIC_KEY: process.env.NEW_RELIC_KEY,

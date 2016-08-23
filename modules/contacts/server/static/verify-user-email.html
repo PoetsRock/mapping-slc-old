@@ -4,16 +4,16 @@
   <meta charset="utf-8"> <!-- utf-8 works for most cases -->
   <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
-  <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+  <title>Mapping Salt Lake City | Confirm Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 
   <!-- Web Font / @font-face : BEGIN -->
   <!-- NOTE: If web fonts are not required, lines 9 - 26 can be safely removed. -->
-
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700" rel="stylesheet" type='text/css'>
   <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
   <!--[if mso]>
   <style>
     * {
-      font-family: sans-serif !important;
+      font-family: 'Open Sans', sans-serif !important;
     }
   </style>
   <![endif]-->
@@ -21,6 +21,7 @@
   <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
   <!--[if !mso]><!-->
   <!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+  <!--<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700" rel="stylesheet" type='text/css'>-->
   <!--<![endif]-->
 
   <!-- Web Font / @font-face : END -->
@@ -98,6 +99,13 @@
     .button-a:hover {
       background: #555555 !important;
       border-color: #555555 !important;
+      color: #023a31;
+    }
+    .button-a span {
+      color: #ffffff;
+    }
+    .button-a:hover span {
+      color: #046e5d;
     }
 
     .center {
@@ -114,29 +122,29 @@
   <center style="width: 100%;">
 
     <!-- Visually Hidden Preheader Text : BEGIN -->
-    <div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family: sans-serif;">
+    <div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family: 'Open Sans', sans-serif;">
       (Optional) This text will appear in the inbox preview, but not the email body.
     </div>
     <!-- Visually Hidden Preheader Text : END -->
 
     <!--
         Set the email width. Defined in two places:
-        1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 600px.
-        2. MSO tags for Desktop Windows Outlook enforce a 600px width.
+        1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 640px.
+        2. MSO tags for Desktop Windows Outlook enforce a 640px width.
     -->
-    <div style="width: 100%; max-width: 600px; margin: auto;">
+    <div style="width: 100%; max-width: 640px; margin: auto;">
       <!--[if (gte mso 9)|(IE)]>
-      <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+      <table cellspacing="0" cellpadding="0" border="0" width="640" align="center">
         <tr>
           <td>
       <![endif]-->
 
       <!-- Email Header : BEGIN -->
-      <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+      <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 640px;">
         <tr>
           <td style="padding: 20px 0; text-align: center">
-            <!--<img src="cid:main-logo-email" width="300" height="94" alt="alt_text" border="0">-->
-            <img src="http://mappingslc.org/images/mapping.png" width="300" height="94" alt="alt_text" border="0">
+            <img src="cid:main-logo-email"  width="300" height="94" alt="alt_text" border="0" />
+            <!--<img src="http://mappingslc.org/images/mapping.png" width="300" height="94" alt="alt_text" border="0">-->
             <!--<img src="http://localhost:3000/modules/core/client/img/brand/mapping.png" width="300" height="94" alt="alt_text" border="0">-->
           </td>
         </tr>
@@ -144,12 +152,12 @@
       <!-- Email Header : END -->
 
       <!-- Email Body : BEGIN -->
-      <table cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="#ffffff" width="100%" style="max-width: 600px;">
+      <table cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="#fff6f8" width="100%" style="max-width: 640px;">
 
         <!-- Hero Image, Flush : BEGIN -->
         <tr>
           <td>
-            <img src="http://placehold.it/600x300" width="600" height="" alt="alt_text" border="0" align="center" style="width: 100%; max-width: 600px;">
+            <img src="http://www.mappingslc.org/templates/nebula/images/background3.jpg" width="640" height="240" alt="mapping-slc-background" border="0" align="center" style="width: 100%; max-width: 640px;">
           </td>
         </tr>
         <!-- Hero Image, Flush : END -->
@@ -159,15 +167,16 @@
           <td>
             <table cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
-                <td style="padding: 40px; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+                <td style="padding: 40px; font-family: 'Open Sans', sans-serif; font-size: 18px; mso-height-rule: exactly; line-height: 1.7rem; color: #555555;">
                   Hi there. Just click the button below to confirm your account.
                   <br><br>
                   <!-- Button : Begin -->
                   <table cellspacing="0" cellpadding="0" border="0" align="center" style="Margin: auto;">
                     <tr>
-                      <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
-                        <a href="http://localhost:3000/api/v1/auth/signup/verify?tempUserId=123&tempToken=456" style="background: #222222; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
-                          &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ffffff">Confirm E-mail</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                      <td style="border-radius: 3px; background: #023a31; text-align: center;" class="button-td">
+                        <!--<a href="http://localhost:3000/authentication/complete-signup?tempUserId=123&tempToken=456" -->
+                        <a  href="cid:reply-url" style="background: #023a31; border: 15px solid #023a31; font-family: 'Open Sans', sans-serif; font-size: 20px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                          &nbsp;&nbsp;&nbsp;&nbsp;<span>Confirm E-mail</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         </a>
                       </td>
                     </tr>
@@ -176,52 +185,28 @@
                   <br>
                   You can also click on this link or paste it into a window in your browser to finish signing up.
                   <br />
-                  <a href="http://localhost:3000/api/v1/auth/signup/verify?tempUserId=123&tempToken=456">http://localhost:3000/api/v1/auth/signup/verify?tempUserId=123&tempToken=456"</a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <!-- 1 Column Text + Button : BEGIN -->
+                  <a href="cid:reply-url"><span>cid:reply-url</span></a>
+                  <!--<a href="http://localhost:3000/api/v1/auth/signup/verify?tempUserId=123&tempToken=456">http://localhost:3000/api/v1/auth/signup/verify?tempUserId=123&tempToken=456</a>-->
 
-        <!-- 2 Even Columns : BEGIN -->
-        <tr>
-          <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%" style="padding-bottom: 40px">
-            <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:560px;">
-              <tr>
-                <td align="center" valign="top" width="50%">
-                  <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
-                    <tr>
-                      <td style="text-align: center; padding: 0 10px;">
-                        <img src="http://placehold.it/200" width="200" alt="" style="border: 0;width: 100%;max-width: 200px;" class="center-on-narrow">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="text-align: center;font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0;" class="stack-column-center">
-                        Maecenas sed ante pellentesque, posuere leo id, eleifend dolor. Class aptent taciti sociosqu ad litora per conubia nostra, per torquent inceptos&nbsp;himenaeos.
-                      </td>
-                    </tr>
+
+                  <table cellspacing="0" cellpadding="0" border="0" align="center" style="Margin: auto;">
+                    <td>
+                      <tr>
+                        <br><br>
+                        If you did not signup for an account, you can simply ignore this email or unsubscribe below.
+                      </tr>
+                    </td>
                   </table>
-                </td>
-                <td align="center" valign="top" width="50%">
-                  <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
-                    <tr>
-                      <td style="text-align: center; padding: 0 10px;">
-                        <img src="http://placehold.it/200" width="200" alt="" style="border: 0;width: 100%;max-width: 200px;" class="center-on-narrow">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="text-align: center;font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0;" class="stack-column-center">
-                        Maecenas sed ante pellentesque, posuere leo id, eleifend dolor. Class aptent taciti sociosqu ad litora per conubia nostra, per torquent inceptos&nbsp;himenaeos.
-                      </td>
-                    </tr>
-                  </table>
+
+
                 </td>
               </tr>
             </table>
           </td>
         </tr>
-        <!-- Two Even Columns : END -->
+        <!-- 1 Column Text + Button : END -->
+
+
 
       </table>
       <!-- Email Body : END -->
@@ -229,8 +214,8 @@
       <!-- Email Footer : BEGIN -->
       <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
         <tr>
-          <td style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888;">
-            <webversion style="color:#cccccc; text-decoration:underline; font-weight: bold;">View as a Web Page</webversion>
+          <td style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: 'Open Sans', sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888;">
+            <webversion style="color:#cccccc; text-decoration:underline; font-weight: bold;"><a href="http://localhost:3000/api/v1/emails/auth/signup/verify-user-email.html">View as a Web Page</a></webversion>
             <br><br>
             Mapping Salt Lake City<br><span class="mobile-link--footer">Salt Lake City, UT</span><br><span class="mobile-link--footer"><a href="http://localhost:3000/contact-us">Contact Form</a> </span><br><span class="mobile-link--footer"><a href="mailto:maps@mappingslc.org">maps@mappingslc.org</a> </span>
             <br><br>

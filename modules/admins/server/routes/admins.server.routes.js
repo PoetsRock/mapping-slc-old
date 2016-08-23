@@ -21,6 +21,9 @@ module.exports = function (app) {
     .put(admins.update)
     .delete(admins.delete);
 
+  app.route('/api/v1/admins/recaptcha')
+    .post(admins.recaptchaVerify);
+
   // Finish by binding the admin middleware
   app.param('adminId', admins.adminByID);
 

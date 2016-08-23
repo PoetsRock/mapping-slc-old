@@ -6,7 +6,31 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Admin = mongoose.model('Admin'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  config = require(path.resolve('./config/config')),
+  request = require('request');
+
+
+exports.recaptchaVerify = (req, res) => {
+  request.post({
+    url: 'https://www.google.com/recaptcha/api/siteverify',
+    form: {
+      secret: config.GOOGLE_RECAPTCHA_SECRET,
+      response: req.body.recaptchaResponse,
+      remoteip: req.connection.remoteAddress
+    }
+  }, (err, response, body) => {
+    if(err) {
+      console.error('recaptcha error:\n', err);
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    }
+    console.log('recaptcha body:\n', body);
+    res.jsonp({
+      body
+    });
+  });
+
+};
 
 /**
  * Create a admin

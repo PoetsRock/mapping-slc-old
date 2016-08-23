@@ -1,207 +1,179 @@
 <section ng-controller="AuthenticationController" class="main-content-inner">
-<div class="auth-form">
-  <h1 class="page-header text-center">Sign Up</h1>
+  <temp-user-signup></temp-user-signup>
+</section>
+
+<!--<section ng-controller="AuthenticationController" class="main-content-inner">-->
+<!--<div class="auth-form">-->
+  <!--<h1 class="page-header text-center">Sign Up</h1>-->
 
 
-  <div class="row" data-ng-show="signInBeforeProject && !closeWarning">
-    <div class="col-md-12">
-      <div class="sign-in-warning">
-        <div class="pull-right" data-ng-click="closeWarning = !closeWarning">X</div>
-        <div>
-          <p>You need to sign up before you create a project.</p>
+  <!--<div class="row" data-ng-show="signInBeforeProject && !closeWarning">-->
+    <!--<div class="col-md-12">-->
+      <!--<div class="sign-in-warning">-->
+        <!--<div class="pull-right" data-ng-click="closeWarning = !closeWarning">X</div>-->
+        <!--<div>-->
+          <!--<p>You need to sign up before you create a project.</p>-->
 
-          <p>If you've already registered, <a href="//signin">sign in here</a>.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="row">
-
-    <div class="col-md-12">
+          <!--<p>If you've already registered, <a href="//signin">sign in here</a>.</p>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 
 
-      <form name="userForm" data-ng-submit="signup(userForm.$valid)" class="signin form-horizontal" novalidate
-            autocomplete="off">
-        <div class="row">
-          <div class="col-md-12">
+  <!--<div class="row">-->
 
-            <fieldset>
+    <!--<div class="col-md-12">-->
 
 
-              <div class="row"> <!-- Row #1 -->
-                <div class="col-md-6">
-                  <!--<div class="form-group" show-errors>-->
-                  <div show-errors>
-                    <span class="input input-secondary" data-ng-class="{'input-filled': credentials.firstName}">
-                        <input class="input_field input_field-secondary" type="text" id="firstName" data-ng-model="credentials.firstName"/>
-                        <label class="input_label input_label-secondary" for="firstName">
-                          <span class="input_label-content input_label-content-secondary">First Name</span>
-                        </label>
-                    </span>
-                  </div>
-                </div>
+      <!--<form name="userForm" data-ng-submit="signup(userForm.$valid)" class="signin form-horizontal" novalidate-->
+            <!--autocomplete="off">-->
+        <!--<div class="row">-->
+          <!--<div class="col-md-12">-->
 
-                <div class="col-md-6">
-                  <!--<div class="form-group" show-errors>-->
-                  <div show-errors>
-                  <span class="input input-secondary"
-                        data-ng-class="{'input-filled': credentials.lastName}">
-                    <input class="input_field input_field-secondary" type="text"
-                           id="lastName" data-ng-model="credentials.lastName"/>
-                    <label class="input_label input_label-secondary" for="lastName">
-                      <span class="input_label-content input_label-content-secondary">Last Name</span>
-                    </label>
-                </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row"> <!-- Row #2 -->
-                <div class="col-md-6">
-                  <!--<div class="form-group" show-errors>-->
-                  <div show-errors>
-                <span class="input input-secondary"
-                      data-ng-class="{'input-filled': credentials.email}">
-                    <input class="input_field input_field-secondary" type="text" id="email"
-                           data-ng-model="credentials.email"/>
-                    <label class="input_label input_label-secondary" for="email">
-                      <span
-                        class="input_label-content input_label-content-secondary">E-mail</span>
-                    </label>
-                </span>
-                  </div>
-                </div>
+            <!--<fieldset>-->
 
 
-                <div class="col-md-6">
-                  <!--<div class="form-group" show-errors>-->
-                  <div show-errors>
-                <span class="input input-secondary"
-                      data-ng-class="{'input-filled': credentials.password}">
-                    <input class="input_field input_field-secondary" type="password"
-                           id="password" data-ng-model="credentials.password" popover="{{popoverMsg}}"
-                           popover-trigger="focus"
-                           password-validator/>
-                    <label class="input_label input_label-secondary" for="password">
-                      <span class="input_label-content input_label-content-secondary">Password</span>
-                    </label>
-                </span>
+              <!--<div class="row"> &lt;!&ndash; Row #1 &ndash;&gt;-->
+                <!--<div class="col-md-6">-->
+                  <!--&lt;!&ndash;<div class="form-group" show-errors>&ndash;&gt;-->
+                  <!--<div show-errors>-->
+                    <!--<span class="input input-secondary" data-ng-class="{'input-filled': credentials.firstName}">-->
+                        <!--<input class="input_field input_field-secondary" type="text" id="firstName" data-ng-model="credentials.firstName"/>-->
+                        <!--<label class="input_label input_label-secondary" for="firstName">-->
+                          <!--<span class="input_label-content input_label-content-secondary">First Name</span>-->
+                        <!--</label>-->
+                    <!--</span>-->
+                  <!--</div>-->
+                <!--</div>-->
 
-                    <div ng-messages="userForm.password.$error" role="alert">
-                      <p class="help-block error-text" ng-message="required">Password is required.</p>
-                      <div ng-repeat="passwordError in passwordErrors">
-                        <p class="help-block error-text" ng-show="userForm.password.$error.requirements">
-                          {{passwordError}}</p>
-                      </div>
-                    </div>
+                <!--<div class="col-md-6">-->
+                  <!--&lt;!&ndash;<div class="form-group" show-errors>&ndash;&gt;-->
+                  <!--<div show-errors>-->
+                  <!--<span class="input input-secondary"-->
+                        <!--data-ng-class="{'input-filled': credentials.lastName}">-->
+                    <!--<input class="input_field input_field-secondary" type="text"-->
+                           <!--id="lastName" data-ng-model="credentials.lastName"/>-->
+                    <!--<label class="input_label input_label-secondary" for="lastName">-->
+                      <!--<span class="input_label-content input_label-content-secondary">Last Name</span>-->
+                    <!--</label>-->
+                <!--</span>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
 
-                  </div>
-                </div>
-              </div>
-
-              <div class="row"> <!-- Row #3 -->
-                <div class="col-md-6">
-                  <div class="form-group" show-errors data-ng-show="!userForm.password.$pristine">
-                  <!--<div show-errors data-ng-show="!userForm.password.$pristine">-->
-                    <span class="input input-secondary" data-ng-class="{'input-filled': credentials.passwordVerify}">
-                      <input class="input_field input_field-secondary" type="password" id="passwordVerify"
-                             data-ng-model="credentials.passwordVerify"/>
-                      <label class="input_label input_label-secondary" for="passwordVerify">
-                        <span class="input_label-content input_label-content-secondary">Retype Password</span>
-                      </label>
-                    </span>
-
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group" show-errors ng-show="!userForm.password.$error.required">
-                  <!--<div show-errors ng-show="!userForm.password.$error.required">-->
-                    <label>Password Requirements</label>
-                    <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}">
-                      <span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span>
-                    </uib-progressbar>
-                  </div>
-                </div>
-              </div>
+              <!--<div class="row"> &lt;!&ndash; Row #2 &ndash;&gt;-->
+                <!--<div class="col-md-6">-->
+                  <!--&lt;!&ndash;<div class="form-group" show-errors>&ndash;&gt;-->
+                  <!--<div show-errors>-->
+                <!--<span class="input input-secondary"-->
+                      <!--data-ng-class="{'input-filled': credentials.email}">-->
+                    <!--<input class="input_field input_field-secondary" type="text" id="email"-->
+                           <!--data-ng-model="credentials.email"/>-->
+                    <!--<label class="input_label input_label-secondary" for="email">-->
+                      <!--<span-->
+                        <!--class="input_label-content input_label-content-secondary">E-mail</span>-->
+                    <!--</label>-->
+                <!--</span>-->
+                  <!--</div>-->
+                <!--</div>-->
 
 
-              <div class="row">  <!-- Row #4 -->
-                <div class="col-md-6">
-                  <div id="check-awesome" class="filter first-filter">
-                    <input type="checkbox" name="filters" id="newsletter" value="newsletter"
-                           data-ng-model="credentials.newsletter">
-                    <label for="newsletter">
-                      <span class="check"></span>
-                      <span class="box"></span>
-                      Subscribe to our quarterly e-newsletter
-                    </label>
-                  </div>
-                </div>
-                <div class="col-md-6"></div>
-              </div>
+                <!--<div class="col-md-6">-->
+                  <!--<div show-errors>-->
+                    <!--<span class="input input-secondary" data-ng-class="{'input-filled': credentials.password}">-->
+                    <!--<input class="input_field input_field-secondary" type="password" id="password" data-ng-model="credentials.password" popover="{{popoverMsg}}" popover-trigger="focus" password-validator/>-->
+                    <!--<label class="input_label input_label-secondary" for="password"><span class="input_label-content input_label-content-secondary">Password</span></label>-->
+                <!--</span>-->
+                    <!--<div ng-messages="userForm.password.$error" role="alert">-->
+                      <!--<p class="help-block error-text" ng-message="required">Password is required.</p>-->
+                      <!--<div ng-repeat="passwordError in passwordErrors">-->
+                        <!--<p class="help-block error-text" ng-show="userForm.password.$error.requirements">-->
+                          <!--{{passwordError}}</p>-->
+                      <!--</div>-->
+                    <!--</div>-->
+
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+
+              <!--<div class="row"> &lt;!&ndash; Row #3 &ndash;&gt;-->
+                <!--<div class="col-md-6">-->
+                  <!--<div class="form-group" show-errors data-ng-show="!userForm.password.$pristine">-->
+                  <!--&lt;!&ndash;<div show-errors data-ng-show="!userForm.password.$pristine">&ndash;&gt;-->
+                    <!--<span class="input input-secondary" data-ng-class="{'input-filled': credentials.passwordVerify}">-->
+                      <!--<input class="input_field input_field-secondary" type="password" id="passwordVerify"-->
+                             <!--data-ng-model="credentials.passwordVerify"/>-->
+                      <!--<label class="input_label input_label-secondary" for="passwordVerify">-->
+                        <!--<span class="input_label-content input_label-content-secondary">Retype Password</span>-->
+                      <!--</label>-->
+                    <!--</span>-->
+
+                  <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="col-md-6">-->
+                  <!--<div class="form-group" show-errors ng-show="!userForm.password.$error.required">-->
+                  <!--&lt;!&ndash;<div show-errors ng-show="!userForm.password.$error.required">&ndash;&gt;-->
+                    <!--<label>Password Requirements</label>-->
+                    <!--<uib-progressbar value="requirementsProgress" type="{{requirementsColor}}">-->
+                      <!--<span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span>-->
+                    <!--</uib-progressbar>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
 
 
-              <div class="row">
-                <div class="col-xs-offset-4 col-xs-6 col-md-offset-4 col-md-8">
-                  <div class="form-group">
-                    <div>
-                      <button type="submit" class="btn btn-main grow">Sign up</button>
-                      &nbsp; or&nbsp;
-                      <a ui-sref="authentication.signin" class="show-signup">Sign in</a>
-                    </div>
-                    <div class="forgot-password">
-                      <a ui-sref="authentication.signin">Forgot your password?</a>
-                    </div>
-
-                    <div data-ng-show="error" class="text-center text-danger">
-                      <strong data-ng-bind="error"></strong>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-
-              <div ng-show="error" class="text-center text-danger">
-                <strong ng-bind="error"></strong>
-              </div>
+              <!--<div class="row">  &lt;!&ndash; Row #4 &ndash;&gt;-->
+                <!--<div class="col-md-6">-->
+                  <!--<div id="check-awesome" class="filter first-filter">-->
+                    <!--<input type="checkbox" name="filters" id="newsletter" value="newsletter"-->
+                           <!--data-ng-model="credentials.newsletter">-->
+                    <!--<label for="newsletter">-->
+                      <!--<span class="check"></span>-->
+                      <!--<span class="box"></span>-->
+                      <!--Subscribe to our quarterly e-newsletter-->
+                    <!--</label>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div class="col-md-6"></div>-->
+              <!--</div>-->
 
 
-            </fieldset>
+              <!--<div class="row">-->
+                <!--<div class="col-xs-offset-4 col-xs-6 col-md-offset-4 col-md-8">-->
+                  <!--<div class="form-group">-->
+                    <!--<div>-->
+                      <!--<button type="submit" class="btn btn-main grow">Sign up</button>-->
+                      <!--&nbsp; or&nbsp;-->
+                      <!--<a ui-sref="authentication.signin" class="show-signup">Sign in</a>-->
+                    <!--</div>-->
+                    <!--<div class="forgot-password">-->
+                      <!--<a ui-sref="authentication.signin">Forgot your password?</a>-->
+                    <!--</div>-->
 
-          </div>
-        </div>
+                    <!--<div data-ng-show="error" class="text-center text-danger">-->
+                      <!--<strong data-ng-bind="error"></strong>-->
+                    <!--</div>-->
 
-      </form>
-    </div>
-  </div>
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
 
-        <!--<div class="form-group" show-errors>-->
-          <!--<label for="password">Password</label>-->
-            <!--<input type="password" id="password" name="password" class="form-control" ng-model="credentials.password" placeholder="Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>-->
-          <!--<div ng-messages="userForm.password.$error" role="alert">-->
-            <!--<p class="help-block error-text" ng-message="required">Password is required.</p>-->
-            <!--<div ng-repeat="passwordError in passwordErrors">-->
-              <!--<p class="help-block error-text" ng-show="userForm.password.$error.requirements">{{passwordError}}</p>-->
-            <!--</div>-->
+              <!--<div ng-show="error" class="text-center text-danger">-->
+                <!--<strong ng-bind="error"></strong>-->
+              <!--</div>-->
+
+
+            <!--</fieldset>-->
+
           <!--</div>-->
         <!--</div>-->
-        <!--<div class="form-group" ng-show="!userForm.password.$error.required">-->
-          <!--<label>Password Requirements</label>-->
-          <!--<uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>-->
-        <!--</div>-->
-        <!--<div class="text-center form-group">-->
-          <!--<button type="submit" class="btn btn-primary">Sign up</button>-->
-          <!--&nbsp; or&nbsp;-->
-          <!--<a ui-sref="authentication.signin" class="show-signup">Sign in</a>-->
-        <!--</div>-->
-        <!--<div ng-show="error" class="text-center text-danger">-->
-          <!--<strong ng-bind="error"></strong>-->
-        <!--</div>-->
-      <!--</fieldset>-->
-    <!--</form>-->
 
-  </div>
-</section>
+      <!--</form>-->
+    <!--</div>-->
+  <!--</div>-->
+
+
+  <!--</div>-->
+<!--</section>-->

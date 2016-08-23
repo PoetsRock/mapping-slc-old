@@ -3,11 +3,12 @@
 /**
  * Module dependencies
  */
-var passport = require('passport');
+const passport = require('passport');
 
 module.exports = function (app) {
   // User Routes
-  var users = require('../controllers/users.server.controller');
+  const users = require('../controllers/users.server.controller');
+  const emailCtrl = require('../../../contacts/server/controllers/contacts.email.server.controller');
 
   // Setting up the users password api
   app.route('/api/v1/auth/forgot').post(users.forgot);
@@ -16,15 +17,15 @@ module.exports = function (app) {
 
   // Setting up the users authentication api
 
-  app.route('/api/v1/auth/signup').post(users.signup);
+  app.route('/api/v1/auth/signup')
+    .post(users.tempUserSignup, emailCtrl.formatEmail, emailCtrl.sendTempUserSignupEmail);
+    // .post(users.tempUserSignup);
   app.route('/api/v1/auth/signin').post(users.signin);
   app.route('/api/v1/auth/signout').get(users.signout);
 
+  app.route('/api/v1/auth/signup/verify')
+    .post(users.signupTest);
 
-
-
-  // app.route('/api/v1/auth/verify')
-  //   .get(users.getSignupEmail, users.tempUserSignup);
 
 
   // Setting the facebook oauth routes

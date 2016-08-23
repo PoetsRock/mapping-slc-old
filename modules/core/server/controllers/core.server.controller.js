@@ -1,6 +1,6 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
   Project = mongoose.model('Project'),
   Core = mongoose.model('Core'),
   validator = require('validator');

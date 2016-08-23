@@ -61,12 +61,6 @@
         transform: scale(1.2);
     }
 
-    .logo-second-page {
-        top: 5%;
-        left: 25%;
-        transform: scale(2);
-    }
-
 }
 
 @media (max-height: 810px) {

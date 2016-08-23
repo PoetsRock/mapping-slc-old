@@ -37,11 +37,14 @@ angular.module('core')
       });
 
       scope.$on('show-errors-check-validity', function (event, name) {
+        console.error('event: ', event);
+        console.error('name: ', name);
         if (angular.isUndefined(name) || formCtrl.$name === name) {
           initCheck = true;
           showValidationMessages = true;
-
-          return toggleClasses(formCtrl[inputName].$invalid);
+          var errorResponse = toggleClasses(formCtrl[inputName].$invalid);
+          console.error('errorResponse:\n', errorResponse);
+          return errorResponse;
         }
       });
 
