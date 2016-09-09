@@ -1,0 +1,55 @@
+<!--<section data-ng-controller="ProjectsController" data-ng-init="find()" class="main-content-inner">-->
+<section class="admin">
+
+  <div class="admin">
+    <div class="admin-projects">
+
+      <div class="admin-nav">
+        <md-button class="md-raised" ui-sref="admin.dashboard">Admin Home Page</md-button>
+      </div>
+
+      <div class="page-header" layout="row" layout-align="space-between end">
+
+        <h1 flex="">Admin Panel</h1>
+
+          <md-input-container flex="">
+            <label>Sort Order</label>
+            <md-select id="sortAdminProjectList" data-ng-model="sorts">
+              <md-optgroup label="Sort By">
+                <md-option ng-value="sort.value" ng-repeat="sort in sorts">{{sort.name}}
+                </md-option>
+              </md-optgroup>
+            </md-select>
+          </md-input-container>
+
+        <form flex="">
+          <md-input-container flex="">
+            <label>Search Projects</label>
+            <input type="text" data-ng-model="searchKeyword.$" id="search">
+          </md-input-container>
+        </form>
+
+      </div>
+
+
+      <md-content class="body md-padding" flex="" layout-xs="column" layout="row" layout-wrap>
+        <md-card md-whiteframe="2" flex-xs="" flex-gt-xs="45" layout="column" data-ng-repeat="project in projects | orderBy:sorts | filter:searchKeyword" class="admin-list" ui-sref="admin.adminEditProject({ 'projectId' : project._id })">
+          <md-card-title-media >
+            <img ng-src="{{project.mainImage.thumbImageUrl}}" class="project-tile-image"
+                 alt="{{project.title}}">
+          </md-card-title-media>
+          <md-card-title>
+            <md-card-title-text>{{project.title}}</md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <p>{{project.user.firstName}} {{project.user.lastName}}</p>
+          </md-card-content>
+
+
+        </md-card>
+      </md-content>
+
+    </div>
+  </div>
+
+</section>

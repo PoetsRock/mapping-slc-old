@@ -4,6 +4,7 @@ module.exports = function (app) {
   const contactsPolicy = require('../policies/contacts.server.policy');
   const contacts = require('../controllers/contacts.server.controller');
   const emailCtrl = require('../controllers/contacts.email.server.controller');
+  const middleware = require('../controllers/contacts.middleware.server.controller');
 
 // Contacts collection routes
   //app.route('/api/v1/contacts').all(contactsPolicy.isAllowed)
@@ -18,13 +19,16 @@ module.exports = function (app) {
     .delete(contacts.delete);
 
   app.route('/api/v1/emails/auth/signup/:fileName')
-    .get(contacts.getSignupEmail);
+    .get(emailCtrl.getSignupEmail);
 
   app.route('/api/v1/emails/email/test')
-  .put(emailCtrl.sendTempUserSignupEmail);
+    .put(emailCtrl.sendTempUserSignupEmail);
 
+  app.route('/api/v1/emails/:email/static')
+    .put(emailCtrl.getSignupEmail);
 
   // Finish by binding the Contact middleware
-  app.param('contactId', contacts.contactByID);
-  app.param('fileName', contacts.fileName);
+  app.param('contactId', middleware.contactByID);
+  app.param('fileName', middleware.fileName);
+  app.param('emailId', middleware.fileName);
 };

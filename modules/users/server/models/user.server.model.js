@@ -76,16 +76,16 @@ var UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    //required: 'This email already exists',
+    required: 'This email already exists',
     validate: [validateLocalStrategyEmail, 'Please use a valid email address'],
     trim: true
   },
-  userStreet: {
+  userAddress1: {
     type: String,
     default: '',
     trim: true
   },
-  userStreet2: {
+  userAddress2: {
     type: String,
     trim: true
   },
@@ -101,13 +101,11 @@ var UserSchema = new Schema({
   },
   userZip: {
     type: Number,
-    trim: true
+    trim: true,
+    required:  'Please provide a zip code',
   },
   username: {
     type: String,
-    //unique: 'Username already exists',
-    //required: 'Please fill in a username',
-    //lowercase: true,
     trim: true
   },
   password: {
@@ -125,7 +123,6 @@ var UserSchema = new Schema({
     imageId: String,
     thumbImageUrl: {
       type: String,
-      trim: true,
       default: 'modules/users/client/img/profile/thumb_default.png'
     },
     thumbImageId: String,
@@ -169,8 +166,9 @@ var UserSchema = new Schema({
   },
   bookmarks: {
     type: [{
-      type: Object
-    }]
+      type: String
+    }],
+    default: []
   },
   favorites: {
     type: [{
@@ -230,6 +228,12 @@ UserSchema.pre('validate', function (next) {
     if (result.errors.length) {
       var error = result.errors.join(' ');
       this.invalidate('password', error);
+      console.error('result.errors:\n',
+        { location: 'Hook a pre validate method to test the local password',
+          errors: result.errors
+        }
+      );
+
     }
   }
 

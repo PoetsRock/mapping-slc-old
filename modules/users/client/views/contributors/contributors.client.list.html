@@ -1,56 +1,41 @@
-<div id="main-menu" class="main-menu"><main-menu></main-menu></div>
+<div id="main-menu" class="main-menu">
+  <main-menu></main-menu>
+</div>
 
 <section class="content background" data-ng-controller="RandomMapController"
          ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
   <section class="container">
-    <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
+    <div class="main-logo" ui-sref="home"></div>
 
     <div class="main-content-outer">
       <section data-ng-controller="ContributorController" data-ng-init="getContributors()" class="contributors">
         <div class="contrib">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="main-content-inner">
+          <div class="main-content-inner" layout="column">
 
-                <div class="row">
-                  <div><h1 class="col-md-6">Contributors</h1></div>
+            <div layout="row">
 
-                  <div class="col-md-6 search-input-div">
-                    <span class="input input-secondary pull-right">
-                        <input class="input_field input_field-secondary" type="text" id="search"
-                               data-ng-model="searchContributors"/>
-                        <label class="input_label input_label-secondary" for="search">
-                          <span class="input_label-content input_label-content-secondary">Search Contributors</span>
-                        </label>
-                    </span>
-                  </div>
-                </div>
+              <h1 flex="40">Contributors</h1>
 
-                <!--<div class="row">-->
-                  <md-grid-list md-cols="2" md-row-height="4:3" md-gutter="1em" class="contrib-list">
-                    <md-grid-tile data-ng-repeat="contributor in contributors | filter:searchContributors" class="contrib-view md-whiteframe-1dp" flex-gt-xs="40" ui-sref="contributor({ 'userId' : contributor._id })">
-                      <img ng-src="{{contributor.profileImageThumbUrl}}" class="contrib-tile-image img-responsive" alt="contributor profile image"/>
-                      <md-grid-tile-footer data-ng-bind="contributor.displayName"></md-grid-tile-footer>
-                    </md-grid-tile>
-                  </md-grid-list>
-
-                  <!--<ul id="grid-view">-->
-                    <!--<a ng-click="openLightboxModal($index)"-->
-                       <!--data-ng-repeat="contributor in contributors | filter:searchContributors" class="col-md-3">-->
-                      <!--<li>-->
-                        <!--<div>-->
-                          <!--<img ng-src="{{contributor.profileImageURL}}" class="img-thumbnail">-->
-                          <!--<p>{{contributor.firstName}} {{contributor.lastName}}</p>-->
-                        <!--</div>-->
-                      <!--</li>-->
-                    <!--</a>-->
-                  <!--</ul>-->
-                <!--</div>-->
-
-              </div>
+              <form flex="50" flex-offset="10">
+                <md-input-container flex="">
+                  <label>Search Contributors</label>
+                  <input type="text" data-ng-model="searchContributors.$" id="search">
+                </md-input-container>
+              </form>
 
             </div>
+
+            <md-grid-list md-cols="2" md-row-height="4:3" md-gutter="1em" class="contrib-list" layout="row">
+              <md-grid-tile data-ng-repeat="contributor in contributors | filter:searchContributors"
+                            class="contrib-view md-whiteframe-1dp" flex-gt-xs="40"
+                            ui-sref="contributor({ 'userId' : contributor._id })">
+                <img ng-src="{{contributor.profileImage.thumbImageUrl}}" class="contrib-tile-image img-responsive"
+                     alt="contributor profile image"/>
+                <md-grid-tile-footer data-ng-bind="contributor.displayName"></md-grid-tile-footer>
+              </md-grid-tile>
+            </md-grid-list>
+
           </div>
         </div>
       </section>

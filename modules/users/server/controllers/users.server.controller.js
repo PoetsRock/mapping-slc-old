@@ -15,5 +15,6 @@ module.exports = _.extend(
   require('./users/users.profile.server.controller'),
   require('./users/users.newsletter.server.controller'),
   require('./users/users.uploader.server.controller'),
-  require('./users/users.middleware.server.controller')
+  require('./users/users.middleware.server.controller'),
+  require('./users/users.tempUser.middleware.server.controller')
 );

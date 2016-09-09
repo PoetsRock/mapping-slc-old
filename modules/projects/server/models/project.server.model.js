@@ -19,6 +19,7 @@ var ImageGallerySchema = new Schema({
   imageExt: String,
   imageTags: Array,
   imageName: String,
+  imageCaption: String,
   isDefaultImage: Boolean,
   imageHash: String,
   imageS3Key: String,
@@ -191,6 +192,16 @@ var ProjectSchema = new Schema({
   featuredEndDate: {
     type: Date
   },
+  userIdFavoritesList: {
+    type: [{
+      type: String
+    }]
+  },
+  userIdBookmarkedList: {
+    type: [{
+      type: String
+    }]
+  },
   mainImage: {
     imageUrl: String,
     imageId: String,
@@ -200,6 +211,7 @@ var ProjectSchema = new Schema({
     imageType: String,
     imageExt: String,
     imageName: String,
+    imageCaption: String,
     imageTags: {
       type: [{
         type: String

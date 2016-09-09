@@ -63,12 +63,22 @@ exports.setDefaultImage = (req, res) => {
 
 };
 
-
-// Mongo = require('mongodb'),
-// const projectsDb = new Mongo().getDB('projects');
-// const myProject = projectsDb.find({ title: 'Little Star, Why Can\'t You Be What You Are?' });
-
-// console.log('mongoose.connections.db:\n', mongoose.connections[0].db);
+//
+// const Mongo = require('mongodb');
+//
+// console.log('Mongo:\n', Mongo);
+// console.log('mongoose.connections[0].db:\n', mongoose.connections[0].db);
+//
 // const db = mongoose.connections[0].db;
+//
+// if(mongoose.connections > 1) {
+//   console.log('mongoose.connections:\n', mongoose.connections;
+// }
+//
 // const projects = db.getDB('projects');
 // console.log('projects:\n', projects);
+//
+//
+// const projectsDb = new Mongo().getDB('projects');
+// const myProject = projectsDb.find({ title: 'Little Star, Why Can\'t You Be What You Are?' });
+// console.log('myProject:\n', myProject);

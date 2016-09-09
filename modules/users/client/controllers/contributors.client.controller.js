@@ -1,8 +1,12 @@
 'use strict';
 
 
-angular.module('users').controller('ContributorController', ['$scope', '$animate', '$location', 'Authentication', 'GetContributors', '$stateParams', '$http', '$uibModal', '$window', 'Lightbox', 'UtilsService', 'Users', 'Projects',
-  function ($scope, $animate, $location, Authentication, GetContributors, $stateParams, $http, $uibModal, $window, Lightbox, UtilsService, Users, Projects) {
+angular.module('users')
+.config(function (LightboxProvider) {
+  LightboxProvider.fullScreenMode = false;
+})
+.controller('ContributorController', ['$scope', '$animate', '$location', 'Authentication', 'GetContributors', '$stateParams', '$http', '$uibModal', '$window', 'Lightbox', 'UtilsService',
+  function ($scope, $animate, $location, Authentication, GetContributors, $stateParams, $http, $uibModal, $window, Lightbox, UtilsService) {
 
     $scope.contributors = null;
     $scope.contributor = {};
@@ -19,9 +23,9 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
       Lightbox.openModal($scope.images, index);
     };
 
+
     $scope.images = [];
     var getImages = function (contribData) {
-      console.log('getImages Function `contribData`:\n', contribData);
       for (var i = 0; i < contribData.length; i++) {
         var tempData = {};
         tempData.url = contribData[i].profileImageURL;
@@ -29,16 +33,24 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
         tempData.caption = contribData[i].bio;
         $scope.images.push(tempData);
       }
-      console.log('getImages Function `$scope.images`:\n', $scope.images);
     };
+
+    var getAssociatedProjects = function (userId) {
+      $http.get(`/api/v1/contributors/${userId}/projects?publishedOnly=true`)
+      .then(function successCb(projects) {
+        $scope.contributorProjects = projects.data;
+      }, function errorCb(errorData) {
+        console.log('errorData: ', errorData);
+      });
+    };
+
 
     $scope.getContributors = function () {
       GetContributors.contributors()
       .then(function (contributorsData) {
         $scope.contributors = contributorsData.data;
         getImages($scope.contributors);
-        console.log('getContributors Fn `$scope.contributors`:\n', $scope.contributors);
-      }).catch(function (errorData) {
+      }, function errorCb(errorData) {
         console.log('errorData: ', errorData);
       });
     };
@@ -47,18 +59,11 @@ angular.module('users').controller('ContributorController', ['$scope', '$animate
     $scope.findContributor = function () {
       $http.get(`/api/v1/contributors/${$stateParams.userId}`)
       .then(function (userData) {
+        getAssociatedProjects(userData.data._id);
         $scope.contributor = userData.data;
-        getAssociatedProjects(userData.data);
+      }, function errorCb(errorData) {
+        console.log('errorData: ', errorData);
       });
-    };
-
-    var getAssociatedProjects = function (userObj) {
-      for (var i = 0; i < userObj.associatedProjects.length; i++) {
-        Projects.get({projectId: userObj.associatedProjects[i]},
-          function (projectObj) {
-            $scope.contributorProjects.push(projectObj);
-          });
-      }
     };
 
 

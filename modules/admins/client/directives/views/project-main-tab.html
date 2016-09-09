@@ -1,200 +1,129 @@
+<!--<md-button data-ng-show="toggleEdit" data-ng-click="toggleEditFn(0)" class="md-raised btn-warning">Cancel</md-button>-->
+<!--<md-button data-ng-show="toggleEdit" type="submit" data-ng-click="toggleEditFn(0)" class="md-raised">Save</md-button>-->
 
-  <md-button data-ng-show="toggleEdit" data-ng-click="toggleEditFn(0)" class="md-raised btn-warning">Cancel</md-button>
-  <md-button data-ng-show="toggleEdit" data-ng-click="updateFeatured()" class="md-raised">Update Featured</md-button >
-  <md-button data-ng-show="toggleEdit" type="submit" data-ng-click="toggleEditFn(0)" class="md-raised">Save</md-button>
-
-  <div data-ng-show="!toggleEdit" data-ng-click="toggleEdit = !toggleEdit"><i class="fa fa-pencil"></i></div>
+<!--<div data-ng-click="toggleEdit = !toggleEdit"><i class="fa fa-pencil"></i></div>-->
 
 
-<div class="row no-border" data-ng-show="toggleEdit">
-  <div class="col-xs-11 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.street !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="street" data-ng-model="project.street"/>
-      <label class="input_label input_label-secondary" for="street">
-        <span class="input_label-content input_label-content-secondary">Street Address for Project</span>
-      </label>
-    </span>
+<md-content data-ng-show="toggleEdit" layout="column">
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Address 1</label>
+    <input type="text" data-ng-model="project.street1"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Address 2</label>
+    <input type="text" data-ng-model="project.street2"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>City</label>
+    <input type="text" id="city" data-ng-model="project.city"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>State</label>
+    <input type="text" id="state" data-ng-model="project.state"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Zip</label>
+    <input type="text" id="zip" data-ng-model="project.zip"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Project Title</label>
+    <input type="text" id="title" data-ng-model="project.title"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Keywords</label>
+    <input type="text" id="keywords" data-ng-model="project.keywords"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Story Summary</label>
+    <input type="text" id="storySummary" data-ng-model="project.storySummary"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Latitude</label>
+    <input type="number" id="lat" data-ng-model="project.lat"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Longitude</label>
+    <input type="number" id="lng" data-ng-model="project.lng"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Vimeo ID</label>
+    <input type="text" id="vimeoId" data-ng-model="project.vimeoId"/>
+  </md-input-container>
+
+  <md-input-container class="md-block" flex-gt-sm="" layout="">
+    <label>Sound Cloud ID</label>
+    <input type="text" id="soundCloudId" data-ng-model="project.soundCloudId"/>
+  </md-input-container>
+
+</md-content>
+
+
+<md-content data-ng-show="!toggleEdit" layout="column">
+
+  <div layout="">
+    <div flex="20">Street</div>
+    <div flex="80" data-ng-bind="project.street"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Street</div>
-  <div class="col-xs-9" data-ng-bind="project.street"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.city!== ''}">
-      <input class="input_field input_field-secondary" type="text" id="city" data-ng-model="project.city"/>
-      <label class="input_label input_label-secondary" for="city">
-        <span class="input_label-content input_label-content-secondary">City</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">City</div>
+    <div flex="80" data-ng-bind="project.city"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">City</div>
-  <div class="col-xs-9" data-ng-bind="project.city"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.state !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="state" data-ng-model="project.state"/>
-      <label class="input_label input_label-secondary" for="state">
-        <span class="input_label-content input_label-content-secondary">State</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">State</div>
+    <div flex="80" data-ng-bind="project.state"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">State</div>
-  <div class="col-xs-9" data-ng-bind="project.state"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.zip !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="zip" data-ng-model="project.zip"/>
-      <label class="input_label input_label-secondary" for="zip">
-        <span class="input_label-content input_label-content-secondary">Zip</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Project Title</div>
+    <div flex="80" data-ng-bind="project.title"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Zip</div>
-  <div class="col-xs-9" data-ng-bind="project.zip"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.title !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="title" data-ng-model="project.title"/>
-      <label class="input_label input_label-secondary" for="title">
-        <span class="input_label-content input_label-content-secondary">Title of Your Project</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Zip</div>
+    <div flex="80" data-ng-bind="project.zip"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Title of Your Project</div>
-  <div class="col-xs-9" data-ng-bind="project.title"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.keywords !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="keywords"
-             data-ng-model="project.keywords"/>
-      <label class="input_label input_label-secondary" for="keywords">
-        <span class="input_label-content input_label-content-secondary">Keywords</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Keywords</div>
+    <div flex="80" data-ng-bind="project.keywords"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Keywords</div>
-  <div class="col-xs-9" data-ng-bind="project.keywords"></div>
-</div>
-
-
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-  <span class="input input-secondary" data-ng-class="{'input-filled': project.storySummary !== ''}">
-  <input class="input_field input_field-secondary" type="text" id="storySummary"
-         data-ng-model="project.storySummary"/>
-  <label class="input_label input_label-secondary" for="storySummary">
-    <span class="input_label-content input_label-content-secondary">Story Summary</span>
-  </label>
-  </span>
+  <div layout="">
+    <div>Story Summary</div>
+    <div flex="80" data-ng-bind="project.storySummary"></div>
   </div>
-</div>
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-3">Story Summary</div>
-  <div class="col-xs-9" data-ng-bind="project.storySummary"></div>
-</div>
 
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.lat !== ''}">
-      <input class="input_field input_field-secondary" type="number" id="lat" data-ng-model="project.lat"/>
-      <label class="input_label input_label-secondary" for="lat">
-        <span class="input_label-content input_label-content-secondary">Latitude</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Latitude</div>
+    <div flex="80" data-ng-bind="project.lat"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Latitude</div>
-  <div class="col-xs-9" data-ng-bind="project.lat"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.lng !== ''}">
-      <input class="input_field input_field-secondary" type="number" id="lng" data-ng-model="project.lng"/>
-      <label class="input_label input_label-secondary" for="lng">
-        <span class="input_label-content input_label-content-secondary">Longitude</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Longitude</div>
+    <div flex="80" data-ng-bind="project.lng"></div>
   </div>
-</div>
 
-  <div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Longitude</div>
-  <div class="col-xs-9" data-ng-bind="project.lng"></div>
-</div>
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.vimeoId !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="vimeoId" data-ng-model="project.vimeoId"/>
-      <label class="input_label input_label-secondary" for="vimeoId">
-        <span class="input_label-content input_label-content-secondary">Vimeo ID</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Vimeo ID</div>
+    <div flex="80" data-ng-bind="project.vimeoId"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Vimeo ID</div>
-  <div class="col-xs-9" data-ng-bind="project.vimeoId"></div>
-</div>
-
-
-<div class="row" data-ng-show="toggleEdit">
-  <div class="col-xs-8 col-xs-offset-1">
-    <span class="input input-secondary" data-ng-class="{'input-filled': project.soundCloudId !== ''}">
-      <input class="input_field input_field-secondary" type="text" id="soundCloudId"
-             data-ng-model="project.soundCloudId"/>
-      <label class="input_label input_label-secondary" for="soundCloudId">
-        <span class="input_label-content input_label-content-secondary">Sound Cloud ID</span>
-      </label>
-    </span>
+  <div layout="">
+    <div flex="20">Sound Cloud ID</div>
+    <div flex="80" data-ng-bind="project.soundCloudId"></div>
   </div>
-</div>
 
-<div class="row" data-ng-show="!toggleEdit">
-  <div class="col-xs-2">Sound Cloud ID</div>
-  <div class="col-xs-9" data-ng-bind="project.soundCloudId"></div>
-</div>
-
-
-  <md-button class="md-raised" data-ng-click="sendTestEmail()">Send Email</md-button>
-  <md-button class="md-raised" data-ng-click="sendTestHtmlEmail()">New User Email</md-button>
+</md-content>

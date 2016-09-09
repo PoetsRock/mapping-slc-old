@@ -1,0 +1,90 @@
+<section data-ng-controller="ProjectsController" class="main-content-inner" data-ng-init="initSubmissionStatus()">
+
+  <div class="view-project">
+
+    <div class="page-header">
+      <h1 data-ng-if="project.status[0]==='received'">Thank You for Your Submission</h1>
+      <h3 data-ng-if="project.status[0]==='pending'">Hi {{project.user.firstName}}, we're reading your submission and
+        will be in touch soon.</h3>
+      <h3 data-ng-if="project.status[0]==='accepted'">{{project.title}}</h3>
+      <h3 data-ng-if="project.status[0]==='published'">{{project.title}} has been published.</h3>
+      <h3 data-ng-if="project.status[0]==='pulled'">Our records indicate... </h3>
+    </div>
+
+    <section class="overview">
+
+      <div data-ng-if="project.status[0]==='received'">
+        <p>We have received your submission, and will begin reviewing it shortly.</p>
+        <p>You are welcome to edit your submission for a short period, until we begin reviewing it. After we have
+          begun our review, you may still edit your contact information on this page.</p>
+        <p>If your piece is accepted for publication, you will have a chance to layout and format your project and
+          are welcome to suggest edits at this stage as well.</p>
+        <p>You can access this page at a later date by logging in and going to your <a ui-sref="settings.profile">Account
+          page</a> and clicking on the Submitted
+          Projects tab.</p>
+      </div>
+      <p data-ng-if="project.status[0]==='pending'">We have begun reading your submission. So, currently, you
+        are not able to edit your submission. You can still edit your contact information.</p>
+
+      <div data-ng-if="project.status[0]==='accepted'">
+        <p>{{project.title}} has been accepted for publication. We thank you again for your submission and feel
+          fortunate to be able to publish it.</p>
+        <p>Please make sure the information below is correct. Additionally, we ask that you submit a bio and an author
+          photo.</p>
+      </div>
+
+    </section>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <section class="submission-info">
+
+      <md-content>
+        <md-tabs md-dynamic-height="" md-border-bottom="">
+
+          <md-tab label="Project Information">
+            <md-content class="md-padding">
+              <project-status-project-info></project-status-project-info>
+            </md-content>
+          </md-tab>
+
+          <md-tab label="Submission" data-ng-if="project.status[0]==='received' || project.story && project.status[0]==='accepted'" md-active="true">
+            <md-content class="md-padding">
+              <project-editor></project-editor>
+            </md-content>
+          </md-tab>
+
+          <md-tab label="Multimedia">
+            <md-content class="md-padding">
+              <project-images></project-images>
+            </md-content>
+          </md-tab>
+
+          <md-tab label="Project Files">
+            <md-content class="md-padding">
+              <project-files></project-files>
+            </md-content>
+          </md-tab>
+
+          <md-tab label="Author Info">
+            <md-content class="md-padding">
+              <user-view-form></user-view-form>
+            </md-content>
+          </md-tab>
+
+          <md-tab label="Author Photo" data-ng-if="project.status[0]==='accepted'">
+            <md-content class="md-padding">
+              <change-profile-picture></change-profile-picture>
+            </md-content>
+          </md-tab>
+
+        </md-tabs>
+      </md-content>
+
+    </section>
+
+  </div>
+
+</section>

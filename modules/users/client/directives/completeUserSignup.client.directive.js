@@ -4,7 +4,7 @@
   angular.module('users')
   .directive('completeUserSignup', completeUserSignup);
 
-  completeUserSignup.$inject = [];
+  completeUserSignup.$inject = ['listStates'];
 
   function completeUserSignup() {
     var directive = {
@@ -15,21 +15,39 @@
 
     return directive;
 
-    function controller($scope, $http) {
+    function controller($scope, $http, $state, listStates) {
+      $scope.states = listStates;
 
-      $scope.testUserSignupEmail = function () {
-        var emailOptions = {};
-        $http.get('/api/v1/emails/html-email.html', emailOptions)
-        .then(function (response) {
-          console.log('email response:\n', response);
-          // do something with data
+      this.$onInit = function() {
+        $http.get('/api/v1/tempUser/' + $state.params.tempUserId)
+        .then(function getTempUserCb(response) {
+          $scope.credentials = response.data;
+          $scope.credentials.newsletter = 'Yes';
         })
-        .catch(function (err) {
-          console.log('email err:\n', err);
+        .catch(function getTempUserError(err) {
+          console.error('error getting temp user:\n', err);
         });
       };
+
+
+      $scope.completeSignup = function(isValid) {
+        $scope.error = null;
+        if (!isValid) {
+          console.error('NOPE NOT VAILD', isValid);
+          $scope.$broadcast('show-errors-check-validity', 'userForm');
+          return false;
+        }
+        $http.post('/api/v1/auth/signup/verify', $scope.credentials)
+        .then(function createUserCb(createUserResponse) {
+          // If successful, assign response to global user model
+          $scope.user = $scope.authentication.user = createUserResponse.data;
+          $state.go('settings.accounts');
+        }, function createUserError(err) {
+          console.error('error creating new user:\n', err);
+          $scope.error = err.message;
+        });
+      };
+
     }
   }
 }());
-
-

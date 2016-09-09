@@ -30,17 +30,21 @@
 
   <!-- Fav Icon -->
   <link href="{{favicon}}" rel="shortcut icon" type="image/x-icon">
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Lato:400,400i" rel="stylesheet">
-
 
   <!-- Application CSS Files -->
   {% for cssFile in cssFiles %}
   <link rel="stylesheet" href="{{cssFile}}">
   {% endfor %}
 
+  <!--these 2 scripts are supposed to be used in production for the angular material icons-->
+  <!--<script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>-->
+  <!--<script src="//cdnjs.cloudflare.com/ajax/libs/SVG-Morpheus/0.1.8/svg-morpheus.js"></script>-->
+
   <!-- Google reCAPTCHA widget -->
-  <!--<script src="https://www.google.com/recaptcha/api.js" async defer></script>-->
   <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=vcRecaptchaApiLoaded" async defer></script>
 </head>
 

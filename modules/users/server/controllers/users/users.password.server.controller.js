@@ -30,7 +30,7 @@ exports.forgot = function (req, res, next) {
     function (token, done) {
       if (req.body.username) {
         User.findOne({
-          username: req.body.username.toLowerCase()
+          email: req.body
         }, '-salt -password', function (err, user) {
           if (err || !user) {
             return res.status(400).send({
@@ -51,7 +51,7 @@ exports.forgot = function (req, res, next) {
         });
       } else {
         return res.status(400).send({
-          message: 'Username field must not be blank'
+          message: 'Email field must not be blank'
         });
       }
     },

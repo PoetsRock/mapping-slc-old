@@ -1,0 +1,188 @@
+/*** FEATURED PROJECT IMAGES   ***/
+
+div.featured-projects-row {
+  font-size: 0;
+  display: -ms-flexbox;
+  -ms-flex-wrap: wrap;
+  -ms-flex-direction: column;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  display: -webkit-box;
+  display: flex;
+  div.featured-label {
+    -webkit-box-flex: auto;
+    -ms-flex: auto;
+    flex: auto;
+    width: 200px;
+    overflow: hidden;
+    img.featured-project-img.img-responsive {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      -webkit-transition: all 1s ease;
+      -moz-transition: all 1s ease;
+      -o-transition: all 1s ease;
+      transition: all 1s ease;
+      &:hover {
+        transform: scale(1.55);
+      }
+    }
+  }
+}
+.featured-projects {
+  div {
+    div {
+      div {
+        position: absolute;
+        top: 0;
+        color: #ffffff;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+      }
+    }
+  }
+  img {
+    width: 125%;
+    height: auto;
+    &:hover {
+      background: rgba(0, 0, 0, 0.5);
+      -webkit-transition: all 2.5s ease;
+      -moz-transition: all 2.5s ease;
+      -o-transition: all 2.5s ease;
+      transition: all 2.5s ease;
+    }
+  }
+}
+.featured-projects-title {
+  position: relative;
+  height: 150px;
+  width: 150px;
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  transition: all 0.15s ease;
+  &:hover {
+    background: rgba(0, 0, 0, 0.5);
+    -webkit-transition: all 2.5s ease;
+    -moz-transition: all 2.5s ease;
+    -o-transition: all 2.5s ease;
+    transition: all 2.5s ease;
+    p {
+      display: block;
+    }
+  }
+  >p {
+    position: absolute;
+    bottom: 0;
+    text-align: left;
+    display: none;
+  }
+}
+featured-projects {
+  ul {
+    transform: translate(10%);
+  }
+}
+@media screen and (max-width: 400px) {
+  div.featured-projects-row {
+    div.featured-label {
+      margin: 0;
+    }
+    padding: 0;
+  }
+}
+
+
+/*** FEATURED PROJECT IMAGES   ***/
+
+div.featured-projects-row {
+  font-size: 0;
+  display: -ms-flexbox;
+  -ms-flex-wrap: wrap;
+  -ms-flex-direction: column;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  display: -webkit-box;
+  display: flex;
+  height: 150px;
+
+  ul {
+    transform: translate(10%);
+
+    div.featured-label {
+      -webkit-box-flex: auto;
+      -ms-flex: auto;
+      flex: auto;
+      width: 200px;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      color: #ffffff;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease;
+
+      img.featured-project-img.img-responsive {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+        &:hover {
+          background: rgba(0, 0, 0, 0.5);
+          -webkit-transition: all 2.5s ease;
+          -moz-transition: all 2.5s ease;
+          -o-transition: all 2.5s ease;
+          transition: all 2.5s ease;
+          transform: scale(1.55);
+        }
+        .featured-projects-title {
+          position: relative;
+          height: 150px;
+          width: 150px;
+          -webkit-transition: all 0.15s ease;
+          -moz-transition: all 0.15s ease;
+          -o-transition: all 0.15s ease;
+          transition: all 0.15s ease;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.5);
+            -webkit-transition: all 2.5s ease;
+            -moz-transition: all 2.5s ease;
+            -o-transition: all 2.5s ease;
+            transition: all 2.5s ease;
+            p {
+              display: block;
+            }
+          }
+
+          p {
+            position: absolute;
+            bottom: 0;
+            text-align: left;
+            //display: none;
+          }
+
+        }
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 400px) {
+
+  div.featured-projects-row div.featured-label {
+    margin: 0;
+  }
+
+  div.featured-projects-row {
+    padding: 0;
+  }
+
+}

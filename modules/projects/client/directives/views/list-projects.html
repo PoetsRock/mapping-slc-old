@@ -1,0 +1,90 @@
+<div id="main-menu" class="main-menu">
+  <main-menu></main-menu>
+</div>
+
+<section class="content background" data-ng-controller="RandomMapController"
+         ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
+         data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
+
+  <section class="container">
+    <a ui-sref="home" class="small-main-logo logo-on-page logo-second-page img-responsive"></a>
+
+    <div class="main-content-outer">
+
+      <section data-ng-controller="ProjectsController" class="main-content-inner">
+
+        <div class="list-projects">
+
+          <div class="page-header" class="md-padding" layout-xs="column" layout="row"
+               layout-align="space-around center">
+
+            <div flex="" layout="column">
+              <h1>Projects</h1>
+              <div>
+                <md-button class="" data-ng-click="showMap()">
+                  <ng-md-icon size="48" icon="map"></ng-md-icon>
+                  <md-tooltip md-delay="1000">Show Projects on Map View</md-tooltip>
+                </md-button>
+              </div>
+            </div>
+
+            <form flex="">
+              <md-input-container flex="">
+                <label>Search Projects</label>
+                <input type="text" data-ng-model="searchProjects.$" id="search">
+              </md-input-container>
+            </form>
+
+          </div>
+
+
+            <div class="body md-padding" layout-xs="column" layout="" layout-align="start space-around">
+              <md-card data-ng-repeat="publishedProject in publishedProjects | filter:searchProjects" flex-xs="" flex-gt-xs="45">
+                <md-card-header ui-sref="contributor({ userId: publishedProject.user._id })">
+                  <md-card-avatar>
+                    <img class="md-user-avatar" data-ng-src="{{publishedProject.user.profileImage.thumbImageUrl}}">
+                  </md-card-avatar>
+                  <md-card-header-text>
+                    <span class="md-title">{{publishedProject.user.firstName}} {{publishedProject.user.lastName}}</span>
+                  </md-card-header-text>
+                </md-card-header>
+                <img data-ng-src="{{publishedProject.mainImage.thumbImageUrl}}" class="md-card-image"
+                     alt="Favorite Projects" ui-sref="viewProject({projectId: publishedProject._id})">
+                <md-card-title ui-sref="viewProject({projectId: publishedProject._id})">
+                  <md-card-title-text>
+                    <span class="md-headline">{{publishedProject.title}}</span>
+                  </md-card-title-text>
+                </md-card-title>
+                <md-card-actions layout="row" layout-align="end center">
+
+                  <md-button class="md-icon-button" aria-label="Share" data-ng-click="">
+                    <ng-md-icon icon="share"></ng-md-icon>
+                    <md-tooltip md-delay="1000">Share</md-tooltip>
+                  </md-button>
+
+                  <!--<md-button aria-label="Bookmark" data-ng-click="toggleBookmarkProject(publishedProject._id)">-->
+                    <!--<ng-md-icon icon="{{publishedProject.bookmarkData.btn}}"></ng-md-icon>-->
+                    <!--<md-tooltip md-delay="1000">{{publishedProject.bookmarkData.tooltip}}</md-tooltip>-->
+                  <!--</md-button>-->
+
+                  <md-button aria-label="Remove" data-ng-click="toggleFavProject(publishedProject._id)">
+                    <ng-md-icon icon="{{publishedProject.favoriteData.btn}}"></ng-md-icon>
+                    <md-tooltip md-delay="1000">{{publishedProject.favoriteData.tooltip}}</md-tooltip>
+                  </md-button>
+
+                </md-card-actions>
+              </md-card>
+            </div>
+
+
+
+          <!--see `modules/core/client/services/utils.client.service.js` for pagination script`-->
+          <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength"
+                          ng-model="currentPage" ng-change="pageChanged()">
+          </uib-pagination>
+
+        </div>
+      </section>
+    </div>
+  </section>
+</section>

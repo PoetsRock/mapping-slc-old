@@ -90,7 +90,7 @@ const TempUserSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    //required: 'This email already exists',
+    required: 'This email already exists',
     validate: [validateLocalStrategyEmail, 'Please use a valid email address'],
     trim: true
   },

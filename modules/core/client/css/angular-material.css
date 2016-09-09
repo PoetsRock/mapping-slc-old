@@ -1,0 +1,50 @@
+.md-btn-root, .md-btn, .md-btn-border, .md-btn-warn, .md-btn-warn-border {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.75rem;
+  text-transform: none;
+  padding: 0.25rem 1rem;
+  border: 2px solid transparent; }
+
+.md-btn-border {
+  border: 2px solid #ffffff; }
+
+.md-btn-warn-border {
+  border: 2px solid #de3641; }
+
+md-grid-list md-grid-tile {
+  cursor: pointer; }
+
+.contrib-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start; }
+
+.contrib-tile-image {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -o-object-fit: cover;
+     object-fit: cover; }
+
+.project-tile-image {
+  -o-object-fit: cover;
+     object-fit: cover;
+  width: 100%;
+  height: 100%; }
+
+.contrib md-grid-tile md-grid-tile-footer {
+  padding-left: 5%;
+  color: #000000;
+  font-size: 2.3rem; }
+
+md-content, md-input-container {
+  width: 100%; }
+
+ng-md-icon[size="48"] {
+  height: 50px;
+  width: 50px; }

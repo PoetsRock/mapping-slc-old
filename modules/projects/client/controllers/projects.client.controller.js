@@ -21,9 +21,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.projectFiles = [];
     $scope.uploading = false;
 
-    $scope.init = function () {
-      $scope.publishedProjectsFn();
-    };
 
     $scope.initSubmissionStatus = function () {
       $scope.findOne();
@@ -51,11 +48,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       if ($scope.project.status === 'published') {
         $scope.publishProject();
       } else {
-        $scope.update();
+        $scope.updateProject();
       }
       $scope.toggleEdit = false;
     };
 
+    // todo: refactor to admin panel for projects
     // $scope.confirmPublishModal = function () {
     //   $scope.animationsEnabled = true;
     //   $uibModal.open({
@@ -66,6 +64,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     //   });
     // };
 
+    // todo: refactor to admin panel for users
     var publishUser = function (project) {
       console.log('publishUser ::::  project.user._id:: ', project.user._id);
       AdminUpdateUser.get({ userId: project.user._id },
@@ -79,12 +78,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         });
     };
 
-
+    // todo: refactor to admin panel for projects
     $scope.publishProject = function () {
       //todo need to call on a confirm modal first
       // confirmModalService.showConfirm();
       $scope.project.publishedDate = new Date();
-      $scope.update();
+      $scope.updateProject();
       //publishUser($scope.project); //call method to display contributor bio
     };
 
@@ -116,16 +115,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-    // Find a list of all published projects
-    $scope.publishedProjects = [];
-    $scope.publishedProjectsFn = function () {
-      $http.get('/api/v1/projects/published', { cache: true })
-      .then(function (publishedProjects) {
-        $scope.publishedProjects = publishedProjects.data;
-      });
-    };
-
-
+    // todo: refactor by making create project view a directive and add this function in that directive
     // Create new Project
     $scope.create = function (isValid) {
       $scope.error = null;
@@ -160,6 +150,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           $scope.override = true;
           $location.path('projects/' + response._id + '/status');
 
+          // todo create something like `$scope.project.street`, `$scope.project.city`, etc. simpler to read and easier clean up afterwards
           // Clear form fields
           $scope.street = '';
           $scope.city = '';
@@ -205,21 +196,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      *  Update an existing Project
      *
      */
-    $scope.update = function (isValid, toggleId) {
-
-      // console.log('inside func $scope.update():::: logging var `$scope.project`', $scope.project);
-      //console.log('update :::: isValid', isValid);
-      //console.log('update :::: toggleId', toggleId);
-      //$scope.error = null;
-      //if (!isValid) {
-      //  console.log('update :::: ground control to major tom', isValid);
-      //  $scope.$broadcast('show-errors-check-validity', 'projectForm');
-      //  return false;
-      //}
+    $scope.updateProject = function (isValid, toggleId) {
       var project = $scope.project;
-      //console.log('update 22222:::: project', project);
+      console.log('update 22222:::: project', project);
       project.$update(function (response) {
-        console.log('return from $scope.update() `response`', response);
+        console.log('return from $scope.updateProject() `response`', response);
         if (response.$resolved) {
           if ($location.path() === '/admin/edit-project/' + project._id) {
             $location.path('/admin/edit-project/' + project._id);
@@ -228,6 +209,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
             $location.path('projects/' + project._id);
             $scope.toggleEditFn(0);
           }
+          // todo refactor to use ng-message
           notify({
             message: 'Project updated successfully',
             classes: 'ng-notify-contact-success'
@@ -244,20 +226,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-    /**
-     *
-     *
-     */
-    $scope.updateFeatured = function () {
-      $scope.toggleEditFn(0);
-      console.log('route:\napi/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured);
-      console.log('$scope.project:\n', $scope.project);
-      $http.put('api/v1/projects/' + $scope.project._id + '/featured/' + $scope.project.featured, $scope.project)
-      .then(function (resolved) {
-        console.log('resolved:\n', resolved);
-      });
-    };
-
 
     /**
      * Find a list of Projects
@@ -270,7 +238,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
      * Find existing Project
      */
     $scope.findOne = function () {
-
       Projects.get({ projectId: $stateParams.projectId },
         function (project) {
           $scope.project = project;
@@ -301,7 +268,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
               $scope.files.push(project.fileUrls[i]);
             }
           }
-          getUserFavoriteStoriesFn($scope.user.favorites, $scope.project.id);
+          getUserFavoriteStoriesFn($scope.project.user.favorites, $scope.project.id);
         });
 
     };
@@ -321,6 +288,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       }
     };
+
+    // todo refactor to createProject directive
 
     /**
      * Checks to see if a user is logged in before allowing a user to create a project
@@ -362,41 +331,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
     }();
 
-    /**
-     * Favorite project function
-     */
-
-    // $scope.$watchCollection('user.favorites',
-    //   function (newVal, oldVal) {
-        // console.log('PROJECTS CTRL :::::$scope.user.favorites BEFORE $watch\n', $scope.user.favorites, '\n');
-        // console.log('PROJECTS CTRL watchUpdateFavorites newVal.length::::::\n', newVal.length, '\n\n');
-        // console.log('PROJECTS CTRL watchUpdateFavorites::::::oldVal.length\n', oldVal.length);
-        // if ($scope.user.favorites && newVal.length !== oldVal.length) {
-        //   $scope.user.favorites = newVal;
-          // console.log('PROJECTS CTRL :::::$scope.user.favorites AFTER $watch\n', $scope.user.favorites, '\n');
-        // }
-      // }
-    // );
-
-
-    //var removeItemFromArray = function(item) {
-    //  var updatedFavProjects = $scope.user.favorites.indexOf(item);
-    //  if (updatedFavProjects !== -1) {
-    //    $scope.user.favorites.splice(updatedFavProjects, 1);
-    //  }
-    //};
-    //
-    //var addItemToArray = function(addedItem) {
-    //  $scope.user.favorites.push(addedItem);
-    //};
-
-    //var getUserFavoriteStories = function (userFavoriteProjects, projectId) {
-    //  userFavoriteProjects.forEach(function (userFavoriteProject) {
-    //    if (userFavoriteProject === projectId) {
-    //      $scope.isFavorite = true;
-    //    }
-    //  });
-    //};
 
     var getUserFavoriteStoriesFn = function (userFavoriteProjects, projectId) {
       userFavoritesService.getUserFavoriteStories(userFavoriteProjects, projectId,
@@ -414,32 +348,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
 
 
-    /** modal for leaving projects, will give user warning if leaving form  */
-    // $scope.preventRunning = true;
-    // $scope.$on('$stateChangeStart',
-    //   function (event, toState, toParams, fromState, fromParams) {
-    //     var state = {
-    //       event: event,
-    //       toState: toState,
-    //       toParams: toParams,
-    //       fromState: fromState,
-    //       fromParams: fromParams
-    //     };
-    //     if (!$scope.preventRunning || $scope.override) {
-    //       return
-    //     } else {
-    //       var template = '';
-    //       $scope.items = [];
-    //
-    //       if (fromState.url === '/projects/create' && toState.url !== "/signin?err") {
-    //         event.preventDefault();
-    //         $scope.items.toStateUrl = toState.url;
-    //         confirmModalService.showConfirm(event, state);
-    //       }
-    //     }
-    //   });
-
-
     $scope.toggleEdit = false;
     $scope.toggleId = 0;
 
@@ -455,166 +363,23 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
     $scope.toggleEditFn = function (editNum, isEdit, originalData) {
       if(isEdit === 'edit') {
-        //originalData.value = $scope.project.storySummary;
-        console.log('isEdit: ', isEdit);
-        console.log('originalData: ', originalData);
-        console.log('$scope.project.storySummary: ', $scope.project.storySummary);
       }
       if(isEdit === 'cancel') {
         $scope.project.story = originalData;
-        console.log('isEdit: ', isEdit);
-        console.log('originalData: ', originalData);
-        console.log('$scope.project.storySummary: ', $scope.project.storySummary);
       }
       $scope.toggleEdit = !$scope.toggleEdit;
       $scope.toggleId = editNum;
     };
 
-    /**
-     * nlp
-     **/
-    $scope.nlpData = null;
-
-    $scope.processNlpData = function () {
-      $http.get('api/v1/nlp').success(function (nlpData) {
-        console.log(nlpData);
-        $scope.nlpData = nlpData;
-      }).error(function () {
-      });
-    };
-
-
-    $scope.sorts = [
-      { category: 'sortOrder', name: 'Date Submitted', value: 'createdOn' },
-      { category: 'sortOrder', name: 'Title', value: 'title' },
-      { category: 'sortOrder', name: 'Author Name', value: 'user.lastName' },
-      { category: 'sortOrder', name: 'Submission Status', value: 'status' }
-    ];
-
-    $scope.categorySorts = [
-      { category: 'sortOrder', name: 'Essay', value: 'essay' },
-      { category: 'sortOrder', name: 'Multimedia', value: 'multimedia' },
-      { category: 'sortOrder', name: 'Video', value: 'video' },
-      { category: 'sortOrder', name: 'Audio', value: 'audio' },
-      { category: 'sortOrder', name: 'Photography', value: 'photography' },
-      { category: 'sortOrder', name: 'This Was Here', value: 'this-was-here' }
-    ];
 
     $scope.predicate = 'title';
     $scope.reverse = true;
     $scope.order = function (predicate) {
       $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
       $scope.predicate = predicate;
-      console.log('predicate:\n', predicate);
     };
 
 
-    //todo refactor into service
-    // Project Uploader Service logic
-
-    // var projectUpload = function (project, files) {
-    //   $scope.uploading = true;
-    //
-    //   files.forEach(function (file) {
-    //     console.log('projectUpload func  ::: file type conditional check var ` file.type`:\n', file.type);
-    //     if (file.type === 'image/png' || file.type === 'image/jpeg') {
-    //       imageUploader(project, file);
-    //     }
-    //
-    //     if (file.type === 'text/*' || file.type === 'application/pdf') {
-    //       documentUploader(project, file);
-    //     }
-    //
-    //     if (file.type === '' || file.type === '') {
-    //       multimediaUploader(project, file);
-    //     }
-    //
-    //   });
-    //
-    //   $scope.uploading = false;
-    // };
-
-    /**
-     *
-     * @param fileArray
-     *
-     * `fileArray` is which ever property the files belong to.
-     * for example, if they are document files, then the function would be passed
-     * `$scope.project.fileUrls` as the argument; if images, then `$scope.project.imageGallery`
-     * or `$scope.project.imageGalleryThumbnailUrls`
-     *
-     */
-    // $scope.fileReaderNg = function (fileArray) {
-    //
-    //   var fileReader = new FileReader();
-    //
-    //   var files = fileArray;
-    //   var file = fileArray[0];
-    //   var selectedFile;
-    //   // loop through files
-    //   for (var i = 0; i < files.length; i++) {
-    //     selectedFile = files[i];
-    //   }
-    //
-    //   // A callback, onloadend, is executed when the file has been read into memory, the data is then available via the result field.
-    //   // fileReader.loadend = function (event) {
-    //     // console.log('event.target.result:\n', event.target.result);
-    //   // };
-    //
-    //   // var newFile = fileReader.result;
-    //   // var printEventType = function (event) {
-    //     // console.log('got event: ' + event.type);
-    //   // };
-    //
-    //   // fileReader.onload = function (event) {
-    //   //   var arrayBuffer = fileReader.result;
-    //   // };
-    // };
-
-
-    /**
-     * upload files on create project submission
-     * @param project
-       * @param project._id
-       * @param project.user
-     * @param files {object}
-     */
-    // $scope.uploadProjectFiles = function (project, files) {
-    //   console.log('project\n', project);
-    //   console.log('files\n', files);
-    //   // if (files.length === 1) {
-    //     $scope.uploading = true;
-    //     var query = {
-    //       files: files[0],
-    //       project: project
-    //     };
-    //     console.log('query:::\n', query);
-    //     $http.post('api/v1/projects/' + project._id + '/files', query)
-    //     .then(function(response) {
-    //       console.log('SUCCESS uploading files!: `response`:\n', response);
-    //     })
-    //     .catch(function(err) {
-    //       console.log('ERROR uploading files: `err`:\n', err);
-    //     });
-    //   // }
-    // };
-
-    /**
-     * hits back end route that calls `getS3File()`
-     *
-     **/
-    // $scope.files = [];
-    // $scope.getFiles = function () {
-    //   $http.get('/api/v1/projects/' + $scope.project._id + '/files/' + $scope.project.fileUrls, { cache: true })
-    //   .then(function (err, files) {
-    //     if (err) {
-    //       console.log('ERROR IN PROJECTS CONTROLLER\nerr in getting FILES:\n', err, '\n\n');
-    //       return;
-    //     }
-    //     $scope.files = files;
-    //     console.log('file from `projects.controller.client.controller.js`:\n', image, '\n\n');
-    //   });
-    // };
 
     $scope.showMap = function () {
       UtilsService.showMap();
@@ -623,41 +388,3 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
   }
 ]);
-
-
-
-
-/**
-
-
- .success(function (result) {
-          console.log('result v1\n', result);
-          Upload.upload({
-            url: result.url, //s3Url
-            transformRequest: function (data, headersGetter) {
-              var headers = headersGetter();
-              delete headers.Authorization;
-              console.log('data v1\n', data);
-              return data;
-            },
-            fields: result.fields, //credentials
-            method: 'POST',
-            file: files[0]
-          }).progress(function (evt) {
-            console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
-          }).success(function (data, status, headers, config) {
-            var s3Result = xmlToJSON.parseString(data);   // parse
-            // file is uploaded successfully
-            $scope.uploading = false;
-            console.log('s3Result:::\n', s3Result);
-            console.log('status: ', status);
-            console.log('The file ' + config.file.name + ' is uploaded successfully.\nResponse:\n', s3Result);
-          });
-        })
- .error(function (data, status, headers, config) {
-          // called asynchronously if an error occurs or server returns response with an error status.
-          $scope.uploading = false;
-        });
-
-
- */

@@ -44,15 +44,13 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     $scope.signin = function (isValid) {
       $scope.error = null;
-
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
-
         return false;
       }
 
       $http.post('/api/v1/auth/signin', $scope.credentials).success(function (response) {
-        // If successful we assign the response to the global user model
+        // If successful, assign response to global user model
         $scope.user = $scope.authentication.user = response;
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);

@@ -68,6 +68,13 @@ angular.module('users').config(['$stateProvider',
         url: '/authentication',
         templateUrl: 'modules/users/client/views/authentication/authentication.client.view.html'
       })
+      .state('authentication.signin', {
+        url: '/signin?err',
+        templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
+        data: {
+          pageTitle: 'Signin'
+        }
+      })
       .state('authentication.signup', {
         url: '/signup',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
@@ -75,29 +82,13 @@ angular.module('users').config(['$stateProvider',
           pageTitle: 'Signup'
         }
       })
-    .state('authentication.completeRegister', {
-      url: '/complete-signup',
-      templateUrl : 'modules/users/client/views/authentication/complete-user-register.client.view.html',
-      controller: 'AuthenticationController',
-      controllerAs: 'vm',
-      data: {
-        pageTitle: 'New User Registration'
-      }
-    })
-      .state('authentication.completeSignup', {
-        url: '/complete-signup',
-        templateUrl : 'modules/users/client/directives/views/complete-user-signup.client.view.html',
-        // controller: 'AuthenticationController',
-        // controllerAs: 'vm',
+      .state('signupVerify', {
+        url: '/signup-verify?tempUserId&tempToken',
+        templateUrl : 'modules/users/client/views/authentication/signup-verify.client.view.html',
+        controller: 'AuthenticationController',
+        controllerAs: 'vm',
         data: {
           pageTitle: 'New User Registration'
-        }
-      })
-      .state('authentication.signin', {
-        url: '/signin?err',
-        templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
-        data: {
-          pageTitle: 'Signin'
         }
       })
       .state('password', {
@@ -108,6 +99,9 @@ angular.module('users').config(['$stateProvider',
       .state('password.forgot', {
         url: '/forgot',
         templateUrl: 'modules/users/client/views/password/forgot-password.client.view.html',
+        params: {
+          tempUserCheck: false
+        },
         data: {
           pageTitle: 'Password forgot'
         }

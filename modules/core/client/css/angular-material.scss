@@ -1,0 +1,67 @@
+.md-btn-root {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.75rem;
+  text-transform: none;
+  padding: 0.25rem 1rem;
+  border: 2px solid transparent;
+}
+
+.md-btn {
+  @extend .md-btn-root;
+  &:hover {
+    //border: 2px solid #ffffff;
+  }
+}
+
+.md-btn-border {
+  @extend .md-btn;
+  border: 2px solid #ffffff;
+}
+
+.md-btn-warn {
+  @extend .md-btn-root;
+  &:hover {
+    //border: 2px solid rgb(222,54,65);
+  }
+}
+
+.md-btn-warn-border {
+  @extend .md-btn-warn;
+  border: 2px solid rgb(222,54,65);
+}
+
+md-grid-list md-grid-tile {
+  cursor: pointer;
+}
+
+.contrib-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.contrib-tile-image {
+  display: flex;
+  object-fit: cover;
+}
+
+.project-tile-image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.contrib md-grid-tile md-grid-tile-footer {
+  padding-left: 5%;
+  color: #000000;
+  font-size: 2.3rem;
+}
+
+md-content, md-input-container {
+  width: 100%;
+}
+
+ng-md-icon[size="48"] {
+  height: 50px;
+  width: 50px;
+}

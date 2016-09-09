@@ -33,6 +33,7 @@ module.exports = function (app) {
   app.route('/api/v1/projects/:projectId')
     .get(projects.read)
     .put(projects.update)
+    .patch(projects.patchProject)
     .delete(projects.delete);
 
 // Project Markers Routes

@@ -1,0 +1,54 @@
+<section data-ng-controller="UserController" class="row" style="height: 600px;" data-ng-init="getFavorites()">
+
+  <div class="user-favorites">
+
+    <div class="list-group">
+
+      <md-content class="md-padding" layout-xs="column" layout="row">
+        <div flex-xs="" flex-gt-xs="50" layout="column">
+          <md-card data-ng-repeat="userFavorite in userFavorites">
+            <md-card-header ui-sref="contributor({ userId: publishedProject.user._id })">
+              <md-card-avatar>
+                <img class="md-user-avatar" data-ng-src="{{userFavorite.user.profileImage.thumbImageUrl}}">
+              </md-card-avatar>
+              <md-card-header-text>
+                <span class="md-title">{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</span>
+              </md-card-header-text>
+            </md-card-header>
+            <div ui-sref="viewProject({projectId: userFavorite.id})">
+            <img data-ng-src="{{userFavorite.mainImage.thumbImageUrl}}" class="md-card-image" alt="Favorite Projects">
+            <md-card-title>
+              <md-card-title-text>
+                <span class="md-headline">{{userFavorite.title}}</span>
+              </md-card-title-text>
+            </md-card-title>
+            </div>
+            <!--<md-card-content>-->
+              <!--<p>{{userFavorite.user.firstName}} {{userFavorite.user.lastName}}</p>-->
+            <!--</md-card-content>-->
+            <md-card-actions layout="row" layout-align="end center">
+              <md-button class="md-icon-button" aria-label="Share" data-ng-click="">
+                <ng-md-icon icon="share"></ng-md-icon>
+                <md-tooltip md-delay="1000">Share</md-tooltip>
+              </md-button>
+
+              <!--<md-button aria-label="Bookmark" data-ng-click="toggleBookmarkProject(publishedProject._id)">-->
+              <!--<ng-md-icon icon="{{userFavorite.bookmarkData.btn}}"></ng-md-icon>-->
+              <!--<md-tooltip md-delay="1000">{{userFavorite.bookmarkData.tooltip}}</md-tooltip>-->
+              <!--</md-button>-->
+
+              <md-button aria-label="Remove" data-ng-click="toggleFavProject(userFavorite._id)">
+                <ng-md-icon icon="{{userFavorite.favoriteData.btn}}"></ng-md-icon>
+                <md-tooltip md-delay="1000">{{userFavorite.favoriteData.tooltip}}</md-tooltip>
+              </md-button>
+            </md-card-actions>
+
+          </md-card>
+        </div>
+      </md-content>
+
+    </div>`
+  </div>
+
+</section>
+

@@ -1,0 +1,29 @@
+<section layout="">
+  <div
+    class="modal-body"
+    id="lightbox-modal"
+    ng-swipe-left="Lightbox.nextImage()"
+    ng-swipe-right="Lightbox.prevImage()"
+  >
+
+
+    <div class="lightbox-image-container" layout="row">
+      <md-button data-ng-click=Lightbox.prevImage()>
+        <ng-md-icon icon="chevron_left"></ng-md-icon>
+      </md-button>
+
+
+      <img lightbox-src="{{Lightbox.imageUrl}}">
+      <div>{{Lightbox.imageCaption}}</div>
+
+      <md-button data-ng-click=Lightbox.nextImage()>
+        <ng-md-icon icon="chevron_right"></ng-md-icon>
+      </md-button>
+      <md-button class=close aria-hidden=true ng-click=$dismiss()>
+        <ng-md-icon icon="close"></ng-md-icon>
+      </md-button>
+
+    </div>
+
+  </div>
+</section>

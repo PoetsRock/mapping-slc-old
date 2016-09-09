@@ -5,7 +5,7 @@
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}" onerror="myFunction()">
 
   <section class="container">
-    <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
+    <div class="main-logo" ui-sref="home"></div>
 
     <div class="main-content-outer">
 
@@ -13,30 +13,37 @@
       <section data-ng-controller="ProjectsController" data-ng-init="findOne()" class="main-content-inner">
 
         <div class="admin">
-          <div class="admin-projects">
+          <div class="admin-projects" layout="column">
 
-            <div class="admin-nav">
-              <a class="btn btn-main grow" ui-sref="admin.dashboard">
+            <div layout="">
+              <md-button class="md-raised" ui-sref="admin.dashboard">
                 Admin Home Page
-              </a>
-              <a class="btn btn-main grow" ui-sref="admin.adminProjectsQueue">
+              </md-button>
+                <md-button class="md-raised" ui-sref="admin.adminProjectsQueue">
                 Admin Project Page
-              </a>
-              <a class="btn btn-main grow" ui-sref="viewProjectPreview({projectId: project.id})">
+                </md-button>
+                  <md-button class="md-raised" ui-sref="viewProjectPreview({projectId: project.id})">
                 Go to Preview
-              </a>
-              <a class="btn btn-main grow" ui-sref="viewProject({projectId: project.id})">
+                  </md-button>
+              <md-button class="md-raised" ui-sref="viewProject({projectId: project.id})">
                 Go to Project
-              </a>
+              </md-button>
             </div>
+
+            <md-content  layout="">
+              <md-button class="md-raised" data-ng-show="!toggleEdit" data-ng-click="toggleEdit = !toggleEdit"><ng-md-icon icon="create"></ng-md-icon></md-button>
+              <md-button data-ng-show="toggleEdit" data-ng-click="toggleEditFn(0)" class="md-raised btn-warning">Cancel</md-button>
+              <md-button data-ng-show="toggleEdit" type="submit" data-ng-click="toggleEditFn(0)" class="md-raised">Save</md-button>
+            </md-content>
 
           <div>
             <h1>{{project.title}}</h1>
           </div>
 
+
             <div class="row projects-profile">
               <div class="col-xs-12">
-                <form class="form-horizontal" data-ng-submit="update(project.$valid, toggleId)" novalidate>
+                <form class="form-horizontal" data-ng-submit="updateProject(project.$valid, toggleId)" novalidate>
                   <fieldset>
                     <project-tabs></project-tabs>
                   </fieldset>

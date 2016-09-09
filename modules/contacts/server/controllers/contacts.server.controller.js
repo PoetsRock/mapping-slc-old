@@ -16,18 +16,6 @@ let User = mongoose.model('User');
 
 
 
-/**
- * Serve static files
- *
- * @param req
- * @param res
- */
-exports.getSignupEmail = (req, res) => {
-  const fileName = req.params.fileName;
-  // res.sendFile(path.join(__dirname + '/../static/' + fileName));
-  res.sendFile(path.join(__dirname + '/../static/verify-new-user/html.ejs'));
-};
-
 const _checkForExistingUser = function (currentUniqueId) {
   User.find({
     'users._id': req.query
@@ -139,24 +127,6 @@ exports.list = function (req, res) {
   });
 };
 
-/**
- * Contact middleware
- */
-exports.contactByID = function (req, res, next, id) {
-  Contact.findById(id).populate('user', 'displayName').exec(function (err, contact) {
-    if (err) return next(err);
-    if (!contact) return next(new Error('Failed to load Contact ' + id));
-    req.contact = contact;
-    next();
-  });
-};
-
-exports.fileName = (req, res, next, id) => {
-  req.params[id] = id;
-  console.log('id: ', id);
-  console.log('req.params[id]: ', req.params[id]);
-  next();
-};
 
 /**
  * Contact authorization middleware

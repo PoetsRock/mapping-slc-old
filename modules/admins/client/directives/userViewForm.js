@@ -4,19 +4,30 @@ angular.module('admins').directive('userViewForm', function () {
   return {
     restrict: 'E',
     templateUrl: '/modules/admins/client/directives/views/user-view-form.html',
-    controller: function($scope, $state) {
-      
+    controller: function($scope, $http, $state, getLists, Authentication) {
+      if(!$scope.userToEdit && $scope.user) {
+        $scope.userToEdit = $scope.user;
+      }
+
+      // user fn to update a user profile
+      $scope.updateUserProfile = function () {
+        console.log('here!!');
+        console.log('$state:\n', $state);
+        console.log('$state.params:\n', $state.params);
+
+        $http.put('/api/v1/users/' + $scope.userToEdit._id, $scope.userToEdit)
+        .then(function (response) {
+          console.log('user update success `response`:\n', response);
+          Authentication.user = response;
+        }, function errorCb(err) {
+          console.error('user update error `err`:\n', err);
+          $scope.error = err.data.message;
+        });
+      };
+
       $scope.isAdminPanel = $state.current.name.startsWith('admin');
-
-      $scope.states = ('UT AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS ' +
-      'MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX VT VA WA WV WI WY').split(' ').map(function(state) {
-        return { abbrev: state };
-      });
-
-      $scope.roles = ['user', 'blocked', 'unregistered', 'registered', 'contributor', 'admin', 'superUser'].map(function(role) {
-        return { userRole: role };
-      });
-
+      $scope.states = getLists.listStates();
+      $scope.roles = getLists.listRoles();
 
     }
   };

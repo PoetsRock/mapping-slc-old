@@ -1,8 +1,8 @@
-<div flex layout="row">
+<div flex layout="row" class="temp-user-signup">
   <div flex-sm="100" flex-gt-sm="100" flex-gt-md="100" flex-gt-lg="100">
     <md-content class="layout-padding">
 
-      <form name="tempUserSignup" data-ng-submit="createTempUser(tempUser.$valid)">
+      <form name="tempUserSignup" data-ng-submit="createTempUser(tempUserSignup.$valid)">
 
         <!--Row #1-->
         <div layout-gt-xs="row">
@@ -23,6 +23,17 @@
             <label>Email</label>
             <input type="email" data-ng-model="tempUser.email" name="email" ng-pattern="/^.+@.+\..+$/" required="">
           </md-input-container>
+
+          <md-input-container flex="20">
+
+            <div ng-messages="tempUserSignup.email.$error" multiple="" md-auto-hide="false">
+              <span ng-message="pattern">
+                Make sure you're entering a valid email
+              </span>
+              <div data-ng-show="serverError">{{serverError}}</div>
+
+            </div>
+
         </div>
 
 
@@ -31,7 +42,8 @@
           <md-input-container flex="35">
             <label>Password</label>
             <!--<md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>-->
-            <input type="{{inputType}}" data-ng-model="tempUser.password" name="password" minlength="10" required="" autocomplete="off">
+            <input type="{{inputType}}" data-ng-model="tempUser.password" name="password" minlength="10" required=""
+                   autocomplete="off">
           </md-input-container>
 
           <md-input-container flex="5">
@@ -46,48 +58,80 @@
             <input type="{{inputType}}" data-ng-model="tempUser.confirmPassword" name="confirm" minlength="10" autocomplete="off" required="" ng-pattern="tempUser.password">
           </md-input-container>
 
-        </div>
-
-
-        <div layout-gt-xs="row">
-          <md-input-container flex="80">
-
-            <span ng-messages="tempUserSignup.email.$error" multiple="" md-auto-hide="false">
-              <span ng-message="pattern">
-                Make sure you're entering a valid email
-              </span>
-            </span>
-
-            <span ng-messages="tempUserSignup.password.$error" multiple="" md-auto-hide="false">
+          <md-input-container flex="20">
+            <div ng-messages="tempUserSignup.password.$error" multiple="" md-auto-hide="false">
               <span ng-message="pattern">
                 Make sure your password has as at least ten characters, and includes at least one lowercase, uppercase & special character, and at least one number
               </span>
-            </span>
-
-            <span ng-messages="tempUserSignup.confirm.$error" role="alert" multiple="" md-auto-hide="false">
+            </div>
+            <div ng-messages="tempUserSignup.confirm.$error" role="alert" multiple="" md-auto-hide="false">
               <span ng-message="pattern">
                 Make sure the passwords match
               </span>
-            </span>
+            </div>
+          </md-input-container>
 
+        </div>
+
+        <div layout-gt-xs="row">
+
+          <md-input-container flex="40">
+            <div
+              vc-recaptcha
+              theme="'light'"
+              key="model.key"
+              on-create="setWidgetId(widgetId)"
+              on-success="setResponse(response)"
+              on-expire="cbExpiration()"
+            ></div>
+          </md-input-container>
+
+
+          <md-input-container flex="40">
+            <div data-ng-show="reCaptchaError" class="text-center text-danger">
+              <strong ng-bind="reCaptchaError"></strong>
+            </div>
+          </md-input-container>
+
+
+          <md-input-container flex="10">
+            <md-button type="submit" class="md-primary pull-right" data-ng-class="{'md-raised md-hue-1': (tempUser.$dirty && tempUser.$valid)}">Submit</md-button>
+          </md-input-container>
+
+        </div>
+
+        <div layout-gt-xs="row" data-ng-show="!tempUserExists">
+          <md-input-container flex="30" flex-offset="60">
+              <div class="forgot-password" layout="column" layout-align="start end">
+                <div layout="row" >
+                  <div flex="30">Resend Email To</div>
+                  <input flex="70" type="email" data-ng-model="tempUser.email" name="email" ng-pattern="/^.+@.+\..+$/">
+                </div>
+                <md-button data-ng-click="resendVerificationEmail(tempUser.email)">Resend Verification Email</md-button>
+              </div>
+              <div ng-messages="tempUserSignup.email.$error" multiple="" md-auto-hide="false">
+              <span ng-message="pattern">
+                Make sure you enter a valid email
+              </span>
+              </div>
+          </md-input-container>
+      </div>
+
+        <div layout-gt-xs="row">
+          <md-input-container flex="30" flex-offset="60">
+            <div data-ng-show="passwordReminder">
+              <div class="forgot-password" layout="row" layout-align="end center">
+                <md-button ui-sref="password.forgot">Forgot your password?</md-button>
+              </div>
+            </div>
           </md-input-container>
         </div>
 
 
-        <div
-          vc-recaptcha
-          theme="'light'"
-          key="model.key"
-          on-create="setWidgetId(widgetId)"
-          on-success="setResponse(response)"
-          on-expire="cbExpiration()"
-        ></div>
-
-        <md-button type="submit" class="md-primary pull-right" data-ng-class="{'md-raised md-hue-1': (tempUser.$dirty && tempUser.$valid)}">Submit
-        </md-button>
-
       </form>
 
-    </md-content>
+
+      </md-content>
+
   </div>
 </div>

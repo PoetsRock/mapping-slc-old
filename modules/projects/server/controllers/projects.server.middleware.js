@@ -132,7 +132,7 @@ exports.configImageStream = (req, res) => {
   if (/\s/g.test(req.headers['file-name'])) {
     fileName = req.headers['file-name'].replace(/\s/g, '_');
   }
-  
+
   let fileData = {
     name: fileName || req.headers['file-name'],
     type: req.headers['content-type'],

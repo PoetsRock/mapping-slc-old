@@ -1,0 +1,9 @@
+.lightbox-image-container {
+  display: flex;
+  height: auto;
+  img {
+    width: 100%;
+    object-fit: contain;
+  }
+
+}

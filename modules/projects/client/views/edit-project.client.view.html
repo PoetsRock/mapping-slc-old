@@ -5,10 +5,12 @@
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
 
   <section class="container">
-    <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
+    <div class="main-logo" ui-sref="home"></div>
 
     <div class="main-content-outer">
       <section data-ng-controller="ProjectsController" class="main-content-inner">
+
+        <div class="project-edit">
 
         <div class="page-header">
           <h1>Edit</h1>
@@ -143,6 +145,7 @@
               </fieldset>
             </form>
           </div>
+        </div>
         </div>
       </section>
     </div>

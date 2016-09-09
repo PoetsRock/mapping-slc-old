@@ -319,9 +319,6 @@ td i .selected {
     top: 0;
 }
 
-.admin-list:hover {
-}
-
 .admin .admin-projects a.admin-list .md-headline {
     font-size: 2.1rem;
     line-height: 135%;
@@ -389,4 +386,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 project-tabs md-tab-content {
     font-size: 1.5em;
 }
+
+
 

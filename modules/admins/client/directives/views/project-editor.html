@@ -9,9 +9,9 @@
         <div class="row">
           <div class="col-xs-12">
             <!--todo add popup to confirm exit if project.story has been edited-->
-            <md-button data-ng-click="toggleEditFn(0)" class="md-raised">Cancel</md-button>
-            <md-button class="md-raised" data-ng-click="toggleEdit=false">Preview</md-button>
-            <md-button class="md-raised" type="submit" data-ng-click="submit(14)">Save</md-button>
+            <md-button data-ng-click="toggleEditFn(0)" class="md-raised md-warn md-btn" >Cancel</md-button>
+            <md-button class="md-raised md-primary md-btn" data-ng-click="toggleEdit = false">Preview</md-button>
+            <md-button class="md-raised md-primary md-btn" type="submit" data-ng-click="updateProjStory(14)">Save</md-button>
             <!--<md-button class="md-fab" ng-disabled="false" aria-label="Comment">-->
               <!--<md-icon md-svg-src="img/icons/ic_comment_24px.svg"></md-icon>-->
             <!--</md-button>-->
@@ -24,8 +24,7 @@
 
       <div class="row" data-ng-show="!toggleEdit">
         <div class="col-xs-12">
-          <md-button data-ng-click="toggleEditFn(14, 'edit')" class="md-raised">Edit</md-button>
-        </div>
+          <md-button data-ng-click="toggleEditFn(14, 'edit')" class="md-raised md-primary md-btn">Edit</md-button>
       </div>
 
       <hr/>

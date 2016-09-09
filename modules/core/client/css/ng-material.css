@@ -1,62 +1,14 @@
-/*.tabsDynamicHeight md-content {*/
-    /*background-color: transparent !important;*/
-/*}*/
-
-/*.tabsDynamicHeight md-content md-tabs {*/
-    /*background: #F9F2E2;*/
-    /*border: 1px solid #e1e1e1;*/
-/*}*/
-
-/*.tabsDynamicHeight md-content md-tabs md-tabs-wrapper {*/
-    /*background: transparent;*/
-/*}*/
-
-/*.tabsDynamicHeight md-content h1:first-child {*/
-    /*margin-top: 0;*/
-/*}*/
-
-/*md-tabs.md-default-theme .md-tab, md-tabs .md-tab {*/
-    /*color: #000;*/
-    /*text-transform: capitalize;*/
-/*}*/
-
-/*md-tabs.md-default-theme .md-tab.md-active, md-tabs .md-tab.md-active, md-tabs.md-default-theme .md-tab.md-active md-icon, md-tabs .md-tab.md-active md-icon, md-tabs.md-default-theme .md-tab.md-focused, md-tabs .md-tab.md-focused, md-tabs.md-default-theme .md-tab.md-focused md-icon, md-tabs .md-tab.md-focused md-icon {*/
-    /*color: #023A31;*/
-    /*font-size: 115%;*/
-/*}*/
-
-/*md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {*/
-    /*color: #023A31;*/
-    /*background: #023A31;*/
-/*}*/
-
-/*md-tabs.md-default-theme .md-tab, md-tabs .md-tab:hover{*/
-    /*background-color: rgba(0,0,0,0.1);*/
-/*}*/
-
-
-
-/*!* buttons *!*/
-
-/*a.md-button.md-default-theme.md-raised:not([disabled]):hover, a.md-button.md-raised:not([disabled]):hover, .md-button.md-default-theme.md-raised:not([disabled]):hover, .md-button.md-raised:not([disabled]):hover {*/
-    /*!*color: #023A31;*!*/
-    /*background-color: rgba(0, 45, 0, 1.0);*/
-    /*border: solid 3px #04321a;*/
-    /*!*border-color: #000000;*!*/
-/*}*/
-
-/*a.md-button.md-default-theme.md-raised:not([disabled]), a.md-button.md-raised:not([disabled]), .md-button.md-default-theme.md-raised:not([disabled]), .md-button.md-raised:not([disabled]) {*/
-    /*color: #ffffff;*/
-    /*background-color: #023A31;*/
-    /*border: solid 3px #0b8043;*/
-    /*text-transform: capitalize;*/
-/*}*/
-
+.md-btn1 {
+  border: 2px solid #ffffff;
+  font-size: 1.5rem;
+  text-transform: none;
+  font-weight: 500;
+  padding: 0.25rem 1rem;
+}
 
 md-grid-list md-grid-tile {
     cursor: pointer;
 }
-
 
 .contrib-list {
     display: flex;
@@ -70,13 +22,22 @@ md-grid-list md-grid-tile {
 }
 
 .project-tile-image {
-    object-fit: fill;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
-
 
 .contrib md-grid-tile md-grid-tile-footer {
     padding-left: 5%;
     color: #000000;
     font-size: 2.3rem;
+}
 
+md-content, md-input-container {
+    width: 100%;
+}
+
+ng-md-icon[size="48"] {
+  height: 50px;
+  width: 50px;
 }

@@ -113,11 +113,14 @@ module.exports = {
   MEMCACHIER_SERVERS: process.env.MEMCACHIER_SERVERS,
   MEMCACHIER_USERNAME: process.env.MEMCACHIER_USERNAME,
 
+  PRERENDER_TOKEN: process.env.PRERENDER_TOKEN,
 
   NEW_RELIC_KEY: process.env.NEW_RELIC_KEY,
 
   ALCHEMY_KEY: process.env.ALCHEMY_KEY,
   ALCHEMY_CALLBACK_URL: '/api/v1/auth/alchemy/callback',
+
+
 
   TINY_PNG_KEY: process.env.TINY_PNG_KEY,
   KRAKEN_KEY: process.env.KRAKEN_KEY,

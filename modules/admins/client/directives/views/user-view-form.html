@@ -1,10 +1,9 @@
 <div flex layout="row">
   <div flex-sm="100" flex-gt-sm="100" flex-gt-md="100" flex-gt-lg="100">
     <md-content class="layout-padding">
-      <!--<div>-->
 
       <!--<form name="userAdminForm" data-ng-submit="update(userToEdit.$valid)">-->
-      <form name="editUser" data-ng-submit="updateUserAdmin(userToEdit.$valid)">
+      <form name="editUser" data-ng-submit="updateUserProfile()">
 
         <!--Row #1-->
         <div layout-gt-xs="row">
@@ -43,13 +42,13 @@
         <!-- Row #3 -->
         <div layout-gt-xs="row">
           <md-input-container flex="60">
-            <label>Street</label>
-            <input type="text" data-ng-model="userToEdit.userStreet">
+            <label>Address</label>
+            <input type="text" data-ng-model="userToEdit.userAddress1">
           </md-input-container>
 
           <md-input-container flex="20">
-            <label>Apt/Ste</label>
-            <input type="text" data-ng-model="userToEdit.userStreet2">
+            <label>Address2/Apt/Ste</label>
+            <input type="text" data-ng-model="userToEdit.userAddress2">
           </md-input-container>
 
         </div>
@@ -94,13 +93,12 @@
 
 
         <!-- Row #6 -->
-        <div layout-gt-xs="row">
+        <div layout-gt-xs="row" ng-if="userToEdit.roles[0] === 'admin' || user.associatedProjects">
           <md-input-container flex="90">
             <label>Bio</label>
             <textarea data-ng-model="userToEdit.bio" md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
           </md-input-container>
         </div>
-
 
         <!-- Row #7 -->
         <div layout-gt-xs="row" ng-if="userToEdit.roles[0] !== 'userToEdit' && isAdminPanel">

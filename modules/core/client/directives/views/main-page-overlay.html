@@ -1,52 +1,22 @@
-<section class="content">
-  <section class="container">
-    <section class="home-view" ng-class="{'toggle-sidebar': toggleSidebar}">
-      
-      <div class="container">
+<section class="container home-view" ng-class="{'toggle-sidebar': toggleSidebar}" data-ng-show="overlayActive" ng-class="{'main-overlay-hidden': !overlayActive}">
+  <div class="main-overlay core" layout="column">
+    <div layout="">
+      <div flex="60" class="main-logo logo-overlay"></div>
+      <div flex="30" layout-align="end center"><sign-in-directive></sign-in-directive></div>
+      <div flex="10" layout-align="start center" class="close-overlay" data-ng-click="toggleOverlayFunction('overlay')" ng-class="{'main-overlay-hidden': !overlayActive}"><i class="fa fa-times"></i></div>
+    </div>
 
-      <span data-ng-show="overlayActive">
+    <p><span>Mapping Salt Lake City</span> is a community-created archive of Salt Lake City’s neighborhoods and people that documents the city’s changes through art, critical and creative literature, personal maps and multi-media projects.</p>
+    <p>We invite people to engage with and evolve this site by submitting their own contributions.</p>
 
-          <div class="group-overlays">
-            <div class="main-overlay core" ng-class="{'main-overlay-hidden': !overlayActive}">
-              <span class="animate-small-logo pull-right" data-ng-click="toggleOverlayFunction('overlay')"
-                    ng-class="{'main-overlay-hidden': !overlayActive}"><i class="fa fa-times"></i>
-              </span>
+    <!-- two column div begin here -->
+    <div layout="row two-columns">
+      <featured-projects flex="66"></featured-projects>
+      <submit-project-directive flex="33"></submit-project-directive>
+    </div>
 
-              <div>
-                <div class="row">
-                  <div class="col-md-6 logo">
-                    <img src="modules/core/client/img/brand/logo-75.png" class="medium-main-logo img-responsive"/>
-                  </div>
-                  <div class="col-md-5">
-                    <sign-in-directive></sign-in-directive>
-                  </div>
-                </div>
-                
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="main-text">
-                      <p><span style="font-size: 2.5rem;">Mapping Salt Lake City</span> is a community-created archive of Salt Lake City’s neighborhoods and people that documents the city’s changes through art, critical and creative literature, personal maps and multi-media projects.
-                      </p>
-                      <p>We invite people to engage with and evolve this site by submitting their own contributions.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-  
-              <!-- two column div begin here -->
-              <div class="row two-columns">
-                <featured-projects class="col-md-8"></featured-projects>
-                <submit-project-directive class="col-md-4 hidden-sm"></submit-project-directive>
-              </div>
-            </div>
+  </div>
 
-            <footer-directive class="hidden-sm"></footer-directive>
+  <footer-directive></footer-directive>
 
-          </div>
-      </span>
-      </div>
-    
-    </section>
-  </section>
 </section>

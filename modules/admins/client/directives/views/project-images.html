@@ -1,44 +1,65 @@
 <section class="project-images">
   <!--todo -- find better way to display main/default image and to remove one or more images-->
 
-  <div class="row">
+  <md-content layout="column" layout-padding>
 
-    <div data-ng-if="project.imageGallery.length > 0">
+    <div layout="row" layout-align="start start">
+      <h3>Image Gallery</h3>
+      <md-button aria-label="edit images" data-ng-click="editImages = !editImages">
+        <ng-md-icon icon="settings"></ng-md-icon>
+      </md-button>
+    </div>
 
-      <div class="row">
-      <div class="col-md-4">
-        <h3>Image Gallery</h3>
-      </div>
+    <div data-ng-show="project.imageGallery.length > 0">
 
-        <div class="col-offset-md-5 col-md-3">
-          <md-button aria-label="edit images" data-ng-click="editImages = !editImages">
-            <i class="fa fa-cog"></i>
+      <div class="project-image-gallery" data-ng-repeat="image in project.imageGallery track by $index">
+        <a data-ng-href="{{image.imageUrl}}" target="_blank"><img data-ng-src="{{image.thumbImageUrl}}"
+                                                                  class="img-responsive"></a>
+
+        <div data-ng-show="editImages">
+          <md-button class="md-raised" data-ng-click="deleteImageById(image, $index)">Remove</md-button>
+          <md-button class="md-raised" data-ng-hide="image.isDefaultImage"
+                     data-ng-click="setDefaultImage(null, $index)">Default
           </md-button>
         </div>
-      </div>
 
-
-      <div class="row">
-        <div class="col-md-3 project-image-gallery" data-ng-repeat="image in project.imageGallery track by $index">
-          <a data-ng-href="{{image.imageUrl}}" target="_blank">
-            <img data-ng-src="{{image.thumbImageUrl}}" class="img-responsive">
-          </a>
-
-          <div data-ng-show="editImages">
-            <md-button class="md-raised" data-ng-click="deleteImageById(image, $index)">Remove</md-button>
-            <md-button class="md-raised" data-ng-hide="image.isDefaultImage" data-ng-click="setDefaultImage(null, $index)">Default</md-button>
-          </div>
-
-        </div>
       </div>
     </div>
 
-    <div data-ng-if="project.imageGallery.length === 0">
+    <div data-ng-show="project.imageGallery.length === 0">
       <h4>No images found for this project.</h4>
     </div>
 
-    <project-images-admin-upload></project-images-admin-upload>
+
+    <md-content layout="column" class="file-upload">
+
+      <div layout="">
+        <h4>Upload Images</h4>
+        <md-button class="md-raised" data-ng-model="files" ngf-select
+             ngf-multiple="true" ngf-fix-orientation="true"
+             accept=".jpeg,.jpg,.png,image/*" ngf-max-size="3MB"
+             ngf-keep="'distinct'"
+             ngf-model-invalid="errorFile"
+             data-ng-change="filesChanged(files)"
+             data-ng-show="!uploading">
+          {{uploadBtnText}}
+        </md-button>
+
+        <md-button class="md-raised" data-ng-click="imageUpload('projects', project._id, files)"
+                   data-ng-show="files.length > 0 && !uploading">Upload
+        </md-button>
+      </div>
+
+      <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate" data-ng-show="uploading"></md-progress-circular>
+      </div>
+
+      <div layout="" class="thumbnail-list" data-ng-repeat="file in files" data-ng-show="files && !uploading">
+        <img ngf-src="file" ngf-resize="{width: 150, height: 150, quality: 0.8}">
+      </div>
+
+    </md-content>
 
 
-  </div>
+  </md-content>
 </section>

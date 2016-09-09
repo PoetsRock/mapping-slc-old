@@ -11,7 +11,6 @@ var _ = require('lodash'),
   gulp = require('gulp'),
   sourcemaps = require('gulp-sourcemaps'),
   concat = require('gulp-concat'),
-  eslint = require('gulp-eslint'),
   babel = require('gulp-babel'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
@@ -30,10 +29,10 @@ var _ = require('lodash'),
   webdriver_standalone = require('gulp-protractor').webdriver_standalone,
   KarmaServer = require('karma').Server;
 
-function isFixed(file) {
-  // Has ESLint fixed the file contents?
-  return file.eslint != null && file.eslint.fixed;
-}
+// import { stream } from 'wiredep';
+// import lcovMerger from 'lcov-result-merger';
+// import webpack from 'webpack-stream';
+
 
 //serve local production files
 gulp.task('serve-local-prod', function() {
@@ -65,6 +64,34 @@ gulp.task('nodemon', function () {
     watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
   });
 });
+
+gulp.task('node-inspector', function() {
+  gulp.src([])
+  .pipe(plugins.nodeInspector({
+    debugPort: 5858,
+    webHost: '0.0.0.0',
+    webPort: 1337,
+    saveLiveEdit: false,
+    preload: true,
+    inject: true,
+    hidden: [],
+    stackTraceLimit: 50,
+    sslKey: '',
+    sslCert: ''
+  }));
+});
+
+// Nodemon debug task
+gulp.task('nodemon-debug', function () {
+  return plugins.nodemon({
+    script: 'server.js',
+    nodeArgs: ['--debug'],
+    ext: 'js,html',
+    verbose: true,
+    watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+  });
+});
+
 
 // Watch Files For Changes
 gulp.task('watch', function () {
@@ -116,21 +143,6 @@ gulp.task('watch', function () {
     });
   }
 });
-
-// JS `prod-no-mini` task
-gulp.task('uglify-no-mini', function () {
-  var assets = _.union(
-    defaultAssets.client.js,
-    defaultAssets.client.templates
-  );
-
-  return gulp.src(assets)
-    .pipe(plugins.ngAnnotate())
-    .pipe(plugins.concat('application.js'))
-    .pipe(gulp.dest('public/dist'))
-    .pipe(gulp.dest('build'));
-});
-
 
 // CSS linting task
 gulp.task('csslint', function (done) {
@@ -250,18 +262,6 @@ gulp.task('babel-sourcemaps', function () {
   .pipe(gulp.dest('build'));
 });
 
-// Nodemon debug task
-gulp.task('nodemon-debug', function () {
-  return plugins.nodemon({
-    exec: 'node_modules/node-inspector/bin/inspector.js --save-live-edit --preload=false --web-port 1337 & node --debug',
-    script: 'server.js',
-    nodeArgs: ['--debug'],
-    ext: 'js,html',
-    verbose: true,
-    watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
-  });
-});
-
 // wiredep task to default
 gulp.task('wiredep', function () {
   return gulp.src('config/assets/default.js')
@@ -319,14 +319,6 @@ gulp.task('copyLocalEnvConfig', function () {
     .pipe(gulp.dest('config/env'));
 });
 
-// Make sure upload directory exists
-gulp.task('makeUploadsDir', function () {
-  return fs.mkdir('modules/users/client/img/profile/uploads', function (err) {
-    if (err && err.code !== 'EEXIST') {
-      console.log(err);
-    }
-  });
-});
 
 // Angular template cache task
 gulp.task('templatecache', function () {
@@ -344,6 +336,12 @@ gulp.task('templatecache', function () {
       }
     }))
     .pipe(gulp.dest('build'));
+});
+
+gulp.task('webpack', () => {
+  return gulp.src(build)
+    .pipe(webpack(require('./webpack.config')))
+    .pipe(gulp.dest(output));
 });
 
 // Mocha tests task
@@ -429,7 +427,7 @@ gulp.task('protractor', ['webdriver_update'], function () {
 
 // Run the project in development mode
 gulp.task('default', function (done) {
-  runSequence('env:dev', ['copyLocalEnvConfig', 'makeUploadsDir'], 'babel', 'babel-sourcemaps', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['copyLocalEnvConfig'], 'babel', 'babel-sourcemaps', ['nodemon', 'watch'], done);
 });
 
 // Lint CSS and JavaScript files.
@@ -448,7 +446,7 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('test:server', function (done) {
-  runSequence('env:test', ['copyLocalEnvConfig', 'makeUploadsDir'], 'lint', 'mocha', done);
+  runSequence('env:test', ['copyLocalEnvConfig'], 'lint', 'mocha', done);
 });
 
 // Watch all server files for changes & run server tests (test:server) task on changes
@@ -484,31 +482,9 @@ gulp.task('debug', function (done) {
   runSequence('env:dev', ['nodemon-debug', 'watch'], done);
 });
 
-// Lint project files and minify them into two production files.
-gulp.task('build-no-mini', function (done) {
-  runSequence('env:dev', ['uglify-no-mini', 'cssmin'], done);
-});
-
-// Run the project in production mode
-gulp.task('prod-no-mini', function (done) {
-  runSequence('templatecache', 'build-no-mini', 'env:prod', ['nodemon', 'watch'], done);
-});
-
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', ['nodemon', 'watch'], done);
-});
-
-// Run the project in production mode
-gulp.task('prod-test', function (done) {
-  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'], 'build', 'env:prod', done);
-});
-
-
-
-// Minify project files into two production files.
-gulp.task('build-no-lint', function (done) {
-  runSequence('env:dev', ['uglify', 'cssmin'], done);
+  runSequence(['copyLocalEnvConfig', 'templatecache'], 'build', 'env:prod', ['nodemon', 'watch'], done);
 });
 
 

@@ -8,7 +8,10 @@ const passport = require('passport');
 module.exports = function (app) {
   // User Routes
   const users = require('../controllers/users.server.controller');
+  const admin = require('../controllers/admin.server.controller');
+  const tempUsersMiddleware = require('../controllers/users/users.tempUser.middleware.server.controller');
   const emailCtrl = require('../../../contacts/server/controllers/contacts.email.server.controller');
+  const contactsMiddleware = require('../../../contacts/server/controllers/contacts.middleware.server.controller');
 
   // Setting up the users password api
   app.route('/api/v1/auth/forgot').post(users.forgot);
@@ -17,14 +20,19 @@ module.exports = function (app) {
 
   // Setting up the users authentication api
 
-  app.route('/api/v1/auth/signup')
-    .post(users.tempUserSignup, emailCtrl.formatEmail, emailCtrl.sendTempUserSignupEmail);
-    // .post(users.tempUserSignup);
   app.route('/api/v1/auth/signin').post(users.signin);
   app.route('/api/v1/auth/signout').get(users.signout);
 
+  // route that creates a new tempUser
+  app.route('/api/v1/auth/signup')
+    .post(users.tempUserSignup, contactsMiddleware.formatEmail, emailCtrl.sendTempUserSignupEmail);
+
+  app.route('/api/v1/auth/signup/tempUsers/emails/:tempUserEmail/resend')
+    .post(contactsMiddleware.formatEmail, emailCtrl.sendTempUserSignupEmail);
+
+  // route that creates a new user and deletes tempUser
   app.route('/api/v1/auth/signup/verify')
-    .post(users.signupTest);
+    .post(tempUsersMiddleware.tempUserByEmail, users.signupNewUser);
 
 
 

@@ -69,23 +69,20 @@ MODAL
     transform: translateY(20%);
 }
 
-.contributors .modal-body, body > div.modal.fade.ng-isolate-scope.lightbox-modal.in > div > div > section > div {
-    background-color: rgba(0, 0, 0, 0.8);
+md-grid-tile {
+  display: flex;
+  background-color: #000000;
 }
 
-.lightbox-image-caption {
-    text-shadow: none;
-    position: relative;
-    font-weight: normal;
-    color: #fff;
+.contrib md-grid-tile md-grid-tile-footer {
+  background-color: #464646;
+  color: #ffffff;
 }
 
-.lightbox-image-caption span {
-    background-color: transparent;
-    box-shadow: none;
-}
-
-.lightbox-image-container img {
-    height: auto;
-    margin: 5%;
+md-grid-tile img {
+  position: relative;
+  width: 100%;
+  height: calc((100%/4*3));
+  bottom: 5%;
+  object-fit: fill;
 }

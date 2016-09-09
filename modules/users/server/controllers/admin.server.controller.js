@@ -3,21 +3,35 @@
 /**
  * Module dependencies
  */
-//import { admin } from './admin.server.controller.js';
-var path = require('path'),
+const path = require('path'),
   mongoose = require('mongoose'),
-  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   admin = require('./admin.server.controller.js'),
   auth = require('./users/users.authentication.server.controller.js');
 
-/**
+mongoose.Promise = Promise;
+const User = mongoose.model('User'),
+  TempUser = mongoose.model('TempUser');
+
+
+  /**
  * Show the current user
  */
 exports.getUser = function (req, res) {
   res.json(req.model);
 };
+
+/**
+ * Get tempUser from middleware call
+ *
+ * @param req
+ * @param res
+ */
+exports.getTempUser = (req, res) => {
+  res.json(req.tempUser);
+};
+
 
 /**
  * Update a User
@@ -161,7 +175,7 @@ exports.list = function (req, res) {
  */
 
 exports.getContributors = function (req, res) {
-  var query = User.find(req.uery);
+  var query = User.find(req.query);
   query.or([{ roles: 'contributor' }, { roles: 'admin' }])
     .sort('-lastName')
     .exec(function (err, users) {
@@ -181,29 +195,109 @@ exports.getContributors = function (req, res) {
 exports.getContributorByUserId = (req, res) => {
   res.jsonp(req.model);
 };
-
-/**
- * User middleware
- */
-exports.userByID = function (req, res, next, id) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'User is invalid'
-    });
-  }
-
-  User.findById(id, '-salt -password').exec(function (err, user) {
-    if (err) {
-      return next(err);
-    } else if (!user) {
-      return next(new Error('Failed to load user ' + id));
-    }
-
-    req.model = user;
-    next();
-  });
-};
-
+//
+// /**
+//  * User middleware
+//  */
+// exports.userById = function (req, res, next, id) {
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     return res.status(400).send({
+//       message: 'User is invalid'
+//     });
+//   }
+//
+//   User.findById(id, '-salt -password').exec(function (err, user) {
+//     if (err) {
+//       return next(err);
+//     } else if (!user) {
+//       return next(new Error('Failed to load user ' + id));
+//     }
+//
+//     req.model = user;
+//     next();
+//   });
+// };
+//
+// /**
+//  *
+//  * TempUser middleware
+//  *
+//  * @param req
+//  * @param res
+//  * @param next
+//  * @param id
+//  * @returns {*}
+//  */
+// exports.tempUserById = (req, res, next, id) => {
+//   console.log('tempUserById `id`::::::\n', id);
+//   if(!mongoose.Types.ObjectId.isValid(id)) {
+//     return res.status(400).send({
+//       message: 'TempUser is invalid'
+//     });
+//   }
+//
+//   TempUser.findById(id, '-salt -password')
+//   .exec()
+//   .then(tempUser => {
+//     console.log('tempUser::::::\n', tempUser);
+//     if(!tempUser) { return next(new Error('Failed to load tempUser with id: ' + id)); }
+//     req.tempUser = tempUser;
+//     next();
+//   })
+//   .catch(err => {
+//     console.log('tempUser ERRORRRR::::::\n', err);
+//     return next(new Error({
+//       message: errorHandler.getErrorMessage(err)
+//     }));
+//   });
+//
+//   // TempUser.findById(id, '-salt -password').exec(function (err, user) {
+//   //   if (err) {
+//   //     return next(err);
+//   //   } else if (!user) {
+//   //     return next(new Error('Failed to load user ' + id));
+//   //   }
+//   //
+//   //   req.model = user;
+//   //   next();
+//   // });
+//
+// };
+//
+// exports.tempUserByEmail = (req, res, next, id) => {
+//   console.log('tempUserByEmail HERE HERE HERE!!!!!!::::::::::\n');
+//   if(!id) {
+//     req.id = req.body.email;
+//   } else {
+//     req.id = id;
+//   }
+//
+//   console.log('tempUserByEmail `req.id`::::::\n', req.id);
+//   if(!mongoose.Types.ObjectId.isValid(req.id)) {
+//     return res.status(400).send({
+//       message: 'Email is invalid'
+//     });
+//   }
+//   TempUser.findOne(
+//     { email: req.id },
+//     { salt: 0, password: 0 }
+//   ).exec()
+//   .then(tempUser => {
+//     console.log('tempUser::::::\n', tempUser);
+//     if(!tempUser) {
+//       console.log('Failed to load tempUser with id: ' + req.id);
+//       throw new Error('Failed to load tempUser with id: ' + req.id);
+//     }
+//     req.model = tempUser;
+//     next();
+//   })
+//   .catch(err => {
+//     console.log('email doest not exist for any tempUsers :::: ERRORRRR::::::\n', err);
+//     return next(new Error({
+//       message: errorHandler.getErrorMessage(err)
+//     }));
+//   });
+// };
 
 /**
  * Find User(s) By Source (where source can be any property in Users model)

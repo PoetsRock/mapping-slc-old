@@ -1,75 +1,68 @@
 .thumb {
-    width: 24px;
-    height: 24px;
-    float: none;
-    position: relative;
-    top: 7px;
-}
+  width: 24px;
+  height: 24px;
+  float: none;
+  position: relative;
+  top: 7px; }
 
 .image-preview {
-    width: 50px;
-    height: auto;
-    float: none;
-    position: relative;
-    top: 7px;
-}
+  width: 50px;
+  height: auto;
+  float: none;
+  position: relative;
+  top: 7px; }
 
 form .progress {
-    line-height: 15px;
-}
+  line-height: 15px; }
 
 .progress {
-    display: inline-block;
-    width: 100px;
-    border: 3px groove #CCC;
-}
-
-.progress div {
+  display: inline-block;
+  width: 100px;
+  border: 3px groove #CCC; }
+  .progress div {
     font-size: smaller;
     background: orange;
-    width: 0;
-}
+    width: 0; }
 
 .drop-box {
-    background: rgba(0, 0, 0, 0.2);
-    border: 5px dashed #ffffff;
-    width: 115%;
-    height: 50%;
-    min-height: 150px;
-    padding-top: 15%;
-}
+  background: rgba(0, 0, 0, 0.2);
+  border: 5px dashed #ffffff;
+  width: 115%;
+  height: 50%;
+  min-height: 150px;
+  padding-top: 15%; }
 
 .file-upload .btn {
-    margin: 2% 0 8% 0;
-    /*padding: 2%;*/
-    /*border-radius: 15px;*/
-    border: solid 3px #0b8043;
-}
+  margin: 2% 0 8% 0;
+  border: solid 3px #0b8043; }
 
 .drag-drop-alert {
-    font-size: 1.5rem;
-    color: red;
-    width: 125%;
-    left: 5px;
-    position: relative;
-}
+  font-size: 1.5rem;
+  color: red;
+  width: 125%;
+  left: 5px;
+  position: relative; }
 
 .signin-icons .undecorated-link .fa {
-    font-size: 7rem;
-    margin: 12px 5%;
-    transition: all 0.3s ease 0s;
-}
-
-.signin-icons .undecorated-link .fa:hover {
+  font-size: 7rem;
+  margin: 12px 5%;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s; }
+  .signin-icons .undecorated-link .fa:hover {
     -webkit-transform: scale(1.2);
-    -ms-transform: scale(1.2);
     transform: scale(1.2);
-    transition: all 0.3s ease 0s;
-}
+    -webkit-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s; }
 
 .settings-subtitle {
-    position: relative;
-    left: 5rem;
-    margin-bottom: 4rem;
+  position: relative;
+  left: 5rem;
+  margin-bottom: 4rem; }
 
-}
+user-submissions-list .user-submissions .settings-list-container {
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap; }
+
+.user-favorites md-card md-card-actions svg {
+  fill: green;
+  color: green; }

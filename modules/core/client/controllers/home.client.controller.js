@@ -2,23 +2,17 @@
 
 angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'ApiKeys', '$http', 'MarkerDataService', 'mapService', 'AdminAuthService', '$rootScope', '$location', '$sce', 'UtilsService', 'MenuService',
   function ($scope, Authentication, ApiKeys, $http, MarkerDataService, mapService, AdminAuthService, $rootScope, $location, $sce, UtilsService, MenuService) {
-    
     $scope.authentication = Authentication;
     $scope.isAdmin = AdminAuthService;
     $scope.trustAsHtml = $sce.trustAsHtml;
     $scope.overlayActive = true;
-    // $scope.sourceTo = '';
-    // $scope.sourceFrom = '';
     $scope.menuOpen = false;
     $scope.shadeMap = false;
 
-    // $scope.goToProject = function (id) {
-    //   $location.path('projects/' + id);
-    // };
-    
     //provides logic for the css in the forms
     UtilsService.cssLayout();
 
+    // todo refactor to detect url for secondary pages
     $scope.toggleOverlayFunction = function (sourceFrom, sourceTo) {
       console.log('::::::toggleOverlayFunction::::::  sourceFrom\n', sourceFrom, '\nsourceTo:\n', sourceTo, '$scope.overlayActive:\n', $scope.overlayActive);
       if ($scope.overlayActive && sourceFrom === 'overlay') {
@@ -60,7 +54,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       }
     };
     
-    /** atrribution toggle */
+    /** attribution toggle */
     $scope.attributionFull = false;
     $scope.attributionText = '<div style="padding: 0 5px 0 2px"><a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>(the world\'s best maps) & <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, with map data by <a href="http://openstreetmap.org/copyright">OpenStreetMap©</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a></div>';
     
@@ -192,7 +186,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         var index = 0;
         /** loop through markers array and return values for each property */
         markerData.forEach(function (markerDatum) {
-          console.log('markerDatum:\n', markerDatum);
+          // console.log('markerDatum:\n', markerDatum);
           $scope.projectMarker = L.mapbox.featureLayer({
             type: 'Feature',
             geometry: {
@@ -241,7 +235,5 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       
       
     };
-    
-    
   }
 ]);

@@ -19,16 +19,13 @@ angular.module('admins').directive('wysiwygEditor', function () {
         return $http.get('/api/v1/projects/' + $scope.project._id + '/images/' + imageId, { cache: true })
         .then(function(response, reject) {
           if (reject) { console.log('get image `response`:\n', response); }
-          console.log('get image `response`:\n', response);
           return response;
         });
       };
 
       var uploadImage = function() {
-        // var url = '/api/v1/projects/' + $scope.project._id + '/images/wysiwyg';
-        var url = '/api/v1/projects/' + '5799582abef5d8c91e731f21' + '/images/wysiwyg';
-        console.log('url: ', url);
-        return url;
+        return '/api/v1/projects/' + '5799582abef5d8c91e731f21' + '/images/wysiwyg';
+
       };
       var getProjectImages = function() {
         return '/api/v1/projects/' + '5799582abef5d8c91e731f21' + '/images';
@@ -56,5 +53,3 @@ angular.module('admins').directive('wysiwygEditor', function () {
     }
   };
 });
-
-

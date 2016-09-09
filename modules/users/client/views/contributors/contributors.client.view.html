@@ -4,7 +4,7 @@
          ng-style="{'background-image': 'url(' + staticMap.mapUrl + ')', 'background-size' : 'cover' }"
          data-ng-class="{'page-view-menu-open': toggleSecondMenu}">
   <section class="container">
-    <img src="../../../../modules/core/client/img/brand/mapping.png" class="small-main-logo logo-on-page logo-second-page img-responsive" ui-sref="home" />
+    <div class="main-logo" ui-sref="home"></div>
 
     <div class="main-content-outer">
       <section data-ng-controller="ContributorController" data-ng-init="findContributor()" class="contributors">
@@ -15,7 +15,7 @@
 
                 <div class="row">
                   <div><h1 class="col-md-6">{{contributor.firstName}} {{contributor.lastName}}</h1></div>
-                  <div><img class="col-md-6 pull-right" data-ng-src="{{contributor.profileImageUrl}}"/></div>
+                  <div><img class="col-md-6 pull-right" data-ng-src="{{contributor.profileImage.thumbImageUrl}}"/></div>
                 </div>
 
                 <div class="row">
@@ -24,13 +24,11 @@
 
                 <hr/>
 
-                <h4>Other Projects by {{contributor.firstName}}</h4>
-                <div class="row">
-                  <div><p class="col-md-12" data-ng-repeat="contributorProject in contributorProjects"><a
-                    data-ng-href="/projects/{{contributorProject._id}}">
-                    {{contributorProject.title}}
-                  </a>
-                  </p></div>
+                <h4>Projects by {{contributor.firstName}}</h4>
+                <div layout="column">
+                  <p flex="100" data-ng-repeat="contributorProject in contributorProjects">
+                    <a data-ng-href="/projects/{{contributorProject._id}}"> {{contributorProject.title}}</a>
+                  </p>
                 </div>
 
               </div>

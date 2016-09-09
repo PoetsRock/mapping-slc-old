@@ -1,87 +1,87 @@
-.container .footer-overlay .col-md-4 {
-    padding: 0 0 0 15px;
-}
+/*.container .footer-overlay .col-md-4 {*/
+    /*padding: 0 0 0 15px;*/
+/*}*/
 
-.container .footer-overlay > div.row {
-    padding: 0;
-    margin-top: 5px;
-}
+/*.container .footer-overlay > div.row {*/
+    /*padding: 0;*/
+    /*margin-top: 5px;*/
+/*}*/
 
-/* The main '.footer-overlay' class is located in the core/css/animations.css file */
+/*!* The main '.footer-overlay' class is located in the core/css/animations.css file *!*/
 
-.footer-overlay input {
-    margin-bottom: 2rem;
-}
+/*.footer-overlay input {*/
+    /*margin-bottom: 2rem;*/
+/*}*/
 
-.footer-overlay input:focus {
-    margin-bottom: 4rem;
-    transition: all 0.3s ease;
-}
+/*.footer-overlay input:focus {*/
+    /*margin-bottom: 4rem;*/
+    /*transition: all 0.3s ease;*/
+/*}*/
 
-.footer-overlay .body {
-    padding-top: 10px;
-    margin-left: 5px;
-}
+/*.footer-overlay .body {*/
+    /*padding-top: 10px;*/
+    /*margin-left: 5px;*/
+/*}*/
 
-.footer-overlay .form {
-    margin-top: 1%;
-    margin-left: 15%;
-}
+/*.footer-overlay .form {*/
+    /*margin-top: 1%;*/
+    /*margin-left: 15%;*/
+/*}*/
 
-.footer-overlay input:focus, .footer-overlay input:active {
-    color: #ffffff;
-    font-size: 175%;
-}
+/*.footer-overlay input:focus, .footer-overlay input:active {*/
+    /*color: #ffffff;*/
+    /*font-size: 175%;*/
+/*}*/
 
-.btn-footer-overlay {
-    color: #fff;
-    margin: 2% 0 0 0.5%;
-}
+/*.btn-footer-overlay {*/
+    /*color: #fff;*/
+    /*margin: 2% 0 0 0.5%;*/
+/*}*/
 
-.btn-footer-overlay:hover, .btn-footer-overlay:focus, .btn-footer-overlay.focus {
-    color: #ffffff;
-}
+/*.btn-footer-overlay:hover, .btn-footer-overlay:focus, .btn-footer-overlay.focus {*/
+    /*color: #ffffff;*/
+/*}*/
 
-.footer-overlay input {
-    font-size: 1.5rem;
-}
+/*.footer-overlay input {*/
+    /*font-size: 1.5rem;*/
+/*}*/
 
-.footer-overlay input:active {
-    font-size: 1.7rem;
-}
+/*.footer-overlay input:active {*/
+    /*font-size: 1.7rem;*/
+/*}*/
 
-.footer-links {
-    top: 1rem;
-    left: 5rem;
-    position: relative;
-}
+/*.footer-links {*/
+    /*top: 1rem;*/
+    /*left: 5rem;*/
+    /*position: relative;*/
+/*}*/
 
-.footer-links div div {
-    padding: 0;
-}
+/*.footer-links div div {*/
+    /*padding: 0;*/
+/*}*/
 
-/* modification for fb like icon */
-.footer-links div div:first-child {
-    top: 2rem;
-}
+/*!* modification for fb like icon *!*/
+/*.footer-links div div:first-child {*/
+    /*top: 2rem;*/
+/*}*/
 
-@media (max-width: 992px) {
-    .footer-overlay .form-inline {
-        padding-top: 10px;
-        margin: 0;
-        top: -50px;
-        left: -50px;
-        position: relative;
-        width: 329px;
-    }
-}
+/*@media (max-width: 992px) {*/
+    /*.footer-overlay .form-inline {*/
+        /*padding-top: 10px;*/
+        /*margin: 0;*/
+        /*top: -50px;*/
+        /*left: -50px;*/
+        /*position: relative;*/
+        /*width: 329px;*/
+    /*}*/
+/*}*/
 
-@media (max-width: 1079px) {
-    .footer-overlay fieldset > div > div:first-child {
-        transform: translateY(-25%);
-    }
+/*@media (max-width: 1079px) {*/
+    /*.footer-overlay fieldset > div > div:first-child {*/
+        /*transform: translateY(-25%);*/
+    /*}*/
 
-    .footer-overlay fieldset > div > div {
-        margin-top: 0;
-    }
-}
+    /*.footer-overlay fieldset > div > div {*/
+        /*margin-top: 0;*/
+    /*}*/
+/*}*/

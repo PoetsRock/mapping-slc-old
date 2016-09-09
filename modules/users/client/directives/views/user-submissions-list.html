@@ -1,49 +1,64 @@
 <section class="user-submissions">
 
-  <div class="list-group">
+  <!--<div class="list-group">-->
+
     <div class="row">
 
       <div class="col-md-7">
         <h3 class="settings-subtitle">Submissions</h3>
       </div>
 
-        <div class="col-md-5 pull-right">
-          <md-input-container>
-            <label>Submission Status</label>
-            <md-select id="status" data-ng-model="subStatuses">
-              <md-optgroup label="Submission Status">
-                <md-option ng-value="subStatuses[0]" ng-repeat="subStatus in subStatuses">
-                  {{subStatus}}
-                </md-option>
-              </md-optgroup>
-            </md-select>
-          </md-input-container>
-        </div>
-
+      <div class="col-md-5 pull-right">
+        <md-input-container>
+          <label>Submission Status</label>
+          <md-select id="status" data-ng-model="status.subStatuses">
+            <md-optgroup label="Submission Status">
+              <md-option ng-value="subStatuses.status.value" ng-repeat="subStatus in subStatuses">
+                {{subStatus.status.name}}
+              </md-option>
+            </md-optgroup>
+          </md-select>
+        </md-input-container>
       </div>
 
-    <div class="row">
+    </div>
 
-      <a data-ng-repeat="userProject in userProjects" ui-sref="settings.submissionsView({projectId: userProject.id})" class="col-md-12 md-whiteframe-8dp admin-list">
 
-        <div class="row">
+    <div flex-xs="column" flex-gt-xs="100" layout="row" class="settings-list-container">
 
-          <div class="col-md-3">
-            <img data-ng-src="{{userProject.mainImgThumbnail}}"/>
-          </div>
-
-          <div class="col-md-8">
-            <h4 class="list-group-item-heading" data-ng-bind="userProject.title"></h4>
-            <small>
-              Submitted on <span data-ng-bind="userProject.createdOn | date:'short'"></span>
-            </small>
-
-          </div>
-
-        </div>
-      </a>
+      <md-card layout="column" flex="" data-ng-repeat="userProject in userProjects" ui-sref="projectStatus({ projectId: userProject.id})" class="settings-list">
+        <!--<md-card-header>-->
+          <!--<md-card-avatar>-->
+            <!--<img class="md-user-avatar" data-ng-src="{{userProject.user.thumbImageUrl">-->
+          <!--</md-card-avatar>-->
+          <!--<md-card-header-text>-->
+            <!--<span class="md-title">{{userProject.user.firstName}} {{userProject.user.lastName}}</span>-->
+            <!--&lt;!&ndash;<span class="md-subhead">subhead</span>&ndash;&gt;-->
+          <!--</md-card-header-text>-->
+        <!--</md-card-header>-->
+        <img data-ng-src="{{userProject.mainImage.thumbImageUrl}}"/>
+        <!--<md-card-title>-->
+          <!--<md-card-title-text>-->
+            <!--&lt;!&ndash;<span class="md-headline">{{userProject.title}}</span>&ndash;&gt;-->
+            <!--<span class="md-subhead">Submitted on <span data-ng-bind="userProject.createdOn | date:'short'"></span></span>-->
+          <!--</md-card-title-text>-->
+        <!--</md-card-title>-->
+        <!--<md-card-actions layout="row" layout-align="start center">-->
+          <!--<md-button>Action 1</md-button>-->
+          <!--<md-button>Action 2</md-button>-->
+          <!--<md-card-icon-actions>-->
+            <!--<md-button class="md-icon-button" aria-label="toggle">-->
+              <!--<md-icon md-svg-icon="md-toggle-arrow"></md-icon>-->
+            <!--</md-button>-->
+          <!--</md-card-icon-actions>-->
+        <!--</md-card-actions>-->
+        <md-card-content>
+          <h4>{{userProject.title}}</h4>
+          <small>Submitted on <span data-ng-bind="userProject.createdOn | date:'short'"></span></small>
+        </md-card-content>
+      </md-card>
 
     </div>
-  </div>
+
 
 </section>

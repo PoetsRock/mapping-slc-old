@@ -36,83 +36,96 @@ const noReturnUrls = [
  * @param next
  */
 exports.tempUserSignup = (req, res, next) => {
-  // For security measurement we remove the roles from the req.body object
-  delete req.body.roles;
-
-  // Init user and add missing fields
-  const tempUser = new TempUser(req.body);
-  tempUser.provider = 'local';
-  tempUser.username = req.body.email;
-
-  // Then save the user
-  tempUser.save((err, success) => {
-    if (err) {
-      console.error('\n\nerr #1::::::::::::::::::::\n', err);
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
-      if (req.login) {
-        req.login(tempUser, err => {
-          if (err) {
-            console.error('\n\nerr #2::::::::::::::::::::\n', err);
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          }
-
-          /** transform req object for next middleware function, `exports.formatEmail()` **/
-          req.email = {
-            to: req.body.email,
-            subjectLine: req.body.subjectLine || 'Mapping SLC | Please confirm your email address'
-          };
-          req.tempUser = success;
-          next();
-        });
-      }
+  User.findOne({ email: req.body.email })
+  .then(currentUser => {
+    if (currentUser) {
+      console.error('currentUser.errorMsg: ' + currentUser.errorMsg);
+      throw new Error(currentUser);
     }
+  })
+  .then(() => {
+
+    // For security measurement we remove the roles from the req.body object
+    delete req.body.roles;
+
+    // Init user and add missing fields
+    const tempUser = new TempUser(req.body);
+    tempUser.provider = 'local';
+    tempUser.username = req.body.email;
+
+    // Then save the user
+    tempUser.save((err, success) => {
+      if (err) {
+        console.error('\n\nERROR tempUserSignup  Error#1::::::::::::::::::::\n', err);
+        return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+      } else {
+        if (req.login) {
+          req.login(tempUser, err => {
+            if (err) {
+              console.error('\n\nERROR tempUserSignup  Error#2::::::::::::::::::::\n', err);
+              return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+            }
+            req.tempUser = success;
+            next();
+          });
+        }
+      }
+    });
+  })
+  .catch(() => {
+    return res.status(409).send({
+      currentUserExists: true,
+      message: 'Email already exists. You may have already registered.'
+    });
   });
 };
+
 
 /**
  * Signup Test
  */
-exports.signupTest = (req, res) => {
-  console.log('hi you hit the test sign up!!');
-  console.log('req.query:\n', req.query);
-  console.log('req.query.tempUserId: ', req.query.tempUserId);
-  console.log('req.query.tempToken: ', req.query.tempToken);
+exports.signupNewUser = (req, res) => {
+  let tempIdToDelete = '';
 
-  const query = TempUser.findOne({ _id: req.query.tempUserId })
+  TempUser.findOne({ _id: req.body._id })
   .exec()
   .then(tempUser => {
-    if(req.query.tempToken !== tempUser.tempToken) {
-      tempUser.error = 'We are not able to confirm your email address';
-      throw tempUser;
-    }
-    console.log('and you\'re confirmed');
-    console.log('tempUser:\n', tempUser);
-    // delete certain fields on tempUser before saving to User Db
-    // delete tempUser.
-    // save tempUser as a new user to User Db
-    return User.save(tempUser);
+    const rawNewUser = _.extend({}, tempUser, req.body);
+    const newUser = _.pick(rawNewUser, ['salt', 'username', 'provider', 'email', 'password', 'lastName', 'firstName', 'displayName', 'userAddress1', 'userAddress2', 'userCity', 'userState', 'userZip']);
+
+    // store tempUserId in order to delete tempUser document upon success creating user doc
+    tempIdToDelete = req.body._id;
+
+    // create new user in db and return promise
+    return User.create(newUser);
   })
+
+  // login new user
   .then(newUser => {
-    console.log('newUser:\n', newUser);
-    return res.jsonp(newUser);
+    // Remove sensitive data before login
+    newUser.password = undefined;
+    newUser.salt = undefined;
+    if (req.login) {
+      req.login(newUser, err => {
+        if (err) {
+          console.error('ERROR logging in after creating new user:\n', err);
+          throw new Error(err);
+        }
+      });
+    }
+    res.jsonp(newUser);
+  })
+
+  // after successfully creating new user, delete tempUser account
+  .then(() => {
+    return TempUser.findOneAndRemove({ _id: tempIdToDelete });
   })
   .catch(err => {
-    console.error('err:\n', err);
-    console.error('tempUser:\n', tempUser);
-    return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    console.error('ERROR new user signup / tempUser delete:\n', err);
+    return res.status(400).send({message: errorHandler.getErrorMessage(err)});
   });
 
 
-
-  if(req.query.tempToken === '456') {
-    console.log('and you\'re confirmed');
-    const newUser = TempUser.findOne({ _id: req.query.tempUserId });
-    console.log('newUser:\n', newUser);
-    res.jsonp(newUser);
-  } else {
-    console.log('nada!!!!!!!!!!!!!!!!!!!!!!!!!!!1');
-  }
 };
 
 /**
@@ -120,7 +133,7 @@ exports.signupTest = (req, res) => {
  * @param req
  * @param res
  */
-exports.signup = (req, res) => {
+exports.signupOld = (req, res) => {
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
@@ -132,28 +145,31 @@ exports.signup = (req, res) => {
     user.displayName = user.firstName + ' ' + user.lastName;
   }
   // Then save the user
-  user.save(function (err, success) {
+  user.save((err, success) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+    }
 
-      if (req.login) {
-        req.login(user, function (err) {
-          if (err) {
-            res.status(400).send(err);
-          } else {
-            res.json(user);
-          }
-        });
-        //} else {
+    // Remove sensitive data before login
+    user.password = undefined;
+    user.salt = undefined;
+
+    console.log('req.login::::::::::::::::::::\n', req.login);
+
+    if (req.login) {
+      Promise.promisify(req.login);
+      console.log('req.loginAsync::::::::::::::::::::\n', req.loginAsync);
+      req.login(user, err => {
+        if (err) {
+          console.error('ERROR new user signup / tempUser delete:\n', err);
+          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+        }
         console.log('success::::::::::::::::::::\n', success);
-        //  res.json(user);
-      }
+        console.log('user::::::::::::::::::::\n', user);
+        res.json(user);
+      });
     }
   });
 };
@@ -289,7 +305,8 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
     // User is already logged in, join the provider data to the existing user
     var user = req.user;
 
-    // Check if user exists, is not signed in using this provider, and doesn't have that provider data already configured
+    // Check if user exists, is not signed in using this provider, and doesn't have that provider data already
+    // configured
     if (user.provider !== providerUserProfile.provider && (!user.additionalProvidersData || !user.additionalProvidersData[providerUserProfile.provider])) {
       // Add the provider data to the additional provider data field
       if (!user.additionalProvidersData) {
@@ -350,3 +367,40 @@ exports.removeOAuthProvider = function (req, res, next) {
     }
   });
 };
+
+
+// const Mongo = require('mongodb');
+//
+// console.log('Mongo:\n', Mongo);
+//
+// const db = mongoose.connections[0].db;
+//
+// console.log('\n\n\nmongoose.connection.db:\n', mongoose.connection.db);
+// const Collections = mongoose.connection.db.collections;
+// console.log('\n\n\ncollectionssssssssssssssssssssssss:\n', collections);
+//
+// const UsersCollection = db.collection('Users');
+// console.log('\n\n\nUsersCollection:\n', UsersCollection);
+
+
+// const usersDb = new Mongo().getDB('Users');
+// const myUser = usersDb.find({ email: 'christanseer@hotmail.com' });
+// console.log('myUser:\n', myUser);
+
+
+// console.log('\n\n\nTempUser.collection::\n', TempUser.collection);
+// console.log('\n\n\nTempUser.collection.conn::\n', TempUser.collection.conn);
+// console.log('\n\n\nTempUser.collection.conn::\n', TempUser.collection.conn.collections.imagegalleries);
+// console.log('\n\n\nTempUser.collection.conn::\n', TempUser.collection.conn.collections.tempusers);
+
+
+// const tempsTry = mongoose.connection.db;
+// const tempsTry = mongoose.connection.db.serverConfig;
+// console.log('\n\n\ntemps::\n', tempsTry);
+
+
+// const temps = mongoose.connections.getCollection('tempusers').find({});
+// const temps = mongoose.connections.collections;
+// const collections = mongoose.connections[0].collections;
+// console.log('\n\n\ncollections::\n', collections);
+

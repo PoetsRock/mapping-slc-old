@@ -1,0 +1,194 @@
+.main-overlay.core {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: auto;
+  width: 90%;
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  margin: 5%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+  -webkit-transition: all 1s ease-out;
+  transition: all 1s ease-out;
+  font-size: 1.75rem;
+  color: #ffffff;
+  text-align: justify; }
+  .main-overlay.core sign-in-directive {
+    left: 20%;
+    top: 1rem;
+    position: relative; }
+  .main-overlay.core div > .uib-dropdown-menu > li {
+    min-width: 260px; }
+    .main-overlay.core div > .uib-dropdown-menu > li > a:hover {
+      font-size: 1.25rem;
+      background: transparent;
+      color: #f5deb3;
+      -webkit-transition: all 0.3s ease 0s;
+      transition: all 0.3s ease 0s; }
+    .main-overlay.core div > .uib-dropdown-menu > li > a:focus {
+      font-size: 1.25rem;
+      background: transparent;
+      color: #f5deb3;
+      -webkit-transition: all 0.3s ease 0s;
+      transition: all 0.3s ease 0s; }
+  .main-overlay.core .close-overlay {
+    left: 8rem;
+    position: relative;
+    bottom: 1rem;
+    font-size: 2.5rem; }
+  .main-overlay.core p {
+    line-height: 155%;
+    margin: 0 3.4% 1% 3%; }
+  .main-overlay.core .main-text p:nth-child(1) {
+    margin-top: 3.4%; }
+  .main-overlay.core .two-columns {
+    margin-bottom: 2rem; }
+
+.main-overlay-hidden {
+  visibility: hidden; }
+
+.main-overlay-active {
+  -webkit-animation: animate-main-overlay 1s ease forwards;
+  -webkit-animation-delay: 0.15s;
+  -moz-animation: animate-main-overlay 1s ease forwards;
+  -moz-animation-delay: 0.15s;
+  -o-animation: animate-main-overlay 1s ease forwards;
+  -o-animation-delay: 0.15s;
+  animation: animate-main-overlay 1s ease forwards;
+  animation-delay: 0.15s; }
+
+.core .navbar-brand, .core .navbar-nav, .core li a {
+  color: #ffffff;
+  right: 10%;
+  background: transparent;
+  text-align: right; }
+
+.navbar-nav > li > .dropdown-menu {
+  margin-top: 30px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-right: 26px;
+  min-width: 260px; }
+
+/*body > section > section > section > section.home-view.ng-scope > div > span > div > div:nth-child(1) > div.col-md-2 > sign-in-directive > section > */
+div > ul.pull-right > li > ul > li > a {
+  padding: 5% 20%;
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center; }
+
+.header-profile-image {
+  opacity: 0.8;
+  height: 40px;
+  width: auto;
+  border-radius: 50%;
+  margin-right: 5px; }
+
+.open .header-profile-image,
+a:hover .header-profile-image {
+  opacity: 1; }
+
+.user-header-dropdown-toggle {
+  padding-top: 11px !important;
+  padding-bottom: 11px !important; }
+
+.core .nav .open a:focus, .core .nav li a:hover, .core .nav li a:focus {
+  color: #ffffff;
+  background: transparent; }
+
+.core .nav .open a {
+  color: #ffffff;
+  font-size: 1.5rem;
+  min-width: 260px; }
+
+.core .table-bordered {
+  margin: 20px 0 10px 0; }
+
+.core .uib-dropdown-menu {
+  min-width: 0;
+  float: none;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s; }
+
+.open > .uib-dropdown-menu {
+  background: black;
+  width: 100%;
+  top: 4rem;
+  clear: both;
+  position: absolute;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s; }
+
+.btn-dark {
+  background-color: rgba(50, 50, 50, 0.9);
+  font-size: 1.75rem;
+  /*text-decoration: none;*/
+  font-weight: 400;
+  text-transform: uppercase;
+  -ms-flex-line-pack: center;
+      align-content: center; }
+
+.btn-dark:hover {
+  background-color: rgba(75, 75, 75, 0.4);
+  border: solid 1px #8a887a;
+  box-shadow: 0 0 1px transparent;
+  -webkit-transition: all 0.2s ease-in-out 0.2s;
+  transition: all 0.2s ease-in-out 0.2s; }
+
+.btn-dark:active, .btn-dark:visited {
+  background-color: rgba(75, 75, 75, 0.4);
+  border: solid 1px #8a887a;
+  box-shadow: 0 0 1px transparent;
+  -webkit-transition: all 0.2s ease-in-out 0.2s;
+  transition: all 0.2s ease-in-out 0.2s; }
+
+.uib-dropdown-toggle:hover {
+  text-decoration: none; }
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-color: #aaaaaa;
+  border-radius: 5%; }
+
+.footer-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  margin: 35px auto;
+  padding: 10px 5px;
+  overflow: visible !important;
+  /* Has to be !important only if you're using an on/off switch */
+  position: relative;
+  width: 90%;
+  height: 12rem;
+  max-height: 20vh;
+  z-index: 2;
+  -webkit-transition: all 1s ease-out;
+  transition: all 1s ease-out; }
+  .footer-overlay .footer-overlay-active {
+    -webkit-animation: animate-footer-overlay 0.5s ease-out forwards;
+    animation: animate-footer-overlay 0.5s ease forwards; }
+  .footer-overlay .attribution-links {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+    .footer-overlay .attribution-links > a {
+      padding: 0 5%;
+      background-size: 140px auto;
+      background-repeat: no-repeat;
+      -o-object-fit: contain;
+         object-fit: contain; }
+    .footer-overlay .attribution-links #uhc-logo {
+      background-image: url("/modules/core/client/img/brand/uhc.png"); }
+    .footer-overlay .attribution-links #u-of-utah-logo {
+      background-image: url("/modules/core/client/img/brand/uofu.png"); }
+    .footer-overlay .attribution-links #westminster-logo {
+      background-image: url("/modules/core/client/img/brand/westminster.png"); }
+  .footer-overlay form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 0 2%; }

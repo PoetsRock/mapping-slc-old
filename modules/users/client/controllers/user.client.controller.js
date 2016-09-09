@@ -6,8 +6,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     $scope.favoriteProjects = $scope.user.favorites;
     var userProjects = [];
     var userFavorites = [];
-    
-    
+
     $scope.update = function (isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
@@ -53,30 +52,7 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
       });
       //console.log('$scope.users: ', $scope.users);
     };
-    
-    /**
-     * Find a user's favorite projects
-     */
-    $scope.getFavorites = function () {
-      $http.get('/api/v1/users/' + $scope.user._id + '/favorites', { cache: true })
-      .then(function (resolved, rejected) {
-        $scope.userFavorites = resolved.data;
-      });
-    };
-    
-    
-    $scope.$watchCollection('userFavorites',
-      function (newVal, oldVal) {
-        // console.log(':::::$scope.userFavorites\n', $scope.userFavorites);
-        //console.log('watchUpdateFavorites newVal::::::\n', newVal, '\n\n');
-        // console.log('watchUpdateFavorites::::::oldVal\n', oldVal);
-        
-        if ($scope.userFavorites && $scope.userFavorites.length !== $scope.user.favorites.length) {
-          $scope.userFavorites = newVal;
-        }
-      }
-    );
-    
+
     
     /**
      * Remove a User's Favorite projects
@@ -123,24 +99,3 @@ angular.module('users').controller('UserController', ['$scope', '$state', '$stat
     
   }
 ]);
-
-
-// $scope.watchUpdate = function(nameToWatch) {
-//  $scope.$watch('userFavorites',
-//  //$scope.$watch('nameToWatch',
-//    function(newVal, oldVal) {
-//      console.log('watchUpdateFavorites newVal::::::\n', newVal, '\n\n');
-//      console.log('watchUpdateFavorites::::::\n', oldVal);
-//      $scope.userFavorites = newVal;
-//      //$scope.nameToWatch = newVal;
-//    });
-// };
-
-
-//"favorites" : [
-//  "561367a589a0bb717cac7220",
-//  "5636e404ec3e7a2b81c3d1b9",
-//  "561d26f48bfbae85bc21735c",
-//  "56440ce6ad014d8e859ae901",
-//  "567e1938f7aa7c6ad53bbb04"
-//],

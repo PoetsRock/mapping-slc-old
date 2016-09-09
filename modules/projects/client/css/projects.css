@@ -316,13 +316,18 @@ project-status-user-info edit-profile .form-group {
 
 }
 
-#status {
-    margin-left: 15px;
-    width: 175px;
-    border-bottom: solid 7px #023a31;
-    max-width: 350px;
-    width: 110%;
+md-input-container md-select#status {
+  border-bottom: solid 7px #023a31;
 }
+
+.project-create md-input-container md-select#status,
+.project-edit md-input-container md-select#status {
+  max-width: 350px;
+  margin-left: 15px;
+  width: 175px;
+  width: 110%;
+}
+
 
 .project-uploader.ng-show, .project-uploader.ng-hide {
     -webkit-transition: all .5s ease;

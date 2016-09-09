@@ -1,25 +1,38 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('users').directive('userSubmissionsList', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'modules/users/client/directives/views/user-submissions-list.html',
-    controller: function ($scope, Projects) {
+  angular.module('users')
+  .directive('userSubmissionsList', userSubmissionsList);
 
-      $scope.subStatuses = ['received', 'pending', 'rejected', 'soft_rejection', 'revise', 'accepted', 'userPulled', 'staffPulled', 'published', 'edit'];
+  userSubmissionsList.$inject = [];
 
-      // todo shift work to back end -- create a route that returns all projects by userId and returns an array of projects
-        var userProjects = [];
-        return function getProjects() {
-          $scope.user.associatedProjects.map(function (associatedProject) {
-            userProjects.push(Projects.get({
-              projectId: associatedProject
-            }));
-          });
-          console.log('userProjects:\n', userProjects);
-          $scope.userProjects = userProjects;
-        }();
+  function userSubmissionsList() {
+    var directive = {
+      restrict: 'EA',
+      templateUrl: '/modules/users/client/directives/views/user-submissions-list.html',
+      controller: controller
+    };
+    return directive;
 
+    function controller($scope, $http, getLists) {
+      var vm = this;
+
+      var getAssociatedProjects = function (userId) {
+        $http.get(`/api/v1/contributors/${userId}/projects?publishedOnly=false`)
+        .then(function successCb(projects) {
+          $scope.userProjects = projects.data;
+        }, function errorCb(errorData) {
+          console.error('errorData: ', errorData);
+        });
+      };
+      $scope.subStatuses = getLists.listStatuses();
+      vm.$onInit = function () {
+        getAssociatedProjects($scope.user._id);
+      };
+      console.log('$scope.subStatuses:\n', $scope.subStatuses);
+      console.log('$scope.subStatuses:\n', $scope.subStatuses[0].status);
     }
-  };
-});
+  }
+}());
+
+

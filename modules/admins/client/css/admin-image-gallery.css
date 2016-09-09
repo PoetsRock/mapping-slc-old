@@ -24,11 +24,20 @@ section.project-images {
     display: flex;
 }
 
+section.project-images md-content {
+    width: 100%;
+    height: auto;
+}
+
+section.project-images h1, section.project-images h3, section.project-images h4, section.project-images h5 {
+    margin: 12px;
+}
+
 section.project-images div.project-image-gallery {
     -webkit-box-flex: auto;
     -ms-flex: auto;
     flex: auto;
-    width: 200px;
+    /*width: 200px;*/
     margin: .5vw;
 }
 

@@ -1,80 +1,27 @@
-<section>
+<section layout="" class="footer-overlay" data-ng-class="{'main-overlay-hidden': toggleOverlayOff}">>
 
-  <!--<div class="footer-overlay" ng-class="{'footer-overlay-active': animateFooterOverlayCheck}">-->
-  <div class="footer-overlay" data-ng-class="{'main-overlay-hidden': toggleOverlayOff}">
-
-    <!--<div class="container" data-ng-show="!mainMenuModalToggle">-->
-    <div class="container">
-
-      <div class="body">
-        <div class="row">
-
-          <div class="col-md-4 col-sm-12 footer-links">
-            <div class="row">
-  
-              <div
-                  class="col-md-3 col-sm-2 fb-like"
-                  data-share="true"
-                  data-width="450"
-                  data-show-faces="true">
-              </div>
-  
-              <div class="col-md-3 col-sm-2">
-                <a href="http://www.utahhumanities.org/" target="_blank">
-                  <img src="/modules/core/client/img/brand/uhc.png" class="img-responsive"
-                       alt="Responsive image"/>
-                </a>
-              </div>
-
-              <div class="col-md-3 col-sm-2">
-                <a href="http://www.utah.edu/" target="_blank">
-                  <img src="/modules/core/client/img/brand/uofu.png" class="img-responsive"
-                       alt="Responsive image"/>
-                </a>
-              </div>
-              <div class="col-md-3 col-sm-2">
-                <a href="http://www.westminstercollege.edu/" target="_blank">
-                  <img src="/modules/core/client/img/brand/westminster.png" class="img-responsive"
-                       alt="Responsive image"/>
-                </a>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="col-md-offset-1 col-md-7 col-sm-12" data-ng-controller="UserController">
-            <form name="subscribe" class="form-horizontal" data-ng-submit="newsletterSubscription(subscribe.$valid)"
-                  novalidate>
-              <fieldset>
-
-                <div class="row">
-
-                  <div class="col-md-6">
-                    <span class="input input-secondary">
-                      <input class="input_field input_field-secondary" type="email" id="newsletter"
-                             data-ng-model="subscribe.newsletter" required/>
-                      <label class="input_label input_label-secondary" for="newsletter">
-                        <span
-                          class="input_label-content input_label-content-secondary">E-mail for Quarterly Newsletter</span>
-                      </label>
-                    </span>
-                  </div>
-
-                  <div class="col-md-2">
-                    <button class="btn btn-main btn-footer-overlay grow" type="submit">Subscribe</button>
-                  </div>
-
-                </div>
-              </fieldset>
-            </form>
-
-
-          </div>
-
-
-        </div>
-      </div>
-
-    </div>
+  <div layout="" flex="50" class="attribution-links">
+    <span
+      flex=""
+      class="fb-like"
+      data-ng-cloak=""
+      data-share="true"
+      data-show-faces="true">
+    </span>
+    <a id="uhc-logo" flex="" href="http://www.utahhumanities.org/" target="_blank"></a>
+    <a id="u-of-utah-logo" flex="" href="http://www.utah.edu/" target="_blank"></a>
+    <a id="westminster-logo" flex="" href="http://www.westminstercollege.edu/" target="_blank"></a>
   </div>
+
+  <form layout="" flex="50" data-ng-controller="UserController" name="subscribe"
+        data-ng-submit="newsletterSubscription(subscribe.$valid)" novalidate>
+    <md-input-container flex="" layout-align="stretch center">
+      <input type="email" data-ng-model="subscribe.newsletter" placeholder="E-mail for Quarterly Newsletter" required>
+    </md-input-container>
+    <div layout="" layout-align="end center">
+      <md-button class="md-raised md-primary md-btn-border" type="submit" aria-label="subscribe to newsletter">
+        Subscribe
+      </md-button>
+    </div>
+  </form>
 </section>
